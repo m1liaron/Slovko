@@ -15,7 +15,6 @@ const GreetingScreen = () => {
         if(name.length > 0){
             try{
                 dispatch(addUser(name))
-                console.log(name)
                 navigation.navigate('main')
             } catch (error) {
                 console.log(error);

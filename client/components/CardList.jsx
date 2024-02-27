@@ -74,9 +74,6 @@ const CardList = () => {
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
-            <Pressable onPress={() => navigation.navigate('greetin')}>
-                <Text>Greetin</Text>
-            </Pressable>
         </View>
     );
 };

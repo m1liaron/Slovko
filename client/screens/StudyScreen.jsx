@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, FlatList, Pressable} from 'react-native';
+import { View, Text, StyleSheet, FlatList, Pressable, Dimensions } from 'react-native';
 import { useSelector } from "react-redux";
 import { selectCard } from "../redux/cardSlice";
 import Animated, {
@@ -8,9 +8,10 @@ import Animated, {
     withTiming,
     interpolate,
 } from 'react-native-reanimated';
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const CARD_WIDTH = 500; // Set your desired card width
+const CARD_WIDTH = Dimensions.get('window').width - 40; // Set the card width dynamically based on screen width
 
 const StudyScreen = () => {
     const cardData = useSelector(selectCard);
@@ -38,8 +39,9 @@ const StudyScreen = () => {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: CARD_WIDTH, // Set the width for the back side
             backfaceVisibility: 'hidden',
+            width: CARD_WIDTH, // Set the width to be the same as the front side
+            height: '100%', // Set the height to be the same as the front side
         };
     });
 
@@ -60,18 +62,18 @@ const StudyScreen = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <View>
+        <SafeAreaView style={styles.container}>
+            <View style={{height: '100%'}}>
                 <FlatList
                     data={showingCard}
                     maxToRenderPerBatch={1}
                     renderItem={({ item, index }) => (
                         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
-                            <Animated.View style={[styles.card, { width: CARD_WIDTH }, frontAnimatedStyle]}>
+                            <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
                                 <Text style={styles.cardText}>{item.title}</Text>
                                 <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
                             </Animated.View>
-                            <Animated.View style={[styles.card, backAnimatedStyle]}>
+                            <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
                                 <Text style={styles.cardText}>{item.translate}</Text>
                             </Animated.View>
                         </Pressable>
@@ -79,30 +81,31 @@ const StudyScreen = () => {
                     keyExtractor={(item, index) => index.toString()}
                 />
                 <View style={styles.pressableContainer}>
-
                     <Pressable style={styles.button} onPress={showPreviousCard}>
                         <Text style={styles.buttonText}>Previous card</Text>
                     </Pressable>
-
-                    <Pressable style={styles.button} onPress={() => navigation.navigate('home')}>
+                    <Pressable style={styles.button} onPress={() => navigation.navigate('main')}>
                         <Text style={styles.buttonText}>End</Text>
                     </Pressable>
-
                     <Pressable style={styles.button} onPress={showNextCard}>
                         <Text style={styles.buttonText}>Next card</Text>
                     </Pressable>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     cardContainer: {
-
+        height: '100%',
+        justifyContent: 'center', // Center vertically
+        alignItems: 'center', // Center horizontally
     },
     container: {
-        flex: 1, alignItems: 'center'
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center', // Center vertically
     },
     card: {
         borderWidth: 1,
@@ -112,8 +115,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
-        height: 200,
-        marginBottom: 20
+        marginBottom: 20,
     },
     cardText: {
         fontSize: 20,
