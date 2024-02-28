@@ -63,7 +63,8 @@ const StudyScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{height: '100%'}}>
+            <View style={styles.cardContainer}>
+                <Text>{displayedIndex + 1}/{cardData.length}</Text>
                 <FlatList
                     data={showingCard}
                     maxToRenderPerBatch={1}
@@ -98,14 +99,12 @@ const StudyScreen = () => {
 
 const styles = StyleSheet.create({
     cardContainer: {
-        height: '100%',
+        flex: 1,
         justifyContent: 'center', // Center vertically
         alignItems: 'center', // Center horizontally
     },
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center', // Center vertically
     },
     card: {
         borderWidth: 1,
@@ -127,8 +126,8 @@ const styles = StyleSheet.create({
     pressableContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-evenly',
-        marginTop: 20
+        justifyContent: 'center', // Center horizontally
+        marginTop: 20,
     },
     button: {
         backgroundColor: '#007bff',
