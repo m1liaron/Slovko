@@ -40,9 +40,9 @@ const CardList = () => {
         dispatch(removeCard(index));
     };
 
-    const navigateToStudy = () => {
+    const navigateTo = (name) => {
         if (cardData.length > 1) {
-            navigation.navigate('study');
+            navigation.navigate(name);
         } else {
             Alert.alert('Додайте як найменше 2 картки');
         }
@@ -51,9 +51,20 @@ const CardList = () => {
     return (
         <View style={styles.container}>
             <View style={styles.formContainer}>
-                <Pressable onPress={navigateToStudy}>
-                    <Text style={styles.buttonText}>Вчити</Text>
-                </Pressable>
+                <View style={styles.flex}>
+                    <Pressable onPress={() => navigateTo('study')} style={styles.button}>
+                        <Text style={styles.buttonText}>Картки</Text>
+                    </Pressable>
+
+                    <Pressable onPress={() => navigateTo('quiz')} style={styles.button}>
+                        <Text style={styles.buttonText}>Вікторина</Text>
+                    </Pressable>
+
+                    <Pressable onPress={() => navigateTo('sentence')} style={styles.button}>
+                        <Text style={styles.buttonText}>Речення</Text>
+                    </Pressable>
+                </View>
+
                 <Text style={styles.title}>Англійською</Text>
                 <TextInput
                     value={value}
@@ -108,14 +119,20 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: 10,
     },
-    addButton: {
+    button: {
         backgroundColor: '#007bff',
-        borderRadius: 5,
-        padding: 10,
-        alignItems: 'center',
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginHorizontal: 10,
+    },
+    flex:{
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
     },
     buttonText: {
-        color: '#000',
+        color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
     },

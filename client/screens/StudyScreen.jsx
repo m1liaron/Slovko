@@ -10,13 +10,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AntDesign } from '@expo/vector-icons';
 
-const CARD_WIDTH = Dimensions.get('window').width - 40; // Set the card width dynamically based on screen width
+const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width dynamically based on screen width
 
 const StudyScreen = () => {
     const cardData = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
+    const [showDefinition, setShowDefinition] = useState(false)
 
     const navigation = useNavigation()
     const rotation = useSharedValue(0);
@@ -63,8 +65,8 @@ const StudyScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.cardContainer}>
-                <Text>{displayedIndex + 1}/{cardData.length}</Text>
+            <View style={styles.centeredContainer}>
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
                 <FlatList
                     data={showingCard}
                     maxToRenderPerBatch={1}
@@ -73,6 +75,16 @@ const StudyScreen = () => {
                             <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
                                 <Text style={styles.cardText}>{item.title}</Text>
                                 <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
+
+                                <Pressable onPress={() => setShowDefinition(!showDefinition)}>
+                                    <AntDesign name="questioncircleo" size={24} color="black" />
+                                </Pressable>
+                                {showDefinition ? (
+                                    <View>
+                                        <Text>{item.definition}</Text>
+                                    </View>
+                                ) : null}
+
                             </Animated.View>
                             <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
                                 <Text style={styles.cardText}>{item.translate}</Text>
@@ -83,13 +95,13 @@ const StudyScreen = () => {
                 />
                 <View style={styles.pressableContainer}>
                     <Pressable style={styles.button} onPress={showPreviousCard}>
-                        <Text style={styles.buttonText}>Previous card</Text>
+                        <AntDesign name="arrowleft" size={24} color="white" />
                     </Pressable>
                     <Pressable style={styles.button} onPress={() => navigation.navigate('main')}>
-                        <Text style={styles.buttonText}>End</Text>
+                        <Text style={styles.buttonText}>Закінчити</Text>
                     </Pressable>
                     <Pressable style={styles.button} onPress={showNextCard}>
-                        <Text style={styles.buttonText}>Next card</Text>
+                        <AntDesign name="arrowright" size={24} color="white" />
                     </Pressable>
                 </View>
             </View>
@@ -98,13 +110,24 @@ const StudyScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    cardContainer: {
-        flex: 1,
-        justifyContent: 'center', // Center vertically
-        alignItems: 'center', // Center horizontally
-    },
     container: {
         flex: 1,
+        backgroundColor: '#f0f0f0',
+    },
+    centeredContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+    cardContainer: {
+        marginVertical: 20,
+        // height: '100%', // Remove this line
+        flex: 1, // Add this line to allow the cardContainer to take the available height
+    },
+    cardCount: {
+        fontSize: 18,
+        marginBottom: 10,
     },
     card: {
         borderWidth: 1,
@@ -115,13 +138,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
         marginBottom: 20,
+        width: CARD_WIDTH, // Add this line to ensure the card has a fixed width
+
     },
     cardText: {
         fontSize: 20,
         fontWeight: 'bold',
     },
     cardDescription: {
-        fontSize: 15
+        fontSize: 15,
     },
     pressableContainer: {
         flexDirection: 'row',
@@ -134,6 +159,10 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingVertical: 10,
         paddingHorizontal: 20,
+        marginHorizontal: 10,
+    },
+    disabledButton:{
+        backgroundColor: '#808284',
     },
     buttonText: {
         color: '#fff',

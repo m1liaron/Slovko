@@ -10,7 +10,7 @@ const CardItem = ({ item, onRemove }) => {
 
         try {
             setIsPlaying(!isPlaying)
-            await sound.loadAsync({ uri: 'http://ssl.gstatic.com/dictionary/static/sounds/20200429/hello--_gb_1.mp3' });
+            await sound.loadAsync({ uri: item.audioUrl });
 
             sound.setOnPlaybackStatusUpdate((status) => {
                 if (status.didJustFinish) {
@@ -37,8 +37,9 @@ const CardItem = ({ item, onRemove }) => {
                 </View>
                 <Entypo name="cross" onPress={onRemove} size={24} color="black" />
             </View>
-
-            <Text style={styles.translate}>{item.translate}</Text>
+            <Text style={styles.translate}>{item.transcription}</Text>
+            <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translate}</Text></Text>
+            <Text style={styles.translate}>Пояснення: {item.definition}</Text>
         </View>
     );
 };
