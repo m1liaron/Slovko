@@ -1,0 +1,183 @@
+import React, {useEffect, useState} from 'react';
+import { View, Text, StyleSheet, FlatList, Pressable, Dimensions } from 'react-native';
+import { useSelector } from "react-redux";
+import { selectCard } from "../redux/cardSlice";
+import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AntDesign } from '@expo/vector-icons';
+const QuizScreen = () => {
+    const cardData = useSelector(selectCard);
+    const [displayedIndex, setDisplayedIndex] = useState(0);
+    const [quizOptions, setQuizOptions] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(null)
+    const [selectedOption, setSelectedOption] = useState('')
+
+    const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
+    const navigation = useNavigation()
+
+    useEffect(() => {
+        generateQuizOption();
+    }, [])
+
+    const generateQuizOption = () => {
+        const correctOption = cardData[displayedIndex].translate;
+
+        const allOptions = shuffleArray([
+            { text: correctOption, isCorrect: true },
+            ...getIncorrectOptions(),
+        ]);
+
+        setQuizOptions(allOptions);
+    }
+
+    const getIncorrectOptions = () => {
+        const incorrectOptions = cardData
+                .filter((item, index) => index !== displayedIndex)
+                .map(item => ({text: item.translate, isCorrect: false}));
+        return shuffleArray(incorrectOptions).slice(0, 3);
+    }
+
+    const getRandomOptions = (options, count) => {
+        const shuffledOptions = shuffleArray(options);
+        return shuffledOptions.slice(0, count);
+    }
+
+    const shuffleArray = (array) => {
+        const shuffledArray = [...array]; // Копіює масив
+        for(let i = shuffledArray.length - 1; i > 0; i--){ // цикл від кінця до початку
+            const j = Math.floor(Math.random() * (i + 1));  // отримання випадкогового числ
+            // Ліва частина виразу [shuffledArray[i], shuffledArray[j]]: Це створення масиву з двох елементів - елемента, який знаходиться на позиції i у shuffledArray, та елемента, який знаходиться на позиції j у shuffledArray.
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
+            // Права частина виразу [shuffledArray[j], shuffledArray[i]]: Це створення іншого масиву, але з оберненим порядком елементів - елемента на позиції j тепер стоїть на місці i, і навпаки.
+        }
+        return shuffledArray;
+
+    }
+
+    const showNextCard = () => {
+        if (displayedIndex < cardData.length - 1) {
+            setTimeout(() => {
+                setDisplayedIndex(displayedIndex + 1);
+            }, 2000)
+        }
+    }
+
+    const handleOptionPress = (newSelectedOption) => {
+        const correctedOption = cardData[displayedIndex].translate;
+        setSelectedOption(newSelectedOption)
+
+        if(newSelectedOption.text === correctedOption){
+            console.log('Correct!');
+            setIsCorrect(true)
+            showNextCard()
+            if(displayedIndex < cardData.length - 1){
+                setTimeout(() => {
+                    setSelectedOption(null)
+                    generateQuizOption()
+                }, 2000)
+            } else {
+                navigation.navigate('main')
+            }
+        } else {
+            console.log('Incorrect')
+            setTimeout(() => {
+                setSelectedOption(null)
+            }, 1000)
+            setIsCorrect(false)
+        }
+    }
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
+            <FlatList
+                data={showingCard}
+                maxToRenderPerBatch={1}
+                renderItem={({ item, index }) => (
+                    <Pressable style={styles.card}>
+                            <Text style={styles.cardText}>{item.title}</Text>
+                    </Pressable>
+                )}
+                keyExtractor={(item, index) => index.toString()}
+            />
+                <FlatList
+                    data={quizOptions}
+                    renderItem={({ item }) => (
+                        <Pressable
+                        style={[
+                            styles.optionContainer,
+                            {
+                                backgroundColor:
+                                    selectedOption === item
+                                        ? isCorrect === true
+                                            ? '#a1dc93'
+                                            : isCorrect === false
+                                                ? '#df5151'
+                                                : '#8e8e8e'
+                                        : '#8e8e8e',
+                            },
+                        ]} onPress={() => handleOptionPress(item)}>
+                            <Text>{item.text}</Text>
+                        </Pressable>
+                    )}
+                    style={styles.listContainer}
+                    keyExtractor={(item, index) => index.toString()}
+                />
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#ffffff',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    cardCount: {
+        fontSize: 18,
+        marginBottom: 10,
+    },
+    card: {
+        borderWidth: 1,
+        borderColor: '#000000',
+        borderRadius: 8,
+        padding: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        marginBottom: 20,
+        width: Dimensions.get('window').width - 40, // Adjust the width as needed
+    },
+    cardText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    cardDescription: {
+        fontSize: 15,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginHorizontal: 10,
+    },
+    listContainer:{
+    },
+    optionContainer:{
+        backgroundColor:'#8e8e8e',
+        padding:20,
+        borderRadius:5,
+        marginTop:10,
+        width:200,
+        alignItems:'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+});
+
+export default QuizScreen;
