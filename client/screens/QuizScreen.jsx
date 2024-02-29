@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable, Dimensions } from 'react-native';
 import { useSelector } from "react-redux";
 import { selectCard } from "../redux/cardSlice";
@@ -9,13 +9,32 @@ const QuizScreen = () => {
     const cardData = useSelector(selectCard);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(null)
+    const [selectedOption, setSelectedOption] = useState('')
 
     const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
+    const navigation = useNavigation()
 
+    useEffect(() => {
+        generateQuizOption();
+    }, [])
 
     const generateQuizOption = () => {
-        const correctOption = cardData[displayedIndex].title;
-        // const incorctOption =
+        const correctOption = cardData[displayedIndex].translate;
+
+        const allOptions = shuffleArray([
+            { text: correctOption, isCorrect: true },
+            ...getIncorrectOptions(),
+        ]);
+
+        setQuizOptions(allOptions);
+    }
+
+    const getIncorrectOptions = () => {
+        const incorrectOptions = cardData
+                .filter((item, index) => index !== displayedIndex)
+                .map(item => ({text: item.translate, isCorrect: false}));
+        return shuffleArray(incorrectOptions).slice(0, 3);
     }
 
     const getRandomOptions = (options, count) => {
@@ -35,9 +54,42 @@ const QuizScreen = () => {
 
     }
 
+    const showNextCard = () => {
+        if (displayedIndex < cardData.length - 1) {
+            setTimeout(() => {
+                setDisplayedIndex(displayedIndex + 1);
+            }, 2000)
+        }
+    }
+
+    const handleOptionPress = (newSelectedOption) => {
+        const correctedOption = cardData[displayedIndex].translate;
+        setSelectedOption(newSelectedOption)
+
+        if(newSelectedOption.text === correctedOption){
+            console.log('Correct!');
+            setIsCorrect(true)
+            showNextCard()
+            if(displayedIndex < cardData.length - 1){
+                setTimeout(() => {
+                    setSelectedOption(null)
+                    generateQuizOption()
+                }, 2000)
+            } else {
+                navigation.navigate('main')
+            }
+        } else {
+            console.log('Incorrect')
+            setTimeout(() => {
+                setSelectedOption(null)
+            }, 1000)
+            setIsCorrect(false)
+        }
+    }
 
     return (
         <SafeAreaView style={styles.container}>
+            <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
             <FlatList
                 data={showingCard}
                 maxToRenderPerBatch={1}
@@ -48,9 +100,29 @@ const QuizScreen = () => {
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
-            <View>
-
-            </View>
+                <FlatList
+                    data={quizOptions}
+                    renderItem={({ item }) => (
+                        <Pressable
+                        style={[
+                            styles.optionContainer,
+                            {
+                                backgroundColor:
+                                    selectedOption === item
+                                        ? isCorrect === true
+                                            ? '#a1dc93'
+                                            : isCorrect === false
+                                                ? '#df5151'
+                                                : '#8e8e8e'
+                                        : '#8e8e8e',
+                            },
+                        ]} onPress={() => handleOptionPress(item)}>
+                            <Text>{item.text}</Text>
+                        </Pressable>
+                    )}
+                    style={styles.listContainer}
+                    keyExtractor={(item, index) => index.toString()}
+                />
         </SafeAreaView>
     );
 };
@@ -90,6 +162,16 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         marginHorizontal: 10,
+    },
+    listContainer:{
+    },
+    optionContainer:{
+        backgroundColor:'#8e8e8e',
+        padding:20,
+        borderRadius:5,
+        marginTop:10,
+        width:200,
+        alignItems:'center',
     },
     buttonText: {
         color: '#fff',
