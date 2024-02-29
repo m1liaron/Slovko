@@ -51,3 +51,4 @@ def update_card():
 @app.delete()
 def delete_card():
     return {'card': None}
+

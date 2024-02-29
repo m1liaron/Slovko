@@ -18,3 +18,4 @@ class FreeDictApi:
     def get_explanation(self, word: str) -> dict:
         response = requests.get(self.api_url + word)
         return response.json()
+
