@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable, Dimensions } from 'react-native';
-import { useSelector } from "react-redux";
-import { selectCard } from "../redux/cardSlice";
+import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert} from 'react-native';
+import {useDispatch, useSelector} from "react-redux";
+import { selectCard, shuffleCards } from "../redux/cardSlice";
 import Animated, {
     useAnimatedStyle,
     useSharedValue,
@@ -16,10 +16,12 @@ const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width d
 
 const StudyScreen = () => {
     const cardData = useSelector(selectCard);
+    const [learnedCards, setLearnedCards] = useState([]);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false)
 
+    const dispatch = useDispatch()
     const navigation = useNavigation()
     const rotation = useSharedValue(0);
 
@@ -63,6 +65,28 @@ const StudyScreen = () => {
         }
     }
 
+    const leaveStudy = () => {
+        Alert.alert(
+            'Ви впевнені що хочете вийти?',
+            '',
+            [
+                {
+                    text: 'Вийти',
+                    onPress: () => {
+                        dispatch(shuffleCards())
+                        navigation.navigate('main');
+                    },
+                },
+                {
+                    text: 'Скасувати',
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false }
+        );
+    }
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.centeredContainer}>
@@ -97,7 +121,7 @@ const StudyScreen = () => {
                     <Pressable style={styles.button} onPress={showPreviousCard}>
                         <AntDesign name="arrowleft" size={24} color="white" />
                     </Pressable>
-                    <Pressable style={styles.button} onPress={() => navigation.navigate('main')}>
+                    <Pressable style={styles.button} onPress={leaveStudy}>
                         <Text style={styles.buttonText}>Закінчити</Text>
                     </Pressable>
                     <Pressable style={styles.button} onPress={showNextCard}>

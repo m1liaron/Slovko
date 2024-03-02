@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, FlatList, Pressable, Dimensions } from 'react-native';
-import { useSelector } from "react-redux";
-import { selectCard } from "../redux/cardSlice";
+import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert} from 'react-native';
+import {useDispatch, useSelector} from "react-redux";
+import { selectCard, shuffleCards } from "../redux/cardSlice";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import {Audio} from "expo-av";
 const QuizScreen = () => {
     const cardData = useSelector(selectCard);
     const [displayedIndex, setDisplayedIndex] = useState(0);
@@ -13,6 +14,7 @@ const QuizScreen = () => {
     const [selectedOption, setSelectedOption] = useState('')
 
     const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
+    const dispatch = useDispatch()
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -62,13 +64,24 @@ const QuizScreen = () => {
         }
     }
 
-    const handleOptionPress = (newSelectedOption) => {
+    const handleOptionPress = async (newSelectedOption) => {
         const correctedOption = cardData[displayedIndex].translate;
         setSelectedOption(newSelectedOption)
 
         if(newSelectedOption.text === correctedOption){
             console.log('Correct!');
             setIsCorrect(true)
+
+            try {
+                const { sound } = await Audio.Sound.createAsync(
+                    require('../assets/audio/success.mp3'),
+                { positionMillis: 0, durationMillis: 2000 }
+                );
+                await sound.playAsync();
+            } catch (error) {
+                console.error('Error playing sound', error);
+            }
+
             showNextCard()
             if(displayedIndex < cardData.length - 1){
                 setTimeout(() => {
@@ -76,7 +89,10 @@ const QuizScreen = () => {
                     generateQuizOption()
                 }, 2000)
             } else {
-                navigation.navigate('main')
+                setTimeout(() => {
+                    dispatch(shuffleCards())
+                    navigation.navigate('main')
+                }, 2000)
             }
         } else {
             console.log('Incorrect')
@@ -87,9 +103,33 @@ const QuizScreen = () => {
         }
     }
 
+const leaveStudy = () => {
+        Alert.alert(
+            'Ви впевнені що хочете вийти?',
+            '',
+            [
+                {
+                    text: 'Вийти',
+                    onPress: () => {
+                        dispatch(shuffleCards())
+                        navigation.navigate('main');
+                    },
+                },
+                {
+                    text: 'Скасувати',
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false }
+        );
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
+            <View style={styles.crossIcon}>
+                <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
+            </View>
             <FlatList
                 data={showingCard}
                 maxToRenderPerBatch={1}
@@ -114,7 +154,7 @@ const QuizScreen = () => {
                                             : isCorrect === false
                                                 ? '#df5151'
                                                 : '#8e8e8e'
-                                        : '#8e8e8e',
+                                        : '#d0d0d0',
                             },
                         ]} onPress={() => handleOptionPress(item)}>
                             <Text>{item.text}</Text>
@@ -133,10 +173,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         justifyContent: 'center',
         alignItems: 'center',
+        padding:20
     },
     cardCount: {
         fontSize: 18,
-        marginBottom: 10,
     },
     card: {
         borderWidth: 1,
@@ -146,7 +186,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
-        marginBottom: 20,
         width: Dimensions.get('window').width - 40, // Adjust the width as needed
     },
     cardText: {
@@ -165,13 +204,21 @@ const styles = StyleSheet.create({
     },
     listContainer:{
     },
+    crossIcon: {
+        flexDirection: 'row', // Enable horizontal layout
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%', // Ensure the container takes the full width
+        paddingHorizontal: 20, // Add padding for better spacing
+    },
     optionContainer:{
-        backgroundColor:'#8e8e8e',
+        backgroundColor:'#b4b4b4',
         padding:20,
         borderRadius:5,
         marginTop:10,
         width:200,
         alignItems:'center',
+        color:'#fff'
     },
     buttonText: {
         color: '#fff',

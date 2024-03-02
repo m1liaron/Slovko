@@ -50,21 +50,8 @@ const CardList = () => {
 
     return (
         <View style={styles.container}>
+
             <View style={styles.formContainer}>
-                <View style={styles.flex}>
-                    <Pressable onPress={() => navigateTo('study')} style={styles.button}>
-                        <Text style={styles.buttonText}>Картки</Text>
-                    </Pressable>
-
-                    <Pressable onPress={() => navigateTo('quiz')} style={styles.button}>
-                        <Text style={styles.buttonText}>Вікторина</Text>
-                    </Pressable>
-
-                    <Pressable onPress={() => navigateTo('sentence')} style={styles.button}>
-                        <Text style={styles.buttonText}>Речення</Text>
-                    </Pressable>
-                </View>
-
                 <Text style={styles.title}>Англійською</Text>
                 <TextInput
                     value={value}
@@ -94,6 +81,21 @@ const CardList = () => {
                 keyExtractor={(item, index) => index.toString()}
                 style={styles.listContainer}
             />
+            <View style={styles.formContainer}>
+            <View style={styles.flex}>
+                <Pressable onPress={() => navigateTo('study')} style={styles.button}>
+                    <Text style={styles.buttonText}>Картки</Text>
+                </Pressable>
+
+                <Pressable onPress={() => navigateTo('quiz')} style={styles.button}>
+                    <Text style={styles.buttonText}>Вікторина</Text>
+                </Pressable>
+
+                <Pressable onPress={() => navigateTo('sentence')} style={styles.button}>
+                    <Text style={styles.buttonText}>Речення</Text>
+                </Pressable>
+            </View>
+        </View>
         </View>
     );
 };

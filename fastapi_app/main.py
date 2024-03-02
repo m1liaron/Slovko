@@ -1,8 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from translation_api import GoogleApi, FreeDictApi
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 
+# Налаштування CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8081"],  # Додайте сюди дозволені домени
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class TranslateWord(BaseModel):
     title: str

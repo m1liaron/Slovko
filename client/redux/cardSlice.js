@@ -45,13 +45,25 @@ const cardSlice = createSlice({
         removeCard: (state, action) => {
             state.cards = state.cards.filter(item => item.id !== action.payload)
         },
+        shuffleCards: (state) => {
+            state.cards = shuffleArray(state.cards);
+        },
         updateCard: (state, action) => {
 
         }
     }
 })
 
-export const {addCard, removeCard} = cardSlice.actions;
+const shuffleArray = (array) => {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+};
+
+export const {addCard, removeCard,shuffleCards} = cardSlice.actions;
 
 export const selectCard = (state) => state.card.cards;
 
