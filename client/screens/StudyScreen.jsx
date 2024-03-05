@@ -49,10 +49,10 @@ const StudyScreen = () => {
         };
     });
 
-    const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
+    const showingCard = cardData.cards.slice(displayedIndex, displayedIndex + 1);
 
     const showNextCard = () => {
-        if (displayedIndex < cardData.length - 1) {
+        if (displayedIndex < cardData.cards.length - 1) {
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0; // Reset rotation when showing the next card
         }
@@ -90,14 +90,14 @@ const StudyScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.centeredContainer}>
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.cards.length}</Text>
                 <FlatList
                     data={showingCard}
                     maxToRenderPerBatch={1}
                     renderItem={({ item, index }) => (
                         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
                             <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
-                                <Text style={styles.cardText}>{item.title}</Text>
+                                <Text style={styles.cardText}>{item[0]}</Text>
                                 <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
 
                                 <Pressable onPress={() => setShowDefinition(!showDefinition)}>
@@ -105,13 +105,13 @@ const StudyScreen = () => {
                                 </Pressable>
                                 {showDefinition ? (
                                     <View>
-                                        <Text>{item.definition}</Text>
+                                        <Text>{item[2]}</Text>
                                     </View>
                                 ) : null}
 
                             </Animated.View>
                             <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
-                                <Text style={styles.cardText}>{item.translate}</Text>
+                                <Text style={styles.cardText}>{item[1]}</Text>
                             </Animated.View>
                         </Pressable>
                     )}

@@ -10,7 +10,7 @@ const CardItem = ({ item, onRemove }) => {
 
         try {
             setIsPlaying(!isPlaying)
-            await sound.loadAsync({ uri: item.audioUrl });
+            await sound.loadAsync({ uri: item[4] });
 
             sound.setOnPlaybackStatusUpdate((status) => {
                 if (status.didJustFinish) {
@@ -30,7 +30,7 @@ const CardItem = ({ item, onRemove }) => {
         <View style={styles.cardContainer}>
             <View style={styles.titleContainer}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.title}>{item[0]}</Text>
                     <Pressable onPress={playUrl} >
                         <FontAwesome name="file-audio-o" size={30} color={isPlaying ? "red" : "black"} />
                     </Pressable>
@@ -38,8 +38,8 @@ const CardItem = ({ item, onRemove }) => {
                 <Entypo name="cross" onPress={onRemove} size={24} color="black" />
             </View>
             <Text style={styles.translate}>{item.transcription}</Text>
-            <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translate}</Text></Text>
-            <Text style={styles.translate}>Пояснення: {item.definition}</Text>
+            <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item[1]}</Text></Text>
+            <Text style={styles.translate}>Пояснення: {item[2]}</Text>
         </View>
     );
 };
