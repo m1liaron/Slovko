@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert, Platform} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 import { selectCard, shuffleCards } from "../redux/cardSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -13,16 +13,16 @@ const QuizScreen = () => {
     const [isCorrect, setIsCorrect] = useState(null)
     const [selectedOption, setSelectedOption] = useState('')
 
-    const showingCard = cardData.cards.slice(displayedIndex, displayedIndex + 1);
+    const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
     useEffect(() => {
-        generateQuizOption();
-    }, [])
+        generateQuizOption(displayedIndex);
+    }, [displayedIndex])
 
-    const generateQuizOption = () => {
-        const correctOption = cardData.cards[displayedIndex][1];
+    const generateQuizOption = (index) => {
+        const correctOption = cardData[index][1];
 
         const allOptions = shuffleArray([
             { text: correctOption, isCorrect: true },
@@ -33,15 +33,10 @@ const QuizScreen = () => {
     }
 
     const getIncorrectOptions = () => {
-        const incorrectOptions = cardData.cards
+        const incorrectOptions = cardData
                 .filter((item, index) => index !== displayedIndex)
                 .map(item => ({text: item[1], isCorrect: false}));
         return shuffleArray(incorrectOptions).slice(0, 3);
-    }
-
-    const getRandomOptions = (options, count) => {
-        const shuffledOptions = shuffleArray(options);
-        return shuffledOptions.slice(0, count);
     }
 
     const shuffleArray = (array) => {
@@ -57,7 +52,7 @@ const QuizScreen = () => {
     }
 
     const showNextCard = () => {
-        if (displayedIndex < cardData.cards.length - 1) {
+        if (displayedIndex < cardData.length - 1) {
             setTimeout(() => {
                 setDisplayedIndex(displayedIndex + 1);
             }, 2000)
@@ -65,12 +60,15 @@ const QuizScreen = () => {
     }
 
     const handleOptionPress = async (newSelectedOption) => {
-        const correctedOption = cardData.cards[displayedIndex][1];
+        const correctedOption = cardData[displayedIndex][1];
         setSelectedOption(newSelectedOption)
 
         if(newSelectedOption.text === correctedOption){
             console.log('Correct!');
             setIsCorrect(true)
+            setTimeout(() => {
+                setSelectedOption(null)
+            }, 2000)
 
             try {
                 const { sound } = await Audio.Sound.createAsync(
@@ -82,18 +80,20 @@ const QuizScreen = () => {
                 console.error('Error playing sound', error);
             }
 
-            showNextCard()
-            // if(displayedIndex < cardData.length - 1){
-            //     setTimeout(() => {
-            //         setSelectedOption(null)
-            //         generateQuizOption()
-            //     }, 2000)
-            // } else {
-            //     setTimeout(() => {
-            //         // dispatch(shuffleCards())
-            //         navigation.navigate('main')
-            //     }, 2000)
-            // }
+                showNextCard()
+            setTimeout(() => {
+                generateQuizOption()
+            }, 2000)
+            if(displayedIndex < cardData.length - 1){
+                setTimeout(() => {
+                    setSelectedOption(null)
+                    generateQuizOption()
+                }, 2000)
+            } else {
+                setTimeout(() => {
+                    navigation.navigate('main')
+                }, 2000)
+            }
         } else {
             console.log('Incorrect')
             setTimeout(() => {
@@ -104,6 +104,12 @@ const QuizScreen = () => {
     }
 
 const leaveStudy = () => {
+        if(Platform.OS === 'web'){
+            const request = window.confirm('Ви впевнені що хочете вийти?')
+            if(request){
+                navigation.navigate('main');
+            }
+        }
         Alert.alert(
             'Ви впевнені що хочете вийти?',
             '',
@@ -128,7 +134,7 @@ const leaveStudy = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.crossIcon}>
                 <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.cards.length}</Text>
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
             </View>
             <FlatList
                 data={showingCard}

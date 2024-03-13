@@ -11,15 +11,16 @@ import Animated, {
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from '@expo/vector-icons';
+import { RectButton, Swipeable } from 'react-native-gesture-handler';
 
 const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width dynamically based on screen width
 
 const StudyScreen = () => {
     const cardData = useSelector(selectCard);
-    const [learnedCards, setLearnedCards] = useState([]);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
-    const [showDefinition, setShowDefinition] = useState(false)
+    const [showDefinition, setShowDefinition] = useState(false);
+    const [learnedCards, setLearnedCards] = useState([]);
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -49,10 +50,10 @@ const StudyScreen = () => {
         };
     });
 
-    const showingCard = cardData.cards.slice(displayedIndex, displayedIndex + 1);
+    const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
 
     const showNextCard = () => {
-        if (displayedIndex < cardData.cards.length - 1) {
+        if (displayedIndex < cardData.length - 1) {
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0; // Reset rotation when showing the next card
         }
@@ -86,37 +87,75 @@ const StudyScreen = () => {
         );
     }
 
+    const saveCardToLearned = (answer) => {
+        const currentCard = cardData.filter((item, index) => index === displayedIndex).map(item => item);
+        const updatedCard = [...currentCard[0], answer]; // Add "know" to the array
+        setLearnedCards(prevState => [...prevState, updatedCard]);
+        console.log('Saved card', updatedCard);
+    }
+
+    const handleSwipeRight = () => {
+        saveCardToLearned('know')
+        showNextCard()
+    }
+
+    const handleSwipeLeft = () => {
+        saveCardToLearned('unknown')
+        showNextCard();
+    };
+
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.centeredContainer}>
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.cards.length}</Text>
-                <FlatList
-                    data={showingCard}
-                    maxToRenderPerBatch={1}
-                    renderItem={({ item, index }) => (
-                        <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
-                            <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
-                                <Text style={styles.cardText}>{item[0]}</Text>
-                                <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
 
-                                <Pressable onPress={() => setShowDefinition(!showDefinition)}>
-                                    <AntDesign name="questioncircleo" size={24} color="black" />
-                                </Pressable>
-                                {showDefinition ? (
-                                    <View>
-                                        <Text>{item[2]}</Text>
-                                    </View>
-                                ) : null}
-
-                            </Animated.View>
-                            <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
-                                <Text style={styles.cardText}>{item[1]}</Text>
-                            </Animated.View>
-                        </Pressable>
+                <Swipeable
+                    containerStyle={styles.swipeableContainer}
+                    renderRightActions={() => (
+                        <RectButton style={styles.rightAction}>
+                            <Text style={styles.rightActionText}>Знаю</Text>
+                        </RectButton>
                     )}
-                    keyExtractor={(item, index) => index.toString()}
-                />
+                    renderLeftActions={() => (
+                        <RectButton style={styles.leftAction}>
+                            <Text style={styles.leftActionText}>Не знаю</Text>
+                        </RectButton>
+                    )}
+                    overshootRight={false} // Disable overshooting right
+                    overshootLeft={false} // Disable overshooting left
+                    onSwipeableRightOpen={handleSwipeRight}
+                    onSwipeableLeftOpen={handleSwipeLeft}
+                >
+                    <FlatList
+                        data={showingCard}
+                        maxToRenderPerBatch={1}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item, index }) => (
+                            <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
+                                <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
+                                    <Text style={styles.cardText}>{item[0]}</Text>
+                                    <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
+
+                                    <Pressable onPress={() => setShowDefinition(!showDefinition)}>
+                                        <AntDesign name="questioncircleo" size={24} color="black" />
+                                    </Pressable>
+                                    {showDefinition ? (
+                                        <View>
+                                            <Text>{item[3]}</Text>
+                                        </View>
+                                    ) : null}
+
+                                </Animated.View>
+                                <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
+                                    <Text style={styles.cardText}>{item[1]}</Text>
+                                </Animated.View>
+                            </Pressable>
+                        )}
+                    />
+                </Swipeable>
+
+
                 <View style={styles.pressableContainer}>
                     <Pressable style={styles.button} onPress={showPreviousCard}>
                         <AntDesign name="arrowleft" size={24} color="white" />
@@ -135,18 +174,16 @@ const StudyScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#f0f0f0',
     },
     centeredContainer: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 20,
     },
     cardContainer: {
         marginVertical: 20,
-        // height: '100%', // Remove this line
+        width: CARD_WIDTH, // Add this line to ensure the card has a fixed width
         flex: 1, // Add this line to allow the cardContainer to take the available height
     },
     cardCount: {
@@ -162,8 +199,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
         marginBottom: 20,
-        width: CARD_WIDTH, // Add this line to ensure the card has a fixed width
-
+        height:200
     },
     cardText: {
         fontSize: 20,
@@ -192,6 +228,34 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 16,
+    },
+
+    swipeableContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    rightAction: {
+        backgroundColor: '#28a745',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 15,
+    },
+    leftAction: {
+        backgroundColor: '#dc3545',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 15,
+    },
+    rightActionText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    leftActionText: {
+        color: '#fff',
+        fontWeight: 'bold',
     },
 });
 

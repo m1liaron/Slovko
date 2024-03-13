@@ -1,36 +1,48 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const fetchCards = createAsyncThunk('card/fetchCards', async() => {
     try{
-        const response = await fetch('http://localhost:8000/cards');
-        const data = await response.json();
-        // console.log(data)
-        return data
+        const response = await axios.get('http://192.168.31.196:8000/cards');
+        return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
         throw error;
     }
 })
 
+export const addCard = createAsyncThunk('card/addCard', async(data) => {
+    try{
+        const response = await axios.post('http://192.168.31.196:8081/add_card', data)
+        console.log(response.data)
+        return response.data
+    } catch (error){
+        console.error('Error fetching cards:', error);
+        throw error;
+    }
+})
+
+
 const cardSlice = createSlice({
     name:'card',
     initialState: {
-        cards: [],
+        cards: [
+            ["hello", "привіт", "həˈloʊ", "a common greeting or expression of welcome"],
+            ["world", "світ", "wɜrld", "the earth, together with all of its countries, peoples, and natural features"],
+            ["apple", "яблуко", "ˈæpəl", "a round fruit with red or green skin and a whitish interior"],
+            ["house", "будинок", "haʊs", "a building for human habitation, especially one that is lived in by a family or small group of people"],
+            ["cat", "кіт", "kæt", "a small domesticated carnivorous mammal with soft fur, a short snout, and retractile claws"]
+        ]
+        ,
         status:'idle',
         error: null
     },
     reducers:{
-        addCard: (state, action) => {
-            state.cards = [...state.cards, action.payload]
-        },
         removeCard: (state, action) => {
             state.cards = state.cards.filter((item, index) => index !== action.payload)
         },
         shuffleCards: (state) => {
             state.cards = shuffleArray(state.cards);
-        },
-        updateCard: (state, action) => {
-
         }
     },
     extraReducers: (builder) => {
@@ -45,7 +57,11 @@ const cardSlice = createSlice({
             .addCase(fetchCards.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
-        });
+            })
+            .addCase(addCard.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.cards = action.payload
+            })
     }
 })
 
@@ -58,7 +74,7 @@ const shuffleArray = (array) => {
     return shuffledArray;
 };
 
-export const {addCard, removeCard,shuffleCards} = cardSlice.actions;
+export const {removeCard,shuffleCards} = cardSlice.actions;
 
 export const selectCard = (state) => state.card.cards;
 

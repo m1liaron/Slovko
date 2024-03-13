@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
 import {addUser, selectUser} from "../redux/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const GreetingScreen = () => {
     const user = useSelector(selectUser);
     const [name, setName] = useState('');
@@ -11,9 +11,11 @@ const GreetingScreen = () => {
     const navigation = useNavigation()
     const dispatch = useDispatch();
 
-    const handlePress = () => {
+    const handlePress = async () => {
         if(name.length > 0){
             try{
+                AsyncStorage.setItem('token',name)
+                console.log('The name is', name)
                 dispatch(addUser(name))
                 navigation.navigate('main')
             } catch (error) {

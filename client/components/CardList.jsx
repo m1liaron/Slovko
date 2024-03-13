@@ -4,7 +4,6 @@ import {
     Text,
     StyleSheet,
     FlatList,
-    Button,
     TextInput,
     Pressable,
     Alert,
@@ -16,22 +15,22 @@ import { v4 as uuid } from 'uuid';
 import { useNavigation } from '@react-navigation/native';
 import useFetch from "../hooks/useFetch";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CardList = () => {
     const cardData = useSelector(selectCard);
     const [value, setValue] = useState('');
-    const [translate, setTranslate] = useState('');
     const navigation = useNavigation();
 
     const dispatch = useDispatch();
 
     const {loading, error, request} = useFetch
 
-    useEffect(() => {
-        dispatch(fetchCards())
-    }, [])
+    // useEffect(() => {
+    //     dispatch(fetchCards())
+    // }, [])
 
-    console.log(cardData.cards)
+
     const onSaveCard = async () => {
             const cardData = {
                 word: value,
@@ -39,27 +38,17 @@ const CardList = () => {
                 id: uuid(),
             };
 
-    try{
-        await  axios.post('http://localhost:8000/add_card', cardData)
-            .then(response => {
-                console.log(response)
-                dispatch(addCard(response.data));
-                setValue('');
-                setTranslate('');
-            })
-            } catch (error1){
-                console.log(error)
-            }
+        dispatch(addCard(cardData));
+        setValue('');
     };
 
     const onRemoveCard = async (index, word) => {
         try{
-            await  axios.delete(`http://localhost:8000/card/${word}`)
+            await  axios.delete(`http://192.168.31.196:8000/card/${word}`)
                 .then(response => {
                     console.log(response)
                     dispatch(removeCard(index));
                     setValue('');
-                    setTranslate('');
                 })
         } catch (error1){
             console.log(error)
@@ -67,7 +56,7 @@ const CardList = () => {
     };
 
     const navigateTo = (name) => {
-        if (cardData.cards.length > 1) {
+        if (cardData.length > 1) {
             navigation.navigate(name);
         } else {
             Alert.alert('Додайте як найменше 2 картки');
@@ -86,20 +75,13 @@ const CardList = () => {
                     placeholder="Введіть англійське слово"
                 />
 
-                <Text style={styles.title}>Українською</Text>
-                <TextInput
-                    value={translate}
-                    onChangeText={(text) => setTranslate(text)}
-                    style={styles.input}
-                    placeholder="Введіть переклад"
-                />
                 <Pressable onPress={onSaveCard} style={styles.button}>
                     <Text style={styles.buttonText}>Додати</Text>
                 </Pressable>
             </View>
 
             <FlatList
-                data={cardData.cards}
+                data={cardData}
                 renderItem={({ item, index }) => (
                     <CardItem item={item} onRemove={() => onRemoveCard(index, item.word)} />
                 )}
