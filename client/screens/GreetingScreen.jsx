@@ -15,7 +15,6 @@ const GreetingScreen = () => {
         if(name.length > 0){
             try{
                 AsyncStorage.setItem('token',name)
-                console.log('The name is', name)
                 dispatch(addUser(name))
                 navigation.navigate('main')
             } catch (error) {

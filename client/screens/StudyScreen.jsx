@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert, Platform} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 import { selectCard, shuffleCards } from "../redux/cardSlice";
 import Animated, {
@@ -54,8 +54,12 @@ const StudyScreen = () => {
 
     const showNextCard = () => {
         if (displayedIndex < cardData.length - 1) {
+            console.log('show next')
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0; // Reset rotation when showing the next card
+        } else if(displayedIndex >= cardData.length - 1) {
+            console.log('leaver')
+            leaveStudy()
         }
     }
 
@@ -67,25 +71,31 @@ const StudyScreen = () => {
     }
 
     const leaveStudy = () => {
-        Alert.alert(
-            'Ви впевнені що хочете вийти?',
-            '',
-            [
-                {
-                    text: 'Вийти',
-                    onPress: () => {
-                        dispatch(shuffleCards())
-                        navigation.navigate('main');
+        if(Platform.OS === 'web'){
+            const answer = window.confirm();
+            return answer ? navigation.navigate('main') : false
+        } else {
+            Alert.alert(
+                'Ви впевнені що хочете вийти?',
+                '',
+                [
+                    {
+                        text: 'Вийти',
+                        onPress: () => {
+                            dispatch(shuffleCards())
+                            navigation.navigate('main');
+                        },
                     },
-                },
-                {
-                    text: 'Скасувати',
-                    style: 'cancel',
-                },
-            ],
-            { cancelable: false }
-        );
+                    {
+                        text: 'Скасувати',
+                        style: 'cancel',
+                    },
+                ],
+                { cancelable: false }
+            );
+        }
     }
+    console.log("learnedCards", learnedCards)
 
     const saveCardToLearned = (answer) => {
         const currentCard = cardData.filter((item, index) => index === displayedIndex).map(item => item);
@@ -126,6 +136,7 @@ const StudyScreen = () => {
                     overshootLeft={false} // Disable overshooting left
                     onSwipeableRightOpen={handleSwipeRight}
                     onSwipeableLeftOpen={handleSwipeLeft}
+
                 >
                     <FlatList
                         data={showingCard}
@@ -156,17 +167,17 @@ const StudyScreen = () => {
                 </Swipeable>
 
 
-                <View style={styles.pressableContainer}>
-                    <Pressable style={styles.button} onPress={showPreviousCard}>
-                        <AntDesign name="arrowleft" size={24} color="white" />
-                    </Pressable>
-                    <Pressable style={styles.button} onPress={leaveStudy}>
-                        <Text style={styles.buttonText}>Закінчити</Text>
-                    </Pressable>
-                    <Pressable style={styles.button} onPress={showNextCard}>
-                        <AntDesign name="arrowright" size={24} color="white" />
-                    </Pressable>
-                </View>
+                {/*<View style={styles.pressableContainer}>*/}
+                {/*    <Pressable style={styles.button} onPress={showPreviousCard}>*/}
+                {/*        <AntDesign name="arrowleft" size={24} color="white" />*/}
+                {/*    </Pressable>*/}
+                {/*    <Pressable style={styles.button} onPress={leaveStudy}>*/}
+                {/*        <Text style={styles.buttonText}>Закінчити</Text>*/}
+                {/*    </Pressable>*/}
+                {/*    <Pressable style={styles.button} onPress={showNextCard}>*/}
+                {/*        <AntDesign name="arrowright" size={24} color="white" />*/}
+                {/*    </Pressable>*/}
+                {/*</View>*/}
             </View>
         </SafeAreaView>
     );

@@ -15,8 +15,10 @@ import { v4 as uuid } from 'uuid';
 import { useNavigation } from '@react-navigation/native';
 import useFetch from "../hooks/useFetch";
 import axios from "axios";
+import Toast from "react-native-toast-message";
+import BottomSheetComponent from "./BottomSheetComponent";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const CardList = () => {
     const cardData = useSelector(selectCard);
     const [value, setValue] = useState('');
@@ -24,18 +26,26 @@ const CardList = () => {
 
     const dispatch = useDispatch();
 
-    const {loading, error, request} = useFetch
 
-    // useEffect(() => {
-    //     dispatch(fetchCards())
-    // }, [])
+    useEffect(() => {
+        dispatch(fetchCards())
+    }, [])
 
+    const showToast = () => {
+        Toast.show({
+            type: 'success',
+            text1: 'Success',
+            text2:'Description'
+        });
+    }
 
     const onSaveCard = async () => {
+            const token = await AsyncStorage.getItem('token');
+            console.log(token);
             const cardData = {
                 word: value,
                 language: 'uk',
-                id: uuid(),
+                user: token
             };
 
         dispatch(addCard(cardData));
@@ -50,7 +60,7 @@ const CardList = () => {
                     dispatch(removeCard(index));
                     setValue('');
                 })
-        } catch (error1){
+        } catch (error){
             console.log(error)
         }
     };
@@ -65,9 +75,16 @@ const CardList = () => {
 
     return (
         <View style={styles.container}>
-
             <View style={styles.formContainer}>
                 <Text style={styles.title}>Англійською</Text>
+                <Toast
+                    position='top'
+                    style={{ borderLeftColor: 'pink' }}
+                    text1Style={{
+                        fontSize: 15,
+                        fontWeight: '400'
+                    }}
+                />
                 <TextInput
                     value={value}
                     onChangeText={(text) => setValue(text)}
@@ -79,6 +96,10 @@ const CardList = () => {
                     <Text style={styles.buttonText}>Додати</Text>
                 </Pressable>
             </View>
+
+            <Pressable onPress={showToast}>
+                <Text>Show Toast</Text>
+            </Pressable>
 
             <FlatList
                 data={cardData}
@@ -99,8 +120,8 @@ const CardList = () => {
                     <Text style={styles.buttonText}>Вікторина</Text>
                 </Pressable>
 
-                <Pressable onPress={() => navigateTo('sentence')} style={styles.button}>
-                    <Text style={styles.buttonText}>Речення</Text>
+                <Pressable onPress={() => navigateTo('word')} style={styles.button}>
+                    <Text style={styles.buttonText}>Слово</Text>
                 </Pressable>
             </View>
         </View>

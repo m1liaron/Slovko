@@ -1,3 +1,4 @@
+import "react-native-gesture-handler"
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from "react-redux";
@@ -6,7 +7,7 @@ import StudyScreen from "./screens/StudyScreen";
 import GreetingScreen from "./screens/GreetingScreen";
 import MainScreen from "./screens/MainScreen";
 import QuizScreen from "./screens/QuizScreen";
-import SentenceScreen from "./screens/SentenceScreen";
+import GuessWordScreen from "./screens/GuessWordScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -21,16 +22,15 @@ export default function App() {
                     <Stack.Screen name="home" component={GreetingScreen} />
                     <Stack.Screen name="main" component={MainScreen} />
                     <Stack.Screen name="quiz" component={QuizScreen} />
-                    <Stack.Screen name="sentence" component={SentenceScreen} />
+                    <Stack.Screen name="word" component={GuessWordScreen} />
                     {/* Wrap only StudyScreen with GestureHandlerRootView */}
-                    <Stack.Screen
-                        name="study"
-                        component={() => (
+                    <Stack.Screen name="study">
+                        {() => (
                             <GestureHandlerRootView>
                                 <StudyScreen />
                             </GestureHandlerRootView>
                         )}
-                    />
+                    </Stack.Screen>
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>

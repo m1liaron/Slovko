@@ -48,15 +48,14 @@ const styles = StyleSheet.create({
     cardContainer: {
         backgroundColor: '#ffffff',
         padding: 16,
-        marginBottom: 16,
         borderRadius: 8,
         borderWidth: 1,
         borderColor:'#000',
         shadowOpacity: 0.2,
         shadowRadius: 5, // Adjust the radius for iOS
-        width:Dimensions.get('window').width - 70,
+        width: '70%',
         height:Dimensions.get('window').height - 500,
-        marginHorizontal: 20
+        marginHorizontal:20
     },
     titleContainer:{
       flexDirection:'row',
