@@ -29,11 +29,26 @@ const cardSlice = createSlice({
     name:'card',
     initialState: {
         cards: [
-            // ["hello", "привіт", "həˈloʊ", "a common greeting or expression of welcome"],
-            // ["world", "світ", "wɜrld", "the earth, together with all of its countries, peoples, and natural features"],
-            // ["apple", "яблуко", "ˈæpəl", "a round fruit with red or green skin and a whitish interior"],
-            // ["house", "будинок", "haʊs", "a building for human habitation, especially one that is lived in by a family or small group of people"],
-            // ["cat", "кіт", "kæt", "a small domesticated carnivorous mammal with soft fur, a short snout, and retractile claws"]
+            {data:
+                ["hello", "привіт", "həˈloʊ", "a common greeting or expression of welcome"],
+                groupId: 1
+            },
+            {
+                data: ["world", "світ", "wɜrld", "the earth, together with all of its countries, peoples, and natural features"],
+                groupId: 2
+            },
+            {
+                data: ["apple", "яблуко", "ˈæpəl", "a round fruit with red or green skin and a whitish interior"],
+                groupId: 3
+            },
+            {
+                data: ["house", "будинок", "haʊs", "a building for human habitation, especially one that is lived in by a family or small group of people"],
+                groupId: 4
+            },
+            {
+                data: ["cat", "кіт", "kæt", "a small domesticated carnivorous mammal with soft fur, a short snout, and retractile claws"],
+                groupId: 5
+            },
         ]
         ,
         status:'idle',

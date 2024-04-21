@@ -9,35 +9,55 @@ import {
     Alert,
 } from 'react-native';
 import CardItem from './CardItem';
-import {addCard, fetchCards, removeCard, selectCard} from '../redux/cardSlice';
+import {addCard, fetchCards, removeCard, selectCard} from '../../redux/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { v4 as uuid } from 'uuid';
 import { useNavigation } from '@react-navigation/native';
-import useFetch from "../hooks/useFetch";
 import axios from "axios";
-import Toast from "react-native-toast-message";
-import BottomSheetComponent from "./BottomSheetComponent";
+import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
+import BottomSheetComponent from "../BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const CardList = () => {
+const CardList = ({groupId}) => {
     const cardData = useSelector(selectCard);
+    const currentCards = cardData.filter(card => card.groupId === groupId);
     const [value, setValue] = useState('');
     const navigation = useNavigation();
 
     const dispatch = useDispatch();
 
+        const toastConfig = {
+        success: (props) => (
+            <BaseToast
+                {...props}
+                style={{ borderLeftColor: 'pink' }}
+                contentContainerStyle={{ paddingHorizontal: 15 }}
+                text1Style={{
+                    fontSize: 15,
+                    fontWeight: '400'
+                }}
+            />
+        ),
+        error: (props) => (
+            <ErrorToast
+                {...props}
+                text1={'Не можна!'}
+                text2={'Створіть як найменше 2 картки щоб їх вчити'}
+                text1Style={{
+                    fontSize: 17
+                }}
+                text2Style={{
+                    fontSize: 12
+                }}
+            />
+        ),
+        tomatoToast: ({ text1, props }) => (
+            <View style={{ height: 60, width: '100%', backgroundColor: 'tomato' }}>
+                <Text>{text1}</Text>
+                <Text>{props.uuid}</Text>
+            </View>
+        )
+    };
 
-    useEffect(() => {
-        dispatch(fetchCards())
-    }, [])
-
-    const showToast = () => {
-        Toast.show({
-            type: 'success',
-            text1: 'Success',
-            text2:'Description'
-        });
-    }
 
     const onSaveCard = async () => {
             const token = await AsyncStorage.getItem('token');
@@ -66,10 +86,12 @@ const CardList = () => {
     };
 
     const navigateTo = (name) => {
-        if (cardData.length > 1) {
+        if (currentCards.length > 1) {
             navigation.navigate(name);
         } else {
-            Alert.alert('Додайте як найменше 2 картки');
+            Toast.show({
+                type: 'error'
+            });
         }
     };
 
@@ -77,14 +99,7 @@ const CardList = () => {
         <View style={styles.container}>
             <View style={styles.formContainer}>
                 <Text style={styles.title}>Англійською</Text>
-                <Toast
-                    position='top'
-                    style={{ borderLeftColor: 'pink' }}
-                    text1Style={{
-                        fontSize: 15,
-                        fontWeight: '400'
-                    }}
-                />
+                <Toast config={toastConfig}/>
                 <TextInput
                     value={value}
                     onChangeText={(text) => setValue(text)}
@@ -97,12 +112,12 @@ const CardList = () => {
                 </Pressable>
             </View>
 
-            <Pressable onPress={showToast}>
-                <Text>Show Toast</Text>
-            </Pressable>
+            {/*<Pressable onPress={showToast}>*/}
+            {/*    <Text>Show Toast</Text>*/}
+            {/*</Pressable>*/}
 
             <FlatList
-                data={cardData}
+                data={currentCards}
                 renderItem={({ item, index }) => (
                     <CardItem item={item} onRemove={() => onRemoveCard(index, item.word)} />
                 )}
@@ -160,7 +175,8 @@ const styles = StyleSheet.create({
     flex:{
         flexDirection:'row',
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+        flexWrap:'wrap'
     },
     buttonText: {
         color: '#fff',

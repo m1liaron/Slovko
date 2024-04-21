@@ -1,13 +1,15 @@
-import React, {useEffect} from 'react';
-import CardList from "../components/CardList";
+import React from 'react';
 import { SafeAreaView  } from "react-native-safe-area-context";
 import { StyleSheet} from "react-native";
 import BottomSheetComponent from "../components/BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
+import CardList from "../components/Card/CardList";
+import {GroupList} from "../components/Group/GroupList";
 const MainScreen = () => {
+
     return (
         <SafeAreaView  style={styles.container}>
-            <CardList/>
+            <GroupList/>
             {/*<GestureHandlerRootView>*/}
             {/*    <BottomSheetComponent/>*/}
             {/*</GestureHandlerRootView>*/}

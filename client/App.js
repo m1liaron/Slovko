@@ -10,6 +10,7 @@ import QuizScreen from "./screens/QuizScreen";
 import GuessWordScreen from "./screens/GuessWordScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import GroupScreen from "./screens/GroupScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
                 <Stack.Navigator headerMode="none" screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="loading" component={LoadingScreen} />
                     <Stack.Screen name="home" component={GreetingScreen} />
+                    <Stack.Screen name="group" component={GroupScreen}/>
                     <Stack.Screen name="main" component={MainScreen} />
                     <Stack.Screen name="quiz" component={QuizScreen} />
                     <Stack.Screen name="word" component={GuessWordScreen} />
