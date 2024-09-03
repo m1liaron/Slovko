@@ -17,6 +17,7 @@ import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
 import BottomSheetComponent from "../BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const CardList = ({groupId}) => {
     const cardData = useSelector(selectCard);
     const currentCards = cardData.filter(card => card.groupId === groupId);
@@ -87,7 +88,7 @@ const CardList = ({groupId}) => {
 
     const navigateTo = (name) => {
         if (currentCards.length > 1) {
-            navigation.navigate(name);
+            navigation.navigate(name, {groupId});
         } else {
             Toast.show({
                 type: 'error'

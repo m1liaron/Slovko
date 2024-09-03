@@ -6,8 +6,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 
-const GuessWordScreen = () => {
-    const cardData = useSelector(selectCard);
+const GuessWordScreen = ({route}) => {
+    const cards = useSelector(selectCard);
+    const {groupId} = route.params;
+    const cardData = cards?.filter(card => card.groupId === groupId);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [wordIndex, setWordIndex] = useState(0);
     const [rightWord, setRightWord] = useState('');
@@ -21,19 +23,21 @@ const GuessWordScreen = () => {
         generateNewWord();
     }, [wordIndex]); // Call generateNewWord whenever displayedIndex changes
 
-    const currentWord = cardData[wordIndex][0]
+    const currentWord = cardData[wordIndex]?.data[0]
     const generateNewWord = () => {
-        const wordArray = currentWord.split('');
-        const tempWord = [...wordArray];
+        if (currentWord) {
+            const wordArray = currentWord.split('');
+            const tempWord = [...wordArray];
 
-        // Insert 3 random letters into the word array
-        for (let i = 0; i < 3; i++) {
-            const randomLetter = getRandomLetter();
-            const randomIndex = getRandomInt(0, tempWord.length);
-            tempWord.splice(randomIndex, 0, randomLetter);
+            // Insert 3 random letters into the word array
+            for (let i = 0; i < 3; i++) {
+                const randomLetter = getRandomLetter();
+                const randomIndex = getRandomInt(0, tempWord.length);
+                tempWord.splice(randomIndex, 0, randomLetter);
+            }
+
+            setNewWord(tempWord);
         }
-
-        setNewWord(tempWord);
     };
 
     const getRandomInt = (min, max) => {
@@ -51,11 +55,10 @@ const GuessWordScreen = () => {
             setWordIndex(wordIndex + 1)
             setRightWord('')
             setDisplayedIndex(0)
-        } else if(displayedIndex >= cardData.length - 1){
+        } else if(displayedIndex >= cardData.length){
             navigation.navigate('main')
         }
     }
-
     useEffect(() => {
         showNextWord()
     },[])
@@ -67,6 +70,7 @@ const GuessWordScreen = () => {
             setDisplayedIndex(0)
         }
     }, [displayedIndex])
+
     const selectedOption = (selectedLetter, index) => {
         if (selectedLetter === currentWord[displayedIndex]) {
             console.log('Correct');

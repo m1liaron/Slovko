@@ -9,7 +9,6 @@ const GroupScreen = ({route}) => {
     const cards = useSelector(selectCard);
     const currentCards = cards.filter(card => card.groupId === groupId);
 
-    console.log(currentCards)
     return (
         <CardList groupId={groupId} />
     )

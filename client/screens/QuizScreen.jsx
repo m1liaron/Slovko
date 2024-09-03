@@ -6,8 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from '@expo/vector-icons';
 import {Audio} from "expo-av";
-const QuizScreen = () => {
-    const cardData = useSelector(selectCard);
+
+const QuizScreen = ({route}) => {
+    const cards = useSelector(selectCard);
+    const {groupId} = route.params;
+    const cardData = cards?.filter(card => card.groupId === groupId);
+
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
     const [isCorrect, setIsCorrect] = useState(null)
@@ -22,7 +26,7 @@ const QuizScreen = () => {
     }, [displayedIndex])
 
     const generateQuizOption = (index) => {
-        const correctOption = cardData[index][1];
+        const correctOption = cardData[index].data[1]; //
 
         const allOptions = shuffleArray([
             { text: correctOption, isCorrect: true },
@@ -35,7 +39,7 @@ const QuizScreen = () => {
     const getIncorrectOptions = () => {
         const incorrectOptions = cardData
                 .filter((item, index) => index !== displayedIndex)
-                .map(item => ({text: item[1], isCorrect: false}));
+                .map(item => ({text: item.data[1], isCorrect: false})); //
         return shuffleArray(incorrectOptions).slice(0, 3);
     }
 
@@ -60,7 +64,7 @@ const QuizScreen = () => {
     }
 
     const handleOptionPress = async (newSelectedOption) => {
-        const correctedOption = cardData[displayedIndex][1];
+        const correctedOption = cardData[displayedIndex].data[1];
         setSelectedOption(newSelectedOption)
 
         if(newSelectedOption.text === correctedOption){
@@ -141,7 +145,7 @@ const leaveStudy = () => {
                 maxToRenderPerBatch={1}
                 renderItem={({ item, index }) => (
                     <Pressable style={styles.card}>
-                            <Text style={styles.cardText}>{item[0]}</Text>
+                            <Text style={styles.cardText}>{item.data[0]}</Text>
                     </Pressable>
                 )}
                 keyExtractor={(item, index) => index.toString()}

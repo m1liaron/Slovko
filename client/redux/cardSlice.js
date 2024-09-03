@@ -33,6 +33,10 @@ const cardSlice = createSlice({
                 ["hello", "привіт", "həˈloʊ", "a common greeting or expression of welcome"],
                 groupId: 1
             },
+            {data:
+                    ["cat", "кішка", "cat", "a common greeting or expression of welcome"],
+                groupId: 1
+            },
             {
                 data: ["world", "світ", "wɜrld", "the earth, together with all of its countries, peoples, and natural features"],
                 groupId: 2

@@ -12,7 +12,7 @@ export const GroupItem = (
 ) => {
     return (
         <Link key={id} style={styles.item} to={{screen: 'group', params:{groupId: id}}}>
-            <Text style={{fontSize:'5vh'}}>{title}</Text>
+            <Text style={{fontSize:30}}>{title}</Text>
         </Link>
     )
 }

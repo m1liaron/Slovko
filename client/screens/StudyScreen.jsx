@@ -15,8 +15,10 @@ import { RectButton, Swipeable } from 'react-native-gesture-handler';
 
 const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width dynamically based on screen width
 
-const StudyScreen = () => {
-    const cardData = useSelector(selectCard);
+const StudyScreen = ({route}) => {
+    const cards = useSelector(selectCard);
+    const {groupId} = route.params;
+    const cardData = cards?.filter(card => card.groupId === groupId);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
@@ -72,7 +74,7 @@ const StudyScreen = () => {
 
     const leaveStudy = () => {
         if(Platform.OS === 'web'){
-            const answer = window.confirm();
+            const answer = window.confirm('Ви впевнені що хочете вийти?');
             return answer ? navigation.navigate('main') : false
         } else {
             Alert.alert(
@@ -99,7 +101,9 @@ const StudyScreen = () => {
 
     const saveCardToLearned = (answer) => {
         const currentCard = cardData.filter((item, index) => index === displayedIndex).map(item => item);
-        const updatedCard = [...currentCard[0], answer]; // Add "know" to the array
+        console.log(currentCard)
+        // const updatedCard = [...currentCard[0].data, answer]; // Add "know" to the array
+        const updatedCard = {word: currentCard[0], answer} // Add "know" to the array
         setLearnedCards(prevState => [...prevState, updatedCard]);
         console.log('Saved card', updatedCard);
     }
@@ -113,7 +117,6 @@ const StudyScreen = () => {
         saveCardToLearned('unknown')
         showNextCard();
     };
-
 
     return (
         <SafeAreaView style={styles.container}>
@@ -145,16 +148,16 @@ const StudyScreen = () => {
                         renderItem={({ item, index }) => (
                             <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
                                 <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
-                                    <Text style={styles.cardText}>{item[0]}</Text>
+                                    <Text style={styles.cardText}>{item.data[0]}</Text>
                                     <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
 
                                     <Pressable onPress={() => setShowDefinition(!showDefinition)}>
                                         <AntDesign name="questioncircleo" size={24} color="black" />
                                     </Pressable>
                                     {showDefinition ? (
-                                        <View>
-                                            <Text>{item[3]}</Text>
-                                        </View>
+                                        <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
+                                            <Text style={styles.cardText}>{item.data[1]}</Text> {/* Corrected line */}
+                                        </Animated.View>
                                     ) : null}
 
                                 </Animated.View>
