@@ -3,21 +3,21 @@ import axios from "axios";
 
 export const getAllGroups = createAsyncThunk(
     'group/getAll', async (data) => {
-        const response = await axios.get('http://localhost:3000/cards/login', data);
+        const response = await axios.get('http://localhost:3000/groups', data);
         return response.data
     }
 )
 
 export const addGroup = createAsyncThunk(
     'group/add', async (data) => {
-        const response = await axios.post('http://localhost:3000/cards/login', data);
+        const response = await axios.post('http://localhost:3000/groups', data);
         return response.data
     }
 )
 
 export const removeGroup = createAsyncThunk(
     'group/remove', async (data) => {
-        const response = await axios.delete('http://localhost:3000/cards/login', data);
+        const response = await axios.delete('http://localhost:3000/groups', data);
         return response.data
     }
 )

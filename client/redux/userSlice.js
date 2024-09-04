@@ -3,7 +3,15 @@ import axios from "axios";
 
 export const login = createAsyncThunk(
     'user/login', async (data) => {
-        const response = await axios.post('http://localhost:3000/users/login', data);
+        const response = await axios.post('http://localhost:3000/users', data);
+        return response.data
+    }
+)
+
+export const getUser = createAsyncThunk(
+    'user/get', async (data) => {
+        console.log(data)
+        const response = await axios.get('http://localhost:3000/users', data);
         return response.data
     }
 )
@@ -28,6 +36,17 @@ const userSlice = createSlice({
                 state.users.push(action.payload);
             })
             .addCase(login.rejected, (state) => {
+                state.status = 'rejects'
+            })
+
+            .addCase(getUser.pending, (state) => {
+                state.status = 'pending'
+            })
+            .addCase(getUser.fulfilled, (state, action) => {
+                state.status = 'success'
+                state.users = action.payload;
+            })
+            .addCase(getUser.rejected, (state) => {
                 state.status = 'rejects'
             })
     }

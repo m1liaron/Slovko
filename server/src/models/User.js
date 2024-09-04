@@ -1,9 +1,31 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../db/sequelize');
 const { v4: uuidv4 } = require('uuid');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { sequelize } = require('../db/sequelize');
+const { DataTypes, Model } = require('sequelize');
 
-const User = sequelize.define(
-    'User',
+class User extends Model {
+    static async hashPassword(password) {
+        const salt = await bcrypt.genSalt(10);
+        return await bcrypt.hash(password, salt);
+    }
+
+    async comparePassword(candidatePassword) {
+        return await bcrypt.compare(candidatePassword, this.password);
+    }
+
+    createJWT() {
+        return jwt.sign(
+            { userId: this.id, name: this.name },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: process.env.JWT_LIFETIME,
+            },
+        );
+    }
+}
+
+User.init(
     {
         id: {
             type: DataTypes.UUID,
@@ -14,19 +36,37 @@ const User = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-                len: [1, 30],
-                notNull: {
-                    msg: 'Provide user name',
-                },
-                notEmpty: {
-                    msg: 'User name cannot be empty',
-                },
+                len: [3, 50],
             },
-        }
-},
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                isEmail: true,
+            },
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                len: [6],
+            },
+        },
+    },
     {
-    tableName: 'Users',
-    timestamps: true,
+        sequelize,
+        modelName: 'User',
+        timestamps: true,
+        tableName: 'Users',
+    },
+);
+
+User.beforeCreate(async (user) => {
+    if (user.password) {
+        user.password = await User.hashPassword(user.password);
+    }
 });
 
 module.exports = User;

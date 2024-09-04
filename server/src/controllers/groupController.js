@@ -1,7 +1,7 @@
 const Group = require('../models/Group');
 
 const getAllGroups = async (req, res) => {
-    const userId = req.body;
+    const userId = req.user.id;
     try {
         const cards = await Group.findAll({
             where: { userId}
@@ -14,7 +14,8 @@ const getAllGroups = async (req, res) => {
 }
 
 const getGroup = async (req, res) => {
-    const { id, userId} = req.body;
+    const { id } = req.body;
+    const userId = req.user.id;
     try {
         const card = await Group.findOne({
             where: { id, userId }
@@ -41,10 +42,12 @@ const addGroup = async (req, res) => {
 
 const removeGroup = async (req, res) => {
     try {
-        const userId = req.body;
-        const cardId = req.params.id;
+        const {
+            user: { id: userId},
+            params: { id }
+        } = req;
         const card = await Group.findOne({
-            where: { id: cardId, userId }
+            where: { id, userId }
         });
         if(!card) {
             res.status(404).send({ error: true, message: 'Card not found'})
