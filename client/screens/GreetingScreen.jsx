@@ -1,45 +1,33 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
-import {addUser, selectUser} from "../redux/userSlice";
-import {useDispatch, useSelector} from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 
 const GreetingScreen = () => {
-    const user = useSelector(selectUser);
-    const [name, setName] = useState('');
-
-    const navigation = useNavigation()
-    const dispatch = useDispatch();
-
-    const handlePress = async () => {
-        if(name.length > 0){
-            try{
-                AsyncStorage.setItem('token',name)
-                dispatch(addUser(name))
-                navigation.navigate('main')
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
-
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Greeting Form</Text>
+            <Text style={styles.title}>Login</Text>
 
             <TextInput
                 style={styles.input}
-                placeholder="Enter your name"
-                onChangeText={(text) => setName(text)}
-                value={name}
+                placeholder="Email"
+                placeholderTextColor="#ccc"
+                keyboardType="email-address"
+                autoCapitalize="none"
             />
 
-            <Button
-                title="Greet Me"
-                onPress={handlePress}
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                placeholderTextColor="#ccc"
+                secureTextEntry={true}
             />
+
+            <TouchableOpacity style={styles.button}>
+                <Text style={styles.buttonText}>Sign In</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -49,24 +37,43 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingHorizontal: 30,
+        backgroundColor: '#f7f7f7',
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: 30,
+        color: '#333',
     },
     input: {
-        height: 40,
-        borderColor: 'gray',
+        width: '100%',
+        height: 50,
+        borderColor: '#ddd',
         borderWidth: 1,
-        marginBottom: 16,
-        padding: 8,
-        width: 200,
+        borderRadius: 8,
+        paddingHorizontal: 15,
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        fontSize: 16,
     },
-    result: {
-        marginTop: 20,
+    button: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#3498db',
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    buttonText: {
+        color: '#fff',
         fontSize: 18,
+        fontWeight: 'bold',
+    },
+    forgotPasswordText: {
+        color: '#3498db',
+        fontSize: 14,
     },
 });
-
 export default GreetingScreen;

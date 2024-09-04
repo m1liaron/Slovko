@@ -1,9 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import axios from "axios";
+import {createAuthorizedInstance} from "../utils/createAuthorizedInstance";
 
 export const fetchCards = createAsyncThunk('card/fetchCards', async(data) => {
     try{
-        const response = await axios.post('http://192.168.31.196:3000/cards', data);
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.post('/cards', data);
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
@@ -13,7 +14,8 @@ export const fetchCards = createAsyncThunk('card/fetchCards', async(data) => {
 
 export const addCard = createAsyncThunk('card/addCard', async(data) => {
     try{
-        const response = await axios.post('http://192.168.31.196:3000/card', data)
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.post('/card', data)
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);

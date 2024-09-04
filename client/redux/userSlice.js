@@ -1,9 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAuthorizedInstance } from "../utils/createAuthorizedInstance";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const login = createAsyncThunk(
     'user/login', async (data) => {
-        const response = await axios.post('http://localhost:3000/users', data);
+        const response = await axios.post(`http://localhost:3000/users/login`, data);
+        await AsyncStorage.setItem('token', response.data.token)
+        return response.data
+    }
+)
+
+export const register = createAsyncThunk(
+    'user/register', async (data) => {
+        const response = await axios.post(`http://localhost:3000/users/register`, data);
+        await AsyncStorage.setItem('token', response.data.token)
         return response.data
     }
 )
@@ -11,7 +22,8 @@ export const login = createAsyncThunk(
 export const getUser = createAsyncThunk(
     'user/get', async (data) => {
         console.log(data)
-        const response = await axios.get('http://localhost:3000/users', data);
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get('/users', data);
         return response.data
     }
 )
@@ -21,11 +33,7 @@ const userSlice = createSlice({
     initialState: {
         users: []
     },
-    reducers: {
-        addUser: (state, action) => {
-            state.users = [...state.users, action.payload]
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {
@@ -36,6 +44,17 @@ const userSlice = createSlice({
                 state.users.push(action.payload);
             })
             .addCase(login.rejected, (state) => {
+                state.status = 'rejects'
+            })
+
+            .addCase(register.pending, (state) => {
+                state.status = 'pending'
+            })
+            .addCase(register.fulfilled, (state, action) => {
+                state.status = 'success'
+                state.users.push(action.payload);
+            })
+            .addCase(register.rejected, (state) => {
                 state.status = 'rejects'
             })
 
@@ -51,9 +70,5 @@ const userSlice = createSlice({
             })
     }
 });
-
-export const { addUser } = userSlice.actions;
-
 export const selectUser = (state) => state.user.users;
-
 export const userReducers = userSlice.reducer;
