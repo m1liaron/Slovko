@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { sequelize } = require('../db/sequelize');
 const { DataTypes, Model } = require('sequelize');
+require('dotenv').config();
 
 class User extends Model {
     static async hashPassword(password) {

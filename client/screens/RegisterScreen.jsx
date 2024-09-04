@@ -32,17 +32,22 @@ const RegisterScreen = () => {
             })
         }
 
-        const response = await dispatch(register({ email, password }));
+        const registerData = {
+            name,
+            email,
+            password
+        }
+
+        const response = await dispatch(register(registerData));
         if(register.rejected.match(response)) {
             const error = response.payload || 'Registration failed';
-            Toast.show({
+            return Toast.show({
                 type: 'error',
                 text1: 'Fail',
                 text2: error
             })
-        } else {
-            navigation.navigate('home');
         }
+        navigation.navigate('home');
     }
     return (
         <View style={styles.container}>
