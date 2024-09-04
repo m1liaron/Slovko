@@ -1,9 +1,39 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
+import {useDispatch} from "react-redux";
+import {login} from "../redux/userSlice";
+import Toast from "react-native-toast-message";
+import {Entypo} from "@expo/vector-icons";
 
 const LoginScreen = () => {
     const navigation = useNavigation();
+    const dispatch = useDispatch();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [notShowPassword, setNotShowPassword] = useState(true);
+
+    const handleSubmit = async () => {
+        if (!email.length || !password.length) {
+            return Toast.show({
+                type: 'error',
+                text1: 'Fail',
+                text2: 'Inputs must be filled!',
+            });
+        }
+        const response = await dispatch(login({ email, password }));
+        if (login.rejected.match(response)) {
+            const error = response.payload || 'Login failed';
+            Toast.show({
+                type: 'error',
+                text1: 'Fail',
+                text2: error,
+            });
+        } else {
+            navigation.navigate('home');
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -15,22 +45,31 @@ const LoginScreen = () => {
                 placeholderTextColor="#ccc"
                 keyboardType="email-address"
                 autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
             />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                placeholderTextColor="#ccc"
-                secureTextEntry={true}
-            />
+            <View style={styles.passwordContainer}>
+                <TextInput
+                    style={[styles.input, { flex: 1 }]}
+                    placeholder="Password"
+                    placeholderTextColor="#ccc"
+                    secureTextEntry={notShowPassword}
+                    value={password}
+                    onChangeText={setPassword}
+                />
+                <Pressable onPress={() => setNotShowPassword(!notShowPassword)} style={styles.iconContainer}>
+                    <Entypo name={notShowPassword ? "eye" : "eye-with-line"} size={20} color="#333" />
+                </Pressable>
+            </View>
 
-            <TouchableOpacity style={styles.button}>
+            <Pressable style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Sign In</Text>
-            </TouchableOpacity>
+            </Pressable>
 
-            <TouchableOpacity onPress={() => navigation.navigate('register')}>
+            <Pressable onPress={() => navigation.navigate('register')}>
                 <Text style={styles.switchText}>Don't have an account? Register</Text>
-            </TouchableOpacity>
+            </Pressable>
         </View>
     );
 };
@@ -40,7 +79,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 30,
+        paddingHorizontal: 20,
         backgroundColor: '#f7f7f7',
     },
     title: {
@@ -59,6 +98,17 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         backgroundColor: '#fff',
         fontSize: 16,
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        marginBottom: 20,
+    },
+    iconContainer: {
+        paddingHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     button: {
         width: '100%',

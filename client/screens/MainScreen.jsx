@@ -11,7 +11,6 @@ const MainScreen = () => {
     const dispatch = useDispatch();
     const userName = AsyncStorage.getItem('token')
 
-
     useEffect(() => {
         dispatch(getUser(userName));
     }, []);
