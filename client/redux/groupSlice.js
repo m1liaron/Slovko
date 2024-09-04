@@ -1,23 +1,27 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axios from "axios";
+import {createAuthorizedInstance} from "../utils/createAuthorizedInstance";
+
 
 export const getAllGroups = createAsyncThunk(
     'group/getAll', async (data) => {
-        const response = await axios.get('http://localhost:3000/groups', data);
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get('/groups', data);
         return response.data
     }
 )
 
 export const addGroup = createAsyncThunk(
     'group/add', async (data) => {
-        const response = await axios.post('http://localhost:3000/groups', data);
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.post('/groups', data);
         return response.data
     }
 )
 
 export const removeGroup = createAsyncThunk(
     'group/remove', async (data) => {
-        const response = await axios.delete('http://localhost:3000/groups', data);
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.delete('/groups', data);
         return response.data
     }
 )
