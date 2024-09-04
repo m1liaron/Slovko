@@ -6,7 +6,6 @@ import {GroupItem} from "./GroupItem";
 export const GroupList = () => {
     const groups = useSelector(selectGroup);
 
-
     return (
         <View style={{padding:10, justifyContent:'center', alignSelf:'center'}}>
             <FlatList

@@ -4,6 +4,7 @@ import {addUser, selectUser} from "../redux/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const GreetingScreen = () => {
     const user = useSelector(selectUser);
     const [name, setName] = useState('');
