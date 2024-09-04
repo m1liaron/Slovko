@@ -1,4 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const login = createAsyncThunk(
+    'user/login', async (data) => {
+        const response = await axios.post('http://localhost:3000/users/login', data);
+        return response.data
+    }
+)
 
 const userSlice = createSlice({
     name: 'user',

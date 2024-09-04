@@ -1,4 +1,4 @@
-import Card from "../models/Card";
+const Card =  require("../models/Card");
 
 const getAllCards = async (req, res) => {
     const { id, groupId} = req.body;
