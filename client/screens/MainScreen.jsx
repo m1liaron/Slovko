@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import { SafeAreaView  } from "react-native-safe-area-context";
-import { StyleSheet} from "react-native";
+import {StyleSheet, Text} from "react-native";
 import BottomSheetComponent from "../components/BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {GroupList} from "../components/Group/GroupList";

@@ -77,6 +77,6 @@ const groupSlice = createSlice({
 
 // export const {removeGroup, } = cardSlice.actions;
 
-export const selectGroup= (state) => state.group.groups;
+export const selectGroup= (state) => state.groups.groups;
 
 export const groupReducers = groupSlice.reducer;

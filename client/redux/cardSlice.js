@@ -25,7 +25,7 @@ export const addCard = createAsyncThunk('card/addCard', async(data) => {
 
 
 const cardSlice = createSlice({
-    name:'card',
+    name:'cards',
     initialState: {
         cards: [],
         status:'idle',
@@ -70,6 +70,6 @@ const shuffleArray = (array) => {
 
 export const {removeCard,shuffleCards} = cardSlice.actions;
 
-export const selectCard = (state) => state.card.cards;
+export const selectCard = (state) => state.cards.cards;
 
 export const cardReducers = cardSlice.reducer;
