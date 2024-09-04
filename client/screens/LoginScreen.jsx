@@ -1,6 +1,9 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {useNavigation} from "@react-navigation/native";
 
-const GreetingScreen = () => {
+const LoginScreen = () => {
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
@@ -25,8 +28,8 @@ const GreetingScreen = () => {
                 <Text style={styles.buttonText}>Sign In</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('register')}>
+                <Text style={styles.switchText}>Don't have an account? Register</Text>
             </TouchableOpacity>
         </View>
     );
@@ -71,9 +74,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    forgotPasswordText: {
+    switchText: {
         color: '#3498db',
         fontSize: 14,
     },
 });
-export default GreetingScreen;
+
+export default LoginScreen;

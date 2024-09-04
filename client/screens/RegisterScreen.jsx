@@ -1,10 +1,12 @@
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import {useNavigation} from "@react-navigation/native";
 
-const GreetingScreen = () => {
-
+const RegisterScreen = () => {
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
+            <Text style={styles.title}>Register</Text>
 
             <TextInput
                 style={styles.input}
@@ -21,12 +23,19 @@ const GreetingScreen = () => {
                 secureTextEntry={true}
             />
 
+            <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                placeholderTextColor="#ccc"
+                secureTextEntry={true}
+            />
+
             <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Sign In</Text>
+                <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('login')}>
+                <Text style={styles.switchText}>Already have an account? Login</Text>
             </TouchableOpacity>
         </View>
     );
@@ -71,9 +80,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
     },
-    forgotPasswordText: {
+    switchText: {
         color: '#3498db',
         fontSize: 14,
     },
 });
-export default GreetingScreen;
+
+export default RegisterScreen;

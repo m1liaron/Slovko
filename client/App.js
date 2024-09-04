@@ -10,6 +10,8 @@ import QuizScreen from "./screens/QuizScreen";
 import GuessWordScreen from "./screens/GuessWordScreen";
 import LoadingScreen from "./screens/LoadingScreen";
 import GroupScreen from "./screens/GroupScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +28,8 @@ export default function App() {
                     <Stack.Screen name="word" component={GuessWordScreen} />
                     {/* Wrap only StudyScreen with GestureHandlerRootView */}
                     <Stack.Screen name="study" component={StudyScreen} />
+                    <Stack.Screen name="login" component={LoginScreen} />
+                    <Stack.Screen name="register" component={RegisterScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>

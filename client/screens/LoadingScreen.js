@@ -11,7 +11,7 @@ const LoadingScreen = (props) => {
         if (token) {
             props.navigation.replace("main")
         } else {
-            props.navigation.replace("home")
+            props.navigation.replace("login")
         }
     }
 
