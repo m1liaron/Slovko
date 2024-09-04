@@ -1,4 +1,4 @@
-import Group from "../models/Group";
+const Group = require('../models/Group');
 
 const getAllGroups = async (req, res) => {
     const userId = req.body;
@@ -8,6 +8,22 @@ const getAllGroups = async (req, res) => {
         });
 
         res.status(200).json(cards);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error login'})
+    }
+}
+
+const getGroup = async (req, res) => {
+    const { id, userId} = req.body;
+    try {
+        const card = await Group.findOne({
+            where: { id, userId }
+        });
+        if(!card) {
+            res.status(200).send({ error: true, message: "Group does not exist" });
+        }
+
+        res.status(200).json(card);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
     }
@@ -41,6 +57,7 @@ const removeGroup = async (req, res) => {
 
 module.exports = {
     getAllGroups,
+    getGroup,
     addGroup,
     removeGroup
 }

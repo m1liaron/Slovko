@@ -2,13 +2,14 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const { connectDB, sequelize } = require('./db/sequelize');
-const { userRoute, cardRoute } = require('./routes/routes');
+const { userRoute, cardRoute, groupRoute} = require('./routes/routes');
 
 app.use(express.json());
 app.use(cors());
 
 app.use('/users', userRoute);
 app.use('/cards', cardRoute);
+app.use('/groups', groupRoute);
 
 const port = process.env.PORT || 3000;
 

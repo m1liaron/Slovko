@@ -1,11 +1,9 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-export const fetchCards = createAsyncThunk('card/fetchCards', async() => {
+
+export const fetchCards = createAsyncThunk('card/fetchCards', async(data) => {
     try{
-        const token = await AsyncStorage.getItem('token');
-        console.log(token)
-        const response = await axios.post('http://192.168.31.196:8000/cards', {user:token});
+        const response = await axios.post('http://192.168.31.196:3000/cards', data);
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
@@ -15,8 +13,7 @@ export const fetchCards = createAsyncThunk('card/fetchCards', async() => {
 
 export const addCard = createAsyncThunk('card/addCard', async(data) => {
     try{
-        const response = await axios.post('http://192.168.31.196:8000/add_card', data)
-        console.log(response.data)
+        const response = await axios.post('http://192.168.31.196:3000/card', data)
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
