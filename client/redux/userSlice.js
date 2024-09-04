@@ -20,11 +20,10 @@ export const register = createAsyncThunk(
 )
 
 export const getUser = createAsyncThunk(
-    'user/get', async (data) => {
-        console.log(data)
+    'user/get', async () => {
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get('/users', data);
-        return response.data
+        const response = await axiosInstance.get('/users');
+        return response.data.user
     }
 )
 

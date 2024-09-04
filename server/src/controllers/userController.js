@@ -67,7 +67,8 @@ const login = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
+        console.log(req.user)
         const user = await User.findByPk(userId);
 
         if (!user) {

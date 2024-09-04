@@ -6,13 +6,11 @@ import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {GroupList} from "../components/Group/GroupList";
 import {useDispatch} from "react-redux";
 import {getUser} from "../redux/userSlice";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 const MainScreen = () => {
     const dispatch = useDispatch();
-    const userName = AsyncStorage.getItem('token')
 
     useEffect(() => {
-        dispatch(getUser(userName));
+        dispatch(getUser());
     }, []);
 
     return (

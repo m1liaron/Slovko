@@ -2,12 +2,16 @@ const Card = require('./Card');
 const Group = require('./Group');
 const User = require('./User');
 
-User.hasMany(Card, { foreignKey: 'userId', as: 'cards' });
+// User - Group
+User.hasMany(Group, { foreignKey: 'userId', as: 'groups' });
 Group.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-Group.hasMany(Card, { foreignKey: 'userId', as: 'card' });
-Card.belongsTo(Card, { foreignKey: 'userId', as: 'card' });
+
+// Group - Card
+Group.hasMany(Card, { foreignKey: 'userId', as: 'cards' });
+Card.belongsTo(Group, { foreignKey: 'groupId', as: 'group' });
 
 module.exports = {
     Card,
-    User
+    User,
+    Group
 }

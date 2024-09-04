@@ -29,13 +29,7 @@ export const removeGroup = createAsyncThunk(
 const groupSlice = createSlice({
     name:'groups',
     initialState: {
-        groups: [
-            {id: 1, title: 'First Group'},
-            {id: 2, title: 'Second Group'},
-            {id: 3, title: 'Third Group'},
-            {id: 4, title: 'Fourth Group'},
-            {id: 5, title: 'Fifth Group'},
-        ],
+        groups: [],
         status:'idle',
         error: null
     },

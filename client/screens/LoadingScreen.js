@@ -9,7 +9,7 @@ const LoadingScreen = (props) => {
     const detectLogin = async () => {
         const token = await AsyncStorage.getItem('token');
         if (token) {
-            props.navigation.replace("main")
+            props.navigation.replace("home")
         } else {
             props.navigation.replace("login")
         }
