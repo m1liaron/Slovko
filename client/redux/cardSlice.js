@@ -1,10 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import {createAuthorizedInstance} from "../utils/createAuthorizedInstance";
 
-export const fetchCards = createAsyncThunk('card/fetchCards', async(data) => {
+export const getCards = createAsyncThunk('card/fetchCards', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.post('/cards', data);
+        const response = await axiosInstance.get(`/cards/${data.groupId}`);
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
@@ -15,7 +15,20 @@ export const fetchCards = createAsyncThunk('card/fetchCards', async(data) => {
 export const addCard = createAsyncThunk('card/addCard', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.post('/card', data)
+        const response = await axiosInstance.post('/cards', data)
+        console.log(response.data)
+        return response.data
+    } catch (error){
+        console.error('Error fetching cards:', error);
+        throw error;
+    }
+})
+
+
+export const removeCard = createAsyncThunk('card/remove', async(data) => {
+    try{
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.delete(`/cards/${data}`)
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
@@ -32,29 +45,44 @@ const cardSlice = createSlice({
         error: null
     },
     reducers:{
-        removeCard: (state, action) => {
-            state.cards = state.cards.filter((item, index) => index !== action.payload)
-        },
         shuffleCards: (state) => {
             state.cards = shuffleArray(state.cards);
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCards.pending, (state) => {
+            .addCase(getCards.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchCards.fulfilled, (state, action) => {
+            .addCase(getCards.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.cards = action.payload;
             })
-            .addCase(fetchCards.rejected, (state, action) => {
+            .addCase(getCards.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
+            })
+
+            .addCase(addCard.pending, (state, action) => {
+                state.status = 'pending';
             })
             .addCase(addCard.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.cards.cards.push(action.payload)
+            })
+            .addCase(addCard.rejected, (state, action) => {
+                state.status = 'error';
+            })
+
+            .addCase(removeCard.pending, (state, action) => {
+                state.status = 'pending';
+            })
+            .addCase(removeCard.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.cards = state.cards.filter(card => card.id !== action.payload)
+            })
+            .addCase(removeCard.rejected, (state, action) => {
+                state.status = 'error';
             })
     }
 })
@@ -68,7 +96,7 @@ const shuffleArray = (array) => {
     return shuffledArray;
 };
 
-export const {removeCard,shuffleCards} = cardSlice.actions;
+export const { shuffleCards } = cardSlice.actions;
 
 export const selectCard = (state) => state.cards.cards;
 

@@ -1,10 +1,10 @@
 const Card =  require("../models/Card");
 
 const getAllCards = async (req, res) => {
-    const { id, groupId} = req.body;
+    const { groupId } = req.params;
     try {
         const cards = await Card.findAll({
-            where: { id, groupId }
+            where: { groupId }
         });
 
         res.status(200).json(cards);
@@ -25,15 +25,14 @@ const addCard = async (req, res) => {
 
 const removeCard = async (req, res) => {
     try {
-        const groupId = req.body;
         const cardId = req.params.id;
         const card = await Card.findOne({
-            where: { id: cardId, groupId }
+            where: { id: cardId }
         });
         if(!card) {
             res.status(404).send({ error: true, message: 'Card not found'})
         };
-        res.status(200).json(card);
+        res.status(200).json(cardId);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
     }
