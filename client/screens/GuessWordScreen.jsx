@@ -1,106 +1,90 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
-import { useSelector } from "react-redux";
-import { selectCard } from "../redux/cardSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
-import {AntDesign} from "@expo/vector-icons";
-import {useNavigation} from "@react-navigation/native";
+import { useSelector } from 'react-redux';
+import { selectCard } from '../redux/cardSlice';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const GuessWordScreen = () => {
     const cards = useSelector(selectCard);
-    const [displayedIndex, setDisplayedIndex] = useState(0);
-    const [wordIndex, setWordIndex] = useState(0);
-    const [rightWord, setRightWord] = useState('');
-    const [newWord, setNewWord] = useState([]);
-    const [selectedLetterColor, setSelectedLetterColor] = useState({});
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentGuess, setCurrentGuess] = useState('');
+    const [scrambledWord, setScrambledWord] = useState([]);
+    const [letterColors, setLetterColors] = useState({});
     const [showWord, setShowWord] = useState(false);
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const currentWord = cards[currentIndex]?.word;
 
     useEffect(() => {
-        generateNewWord();
-    }, [wordIndex]);
+        if (currentWord) generateScrambledWord(currentWord);
+    }, [currentIndex]);
 
-    const currentWord = cards[wordIndex]?.word
-    const generateNewWord = () => {
-        if (currentWord) {
-            const wordArray = currentWord.split('');
-            const tempWord = [...wordArray];
-
-            // Insert 3 random letters into the word array
-            for (let i = 0; i < 3; i++) {
-                const randomLetter = getRandomLetter();
-                const randomIndex = getRandomInt(0, tempWord.length);
-                tempWord.splice(randomIndex, 0, randomLetter);
-            }
-
-            setNewWord(tempWord);
+    const generateScrambledWord = (word) => {
+        let wordArray = word.split('');
+        for (let i = 0; i < 3; i++) {
+            const randomLetter = getRandomLetter();
+            const randomIndex = getRandomInt(0, wordArray.length);
+            wordArray.splice(randomIndex, 0, randomLetter);
         }
+        setScrambledWord(wordArray);
     };
 
-    const getRandomInt = (min, max) => {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
+    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
     const getRandomLetter = () => {
         const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-        const randomIndex = getRandomInt(0, alphabet.length - 1);
-        return alphabet[randomIndex];
+        return alphabet[getRandomInt(0, alphabet.length - 1)];
     };
 
-    const showNextWord = () => {
-        if(rightWord === currentWord && wordIndex < cards.length - 1){
-            setWordIndex(wordIndex + 1)
-            setRightWord('')
-            setDisplayedIndex(0)
-        } else if(displayedIndex >= cards.length){
-            navigation.navigate('home')
-        }
-    }
-    useEffect(() => {
-        showNextWord()
-    },[])
-
-    useEffect(() => {
-        if(rightWord === currentWord){
-            setWordIndex(wordIndex + 1)
-            setRightWord('')
-            setDisplayedIndex(0)
-        }
-    }, [displayedIndex])
-
-    const selectedOption = (selectedLetter, index) => {
-        if (selectedLetter === currentWord[displayedIndex]) {
-            console.log('Correct');
-            setDisplayedIndex(displayedIndex + 1);
-            setRightWord(rightWord + selectedLetter);
-
-            // Remove the correct letter from newWord
-            const updatedWord = [...newWord];
-                updatedWord.splice(index, 1);
-            setNewWord(updatedWord);
+    const handleLetterSelection = (letter, index) => {
+        if (letter === currentWord[currentGuess.length]) {
+            setCurrentGuess(currentGuess + letter);
+            removeLetterFromScrambled(index);
         } else {
-            console.log('Incorrect');
-            // Set selected letter color to red
-            setSelectedLetterColor({ ...selectedLetterColor, [index]: 'red' });
-
-            // Reset selected letter color after 2 seconds
-            setTimeout(() => {
-                setSelectedLetterColor({});
-            }, 1000);
+            highlightIncorrectLetter(index);
         }
     };
+
+    const removeLetterFromScrambled = (index) => {
+        const updatedWord = [...scrambledWord];
+        updatedWord.splice(index, 1);
+        setScrambledWord(updatedWord);
+    };
+
+    const highlightIncorrectLetter = (index) => {
+        setLetterColors({ ...letterColors, [index]: 'red' });
+        setTimeout(() => setLetterColors({}), 1000);
+    };
+
+    useEffect(() => {
+        if (currentGuess === currentWord) {
+            if (currentIndex < cards.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+                resetGameState();
+            } else {
+                navigation.navigate('home');
+            }
+        }
+    }, [currentGuess]);
+
+    const resetGameState = () => {
+        setCurrentGuess('');
+        setLetterColors({});
+    };
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.cardCount}>{wordIndex + 1}/{cards.length}</Text>
-            <Text>{rightWord}</Text>
+            <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
+            <Text>{currentGuess}</Text>
             <FlatList
                 horizontal
-                data={newWord}
+                data={scrambledWord}
                 contentContainerStyle={styles.wordContainer}
                 renderItem={({ item, index }) => (
                     <Pressable
-                        style={[styles.word, { backgroundColor: selectedLetterColor[index] }]}
-                        onPress={() => selectedOption(item, index)}
+                        style={[styles.word, { backgroundColor: letterColors[index] }]}
+                        onPress={() => handleLetterSelection(item, index)}
                     >
                         <Text style={styles.wordText}>{item}</Text>
                     </Pressable>
@@ -110,8 +94,7 @@ const GuessWordScreen = () => {
             <Pressable onPress={() => setShowWord(!showWord)}>
                 <AntDesign name="questioncircleo" size={24} color="black" />
             </Pressable>
-
-            {showWord ? (<Text>{currentWord}</Text>) : null}
+            {showWord && <Text>{currentWord}</Text>}
         </SafeAreaView>
     );
 };
@@ -121,7 +104,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20
+        padding: 20,
     },
     wordContainer: {
         flexDirection: 'row',
@@ -132,7 +115,7 @@ const styles = StyleSheet.create({
         margin: 5,
         borderColor: '#8a8a8a',
         borderWidth: 1,
-        borderRadius: 50
+        borderRadius: 50,
     },
     wordText: {
         fontSize: 20,

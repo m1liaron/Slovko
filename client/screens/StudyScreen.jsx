@@ -15,12 +15,13 @@ import { RectButton, Swipeable } from 'react-native-gesture-handler';
 
 const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width dynamically based on screen width
 
-const StudyScreen = ({route}) => {
+const StudyScreen = () => {
     const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
     const [learnedCards, setLearnedCards] = useState([]);
+    const [learningCards, setLearningCards] = useState([...cards]);
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -54,35 +55,25 @@ const StudyScreen = ({route}) => {
 
     const showNextCard = () => {
         if (displayedIndex < cards.length - 1) {
-            console.log('show next')
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0; // Reset rotation when showing the next card
         } else if(displayedIndex >= cards.length - 1) {
-            console.log('leaver')
             leaveStudy()
         }
     }
 
     const leaveStudy = () => {
-        if(Platform.OS === 'web'){
-            const answer = window.confirm('Ви впевнені що хочете вийти?');
-            return answer ? navigation.navigate('main') : false
+        const exitMessage = 'Ви впевнені що хочете вийти?';
+        if (Platform.OS === 'web') {
+            const confirmExit = window.confirm(exitMessage);
+            if (confirmExit) navigation.navigate('group');
         } else {
             Alert.alert(
-                'Ви впевнені що хочете вийти?',
+                exitMessage,
                 '',
                 [
-                    {
-                        text: 'Вийти',
-                        onPress: () => {
-                            dispatch(shuffleCards())
-                            navigation.navigate('main');
-                        },
-                    },
-                    {
-                        text: 'Скасувати',
-                        style: 'cancel',
-                    },
+                    { text: 'Вийти', onPress: () => { dispatch(shuffleCards()); navigation.navigate('group'); } },
+                    { text: 'Скасувати', style: 'cancel' }
                 ],
                 { cancelable: false }
             );
@@ -90,10 +81,9 @@ const StudyScreen = ({route}) => {
     }
 
     const saveCardToLearned = (answer) => {
-        const currentCard = cards.filter((item, index) => index === displayedIndex).map(item => item);
-        const updatedCard = {word: currentCard[0], answer} // Add "know" to the array
-        setLearnedCards(prevState => [...prevState, updatedCard]);
-        console.log('Saved card', updatedCard);
+        const currentCard = cards[displayedIndex];
+        const updatedCard = { ...currentCard, answer };
+        setLearnedCards((prev) => [...prev, updatedCard]);
     }
 
     const handleSwipeRight = () => {
@@ -102,9 +92,35 @@ const StudyScreen = ({route}) => {
     }
 
     const handleSwipeLeft = () => {
-        saveCardToLearned('unknown')
-        showNextCard();
+        const currentCard = learningCards[displayedIndex];
+
+        const remainingCards  = learningCards.filter((_, idx) => idx !== displayedIndex);
+        const updatedCards = [...remainingCards, currentCard];
+
+        setLearningCards(updatedCards);
+        setDisplayedIndex(prev => (prev >= updatedCards.length - 1 ? 0 : prev)); // Reset index if needed
+        rotation.value = 0;
+
+        saveCardToLearned('know');
+        // showNextCard();
     };
+
+    console.log(learningCards)
+
+    const renderCard = ({ item, index }) => (
+        <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
+            <Animated.View style={[styles.card, frontAnimatedStyle]}>
+                <Text style={styles.cardText}>{item.word}</Text>
+                <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
+                <Pressable onPress={() => setShowDefinition(!showDefinition)}>
+                    <AntDesign name="questioncircleo" size={24} color="black" />
+                </Pressable>
+            </Animated.View>
+            <Animated.View style={[styles.card, backAnimatedStyle]}>
+                <Text style={styles.cardText}>{item.translateWord}</Text>
+            </Animated.View>
+        </Pressable>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
@@ -129,25 +145,10 @@ const StudyScreen = ({route}) => {
                     onSwipeableLeftOpen={handleSwipeLeft}
                 >
                     <FlatList
-                        data={showingCard}
-                        maxToRenderPerBatch={1}
+                        data={learningCards.slice(displayedIndex, displayedIndex + 1)}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => (
-                            <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
-                                <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
-                                    <Text style={styles.cardText}>{item.word}</Text>
-                                    <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
-
-                                    <Pressable onPress={() => setShowDefinition(!showDefinition)}>
-                                        <AntDesign name="questioncircleo" size={24} color="black" />
-                                    </Pressable>
-
-                                </Animated.View>
-                                <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
-                                    <Text style={styles.cardText}>{item.translateWord}</Text>
-                                </Animated.View>
-                            </Pressable>
-                        )}
+                        renderItem={renderCard}
+                        maxToRenderPerBatch={1}
                     />
                 </Swipeable>
             </View>

@@ -4,7 +4,7 @@ const getAllGroups = async (req, res) => {
     const userId = req.user.id;
     try {
         const cards = await Group.findAll({
-            where: { userId}
+            where: { userId }
         });
 
         res.status(200).json(cards);

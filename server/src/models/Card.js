@@ -45,6 +45,18 @@ const Card = sequelize.define(
             key: 'id',
         },
     },
+    learnedAt: {
+        type: DataTypes.DATE, // Date when the card was learned
+        allowNull: true,
+    },
+    nextReviewAt: {
+        type: DataTypes.DATE, // Date for the next review based on the curve
+        allowNull: true,
+    },
+    reviewCount: {
+        type: DataTypes.INTEGER, // Number of times the card has been reviewed
+        defaultValue: 0,
+    }
 },
 {
         tableName: 'Cards',

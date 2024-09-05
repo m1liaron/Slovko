@@ -7,130 +7,85 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Entypo } from '@expo/vector-icons';
 import {Audio} from "expo-av";
 
-const QuizScreen = ({route}) => {
+const QuizScreen = () => {
     const cards = useSelector(selectCard);
-
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
     const [isCorrect, setIsCorrect] = useState(null)
     const [selectedOption, setSelectedOption] = useState('')
 
-    const showingCard = cards.slice(displayedIndex, displayedIndex + 1);
+    const currentCard = cards[displayedIndex];
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
     useEffect(() => {
-        generateQuizOption(displayedIndex);
+        generateQuizOption();
     }, [displayedIndex])
 
-    const generateQuizOption = (index) => {
-        const correctOption = cards[index]?.translateWord;
-
-
-        const allOptions = shuffleArray([
-            { text: correctOption, isCorrect: true },
-            ...getIncorrectOptions(),
-        ]);
-
-        setQuizOptions(allOptions);
+    const generateQuizOption = () => {
+        if(!currentCard) return;
+        const correctOption = { text: currentCard.translateWord, isCorrect: true };
+        const incorrectOptions = getIncorrectOptions();
+        const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
+        setQuizOptions(shuffledOptions);
     }
 
     const getIncorrectOptions = () => {
-        const incorrectOptions = cards
+        return cards
                 .filter((item, index) => index !== displayedIndex)
-                .map(item => ({text: item.translateWord, isCorrect: false})); //
-        return shuffleArray(incorrectOptions).slice(0, 3);
+                .map(item => ({text: item.translateWord, isCorrect: false}))
+                .slice(0, 3)
     }
 
     const shuffleArray = (array) => {
-        const shuffledArray = [...array]; // Копіює масив
-        for(let i = shuffledArray.length - 1; i > 0; i--){ // цикл від кінця до початку
-            const j = Math.floor(Math.random() * (i + 1));  // отримання випадкогового числ
-            // Ліва частина виразу [shuffledArray[i], shuffledArray[j]]: Це створення масиву з двох елементів - елемента, який знаходиться на позиції i у shuffledArray, та елемента, який знаходиться на позиції j у shuffledArray.
-            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
-            // Права частина виразу [shuffledArray[j], shuffledArray[i]]: Це створення іншого масиву, але з оберненим порядком елементів - елемента на позиції j тепер стоїть на місці i, і навпаки.
-        }
-        return shuffledArray;
+        return array.sort(() => Math.random() - 0.5);
+    };
 
-    }
-
-    const showNextCard = () => {
+    const moveToNextCard  = () => {
         if (displayedIndex < cards.length - 1) {
             setTimeout(() => {
                 setDisplayedIndex(displayedIndex + 1);
+                setIsCorrect(null);
             }, 2000)
-        }
-    }
-
-    const handleOptionPress = async (newSelectedOption) => {
-        const correctedOption = cards[displayedIndex].translateWord;
-        setSelectedOption(newSelectedOption)
-
-        if(newSelectedOption.text === correctedOption){
-            console.log('Correct!');
-            setIsCorrect(true)
-            setTimeout(() => {
-                setSelectedOption(null)
-            }, 2000)
-
-            try {
-                const { sound } = await Audio.Sound.createAsync(
-                    require('../assets/audio/success.mp3'),
-                { positionMillis: 0, durationMillis: 2000 }
-                );
-                await sound.playAsync();
-            } catch (error) {
-                console.error('Error playing sound', error);
-            }
-
-                showNextCard()
-            setTimeout(() => {
-                generateQuizOption()
-            }, 2000)
-            if(displayedIndex < cards.length - 1){
-                setTimeout(() => {
-                    setSelectedOption(null)
-                    generateQuizOption()
-                }, 2000)
-            } else {
-                setTimeout(() => {
-                    navigation.navigate('home')
-                }, 2000)
-            }
         } else {
-            console.log('Incorrect')
-            setTimeout(() => {
-                setSelectedOption(null)
-            }, 1000)
-            setIsCorrect(false)
+            navigation.navigate('home');
         }
     }
 
-const leaveStudy = () => {
-        if(Platform.OS === 'web'){
-            const request = window.confirm('Ви впевнені що хочете вийти?')
-            if(request){
-                navigation.navigate('main');
-            }
+    const handleOptionPress = async (option) => {
+        setSelectedOption(option);
+        if (option.isCorrect) {
+            await playSuccessSound();
+            setIsCorrect(true);
+            moveToNextCard();
+        } else {
+            setIsCorrect(false);
         }
-        Alert.alert(
-            'Ви впевнені що хочете вийти?',
-            '',
-            [
-                {
-                    text: 'Вийти',
-                    onPress: () => {
-                        dispatch(shuffleCards())
-                        navigation.navigate('main');
-                    },
-                },
-                {
-                    text: 'Скасувати',
-                    style: 'cancel',
-                },
-            ],
-            { cancelable: false }
-        );
+
+        setTimeout(() => {
+            setSelectedOption(null);
+        }, 1000);
+    };
+
+    const playSuccessSound = async () => {
+        try {
+            const { sound } = await Audio.Sound.createAsync(
+                require('../assets/audio/success.mp3'),
+                { positionMillis: 0, durationMillis: 2000 }
+            );
+            await sound.playAsync();
+        } catch (error) {
+            console.error('Error playing sound', error);
+        }
+    }
+
+    const leaveStudy = () => {
+        if (Platform.OS === 'web' ? window.confirm('Ви впевнені що хочете вийти?') : true) {
+            Alert.alert('Ви впевнені що хочете вийти?', '', [
+                { text: 'Вийти', onPress: () => { dispatch(shuffleCards()); navigation.navigate('main'); } },
+                { text: 'Скасувати', style: 'cancel' }
+            ]);
+        }
     }
 
     return (
@@ -139,16 +94,9 @@ const leaveStudy = () => {
                 <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
                 <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
             </View>
-            <FlatList
-                data={showingCard}
-                maxToRenderPerBatch={1}
-                renderItem={({ item, index }) => (
-                    <Pressable style={styles.card}>
-                            <Text style={styles.cardText}>{item.word}</Text>
-                    </Pressable>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-            />
+            <Pressable style={styles.card}>
+                <Text style={styles.cardText}>{currentCard.word}</Text>
+            </Pressable>
                 <FlatList
                     data={quizOptions}
                     renderItem={({ item }) => (

@@ -1,4 +1,6 @@
 const Card =  require("../models/Card");
+const {Op} = require("sequelize");
+const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
@@ -9,7 +11,29 @@ const getAllCards = async (req, res) => {
 
         res.status(200).json(cards);
     } catch (error) {
-        res.status(400).send({ error: true, message: error.message || 'Error login'})
+        res.status(400).send({ error: true, message: error.message || 'Error get all cards'})
+    }
+}
+
+const updateCardsAfterReview = async (req, res) => {
+    const { groupId } = req.params;
+
+    try {
+        const groupCards = await Card.findAll({ where: { groupId } });
+
+        for(let card of groupCards){
+            const newReviewCount = card.reviewCount + 1;
+            const nextReviewDate = calculateNextReviewDate(newReviewCount);
+
+            card.reviewCount = newReviewCount;
+            card.nextReviewAt = nextReviewDate;
+
+            await card.save();
+        }
+
+        res.status(200).json(groupCards);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error update card'})
     }
 }
 
@@ -42,5 +66,6 @@ const removeCard = async (req, res) => {
 module.exports = {
     getAllCards,
     addCard,
-    removeCard
+    removeCard,
+    updateCardsAfterReview
 }
