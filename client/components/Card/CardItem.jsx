@@ -2,45 +2,17 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Button, Pressable, Dimensions} from 'react-native';
 import {Audio} from "expo-av";
 import { FontAwesome, Entypo  } from '@expo/vector-icons';
-const CardItem = ({ item: {data}, onRemove }) => {
-    const [isPlaying, setIsPlaying] = useState(false);
-
-    const playUrl = async () => {
-        const sound = new Audio.Sound();
-
-        try {
-            setIsPlaying(!isPlaying)
-            await sound.loadAsync({ uri: data[4] });
-
-            sound.setOnPlaybackStatusUpdate((status) => {
-                if (status.didJustFinish) {
-                    setIsPlaying(false);
-                    sound.unloadAsync(); // Unload the audio after playback finishes
-                }
-            });
-
-
-            await sound.playAsync();
-        } catch (error) {
-            console.error('Error loading or playing the audio', error);
-        }
-    };
-
+const CardItem = ({ item, onRemove }) => {
 
     return (
         <View style={styles.cardContainer}>
             <View style={styles.titleContainer}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{data[0]}</Text>
-                    <Pressable onPress={playUrl} >
-                        <FontAwesome name="file-audio-o" size={30} color={isPlaying ? "red" : "black"} />
-                    </Pressable>
+                    <Text style={styles.title}>{item.word}</Text>
                 </View>
                 <Entypo name="cross" onPress={onRemove} size={24} color="black" />
             </View>
-            <Text style={styles.translate}>{data.transcription}</Text>
-            <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{data[1]}</Text></Text>
-            <Text style={styles.translate}>Пояснення: {data[2]}</Text>
+            <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
         </View>
     );
 };

@@ -9,24 +9,28 @@ import {
     Alert,
 } from 'react-native';
 import CardItem from './CardItem';
-import {addCard, fetchCards, removeCard, selectCard} from '../../redux/cardSlice';
+import {addCard, getCards, removeCard, selectCard} from '../../redux/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
 import BottomSheetComponent from "../BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CardList = ({groupId}) => {
     const cardData = useSelector(selectCard);
     const currentCards = cardData.filter(card => card.groupId === groupId);
     const [value, setValue] = useState('');
+    const [answerWord, setAnswerWord] = useState('');
     const navigation = useNavigation();
-
     const dispatch = useDispatch();
 
-        const toastConfig = {
+    useEffect(() => {
+        dispatch(getCards({groupId}));
+    }, [dispatch])
+
+
+    const toastConfig = {
         success: (props) => (
             <BaseToast
                 {...props}
@@ -59,31 +63,19 @@ const CardList = ({groupId}) => {
         )
     };
 
-
     const onSaveCard = async () => {
-            const token = await AsyncStorage.getItem('token');
-            console.log(token);
             const cardData = {
                 word: value,
-                language: 'uk',
-                user: token
+                translateWord: answerWord,
+                groupId
             };
 
         dispatch(addCard(cardData));
         setValue('');
     };
 
-    const onRemoveCard = async (index, word) => {
-        try{
-            await  axios.delete(`http://192.168.31.196:8000/card/${word}`)
-                .then(response => {
-                    console.log(response)
-                    dispatch(removeCard(index));
-                    setValue('');
-                })
-        } catch (error){
-            console.log(error)
-        }
+    const onRemoveCard = async (courseId) => {
+        dispatch(removeCard(courseId));
     };
 
     const navigateTo = (name) => {
@@ -105,7 +97,14 @@ const CardList = ({groupId}) => {
                     value={value}
                     onChangeText={(text) => setValue(text)}
                     style={styles.input}
-                    placeholder="Введіть англійське слово"
+                    placeholder="Word..."
+                />
+
+                <TextInput
+                    value={answerWord}
+                    onChangeText={setAnswerWord}
+                    style={styles.input}
+                    placeholder="Answer..."
                 />
 
                 <Pressable onPress={onSaveCard} style={styles.button}>
@@ -120,7 +119,7 @@ const CardList = ({groupId}) => {
             <FlatList
                 data={currentCards}
                 renderItem={({ item, index }) => (
-                    <CardItem item={item} onRemove={() => onRemoveCard(index, item.word)} />
+                    <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
                 )}
                 horizontal={true}
                 keyExtractor={(item, index) => index.toString()}

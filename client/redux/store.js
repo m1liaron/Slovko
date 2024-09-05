@@ -4,8 +4,8 @@ import {userReducers} from "./userSlice";
 import {groupReducers} from "./groupSlice";
 export const store = configureStore({
     reducer:{
-        card: cardReducers,
-        group: groupReducers,
+        cards: cardReducers,
+        groups: groupReducers,
         user: userReducers
     }
 })

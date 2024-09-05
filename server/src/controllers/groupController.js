@@ -33,8 +33,8 @@ const getGroup = async (req, res) => {
 const addGroup = async (req, res) => {
     const data = req.body;
     try {
-        const newCard = await Group.create(data);
-        return res.status(200).json(newCard);
+        const newGroup = await Group.create({ ...data, userId: req.user.id });
+        return res.status(200).json(newGroup);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
     }

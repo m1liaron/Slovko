@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db/sequelize');
 const { v4: uuidv4 } = require('uuid');
+const Group = require("./Group");
 
 const Card = sequelize.define(
     'Card',
@@ -34,6 +35,14 @@ const Card = sequelize.define(
             notEmpty: {
                 msg: 'Card translate word cannot be empty',
             },
+        },
+    },
+    groupId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: Group,
+            key: 'id',
         },
     },
 },

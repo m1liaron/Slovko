@@ -1,15 +1,7 @@
 import {Text, View, StyleSheet} from "react-native";
 import {Link, useNavigation} from "@react-navigation/native";
 
-export const GroupItem = (
-    {
-      item: {
-          item: {
-              id, title
-          }
-      }
-    }
-) => {
+export const GroupItem = ({item: { id, title }}) => {
     return (
         <Link key={id} style={styles.item} to={{screen: 'group', params:{groupId: id}}}>
             <Text style={{fontSize:30}}>{title}</Text>

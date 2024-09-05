@@ -1,7 +1,5 @@
-import {FlatList, View} from "react-native";
 import {useSelector} from "react-redux";
 import {selectCard} from "../redux/cardSlice";
-import CardItem from "../components/Card/CardItem";
 import CardList from "../components/Card/CardList";
 
 const GroupScreen = ({route}) => {
