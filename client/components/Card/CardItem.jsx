@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5, // Adjust the radius for iOS
         width: '100%',
         height:Dimensions.get('window').height - 500,
-        marginHorizontal:20
+        marginHorizontal:20,
     },
     titleContainer:{
       flexDirection:'row',

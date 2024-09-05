@@ -116,15 +116,18 @@ const CardList = ({groupId}) => {
             {/*    <Text>Show Toast</Text>*/}
             {/*</Pressable>*/}
 
-            <FlatList
-                data={cards}
-                renderItem={({ item, index }) => (
-                    <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
-                )}
-                horizontal={true}
-                keyExtractor={(item, index) => index.toString()}
-                style={styles.listContainer}
-            />
+            <View>
+                <FlatList
+                    data={cards}
+                    renderItem={({ item, index }) => (
+                        <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
+                    )}
+                    horizontal={true}
+                    keyExtractor={(item, index) => index.toString()}
+                    style={styles.listContainer}
+                />
+            </View>
+
             <View style={styles.formContainer}>
             <View style={styles.flex}>
                 <Pressable onPress={() => navigateTo('study')} style={styles.button}>

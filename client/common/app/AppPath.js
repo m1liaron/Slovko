@@ -9,3 +9,5 @@ const AppPath = {
     Login: 'login',
     Register: 'register'
 }
+
+export { AppPath };

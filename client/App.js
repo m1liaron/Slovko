@@ -11,6 +11,7 @@ import LoadingScreen from "./screens/LoadingScreen";
 import GroupScreen from "./screens/GroupScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import { AppPath } from "./common/app/app";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,15 +20,14 @@ export default function App() {
         <Provider store={store}>
             <NavigationContainer>
                 <Stack.Navigator headerMode="none" screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="loading" component={LoadingScreen} />
-                    <Stack.Screen name="group" component={GroupScreen}/>
-                    <Stack.Screen name="home" component={MainScreen} />
-                    <Stack.Screen name="quiz" component={QuizScreen} />
-                    <Stack.Screen name="word" component={GuessWordScreen} />
-                    {/* Wrap only StudyScreen with GestureHandlerRootView */}
-                    <Stack.Screen name="study" component={StudyScreen} />
-                    <Stack.Screen name="login" component={LoginScreen} />
-                    <Stack.Screen name="register" component={RegisterScreen} />
+                    <Stack.Screen name={AppPath.Loading} component={LoadingScreen} />
+                    <Stack.Screen name={AppPath.Group} component={GroupScreen} />
+                    <Stack.Screen name={AppPath.Home} component={MainScreen} />
+                    <Stack.Screen name={AppPath.Quiz} component={QuizScreen} />
+                    <Stack.Screen name={AppPath.Word} component={GuessWordScreen} />
+                    <Stack.Screen name={AppPath.Study} component={StudyScreen} />
+                    <Stack.Screen name={AppPath.Login} component={LoginScreen} />
+                    <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </Provider>
