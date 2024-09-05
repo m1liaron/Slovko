@@ -9,15 +9,13 @@ import {Audio} from "expo-av";
 
 const QuizScreen = ({route}) => {
     const cards = useSelector(selectCard);
-    const {groupId} = route.params;
-    const cardData = cards?.filter(card => card.groupId === groupId);
 
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
     const [isCorrect, setIsCorrect] = useState(null)
     const [selectedOption, setSelectedOption] = useState('')
 
-    const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
+    const showingCard = cards.slice(displayedIndex, displayedIndex + 1);
     const dispatch = useDispatch()
     const navigation = useNavigation()
 
@@ -26,7 +24,8 @@ const QuizScreen = ({route}) => {
     }, [displayedIndex])
 
     const generateQuizOption = (index) => {
-        const correctOption = cardData[index].data[1]; //
+        const correctOption = cards[index]?.translateWord;
+
 
         const allOptions = shuffleArray([
             { text: correctOption, isCorrect: true },
@@ -37,9 +36,9 @@ const QuizScreen = ({route}) => {
     }
 
     const getIncorrectOptions = () => {
-        const incorrectOptions = cardData
+        const incorrectOptions = cards
                 .filter((item, index) => index !== displayedIndex)
-                .map(item => ({text: item.data[1], isCorrect: false})); //
+                .map(item => ({text: item.translateWord, isCorrect: false})); //
         return shuffleArray(incorrectOptions).slice(0, 3);
     }
 
@@ -56,7 +55,7 @@ const QuizScreen = ({route}) => {
     }
 
     const showNextCard = () => {
-        if (displayedIndex < cardData.length - 1) {
+        if (displayedIndex < cards.length - 1) {
             setTimeout(() => {
                 setDisplayedIndex(displayedIndex + 1);
             }, 2000)
@@ -64,7 +63,7 @@ const QuizScreen = ({route}) => {
     }
 
     const handleOptionPress = async (newSelectedOption) => {
-        const correctedOption = cardData[displayedIndex].data[1];
+        const correctedOption = cards[displayedIndex].translateWord;
         setSelectedOption(newSelectedOption)
 
         if(newSelectedOption.text === correctedOption){
@@ -88,14 +87,14 @@ const QuizScreen = ({route}) => {
             setTimeout(() => {
                 generateQuizOption()
             }, 2000)
-            if(displayedIndex < cardData.length - 1){
+            if(displayedIndex < cards.length - 1){
                 setTimeout(() => {
                     setSelectedOption(null)
                     generateQuizOption()
                 }, 2000)
             } else {
                 setTimeout(() => {
-                    navigation.navigate('main')
+                    navigation.navigate('home')
                 }, 2000)
             }
         } else {
@@ -138,14 +137,14 @@ const leaveStudy = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.crossIcon}>
                 <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
             </View>
             <FlatList
                 data={showingCard}
                 maxToRenderPerBatch={1}
                 renderItem={({ item, index }) => (
                     <Pressable style={styles.card}>
-                            <Text style={styles.cardText}>{item.data[0]}</Text>
+                            <Text style={styles.cardText}>{item.word}</Text>
                     </Pressable>
                 )}
                 keyExtractor={(item, index) => index.toString()}
