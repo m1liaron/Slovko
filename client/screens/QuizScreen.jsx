@@ -94,16 +94,9 @@ const QuizScreen = () => {
                 <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
                 <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
             </View>
-            <FlatList
-                data={currentCard}
-                maxToRenderPerBatch={1}
-                renderItem={({ item, index }) => (
-                    <Pressable style={styles.card}>
-                            <Text style={styles.cardText}>{item.word}</Text>
-                    </Pressable>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-            />
+            <Pressable style={styles.card}>
+                <Text style={styles.cardText}>{currentCard.word}</Text>
+            </Pressable>
                 <FlatList
                     data={quizOptions}
                     renderItem={({ item }) => (
