@@ -73,5 +73,6 @@ const removeCard = async (req, res) => {
 module.exports = {
     getAllCards,
     addCard,
-    removeCard
+    removeCard,
+    updateCardAfterReview
 }
