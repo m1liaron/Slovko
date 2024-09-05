@@ -6,12 +6,7 @@ const getAllCards = async (req, res) => {
     const { groupId } = req.params;
     try {
         const cards = await Card.findAll({
-            where: {
-                groupId,
-                nextReviewAt: {
-                    [Op.lte]: new Date(),
-                }
-            }
+            where: { groupId }
         });
 
         res.status(200).json(cards);

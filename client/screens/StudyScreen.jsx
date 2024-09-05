@@ -21,6 +21,7 @@ const StudyScreen = () => {
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
     const [learnedCards, setLearnedCards] = useState([]);
+    const [learningCards, setLearningCards] = useState([...cards]);
 
     const dispatch = useDispatch()
     const navigation = useNavigation()
@@ -91,9 +92,20 @@ const StudyScreen = () => {
     }
 
     const handleSwipeLeft = () => {
-        saveCardToLearned('unknown')
-        showNextCard();
+        const currentCard = learningCards[displayedIndex];
+
+        const remainingCards  = learningCards.filter((_, idx) => idx !== displayedIndex);
+        const updatedCards = [...remainingCards, currentCard];
+
+        setLearningCards(updatedCards);
+        setDisplayedIndex(prev => (prev >= updatedCards.length - 1 ? 0 : prev)); // Reset index if needed
+        rotation.value = 0;
+
+        saveCardToLearned('know');
+        // showNextCard();
     };
+
+    console.log(learningCards)
 
     const renderCard = ({ item, index }) => (
         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
@@ -133,7 +145,7 @@ const StudyScreen = () => {
                     onSwipeableLeftOpen={handleSwipeLeft}
                 >
                     <FlatList
-                        data={cards.slice(displayedIndex, displayedIndex + 1)}
+                        data={learningCards.slice(displayedIndex, displayedIndex + 1)}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={renderCard}
                         maxToRenderPerBatch={1}
