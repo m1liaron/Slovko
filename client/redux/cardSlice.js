@@ -16,7 +16,6 @@ export const addCard = createAsyncThunk('card/addCard', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
         const response = await axiosInstance.post('/cards', data)
-        console.log(response.data)
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);
@@ -68,7 +67,7 @@ const cardSlice = createSlice({
             })
             .addCase(addCard.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.cards.cards.push(action.payload)
+                state.cards.push(action.payload)
             })
             .addCase(addCard.rejected, (state, action) => {
                 state.status = 'error';

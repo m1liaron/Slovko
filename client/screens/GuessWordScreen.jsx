@@ -6,10 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 
-const GuessWordScreen = ({route}) => {
+const GuessWordScreen = () => {
     const cards = useSelector(selectCard);
-    const {groupId} = route.params;
-    const cardData = cards?.filter(card => card.groupId === groupId);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [wordIndex, setWordIndex] = useState(0);
     const [rightWord, setRightWord] = useState('');
@@ -19,11 +17,10 @@ const GuessWordScreen = ({route}) => {
     const navigation = useNavigation()
 
     useEffect(() => {
-        // Generate initial word when component mounts
         generateNewWord();
-    }, [wordIndex]); // Call generateNewWord whenever displayedIndex changes
+    }, [wordIndex]);
 
-    const currentWord = cardData[wordIndex]?.data[0]
+    const currentWord = cards[wordIndex]?.word
     const generateNewWord = () => {
         if (currentWord) {
             const wordArray = currentWord.split('');
@@ -51,12 +48,12 @@ const GuessWordScreen = ({route}) => {
     };
 
     const showNextWord = () => {
-        if(rightWord === currentWord && wordIndex < cardData.length - 1){
+        if(rightWord === currentWord && wordIndex < cards.length - 1){
             setWordIndex(wordIndex + 1)
             setRightWord('')
             setDisplayedIndex(0)
-        } else if(displayedIndex >= cardData.length){
-            navigation.navigate('main')
+        } else if(displayedIndex >= cards.length){
+            navigation.navigate('home')
         }
     }
     useEffect(() => {
@@ -94,7 +91,7 @@ const GuessWordScreen = ({route}) => {
     };
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.cardCount}>{wordIndex + 1}/{cardData.length}</Text>
+            <Text style={styles.cardCount}>{wordIndex + 1}/{cards.length}</Text>
             <Text>{rightWord}</Text>
             <FlatList
                 horizontal
