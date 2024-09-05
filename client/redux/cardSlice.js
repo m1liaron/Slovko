@@ -35,6 +35,17 @@ export const removeCard = createAsyncThunk('card/remove', async(data) => {
     }
 })
 
+export const updateCardsAfterLearn = createAsyncThunk('card/remove', async(data) => {
+    try{
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.put(`/cards/${data.groupId}`)
+        return response.data
+    } catch (error){
+        console.error('Error fetching cards:', error);
+        throw error;
+    }
+})
+
 
 const cardSlice = createSlice({
     name:'cards',

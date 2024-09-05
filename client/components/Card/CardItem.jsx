@@ -3,6 +3,7 @@ import {View, Text, StyleSheet, Button, Pressable, Dimensions} from 'react-nativ
 import {Audio} from "expo-av";
 import { FontAwesome, Entypo  } from '@expo/vector-icons';
 const CardItem = ({ item, onRemove }) => {
+    const nextReviewDate = new Date(item.nextReviewAt).toLocaleDateString();
 
     return (
         <View style={styles.cardContainer}>
@@ -13,6 +14,7 @@ const CardItem = ({ item, onRemove }) => {
                 <Entypo name="cross" onPress={onRemove} size={24} color="black" />
             </View>
             <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
+            <Text style={styles.reviewDate}>Наступний перегляд: <Text style={{ fontWeight: 'bold' }}>{nextReviewDate}</Text></Text>
         </View>
     );
 };
@@ -51,6 +53,11 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 5,
         width:69
+    },
+    reviewDate: {
+        fontSize: 16,
+        marginTop: 10,
+        color: '#007bff',
     },
 });
 
