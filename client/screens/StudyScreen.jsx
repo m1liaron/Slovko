@@ -17,8 +17,6 @@ const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width d
 
 const StudyScreen = ({route}) => {
     const cards = useSelector(selectCard);
-    const {groupId} = route.params;
-    const cardData = cards?.filter(card => card.groupId === groupId);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
@@ -52,23 +50,16 @@ const StudyScreen = ({route}) => {
         };
     });
 
-    const showingCard = cardData.slice(displayedIndex, displayedIndex + 1);
+    const showingCard = cards.slice(displayedIndex, displayedIndex + 1);
 
     const showNextCard = () => {
-        if (displayedIndex < cardData.length - 1) {
+        if (displayedIndex < cards.length - 1) {
             console.log('show next')
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0; // Reset rotation when showing the next card
-        } else if(displayedIndex >= cardData.length - 1) {
+        } else if(displayedIndex >= cards.length - 1) {
             console.log('leaver')
             leaveStudy()
-        }
-    }
-
-    const showPreviousCard = () => {
-        if (displayedIndex > 0) {
-            setDisplayedIndex(displayedIndex - 1);
-            rotation.value = 0; // Reset rotation when showing the next card
         }
     }
 
@@ -97,12 +88,9 @@ const StudyScreen = ({route}) => {
             );
         }
     }
-    console.log("learnedCards", learnedCards)
 
     const saveCardToLearned = (answer) => {
-        const currentCard = cardData.filter((item, index) => index === displayedIndex).map(item => item);
-        console.log(currentCard)
-        // const updatedCard = [...currentCard[0].data, answer]; // Add "know" to the array
+        const currentCard = cards.filter((item, index) => index === displayedIndex).map(item => item);
         const updatedCard = {word: currentCard[0], answer} // Add "know" to the array
         setLearnedCards(prevState => [...prevState, updatedCard]);
         console.log('Saved card', updatedCard);
@@ -121,7 +109,7 @@ const StudyScreen = ({route}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.centeredContainer}>
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cardData.length}</Text>
+                <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
 
                 <Swipeable
                     containerStyle={styles.swipeableContainer}
@@ -139,7 +127,6 @@ const StudyScreen = ({route}) => {
                     overshootLeft={false} // Disable overshooting left
                     onSwipeableRightOpen={handleSwipeRight}
                     onSwipeableLeftOpen={handleSwipeLeft}
-
                 >
                     <FlatList
                         data={showingCard}
@@ -148,39 +135,21 @@ const StudyScreen = ({route}) => {
                         renderItem={({ item, index }) => (
                             <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
                                 <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, frontAnimatedStyle]}>
-                                    <Text style={styles.cardText}>{item.data[0]}</Text>
+                                    <Text style={styles.cardText}>{item.word}</Text>
                                     <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
 
                                     <Pressable onPress={() => setShowDefinition(!showDefinition)}>
                                         <AntDesign name="questioncircleo" size={24} color="black" />
                                     </Pressable>
-                                    {showDefinition ? (
-                                        <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
-                                            <Text style={styles.cardText}>{item.data[1]}</Text> {/* Corrected line */}
-                                        </Animated.View>
-                                    ) : null}
 
                                 </Animated.View>
                                 <Animated.View style={[styles.card, { width: CARD_WIDTH, height: '100%' }, backAnimatedStyle]}>
-                                    <Text style={styles.cardText}>{item[1]}</Text>
+                                    <Text style={styles.cardText}>{item.translateWord}</Text>
                                 </Animated.View>
                             </Pressable>
                         )}
                     />
                 </Swipeable>
-
-
-                {/*<View style={styles.pressableContainer}>*/}
-                {/*    <Pressable style={styles.button} onPress={showPreviousCard}>*/}
-                {/*        <AntDesign name="arrowleft" size={24} color="white" />*/}
-                {/*    </Pressable>*/}
-                {/*    <Pressable style={styles.button} onPress={leaveStudy}>*/}
-                {/*        <Text style={styles.buttonText}>Закінчити</Text>*/}
-                {/*    </Pressable>*/}
-                {/*    <Pressable style={styles.button} onPress={showNextCard}>*/}
-                {/*        <AntDesign name="arrowright" size={24} color="white" />*/}
-                {/*    </Pressable>*/}
-                {/*</View>*/}
             </View>
         </SafeAreaView>
     );

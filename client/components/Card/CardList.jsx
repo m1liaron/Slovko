@@ -18,8 +18,7 @@ import BottomSheetComponent from "../BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 const CardList = ({groupId}) => {
-    const cardData = useSelector(selectCard);
-    const currentCards = cardData.filter(card => card.groupId === groupId);
+    const cards = useSelector(selectCard);
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
     const navigation = useNavigation();
@@ -72,6 +71,7 @@ const CardList = ({groupId}) => {
 
         dispatch(addCard(cardData));
         setValue('');
+        setAnswerWord('');
     };
 
     const onRemoveCard = async (courseId) => {
@@ -79,7 +79,7 @@ const CardList = ({groupId}) => {
     };
 
     const navigateTo = (name) => {
-        if (currentCards.length > 1) {
+        if (cards.length > 1) {
             navigation.navigate(name, {groupId});
         } else {
             Toast.show({
@@ -95,7 +95,7 @@ const CardList = ({groupId}) => {
                 <Toast config={toastConfig}/>
                 <TextInput
                     value={value}
-                    onChangeText={(text) => setValue(text)}
+                    onChangeText={setValue}
                     style={styles.input}
                     placeholder="Word..."
                 />
@@ -117,7 +117,7 @@ const CardList = ({groupId}) => {
             {/*</Pressable>*/}
 
             <FlatList
-                data={currentCards}
+                data={cards}
                 renderItem={({ item, index }) => (
                     <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
                 )}
