@@ -134,7 +134,7 @@ const CardList = ({groupId}) => {
                     <Text style={styles.buttonText}>Картки</Text>
                 </Pressable>
 
-                <Pressable onPress={() => navigateTo('quiz')} style={styles.button}>
+                <Pressable onPress={() => navigateTo('quiz', { groupId })} style={styles.button}>
                     <Text style={styles.buttonText}>Вікторина</Text>
                 </Pressable>
 

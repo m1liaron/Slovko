@@ -15,8 +15,9 @@ import { AntDesign } from '@expo/vector-icons';
 
 const CARD_WIDTH = Dimensions.get('window').width - 100;
 
-const StudyScreen = () => {
+const StudyScreen = ({ route }) => {
     const cards = useSelector(selectCard);
+    const { groupId } = route.params;
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
@@ -65,13 +66,13 @@ const StudyScreen = () => {
         const exitMessage = 'Ви впевнені що хочете вийти?';
         if (Platform.OS === 'web') {
             const confirmExit = window.confirm(exitMessage);
-            if (confirmExit) navigation.navigate('group');
+            if (confirmExit) navigation.navigate('group', { groupId });
         } else {
             Alert.alert(
                 exitMessage,
                 '',
                 [
-                    { text: 'Вийти', onPress: () => { dispatch(shuffleCards()); navigation.navigate('group'); } },
+                    { text: 'Вийти', onPress: () => { dispatch(shuffleCards()); navigation.navigate('group', { groupId }); } },
                     { text: 'Скасувати', style: 'cancel' }
                 ],
                 { cancelable: false }
@@ -93,15 +94,21 @@ const StudyScreen = () => {
     };
 
     const handleSwipeLeft = () => {
-        const currentCard = learningCards[displayedIndex];
-        const remainingCards = learningCards.filter((_, idx) => idx !== displayedIndex);
-        const updatedCards = [...remainingCards, currentCard];
-        setLearningCards(updatedCards);
-        setDisplayedIndex((prev) => (prev >= updatedCards.length - 1 ? 0 : prev));
-        rotation.value = 0;
+        saveCardToLearned('don’t know');
         setShowLeftSwipeView(true);
         setTimeout(() => setShowLeftSwipeView(false), 1000);
-        saveCardToLearned('don’t know');
+
+        // Update the learning cards
+        const currentCard = learningCards[displayedIndex];
+        const remainingCards = learningCards.filter((_, idx) => idx !== displayedIndex);
+
+        // Append current card to the end of the array
+        const updatedCards = [...remainingCards, currentCard];
+        setLearningCards(updatedCards);
+
+        // // Ensure the index is properly updated
+        setDisplayedIndex((prevIndex) => (prevIndex + 1) % updatedCards.length);
+        rotation.value = 0;
     };
 
     const renderCard = (card, index) => (
