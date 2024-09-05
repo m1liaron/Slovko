@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, FlatList, Pressable, Dimensions, Alert, Platform} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Alert, Platform, Pressable} from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
 import { selectCard, shuffleCards } from "../redux/cardSlice";
 import Animated, {
@@ -10,10 +10,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Swiper from "react-native-deck-swiper";
 import { AntDesign } from '@expo/vector-icons';
-import { RectButton, Swipeable } from 'react-native-gesture-handler';
 
-const CARD_WIDTH = Dimensions.get('window').width - 100; // Set the card width dynamically based on screen width
+const CARD_WIDTH = Dimensions.get('window').width - 100;
 
 const StudyScreen = () => {
     const cards = useSelector(selectCard);
@@ -22,14 +22,15 @@ const StudyScreen = () => {
     const [showDefinition, setShowDefinition] = useState(false);
     const [learnedCards, setLearnedCards] = useState([]);
     const [learningCards, setLearningCards] = useState([...cards]);
+    const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
+    const [showRightSwipeView, setShowRightSwipeView] = useState(false);
 
-    const dispatch = useDispatch()
-    const navigation = useNavigation()
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
     const rotation = useSharedValue(0);
 
     const handleFlipCard = (index) => {
         setFlippedIndex(index === flippedIndex ? null : index);
-
         rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
     };
 
@@ -46,21 +47,19 @@ const StudyScreen = () => {
             top: 0,
             left: 0,
             backfaceVisibility: 'hidden',
-            width: CARD_WIDTH, // Set the width to be the same as the front side
-            height: '100%', // Set the height to be the same as the front side
+            width: CARD_WIDTH,
+            height: '100%',
         };
     });
-
-    const showingCard = cards.slice(displayedIndex, displayedIndex + 1);
 
     const showNextCard = () => {
         if (displayedIndex < cards.length - 1) {
             setDisplayedIndex(displayedIndex + 1);
-            rotation.value = 0; // Reset rotation when showing the next card
-        } else if(displayedIndex >= cards.length - 1) {
-            leaveStudy()
+            rotation.value = 0;
+        } else if (displayedIndex >= cards.length - 1) {
+            leaveStudy();
         }
-    }
+    };
 
     const leaveStudy = () => {
         const exitMessage = 'Ви впевнені що хочете вийти?';
@@ -78,46 +77,44 @@ const StudyScreen = () => {
                 { cancelable: false }
             );
         }
-    }
+    };
 
     const saveCardToLearned = (answer) => {
         const currentCard = cards[displayedIndex];
         const updatedCard = { ...currentCard, answer };
         setLearnedCards((prev) => [...prev, updatedCard]);
-    }
+    };
 
     const handleSwipeRight = () => {
-        saveCardToLearned('know')
-        showNextCard()
-    }
+        saveCardToLearned('know');
+        setShowRightSwipeView(true);
+        setTimeout(() => setShowRightSwipeView(false), 1000);
+        showNextCard();
+    };
 
     const handleSwipeLeft = () => {
         const currentCard = learningCards[displayedIndex];
-
-        const remainingCards  = learningCards.filter((_, idx) => idx !== displayedIndex);
+        const remainingCards = learningCards.filter((_, idx) => idx !== displayedIndex);
         const updatedCards = [...remainingCards, currentCard];
-
         setLearningCards(updatedCards);
-        setDisplayedIndex(prev => (prev >= updatedCards.length - 1 ? 0 : prev)); // Reset index if needed
+        setDisplayedIndex((prev) => (prev >= updatedCards.length - 1 ? 0 : prev));
         rotation.value = 0;
-
-        saveCardToLearned('know');
-        // showNextCard();
+        setShowLeftSwipeView(true);
+        setTimeout(() => setShowLeftSwipeView(false), 1000);
+        saveCardToLearned('don’t know');
     };
 
-    console.log(learningCards)
-
-    const renderCard = ({ item, index }) => (
+    const renderCard = (card, index) => (
         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
             <Animated.View style={[styles.card, frontAnimatedStyle]}>
-                <Text style={styles.cardText}>{item.word}</Text>
+                <Text style={styles.cardText}>{card.word}</Text>
                 <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
                 <Pressable onPress={() => setShowDefinition(!showDefinition)}>
                     <AntDesign name="questioncircleo" size={24} color="black" />
                 </Pressable>
             </Animated.View>
             <Animated.View style={[styles.card, backAnimatedStyle]}>
-                <Text style={styles.cardText}>{item.translateWord}</Text>
+                <Text style={styles.cardText}>{card.translateWord}</Text>
             </Animated.View>
         </Pressable>
     );
@@ -125,32 +122,56 @@ const StudyScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.centeredContainer}>
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
-
-                <Swipeable
-                    containerStyle={styles.swipeableContainer}
-                    renderRightActions={() => (
-                        <RectButton style={styles.rightAction}>
-                            <Text style={styles.rightActionText}>Знаю</Text>
-                        </RectButton>
-                    )}
-                    renderLeftActions={() => (
-                        <RectButton style={styles.leftAction}>
-                            <Text style={styles.leftActionText}>Не знаю</Text>
-                        </RectButton>
-                    )}
-                    overshootRight={false} // Disable overshooting right
-                    overshootLeft={false} // Disable overshooting left
-                    onSwipeableRightOpen={handleSwipeRight}
-                    onSwipeableLeftOpen={handleSwipeLeft}
-                >
-                    <FlatList
-                        data={learningCards.slice(displayedIndex, displayedIndex + 1)}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={renderCard}
-                        maxToRenderPerBatch={1}
-                    />
-                </Swipeable>
+                <Text>{displayedIndex}/{learningCards.length}</Text>
+                <Swiper
+                    cards={learningCards}
+                    renderCard={(card, index) => renderCard(card, index)}
+                    onSwipedRight={handleSwipeRight}
+                    onSwipedLeft={handleSwipeLeft}
+                    stackSize={3}
+                    cardIndex={0}
+                    backgroundColor={'transparent'}
+                    overlayLabels={{
+                        left: {
+                            title: "Не знаю",
+                            style: {
+                                label: {
+                                    backgroundColor: 'red',
+                                    borderColor: 'red',
+                                    color: 'white',
+                                    fontSize: 24,
+                                    padding: 10,
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'flex-start',
+                                    marginTop: 20,
+                                    marginLeft: -20,
+                                },
+                            },
+                        },
+                        right: {
+                            title: 'Знаю',
+                            style: {
+                                label: {
+                                    backgroundColor: 'green',
+                                    borderColor: 'green',
+                                    color: 'white',
+                                    fontSize: 24,
+                                    padding: 10,
+                                },
+                                wrapper: {
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                    marginTop: 20,
+                                    marginLeft: 20,
+                                },
+                            },
+                        },
+                    }}
+                />
             </View>
         </SafeAreaView>
     );
@@ -158,88 +179,94 @@ const StudyScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#f7f8fc',
+        flex: 1,
     },
     centeredContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 16,
+        flex: 1,
     },
     cardContainer: {
-        marginVertical: 20,
-        width: CARD_WIDTH, // Add this line to ensure the card has a fixed width
-        flex: 1, // Add this line to allow the cardContainer to take the available height
-    },
-    cardCount: {
-        fontSize: 18,
-        marginBottom: 10,
+        marginVertical: 16,
+        width: CARD_WIDTH,
+        height: 250,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     card: {
-        borderWidth: 1,
-        borderColor: '#000000',
-        borderRadius: 8,
-        padding: 16,
+        width: '100%',
+        height: '100%',
+        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.4,
+        shadowRadius: 6,
+        elevation: 6,
+        backgroundColor: '#ffffff', // Clean white card
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
-        marginBottom: 20,
-        height:200
+        padding: 20,
     },
     cardText: {
-        fontSize: 20,
-        fontWeight: 'bold',
+        fontSize: 22,
+        fontWeight: '700',
+        color: '#333', // Darker text for better readability
+        textAlign: 'center',
+        marginBottom: 10,
     },
     cardDescription: {
-        fontSize: 15,
-    },
-    pressableContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center', // Center horizontally
-        marginTop: 20,
-    },
-    button: {
-        backgroundColor: '#007bff',
-        borderRadius: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginHorizontal: 10,
-    },
-    disabledButton:{
-        backgroundColor: '#808284',
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
         fontSize: 16,
+        color: '#777', // Lighter color for secondary information
+        textAlign: 'center',
+        marginTop: 8,
     },
-
-    swipeableContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+    iconButton: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: '#f0f0f0', // Subtle background for icons
+        borderRadius: 50,
     },
-    rightAction: {
-        backgroundColor: '#28a745',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 15,
+    swipeFeedbackView: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: [{ translateX: -50 }, { translateY: -50 }],
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Higher opacity for clear feedback
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 12,
     },
-    leftAction: {
-        backgroundColor: '#dc3545',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 15,
+    swipeText: {
+        color: '#ffffff',
+        fontSize: 28,
+        fontWeight: '700',
+        textAlign: 'center',
     },
-    rightActionText: {
-        color: '#fff',
-        fontWeight: 'bold',
+    overlayLabelLeft: {
+        title: {
+            color: 'white',
+            backgroundColor: '#ff6b6b',
+            padding: 12,
+            borderRadius: 8,
+        },
+        wrapper: {
+            justifyContent: 'flex-start',
+            marginLeft: -30,
+        },
     },
-    leftActionText: {
-        color: '#fff',
-        fontWeight: 'bold',
+    overlayLabelRight: {
+        title: {
+            color: 'white',
+            backgroundColor: '#1dd1a1',
+            padding: 12,
+            borderRadius: 8,
+        },
+        wrapper: {
+            justifyContent: 'flex-start',
+            marginRight: -30,
+        },
     },
 });
 
