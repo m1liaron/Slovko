@@ -1,0 +1,19 @@
+version: '3'
+services: 
+  backend:
+    build:
+      context: ./server
+    ports: 
+      - "3000:3000"
+    volumes: 
+      - ./server:/app
+    depends_on:
+      - frontend
+
+  frontend: 
+    build:
+      context: ./frontend
+    ports: 
+      - "8081:8081"
+    volumes:
+      - ./frontend:/app
