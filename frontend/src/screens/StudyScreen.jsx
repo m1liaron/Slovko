@@ -129,7 +129,7 @@ const StudyScreen = ({ route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.centeredContainer}>
-                <Text>{displayedIndex}/{learningCards.length}</Text>
+                <Text style={styles.counterText}>{displayedIndex + 1}/{learningCards.length}</Text>
                 <Swiper
                     cards={learningCards}
                     renderCard={(card, index) => renderCard(card, index)}
@@ -138,44 +138,15 @@ const StudyScreen = ({ route }) => {
                     stackSize={3}
                     cardIndex={0}
                     backgroundColor={'transparent'}
+                    verticalSwipe={false}
                     overlayLabels={{
                         left: {
-                            title: "Не знаю",
-                            style: {
-                                label: {
-                                    backgroundColor: 'red',
-                                    borderColor: 'red',
-                                    color: 'white',
-                                    fontSize: 24,
-                                    padding: 10,
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'flex-start',
-                                    marginTop: 20,
-                                    marginLeft: -20,
-                                },
-                            },
+                            title: "Don’t know",
+                            style: styles.overlayLabelLeft,
                         },
                         right: {
-                            title: 'Знаю',
-                            style: {
-                                label: {
-                                    backgroundColor: 'green',
-                                    borderColor: 'green',
-                                    color: 'white',
-                                    fontSize: 24,
-                                    padding: 10,
-                                },
-                                wrapper: {
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                    justifyContent: 'flex-start',
-                                    marginTop: 20,
-                                    marginLeft: 20,
-                                },
-                            },
+                            title: 'Know',
+                            style: styles.overlayLabelRight,
                         },
                     }}
                 />
@@ -196,15 +167,14 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     cardContainer: {
-        marginVertical: 16,
         width: CARD_WIDTH,
-        height: 250,
+        height: '70%',
         alignItems: 'center',
         justifyContent: 'center',
     },
     card: {
-        width: '100%',
-        height: '100%',
+        width: '50%',
+        height: '80%',
         borderRadius: 12,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
@@ -217,14 +187,14 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     cardText: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: '700',
         color: '#333', // Darker text for better readability
         textAlign: 'center',
         marginBottom: 10,
     },
     cardDescription: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#777', // Lighter color for secondary information
         textAlign: 'center',
         marginTop: 8,
@@ -257,10 +227,14 @@ const styles = StyleSheet.create({
             backgroundColor: '#ff6b6b',
             padding: 12,
             borderRadius: 8,
+            fontSize: 16, // Adjust font size if needed
+            fontWeight: '700',
         },
         wrapper: {
-            justifyContent: 'flex-start',
-            marginLeft: -30,
+            justifyContent: 'flex-end', // Adjust to position the label properly
+            alignItems: 'flex-start', // Align label to the left edge
+            marginLeft: 20, // Adjust margin to position the label
+            marginTop: 20, // Adjust margin to position the label from top
         },
     },
     overlayLabelRight: {
@@ -269,10 +243,14 @@ const styles = StyleSheet.create({
             backgroundColor: '#1dd1a1',
             padding: 12,
             borderRadius: 8,
+            fontSize: 16, // Adjust font size if needed
+            fontWeight: '700',
         },
         wrapper: {
-            justifyContent: 'flex-start',
-            marginRight: -30,
+            justifyContent: 'flex-end', // Adjust to position the label properly
+            alignItems: 'flex-end', // Align label to the right edge
+            marginRight: 20, // Adjust margin to position the label
+            marginTop: 20, // Adjust margin to position the label from top
         },
     },
 });
