@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const login = createAsyncThunk(
     'user/login', async (data) => {
-        const response = await axios.post(`http://localhost:3000/users/login`, data);
+        const response = await axios.post(`http://192.168.31.196:3000/users/login`, data);
         await AsyncStorage.setItem('token', response.data.token)
         return response.data
     }
@@ -13,7 +13,7 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
     'user/register', async (data) => {
-        const response = await axios.post(`http://localhost:3000/users/register`, data);
+        const response = await axios.post(`http://192.168.31.196:3000/users/register`, data);
         await AsyncStorage.setItem('token', response.data.token)
         return response.data
     }
