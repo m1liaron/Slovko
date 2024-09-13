@@ -48,6 +48,7 @@ const Card = sequelize.define(
     status: {
         type: DataTypes.ENUM('Learned', 'To Learn', 'Know'),
         allowNull: false,
+        defaultValue: 'To Learn'
     },
     learnedAt: {
         type: DataTypes.DATE, // Date when the card was learned
