@@ -12,7 +12,7 @@ import GroupScreen from "./screens/GroupScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { AppPath } from "./common/app/app";
-import LearnScreen from "./screens/LearnScreen";
+import LearnScreen from "./screens/LearnScreen/LearnScreen";
 
 const Stack = createNativeStackNavigator();
 
