@@ -16,6 +16,7 @@ import axios from "axios";
 import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
 import BottomSheetComponent from "../BottomSheetComponent";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {AppPath} from "../../common/app/app";
 
 const CardList = ({groupId}) => {
     const cards = useSelector(selectCard);
@@ -130,16 +131,8 @@ const CardList = ({groupId}) => {
 
             <View style={styles.formContainer}>
             <View style={styles.flex}>
-                <Pressable onPress={() => navigateTo('study')} style={styles.button}>
-                    <Text style={styles.buttonText}>Картки</Text>
-                </Pressable>
-
-                <Pressable onPress={() => navigateTo('quiz', { groupId })} style={styles.button}>
-                    <Text style={styles.buttonText}>Вікторина</Text>
-                </Pressable>
-
-                <Pressable onPress={() => navigateTo('word')} style={styles.button}>
-                    <Text style={styles.buttonText}>Слово</Text>
+                <Pressable onPress={() => navigateTo(AppPath.Learn)} style={styles.button}>
+                    <Text style={styles.buttonText}>Вчитися</Text>
                 </Pressable>
             </View>
         </View>

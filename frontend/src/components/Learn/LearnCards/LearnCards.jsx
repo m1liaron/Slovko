@@ -9,7 +9,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigation} from "@react-navigation/native";
 const CARD_WIDTH = Dimensions.get('window').width - 100;
 
-const LearnCards = () => {
+const LearnCards = ({ onComplete }) => {
     const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
@@ -51,25 +51,7 @@ const LearnCards = () => {
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0;
         } else if (displayedIndex >= cards.length - 1) {
-            leaveStudy();
-        }
-    };
-
-    const leaveStudy = () => {
-        const exitMessage = 'Ви впевнені що хочете вийти?';
-        if (Platform.OS === 'web') {
-            const confirmExit = window.confirm(exitMessage);
-            if (confirmExit) navigation.navigate('group', { groupId });
-        } else {
-            Alert.alert(
-                exitMessage,
-                '',
-                [
-                    { text: 'Вийти', onPress: () => { dispatch(shuffleCards()); navigation.navigate('group', { groupId }); } },
-                    { text: 'Скасувати', style: 'cancel' }
-                ],
-                { cancelable: false }
-            );
+            onComplete();
         }
     };
 

@@ -1,21 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList, Pressable} from 'react-native'
-import {AntDesign} from "@expo/vector-icons";
+import {View, Text, FlatList, Pressable} from 'react-native'
 import styles from './LearnQuiz.styles';
 import {Audio} from "expo-av";
-import {useDispatch, useSelector} from "react-redux";
+import { useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 
-const LearnQuiz = () => {
+const LearnQuiz = ({ onComplete }) => {
     const cards = useSelector(selectCard);
-    const currentCard = cards[displayedQuizIndex];
     const navigation = useNavigation()
 
     const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
     const [isCorrect, setIsCorrect] = useState(null)
     const [selectedOption, setSelectedOption] = useState('')
+    const currentCard = cards[displayedQuizIndex];
 
     useEffect(() => {
         generateQuizOption();
@@ -47,7 +46,7 @@ const LearnQuiz = () => {
                 setIsCorrect(null);
             }, 2000)
         } else {
-            navigation.navigate('home');
+            onComplete();
         }
     }
 

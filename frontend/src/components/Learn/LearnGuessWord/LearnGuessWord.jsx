@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList, Pressable} from 'react-native'
+import {View, Text, FlatList, Pressable, useWindowDimensions} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 
-const LearnGuessWord = () => {
+const LearnGuessWord = ({ onComplete }) => {
     const cards = useSelector(selectCard);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState('');
@@ -15,6 +15,7 @@ const LearnGuessWord = () => {
     const [showWord, setShowWord] = useState(false);
     const navigation = useNavigation();
     const currentWord = cards[currentIndex]?.word;
+    const { width } = useWindowDimensions();
 
     useEffect(() => {
         if (currentWord) generateScrambledWord(currentWord);
@@ -63,7 +64,7 @@ const LearnGuessWord = () => {
                 setCurrentIndex(currentIndex + 1);
                 resetGameState();
             } else {
-                navigation.navigate('home');
+                onComplete()
             }
         }
     }, [currentGuess]);

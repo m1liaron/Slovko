@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
@@ -9,16 +9,44 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
+import {useDispatch} from "react-redux";
+import {getCards} from "../../redux/cardSlice";
+import {useNavigation} from "@react-navigation/native";
+import {AppPath} from "../../common/app/app";
 
 
 const LearnScreen = ({ route }) => {
     const { groupId } = route.params;
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
 
-    // settings
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
+    const [currentSection, setCurrentSection] = useState('cards');
+    const [finishedSections, setFinishedSections] = useState([]); // Cards || Quiz || Word
+
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
+
+    useEffect(() => {
+        dispatch(getCards({ groupId }))
+    }, []);
+
+    const handleNextSection = () => {
+        if(currentSection === 'cards') {
+            setCurrentSection('quiz');
+        } else if(currentSection === 'quiz') {
+            setCurrentSection('word');
+        } else {
+            navigation.navigate(AppPath.Home);
+        }
+    }
+
+    useEffect(() => {
+        if(currentSection === 'word') {
+            navigation.navigate(AppPath.Home);
+        }
+    }, [])
 
     const generateSectionContent = () => {
         const sections = [
@@ -52,12 +80,11 @@ const LearnScreen = ({ route }) => {
             </View>
         ))
     }
-
     return (
         <SafeAreaView styles={styles.container}>
-            <LearnCards />
-            <LearnQuiz />
-            <LearnGuessWord />
+            { currentSection === 'cards' && <LearnCards onComplete={handleNextSection}/>}
+            { currentSection === 'quiz' && <LearnQuiz onComplete={handleNextSection}/>}
+            { currentSection === 'word' && <LearnGuessWord onComplete={handleNextSection}/>}
 
             <DefaultModal
                 isVisible={showSettingsModal}
