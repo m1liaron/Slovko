@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable, Platform, Alert, Dimensions, FlatList} from "react-native";
+import {View, Text, Pressable, Platform, Alert, Dimensions, FlatList, useWindowDimensions} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
@@ -12,6 +12,7 @@ import {useNavigation} from "@react-navigation/native";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import Swiper from "react-native-deck-swiper";
 import {Audio} from "expo-av";
+import {AppPath} from "../../common/app/app";
 
 const CARD_WIDTH = Dimensions.get('window').width - 100;
 
@@ -21,6 +22,7 @@ const LearnScreen = ({ route }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const rotation = useSharedValue(0);
+    const { width } = useWindowDimensions();
 
     // cards
     const [flippedIndex, setFlippedIndex] = useState(null);
@@ -37,6 +39,14 @@ const LearnScreen = ({ route }) => {
     const [isCorrect, setIsCorrect] = useState(null)
     const [selectedOption, setSelectedOption] = useState('')
     const currentCard = cards[displayedQuizIndex];
+
+    // guess word
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentGuess, setCurrentGuess] = useState('');
+    const [scrambledWord, setScrambledWord] = useState([]);
+    const [letterColors, setLetterColors] = useState({});
+    const [showWord, setShowWord] = useState(false);
+    const currentWord = cards[currentIndex]?.word;
 
     // settings
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
@@ -238,6 +248,65 @@ const LearnScreen = ({ route }) => {
         }
     }
 
+    // quess words functions
+
+    useEffect(() => {
+        if (currentWord) generateScrambledWord(currentWord);
+    }, [currentIndex]);
+
+    const generateScrambledWord = (word) => {
+        let wordArray = word.split('');
+        for (let i = 0; i < 3; i++) {
+            const randomLetter = getRandomLetter();
+            const randomIndex = getRandomInt(0, wordArray.length);
+            wordArray.splice(randomIndex, 0, randomLetter);
+        }
+        setScrambledWord(wordArray);
+    };
+
+    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    const getRandomLetter = () => {
+        const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+        return alphabet[getRandomInt(0, alphabet.length - 1)];
+    };
+
+    const handleLetterSelection = (letter, index) => {
+        if (letter === currentWord[currentGuess.length]) {
+            setCurrentGuess(currentGuess + letter);
+            removeLetterFromScrambled(index);
+        } else {
+            highlightIncorrectLetter(index);
+        }
+    };
+
+    const removeLetterFromScrambled = (index) => {
+        const updatedWord = [...scrambledWord];
+        updatedWord.splice(index, 1);
+        setScrambledWord(updatedWord);
+    };
+
+    const highlightIncorrectLetter = (index) => {
+        setLetterColors({ ...letterColors, [index]: 'red' });
+        setTimeout(() => setLetterColors({}), 1000);
+    };
+
+    useEffect(() => {
+        if (currentGuess === currentWord) {
+            if (currentIndex < cards.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+                resetGameState();
+            } else {
+                navigation.navigate(AppPath.Home);
+            }
+        }
+    }, [currentGuess]);
+
+    const resetGameState = () => {
+        setCurrentGuess('');
+        setLetterColors({});
+    };
+
     return (
         <SafeAreaView styles={styles.container}>
             {/*<View style={styles.centeredContainer}>*/}
@@ -263,32 +332,57 @@ const LearnScreen = ({ route }) => {
             {/*    />*/}
             {/*</View>*/}
 
-            <View style={styles.centeredContainer} >
-                <Pressable style={styles.card}>
-                    <Text style={styles.cardText}>{currentCard.word}</Text>
+            {/*<View style={styles.centeredContainer} >*/}
+            {/*    <Pressable style={styles.quizCard}>*/}
+            {/*        <Text style={styles.quizCardText}>{currentCard.word}</Text>*/}
+            {/*    </Pressable>*/}
+            {/*    <FlatList*/}
+            {/*        data={quizOptions}*/}
+            {/*        renderItem={({ item }) => (*/}
+            {/*            <Pressable*/}
+            {/*                style={[*/}
+            {/*                    styles.optionContainer,*/}
+            {/*                    {*/}
+            {/*                        backgroundColor:*/}
+            {/*                            selectedOption === item*/}
+            {/*                                ? isCorrect === true*/}
+            {/*                                    ? '#a1dc93'*/}
+            {/*                                    : isCorrect === false*/}
+            {/*                                        ? '#df5151'*/}
+            {/*                                        : '#8e8e8e'*/}
+            {/*                                : '#d0d0d0',*/}
+            {/*                    },*/}
+            {/*                ]} onPress={() => handleOptionPress(item)}>*/}
+            {/*                <Text>{item.text}</Text>*/}
+            {/*            </Pressable>*/}
+            {/*        )}*/}
+            {/*        keyExtractor={(item, index) => index.toString()}*/}
+            {/*    />*/}
+            {/*</View>*/}
+
+            <View style={styles.centeredContainer}>
+                <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
+                <Text>{currentGuess}</Text>
+                <View style={{ flexDirection: 'row', overflow: 'hidden' }}>
+                    <FlatList
+                        horizontal
+                        data={scrambledWord}
+                        contentContainerStyle={[styles.wordContainer, { paddingHorizontal: 20, width: width - 100 }]} // Add padding
+                        renderItem={({ item, index }) => (
+                            <Pressable
+                                style={[styles.word, { backgroundColor: letterColors[index] || 'transparent' }]}
+                                onPress={() => handleLetterSelection(item, index)}
+                            >
+                                <Text style={styles.wordText}>{item}</Text>
+                            </Pressable>
+                        )}
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+                <Pressable onPress={() => setShowWord(!showWord)}>
+                    <AntDesign name="questioncircleo" size={24} color="black" />
                 </Pressable>
-                <FlatList
-                    data={quizOptions}
-                    renderItem={({ item }) => (
-                        <Pressable
-                            style={[
-                                styles.optionContainer,
-                                {
-                                    backgroundColor:
-                                        selectedOption === item
-                                            ? isCorrect === true
-                                                ? '#a1dc93'
-                                                : isCorrect === false
-                                                    ? '#df5151'
-                                                    : '#8e8e8e'
-                                            : '#d0d0d0',
-                                },
-                            ]} onPress={() => handleOptionPress(item)}>
-                            <Text>{item.text}</Text>
-                        </Pressable>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                />
+                {showWord && <Text>{currentWord}</Text>}
             </View>
 
             <DefaultModal
@@ -305,7 +399,7 @@ const LearnScreen = ({ route }) => {
             >
                 {generateSectionContent()}
             </DefaultModal>
-            <Pressable onPress={() => toggleSwitch(setShowSettingsModal)}>
+            <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
                 <AntDesign name="setting" size={30} color="#000"/>
             </Pressable>
         </SafeAreaView>
