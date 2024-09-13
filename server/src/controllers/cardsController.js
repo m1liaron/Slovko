@@ -1,12 +1,23 @@
 const Card =  require("../models/Card");
-const {Op} = require("sequelize");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
+const { Op } = require("sequelize");
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
     try {
         const cards = await Card.findAll({
-            where: { groupId }
+            where: { 
+                groupId,
+                [Op.or]: [
+                    { status: 'To Learn' },
+                    {
+                        status: 'Learned',
+                        nextReviewAt: {
+                            [Op.lte]: today
+                        }
+                    }
+                ]
+             }
         });
 
         res.status(200).json(cards);
@@ -25,6 +36,8 @@ const updateCardsAfterReview = async (req, res) => {
             const newReviewCount = card.reviewCount + 1;
             const nextReviewDate = calculateNextReviewDate(newReviewCount);
 
+            card.status = 'Learned';
+            card.learnedAt = new Date();
             card.reviewCount = newReviewCount;
             card.nextReviewAt = nextReviewDate;
 
@@ -40,7 +53,7 @@ const updateCardsAfterReview = async (req, res) => {
 const addCard = async (req, res) => {
     const data = req.body;
     try {
-        const newCard = await Card.create(data);
+        const newCard = await Card.create({...data, status: 'To Learn' });
         return res.status(200).json(newCard);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
