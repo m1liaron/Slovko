@@ -27,6 +27,19 @@ const getAllCards = async (req, res) => {
     }
 }
 
+const getAllStatusCards = async (req, res) => {
+    const { status, groupId } = req.body;
+    try {
+        const cards = await Card.findAll({
+            where: { status, groupId }
+        });
+        
+        res.status(200).json(cards);
+    } catch(error) {
+        res.status(400).send({ error: true, message: error.message || 'Getting cards'})
+    }
+}
+
 const updateCardsAfterReview = async (req, res) => {
     const { groupId } = req.params;
 
@@ -81,5 +94,6 @@ module.exports = {
     getAllCards,
     addCard,
     removeCard,
-    updateCardsAfterReview
+    updateCardsAfterReview,
+    getAllStatusCards
 }
