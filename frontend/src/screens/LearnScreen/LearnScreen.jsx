@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable, Platform, Alert, Dimensions} from "react-native";
+import {View, Text, Pressable, Platform, Alert, Dimensions, FlatList} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {AntDesign, MaterialIcons} from "@expo/vector-icons";
+import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import {useDispatch, useSelector} from "react-redux";
 import {selectCard, shuffleCards} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import Swiper from "react-native-deck-swiper";
+import {Audio} from "expo-av";
 
 const CARD_WIDTH = Dimensions.get('window').width - 100;
 
@@ -29,6 +30,13 @@ const LearnScreen = ({ route }) => {
     const [learningCards, setLearningCards] = useState([...cards]);
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
+
+    // quiz
+    const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
+    const [quizOptions, setQuizOptions] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(null)
+    const [selectedOption, setSelectedOption] = useState('')
+    const currentCard = cards[displayedQuizIndex];
 
     // settings
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
@@ -167,28 +175,119 @@ const LearnScreen = ({ route }) => {
         </Pressable>
     );
 
+    // quiz functions
+
+    useEffect(() => {
+        generateQuizOption();
+    }, [displayedQuizIndex])
+
+    const generateQuizOption = () => {
+        if(!currentCard) return;
+        const correctOption = { text: currentCard.translateWord, isCorrect: true };
+        const incorrectOptions = getIncorrectOptions();
+        const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
+        setQuizOptions(shuffledOptions);
+    }
+
+    const getIncorrectOptions = () => {
+        return cards
+            .filter((item, index) => index !== displayedQuizIndex)
+            .map(item => ({text: item.translateWord, isCorrect: false}))
+            .slice(0, 3)
+    }
+
+    const shuffleArray = (array) => {
+        return array.sort(() => Math.random() - 0.5);
+    };
+
+    const moveToNextCard  = () => {
+        if (displayedQuizIndex < cards.length - 1) {
+            setTimeout(() => {
+                setDisplayedQuizIndex(displayedQuizIndex + 1);
+                setIsCorrect(null);
+            }, 2000)
+        } else {
+            navigation.navigate('home');
+        }
+    }
+
+    const handleOptionPress = async (option) => {
+        setSelectedOption(option);
+        if (option.isCorrect) {
+            await playSuccessSound();
+            setIsCorrect(true);
+            moveToNextCard();
+        } else {
+            setIsCorrect(false);
+        }
+
+        setTimeout(() => {
+            setSelectedOption(null);
+        }, 1000);
+    };
+
+    const playSuccessSound = async () => {
+        try {
+            const { sound } = await Audio.Sound.createAsync(
+                require('../assets/audio/success.mp3'),
+                { positionMillis: 0, durationMillis: 2000 }
+            );
+            await sound.playAsync();
+        } catch (error) {
+            console.error('Error playing sound', error);
+        }
+    }
+
     return (
         <SafeAreaView styles={styles.container}>
-            <View style={styles.centeredContainer}>
-                <Swiper
-                    cards={learningCards}
-                    renderCard={(card, index) => renderCard(card, index)}
-                    onSwipedRight={handleSwipeRight}
-                    onSwipedLeft={handleSwipeLeft}
-                    stackSize={3}
-                    cardIndex={0}
-                    backgroundColor={'transparent'}
-                    verticalSwipe={false}
-                    overlayLabels={{
-                        left: {
-                            title: "Don’t know",
-                            style: styles.overlayLabelLeft,
-                        },
-                        right: {
-                            title: 'Know',
-                            style: styles.overlayLabelRight,
-                        },
-                    }}
+            {/*<View style={styles.centeredContainer}>*/}
+            {/*    <Swiper*/}
+            {/*        cards={learningCards}*/}
+            {/*        renderCard={(card, index) => renderCard(card, index)}*/}
+            {/*        onSwipedRight={handleSwipeRight}*/}
+            {/*        onSwipedLeft={handleSwipeLeft}*/}
+            {/*        stackSize={3}*/}
+            {/*        cardIndex={0}*/}
+            {/*        backgroundColor={'transparent'}*/}
+            {/*        verticalSwipe={false}*/}
+            {/*        overlayLabels={{*/}
+            {/*            left: {*/}
+            {/*                title: "Don’t know",*/}
+            {/*                style: styles.overlayLabelLeft,*/}
+            {/*            },*/}
+            {/*            right: {*/}
+            {/*                title: 'Know',*/}
+            {/*                style: styles.overlayLabelRight,*/}
+            {/*            },*/}
+            {/*        }}*/}
+            {/*    />*/}
+            {/*</View>*/}
+
+            <View style={styles.centeredContainer} >
+                <Pressable style={styles.card}>
+                    <Text style={styles.cardText}>{currentCard.word}</Text>
+                </Pressable>
+                <FlatList
+                    data={quizOptions}
+                    renderItem={({ item }) => (
+                        <Pressable
+                            style={[
+                                styles.optionContainer,
+                                {
+                                    backgroundColor:
+                                        selectedOption === item
+                                            ? isCorrect === true
+                                                ? '#a1dc93'
+                                                : isCorrect === false
+                                                    ? '#df5151'
+                                                    : '#8e8e8e'
+                                            : '#d0d0d0',
+                                },
+                            ]} onPress={() => handleOptionPress(item)}>
+                            <Text>{item.text}</Text>
+                        </Pressable>
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
                 />
             </View>
 
