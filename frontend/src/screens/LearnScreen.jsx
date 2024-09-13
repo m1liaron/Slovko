@@ -1,13 +1,15 @@
 import{ useState } from 'react';
 
 import { Switch } from "react-native-gesture-handler";
-import { StyleSheet, View, Text } from "react-native";
+import {StyleSheet, View, Text, Pressable} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import {AntDesign, MaterialIcons} from "@expo/vector-icons";
+import DefaultModal from "../components/DefaultModal/DefaultModal";
 
 const LearnScreen = () => {
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
+    const [showSettingsModal, setShowSettingsModal] = useState(false);
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
     const generateSectionContent = () => {
@@ -45,7 +47,16 @@ const LearnScreen = () => {
 
     return (
         <SafeAreaView styles={styles.container}>
-            {generateSectionContent()}
+            <DefaultModal
+                isVisible={showSettingsModal}
+                handleClose={() => toggleSwitch(setShowSettingsModal)}
+                backgroundColor="transparent"
+            >
+                {generateSectionContent()}
+            </DefaultModal>
+            <Pressable onPress={() => toggleSwitch(setShowSettingsModal)}>
+                <AntDesign name="setting" size={30} color="#000"/>
+            </Pressable>
         </SafeAreaView>
     )
 }
