@@ -3,6 +3,7 @@ const AppPath = {
     Loading: 'loading',
     Group: 'group',
     Home: 'home',
+    Learn: 'learn',
     Quiz: 'quiz',
     Word: 'word',
     Study: 'study',

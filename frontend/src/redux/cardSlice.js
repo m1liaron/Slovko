@@ -12,6 +12,17 @@ export const getCards = createAsyncThunk('card/fetchCards', async(data) => {
     }
 })
 
+export const getAllStatusCards = createAsyncThunk('card/getStatusCards', async(data) => {
+    try{
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get(`/cards`, data);
+        return response.data
+    } catch (error){
+        console.error('Error fetching cards:', error);
+        throw error;
+    }
+})
+
 export const addCard = createAsyncThunk('card/addCard', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
@@ -69,6 +80,18 @@ const cardSlice = createSlice({
                 state.cards = action.payload;
             })
             .addCase(getCards.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+
+            .addCase(getAllStatusCards.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(getAllStatusCards.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.cards = action.payload;
+            })
+            .addCase(getAllStatusCards.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })
