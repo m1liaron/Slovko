@@ -1,11 +1,16 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Platform, Alert, Pressable} from 'react-native'
+import {View, Text, StyleSheet, Platform, Alert, Pressable, Dimensions} from 'react-native'
 import Swiper from "react-native-deck-swiper";
-import Animated, {interpolate, useAnimatedStyle, withTiming} from "react-native-reanimated";
-import {shuffleCards} from "../../redux/cardSlice";
+import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import {selectCard, shuffleCards} from "../../../redux/cardSlice";
 import {AntDesign} from "@expo/vector-icons";
+import styles from './LearnCards.styles';
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigation} from "@react-navigation/native";
+const CARD_WIDTH = Dimensions.get('window').width - 100;
 
 const LearnCards = () => {
+    const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
@@ -13,6 +18,10 @@ const LearnCards = () => {
     const [learningCards, setLearningCards] = useState([...cards]);
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
+
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+    const rotation = useSharedValue(0);
 
     const handleFlipCard = (index) => {
         setFlippedIndex(index === flippedIndex ? null : index);

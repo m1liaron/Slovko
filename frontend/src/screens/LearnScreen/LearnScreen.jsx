@@ -11,14 +11,14 @@ import {selectCard, shuffleCards} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {Audio} from "expo-av";
 import {AppPath} from "../../common/app/app";
-import LearnCards from "../../components/LearnCards/LearnCards";
+import LearnCards from "../../components/Learn/LearnCards/LearnCards";
+import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 
 const CARD_WIDTH = Dimensions.get('window').width - 100;
 
 const LearnScreen = ({ route }) => {
     const { groupId } = route.params;
     const cards = useSelector(selectCard);
-    const dispatch = useDispatch();
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
 
@@ -74,69 +74,6 @@ const LearnScreen = ({ route }) => {
                 />
             </View>
         ))
-    }
-
-    // quiz functions
-
-    useEffect(() => {
-        generateQuizOption();
-    }, [displayedQuizIndex])
-
-    const generateQuizOption = () => {
-        if(!currentCard) return;
-        const correctOption = { text: currentCard.translateWord, isCorrect: true };
-        const incorrectOptions = getIncorrectOptions();
-        const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
-        setQuizOptions(shuffledOptions);
-    }
-
-    const getIncorrectOptions = () => {
-        return cards
-            .filter((item, index) => index !== displayedQuizIndex)
-            .map(item => ({text: item.translateWord, isCorrect: false}))
-            .slice(0, 3)
-    }
-
-    const shuffleArray = (array) => {
-        return array.sort(() => Math.random() - 0.5);
-    };
-
-    const moveToNextCard  = () => {
-        if (displayedQuizIndex < cards.length - 1) {
-            setTimeout(() => {
-                setDisplayedQuizIndex(displayedQuizIndex + 1);
-                setIsCorrect(null);
-            }, 2000)
-        } else {
-            navigation.navigate('home');
-        }
-    }
-
-    const handleOptionPress = async (option) => {
-        setSelectedOption(option);
-        if (option.isCorrect) {
-            await playSuccessSound();
-            setIsCorrect(true);
-            moveToNextCard();
-        } else {
-            setIsCorrect(false);
-        }
-
-        setTimeout(() => {
-            setSelectedOption(null);
-        }, 1000);
-    };
-
-    const playSuccessSound = async () => {
-        try {
-            const { sound } = await Audio.Sound.createAsync(
-                require('../assets/audio/success.mp3'),
-                { positionMillis: 0, durationMillis: 2000 }
-            );
-            await sound.playAsync();
-        } catch (error) {
-            console.error('Error playing sound', error);
-        }
     }
 
     // quess words functions
@@ -201,6 +138,7 @@ const LearnScreen = ({ route }) => {
     return (
         <SafeAreaView styles={styles.container}>
             <LearnCards/>
+            <LearnQuiz/>
 
             <View style={styles.centeredContainer}>
                 <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>

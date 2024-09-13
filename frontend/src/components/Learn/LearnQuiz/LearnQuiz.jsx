@@ -1,0 +1,113 @@
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, FlatList, Pressable} from 'react-native'
+import {AntDesign} from "@expo/vector-icons";
+import styles from './LearnQuiz.styles';
+import {Audio} from "expo-av";
+import {useDispatch, useSelector} from "react-redux";
+import {selectCard} from "../../../redux/cardSlice";
+import {useNavigation} from "@react-navigation/native";
+
+const LearnQuiz = () => {
+    const cards = useSelector(selectCard);
+    const currentCard = cards[displayedQuizIndex];
+    const navigation = useNavigation()
+
+    const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
+    const [quizOptions, setQuizOptions] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(null)
+    const [selectedOption, setSelectedOption] = useState('')
+
+    useEffect(() => {
+        generateQuizOption();
+    }, [displayedQuizIndex])
+
+    const generateQuizOption = () => {
+        if(!currentCard) return;
+        const correctOption = { text: currentCard.translateWord, isCorrect: true };
+        const incorrectOptions = getIncorrectOptions();
+        const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
+        setQuizOptions(shuffledOptions);
+    }
+
+    const getIncorrectOptions = () => {
+        return cards
+            .filter((item, index) => index !== displayedQuizIndex)
+            .map(item => ({text: item.translateWord, isCorrect: false}))
+            .slice(0, 3)
+    }
+
+    const shuffleArray = (array) => {
+        return array.sort(() => Math.random() - 0.5);
+    };
+
+    const moveToNextCard  = () => {
+        if (displayedQuizIndex < cards.length - 1) {
+            setTimeout(() => {
+                setDisplayedQuizIndex(displayedQuizIndex + 1);
+                setIsCorrect(null);
+            }, 2000)
+        } else {
+            navigation.navigate('home');
+        }
+    }
+
+    const handleOptionPress = async (option) => {
+        setSelectedOption(option);
+        if (option.isCorrect) {
+            await playSuccessSound();
+            setIsCorrect(true);
+            moveToNextCard();
+        } else {
+            setIsCorrect(false);
+        }
+
+        setTimeout(() => {
+            setSelectedOption(null);
+        }, 1000);
+    };
+
+    const playSuccessSound = async () => {
+        try {
+            const { sound } = await Audio.Sound.createAsync(
+                require('../assets/audio/success.mp3'),
+                { positionMillis: 0, durationMillis: 2000 }
+            );
+            await sound.playAsync();
+        } catch (error) {
+            console.error('Error playing sound', error);
+        }
+    }
+
+    return (
+        <View style={styles.centeredContainer}>
+            <Pressable style={styles.card}>
+                <Text style={styles.cardText}>{currentCard.word}</Text>
+            </Pressable>
+            <FlatList
+                data={quizOptions}
+                renderItem={({ item }) => (
+                    <Pressable
+                        style={[
+                            styles.optionContainer,
+                            {
+                                backgroundColor:
+                                    selectedOption === item
+                                        ? isCorrect === true
+                                            ? '#a1dc93'
+                                            : isCorrect === false
+                                                ? '#df5151'
+                                                : '#8e8e8e'
+                                        : '#d0d0d0',
+                            },
+                        ]} onPress={() => handleOptionPress(item)}>
+                        <Text>{item.text}</Text>
+                    </Pressable>
+                )}
+                style={styles.listContainer}
+                keyExtractor={(item, index) => index.toString()}
+            />
+        </View>
+    );
+};
+
+export default LearnQuiz;
