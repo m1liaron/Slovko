@@ -4,6 +4,7 @@ const { Op } = require("sequelize");
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
+    const today = new Date();
     try {
         const cards = await Card.findAll({
             where: { 
@@ -23,6 +24,19 @@ const getAllCards = async (req, res) => {
         res.status(200).json(cards);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get all cards'})
+    }
+}
+
+const getAllStatusCards = async (req, res) => {
+    const { status, groupId } = req.body;
+    try {
+        const cards = await Card.findAll({
+            where: { status, groupId }
+        });
+        
+        res.status(200).json(cards);
+    } catch(error) {
+        res.status(400).send({ error: true, message: error.message || 'Getting cards'})
     }
 }
 
@@ -53,7 +67,7 @@ const updateCardsAfterReview = async (req, res) => {
 const addCard = async (req, res) => {
     const data = req.body;
     try {
-        const newCard = await Card.create({...data, status: 'To Learn' });
+        const newCard = await Card.create(data);
         return res.status(200).json(newCard);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
@@ -80,5 +94,6 @@ module.exports = {
     getAllCards,
     addCard,
     removeCard,
-    updateCardsAfterReview
+    updateCardsAfterReview,
+    getAllStatusCards
 }
