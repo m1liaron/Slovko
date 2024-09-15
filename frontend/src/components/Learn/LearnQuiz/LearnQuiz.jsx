@@ -68,7 +68,7 @@ const LearnQuiz = ({ onComplete }) => {
     const playSuccessSound = async () => {
         try {
             const { sound } = await Audio.Sound.createAsync(
-                require('../assets/audio/success.mp3'),
+                require('../../../assets/audio/success.mp3'),
                 { positionMillis: 0, durationMillis: 2000 }
             );
             await sound.playAsync();
@@ -79,9 +79,13 @@ const LearnQuiz = ({ onComplete }) => {
 
     return (
         <View style={styles.centeredContainer}>
-            <Pressable style={styles.card}>
+            <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
+           <Pressable onPress={onComplete}>
+               <Text>Finish this lesson</Text>
+           </Pressable>
+            <View style={styles.card}>
                 <Text style={styles.cardText}>{currentCard.word}</Text>
-            </Pressable>
+            </View>
             <FlatList
                 data={quizOptions}
                 renderItem={({ item }) => (

@@ -24,29 +24,69 @@ const LearnScreen = ({ route }) => {
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [currentSection, setCurrentSection] = useState('cards');
-    const [finishedSections, setFinishedSections] = useState([]); // Cards || Quiz || Word
+    const [finishedSections, setFinishedSections] = useState([]);
+    const [isLessonOver, setIsLessonOver] = useState(false);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
     useEffect(() => {
         dispatch(getCards({ groupId }))
-    }, []);
+    }, [dispatch, groupId]);
 
     const handleNextSection = () => {
-        if(currentSection === 'cards') {
-            setCurrentSection('quiz');
-        } else if(currentSection === 'quiz') {
-            setCurrentSection('word');
-        } else {
-            navigation.navigate(AppPath.Home);
+        switch (currentSection) {
+            case 'cards':
+                if (isQuizEnabled) {
+                    setCurrentSection('quiz');
+                } else if (isGuessWordEnabled) {
+                    setCurrentSection('word');
+                } else {
+                    console.log('Finish lesson in cards');
+                    finishLesson();
+                }
+                break;
+            case 'quiz':
+                if (isGuessWordEnabled) {
+                    setFinishedSections(prevState => [...prevState, 'quiz']);
+                    setCurrentSection('word');
+                } else if (isQuizEnabled) {
+                    setCurrentSection('quiz');
+                } else {
+                    console.log('Finish lesson in quiz');
+                    finishLesson();
+                }
+                break;
+            case 'word':
+                if(isQuizEnabled && !finishedSections.includes('quiz')) {
+                    setCurrentSection('quiz');
+                } else {
+                    console.log('Finish lesson in word');
+                    finishLesson();
+                }
+                break;
+            default:
+                finishLesson();
+                break;
         }
+    };
+
+    const finishLesson = () => {
+        setIsQuizEnabled(true);
+        setIsGuessWordEnabled(true);
+        setFinishedSections([]);
+        setIsLessonOver(true);
+        setInterval(() => {
+            navigation.navigate(AppPath.Home);
+        }, 2000);
     }
 
-    useEffect(() => {
-        if(currentSection === 'word') {
-            navigation.navigate(AppPath.Home);
+    const switchSection = (changeState, sectionName) => {
+        toggleSwitch(changeState);
+
+        if (currentSection === sectionName) {
+            handleNextSection();
         }
-    }, [])
+    }
 
     const generateSectionContent = () => {
         const sections = [
@@ -55,54 +95,65 @@ const LearnScreen = ({ route }) => {
                 iconName: 'quiz',
                 state: isQuizEnabled,
                 changeState:setIsQuizEnabled,
+                sectionName: 'quiz'
             },
             {
                 text: 'Guess Word mode',
                 iconName: 'wordpress',
                 state: isGuessWordEnabled,
                 changeState: setIsGuessWordEnabled,
+                sectionName: 'word'
             }
         ];
 
-        return sections.map((section, idx) => (
+        return sections.map(({iconName, text, state, changeState, sectionName}, idx) => (
             <View style={styles.sectionContainer} key={idx}>
                 <View style={styles.sectionContainer}>
-                    <MaterialIcons name={section.iconName} size={30} color="#00" />
-                    <Text>{section.text}</Text>
+                    <MaterialIcons name={iconName} size={30} color="#00" />
+                    <Text>{text}</Text>
                 </View>
                 <Switch
                     trackColor={{false: '#767577', true: '#81b0ff'}}
-                    thumbColor={section.state ? '#f5dd4b' : '#f4f3f4'}
+                    thumbColor={state ? '#f5dd4b' : '#f4f3f4'}
                     ios_backgroundColor="#3e3e3e"
-                    onValueChange={() => toggleSwitch(section.changeState)}
-                    value={section.state}
+                    onValueChange={() => switchSection(changeState, sectionName)}
+                    value={state}
                 />
             </View>
         ))
     }
+
     return (
         <SafeAreaView styles={styles.container}>
-            { currentSection === 'cards' && <LearnCards onComplete={handleNextSection}/>}
-            { currentSection === 'quiz' && <LearnQuiz onComplete={handleNextSection}/>}
-            { currentSection === 'word' && <LearnGuessWord onComplete={handleNextSection}/>}
+            {!isLessonOver ? (
+                <>
+                    { currentSection === 'cards' && <LearnCards onComplete={handleNextSection}/>}
+                    {  currentSection === 'quiz' && isQuizEnabled  && <LearnQuiz onComplete={handleNextSection}/>}
+                    { currentSection === 'word' && isGuessWordEnabled  && <LearnGuessWord onComplete={handleNextSection}/>}
 
-            <DefaultModal
-                isVisible={showSettingsModal}
-                handleClose={() => toggleSwitch(setShowSettingsModal)}
-                backgroundColor="none"
-                modalStyle={{
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                    elevation: 5, // for Android shadow
-                }}
-            >
-                {generateSectionContent()}
-            </DefaultModal>
-            <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
-                <AntDesign name="setting" size={30} color="#000"/>
-            </Pressable>
+                    <DefaultModal
+                        isVisible={showSettingsModal}
+                        handleClose={() => toggleSwitch(setShowSettingsModal)}
+                        backgroundColor="none"
+                        modalStyle={{
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 4,
+                            elevation: 5, // for Android shadow
+                        }}
+                    >
+                        {generateSectionContent()}
+                    </DefaultModal>
+                    <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
+                        <AntDesign name="setting" size={30} color="#000"/>
+                    </Pressable>
+                </>
+            ) : (
+                <View>
+                    <Text style={{ fontSize: 50, textAlign: 'center' }}>The lesson is over. Have a good day😁</Text>
+                </View>
+            )}
         </SafeAreaView>
     )
 }

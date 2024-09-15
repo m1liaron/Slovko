@@ -4,7 +4,6 @@ import {createAuthorizedInstance} from "../utils/createAuthorizedInstance";
 export const getCards = createAsyncThunk('card/fetchCards', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        console.log(data)
         const response = await axiosInstance.get(`/cards/${data.groupId}`);
         return response.data
     } catch (error){

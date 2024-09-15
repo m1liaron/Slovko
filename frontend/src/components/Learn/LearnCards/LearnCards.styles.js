@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     cardText: {
-        fontSize: 20,
+        fontSize: 35,
         fontWeight: '700',
         color: '#333', // Darker text for better readability
         textAlign: 'center',
