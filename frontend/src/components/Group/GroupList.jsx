@@ -1,9 +1,10 @@
-import {FlatList, Pressable, Text, TextInput, View, StyleSheet } from "react-native";
+import {FlatList, Pressable, Text, TextInput, View, StyleSheet, Image} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {addGroup, getAllGroups, selectGroup} from "../../redux/groupSlice";
 import {GroupItem} from "./GroupItem";
 import {useEffect, useState} from "react";
 import Toast from "react-native-toast-message";
+import noGroupsImage from '../../assets/images/no_groups.png';
 
 export const GroupList = () => {
     const groups = useSelector(selectGroup);
@@ -39,11 +40,20 @@ export const GroupList = () => {
                 <Text style={styles.buttonText}>Add Group</Text>
             </Pressable>
 
-            <FlatList
-                data={groups}
-                renderItem={({item}) => <GroupItem item={item} />}
-                keyExtractor={(item) => item.id}
-            />
+            {!groups.length ? (
+                <View style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}>
+                    <Image source={noGroupsImage}/>
+                </View>
+            ) : (
+                <FlatList
+                    data={groups}
+                    renderItem={({item}) => <GroupItem item={item} />}
+                    keyExtractor={(item) => item.id}
+                />
+            )}
         </View>
     )
 }

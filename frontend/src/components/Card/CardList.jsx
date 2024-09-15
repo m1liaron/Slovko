@@ -6,17 +6,15 @@ import {
     FlatList,
     TextInput,
     Pressable,
-    Alert,
+    Image
 } from 'react-native';
 import CardItem from './CardItem';
 import {addCard, getCards, removeCard, selectCard} from '../../redux/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import axios from "axios";
 import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
-import BottomSheetComponent from "../BottomSheetComponent";
-import {GestureHandlerRootView} from "react-native-gesture-handler";
 import {AppPath} from "../../common/app/app";
+import noCardsImage from '../../assets/images/no-cards.png';
 
 const CardList = ({groupId}) => {
     const cards = useSelector(selectCard);
@@ -117,25 +115,34 @@ const CardList = ({groupId}) => {
             {/*    <Text>Show Toast</Text>*/}
             {/*</Pressable>*/}
 
-            <View>
-                <FlatList
-                    data={cards}
-                    renderItem={({ item, index }) => (
-                        <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
-                    )}
-                    horizontal={true}
-                    keyExtractor={(item, index) => index.toString()}
-                    style={styles.listContainer}
-                />
-            </View>
+            {!cards.length ? (
+                <View style={{
+                    justifyContent:'center',
+                    alignItems: 'center'
+                }}>
+                    <Image source={noCardsImage} />
+                </View>
+            ) : (
+                <View>
+                    <FlatList
+                        data={cards}
+                        renderItem={({ item, index }) => (
+                            <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
+                        )}
+                        horizontal={true}
+                        keyExtractor={(item, index) => index.toString()}
+                        style={styles.listContainer}
+                    />
+                </View>
+            )}
 
-            <View style={styles.formContainer}>
-            <View style={styles.flex}>
-                <Pressable onPress={() => navigateTo(AppPath.Learn)} style={styles.button}>
-                    <Text style={styles.buttonText}>Вчитися</Text>
-                </Pressable>
-            </View>
-        </View>
+            {cards.length > 1 && (
+                <View style={{ marginVertical: 20}}>
+                        <Pressable onPress={() => navigateTo(AppPath.Learn)}  disabled={cards.length < 1} style={styles.button}>
+                            <Text style={styles.buttonText}>Вчитися</Text>
+                        </Pressable>
+                </View>
+            )}
         </View>
     );
 };
