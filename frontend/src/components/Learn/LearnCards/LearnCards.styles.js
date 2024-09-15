@@ -1,6 +1,6 @@
 import {Dimensions, StyleSheet} from 'react-native';
 
-const CARD_WIDTH = Dimensions.get('window').width - 100;
+const CARD_WIDTH = Dimensions.get('window').width - 800;
 
 const styles = StyleSheet.create({
     centeredContainer: {
@@ -11,12 +11,12 @@ const styles = StyleSheet.create({
     },
     cardContainer: {
         width: CARD_WIDTH,
-        height: '70%',
+        height: '50%',
         alignItems: 'center',
         justifyContent: 'center',
     },
     card: {
-        width: '50%',
+        width: '100%',
         height: '80%',
         borderRadius: 12,
         shadowColor: '#000',
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 6,
         elevation: 6,
-        backgroundColor: '#ffffff', // Clean white card
+        backgroundColor: '#ffffff',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
@@ -32,20 +32,20 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 35,
         fontWeight: '700',
-        color: '#333', // Darker text for better readability
+        color: '#333',
         textAlign: 'center',
         marginBottom: 10,
     },
     cardDescription: {
         fontSize: 14,
-        color: '#777', // Lighter color for secondary information
+        color: '#777',
         textAlign: 'center',
         marginTop: 8,
     },
     iconButton: {
         marginTop: 10,
         padding: 10,
-        backgroundColor: '#f0f0f0', // Subtle background for icons
+        backgroundColor: '#f0f0f0',
         borderRadius: 50,
     },
     swipeFeedbackView: {
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         top: '50%',
         left: '50%',
         transform: [{ translateX: -50 }, { translateY: -50 }],
-        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Higher opacity for clear feedback
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
         paddingVertical: 12,
         paddingHorizontal: 24,
         borderRadius: 12,
@@ -68,34 +68,42 @@ const styles = StyleSheet.create({
         title: {
             color: 'white',
             backgroundColor: '#ff6b6b',
-            padding: 12,
+            paddingVertical: 8,
+            paddingHorizontal: 20,
             borderRadius: 8,
-            fontSize: 16, // Adjust font size if needed
+            fontSize: 16,
             fontWeight: '700',
+            maxWidth: CARD_WIDTH - 40, // Ensures the label doesn't exceed card width
         },
         wrapper: {
-            justifyContent: 'flex-end', // Adjust to position the label properly
-            alignItems: 'flex-start', // Align label to the left edge
-            marginLeft: 20, // Adjust margin to position the label
-            marginTop: 20, // Adjust margin to position the label from top
+            position: 'absolute',
+            top: '-35%',
+            left: 100,
+            transform: [{ translateY: -20 }], // Adjusts the label to be centered vertically
+            justifyContent: 'center',
+            alignItems: 'center',
         },
     },
     overlayLabelRight: {
         title: {
             color: 'white',
             backgroundColor: '#1dd1a1',
-            padding: 12,
+            paddingVertical: 8,
+            paddingHorizontal: 20,
             borderRadius: 8,
-            fontSize: 16, // Adjust font size if needed
+            fontSize: 16,
             fontWeight: '700',
+            maxWidth: CARD_WIDTH - 40, // Ensures the label doesn't exceed card width
         },
         wrapper: {
-            justifyContent: 'flex-end', // Adjust to position the label properly
-            alignItems: 'flex-end', // Align label to the right edge
-            marginRight: 20, // Adjust margin to position the label
-            marginTop: 20, // Adjust margin to position the label from top
+            position: 'absolute',
+            top: '-35%',
+            right: 100,
+            transform: [{ translateY: -20 }], // Adjusts the label to be centered vertically
+            justifyContent: 'center',
+            alignItems: 'center',
         },
     },
 });
 
-export default styles
+export default styles;

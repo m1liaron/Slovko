@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Platform, Alert, Pressable, Dimensions} from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
@@ -18,14 +18,28 @@ const LearnCards = ({ onComplete }) => {
     const [learningCards, setLearningCards] = useState([...cards]);
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
+    const [flippedCards, setFlippedCards] = useState({});
 
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const rotation = useSharedValue(0);
 
     const handleFlipCard = (index) => {
-        setFlippedIndex(index === flippedIndex ? null : index);
-        rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
+        // Use the current state of flippedCards
+        setFlippedCards((prevFlippedCards) => {
+            // Check if the card has already been flipped
+            if (prevFlippedCards[index]) {
+                console.log('CARD ALREADY FLIPPED, STOP!');
+                return prevFlippedCards; // Return the same state if the card is already flipped
+            }
+
+            // Flip the card and update the state
+            setFlippedIndex(index === flippedIndex ? null : index);
+            rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
+
+            // Update the flipped cards state
+            return { ...prevFlippedCards, [index]: true };
+        });
     };
 
     const frontAnimatedStyle = useAnimatedStyle(() => {
@@ -50,6 +64,7 @@ const LearnCards = ({ onComplete }) => {
         if (displayedIndex < cards.length - 1) {
             setDisplayedIndex(displayedIndex + 1);
             rotation.value = 0;
+            setFlippedIndex(null);
         } else if (displayedIndex >= cards.length - 1) {
             onComplete();
         }
@@ -84,6 +99,7 @@ const LearnCards = ({ onComplete }) => {
         // // Ensure the index is properly updated
         setDisplayedIndex((prevIndex) => (prevIndex + 1) % updatedCards.length);
         rotation.value = 0;
+        setFlippedIndex(null);
     };
 
     const renderCard = (card, index) => (
