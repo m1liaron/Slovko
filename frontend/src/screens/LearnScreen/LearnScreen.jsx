@@ -10,7 +10,7 @@ import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch} from "react-redux";
-import {getCards} from "../../redux/cardSlice";
+import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 
@@ -75,8 +75,9 @@ const LearnScreen = ({ route }) => {
         setIsGuessWordEnabled(true);
         setFinishedSections([]);
         setIsLessonOver(true);
-        setInterval(() => {
+        setTimeout(() => {
             navigation.navigate(AppPath.Home);
+            dispatch(updateCardsAfterLearn({ groupId }));
         }, 2000);
     }
 

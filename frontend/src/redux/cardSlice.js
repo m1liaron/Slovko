@@ -46,7 +46,7 @@ export const removeCard = createAsyncThunk('card/remove', async(data) => {
     }
 })
 
-export const updateCardsAfterLearn = createAsyncThunk('card/remove', async(data) => {
+export const updateCardsAfterLearn = createAsyncThunk('card/learnCards', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
         const response = await axiosInstance.put(`/cards/${data.groupId}`)
@@ -96,6 +96,18 @@ const cardSlice = createSlice({
                 state.error = action.error.message;
             })
 
+            .addCase(updateCardsAfterLearn.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.cards = action.payload;
+            })
+            .addCase(updateCardsAfterLearn.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+
             .addCase(addCard.pending, (state, action) => {
                 state.status = 'pending';
             })
@@ -106,6 +118,8 @@ const cardSlice = createSlice({
             .addCase(addCard.rejected, (state, action) => {
                 state.status = 'error';
             })
+
+
 
             .addCase(removeCard.pending, (state, action) => {
                 state.status = 'pending';
