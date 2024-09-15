@@ -71,6 +71,9 @@ const LearnQuiz = ({ onComplete }) => {
                 require('../../../assets/audio/success.mp3'),
                 { positionMillis: 0, durationMillis: 2000 }
             );
+
+            await sound.setVolumeAsync(0.2);
+
             await sound.playAsync();
         } catch (error) {
             console.error('Error playing sound', error);
@@ -78,7 +81,7 @@ const LearnQuiz = ({ onComplete }) => {
     }
 
     return (
-        <View style={styles.centeredContainer}>
+        <View style={styles.quizContainer}>
             <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
            <Pressable onPress={onComplete}>
                <Text>Finish this lesson</Text>

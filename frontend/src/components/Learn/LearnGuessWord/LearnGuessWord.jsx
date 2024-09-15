@@ -75,9 +75,9 @@ const LearnGuessWord = ({ onComplete }) => {
     };
 
     return (
-        <View style={styles.centeredContainer}>
+        <View style={styles.guessWordContainer}>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
-            <Text>{currentGuess}</Text>
+            <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess}</Text>
             <View style={{ flexDirection: 'row', overflow: 'hidden' }}>
                 <FlatList
                     horizontal

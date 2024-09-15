@@ -55,7 +55,7 @@ const LearnCards = ({ onComplete }) => {
             top: 0,
             left: 0,
             backfaceVisibility: 'hidden',
-            width: CARD_WIDTH,
+            width: CARD_WIDTH - 700,
             height: '100%',
         };
     });
