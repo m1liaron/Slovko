@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     cardContainer: {
-        width: CARD_WIDTH,
+        mexWidth: CARD_WIDTH,
         height: '50%',
         alignItems: 'center',
         justifyContent: 'center',
