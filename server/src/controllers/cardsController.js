@@ -9,15 +9,15 @@ const getAllCards = async (req, res) => {
         const cards = await Card.findAll({
             where: { 
                 groupId,
-                // [Op.or]: [
-                //     { status: 'To Learn' },
-                //     {
-                //         status: 'Learned',
-                //         nextReviewAt: {
-                //             [Op.lte]: today
-                //         }
-                //     }
-                // ]
+                [Op.or]: [
+                    { status: 'To Learn' },
+                    {
+                        status: 'Learned',
+                        nextReviewAt: {
+                            [Op.lte]: today
+                        }
+                    }
+                ]
              }
         });
 
@@ -28,7 +28,7 @@ const getAllCards = async (req, res) => {
 }
 
 const getAllStatusCards = async (req, res) => {
-    const { status, groupId } = req.body;
+    const { status, groupId } = req.params;
     try {
         const cards = await Card.findAll({
             where: { status, groupId }

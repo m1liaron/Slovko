@@ -12,10 +12,10 @@ export const getCards = createAsyncThunk('card/fetchCards', async(data) => {
     }
 })
 
-export const getAllStatusCards = createAsyncThunk('card/getStatusCards', async(data) => {
+export const getAllStatusCards = createAsyncThunk('card/getStatusCards', async({groupId, status}) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get(`/cards`, data);
+        const response = await axiosInstance.get(`/cards/${groupId}/${status}`);
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);

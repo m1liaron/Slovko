@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Platform, Alert, Pressable, Dimensions} from 'react-native'
+import React, { useState} from 'react';
+import {View, Text,  Pressable} from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
-import {selectCard, shuffleCards} from "../../../redux/cardSlice";
+import {selectCard} from "../../../redux/cardSlice";
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnCards.styles';
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigation} from "@react-navigation/native";
-const CARD_WIDTH = Dimensions.get('window').width - 100;
+import {useSelector} from "react-redux";
 
 const LearnCards = ({ onComplete }) => {
     const cards = useSelector(selectCard);
@@ -20,8 +18,6 @@ const LearnCards = ({ onComplete }) => {
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
 
-    const dispatch = useDispatch();
-    const navigation = useNavigation();
     const rotation = useSharedValue(0);
 
     const handleFlipCard = (index) => {
@@ -55,7 +51,6 @@ const LearnCards = ({ onComplete }) => {
             top: 0,
             left: 0,
             backfaceVisibility: 'hidden',
-            width: CARD_WIDTH - 700,
             height: '100%',
         };
     });

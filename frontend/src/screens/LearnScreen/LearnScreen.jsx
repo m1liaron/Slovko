@@ -73,7 +73,9 @@ const LearnScreen = ({ route }) => {
     const finishLesson = () => {
         setIsQuizEnabled(true);
         setIsGuessWordEnabled(true);
+        setShowSettingsModal(false);
         setFinishedSections([]);
+        setCurrentSection('cards');
         setIsLessonOver(true);
         setTimeout(() => {
             navigation.navigate(AppPath.Home);
