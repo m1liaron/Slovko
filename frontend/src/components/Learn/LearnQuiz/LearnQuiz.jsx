@@ -1,0 +1,119 @@
+import React, {useEffect, useState} from 'react';
+import {View, Text, FlatList, Pressable} from 'react-native'
+import styles from './LearnQuiz.styles';
+import {Audio} from "expo-av";
+import { useSelector} from "react-redux";
+import {selectCard} from "../../../redux/cardSlice";
+import {useNavigation} from "@react-navigation/native";
+
+const LearnQuiz = ({ onComplete }) => {
+    const cards = useSelector(selectCard);
+    const navigation = useNavigation()
+
+    const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
+    const [quizOptions, setQuizOptions] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(null)
+    const [selectedOption, setSelectedOption] = useState('')
+    const currentCard = cards[displayedQuizIndex];
+
+    useEffect(() => {
+        generateQuizOption();
+    }, [displayedQuizIndex])
+
+    const generateQuizOption = () => {
+        if(!currentCard) return;
+        const correctOption = { text: currentCard.translateWord, isCorrect: true };
+        const incorrectOptions = getIncorrectOptions();
+        const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
+        setQuizOptions(shuffledOptions);
+    }
+
+    const getIncorrectOptions = () => {
+        return cards
+            .filter((item, index) => index !== displayedQuizIndex)
+            .map(item => ({text: item.translateWord, isCorrect: false}))
+            .slice(0, 3)
+    }
+
+    const shuffleArray = (array) => {
+        return array.sort(() => Math.random() - 0.5);
+    };
+
+    const moveToNextCard  = () => {
+        if (displayedQuizIndex < cards.length - 1) {
+            setTimeout(() => {
+                setDisplayedQuizIndex(displayedQuizIndex + 1);
+                setIsCorrect(null);
+            }, 2000)
+        } else {
+            onComplete();
+        }
+    }
+
+    const handleOptionPress = async (option) => {
+        setSelectedOption(option);
+        if (option.isCorrect) {
+            await playSuccessSound();
+            setIsCorrect(true);
+            moveToNextCard();
+        } else {
+            setIsCorrect(false);
+        }
+
+        setTimeout(() => {
+            setSelectedOption(null);
+        }, 1000);
+    };
+
+    const playSuccessSound = async () => {
+        try {
+            const { sound } = await Audio.Sound.createAsync(
+                require('../../../assets/audio/success.mp3'),
+                { positionMillis: 0, durationMillis: 2000 }
+            );
+
+            await sound.setVolumeAsync(0.2);
+
+            await sound.playAsync();
+        } catch (error) {
+            console.error('Error playing sound', error);
+        }
+    }
+
+    return (
+        <View style={styles.quizContainer}>
+            <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
+           <Pressable onPress={onComplete}>
+               <Text>Finish this lesson</Text>
+           </Pressable>
+            <View style={styles.card}>
+                <Text style={styles.cardText}>{currentCard.word}</Text>
+            </View>
+            <FlatList
+                data={quizOptions}
+                renderItem={({ item }) => (
+                    <Pressable
+                        style={[
+                            styles.optionContainer,
+                            {
+                                backgroundColor:
+                                    selectedOption === item
+                                        ? isCorrect === true
+                                            ? '#a1dc93'
+                                            : isCorrect === false
+                                                ? '#df5151'
+                                                : '#8e8e8e'
+                                        : '#d0d0d0',
+                            },
+                        ]} onPress={() => handleOptionPress(item)}>
+                        <Text>{item.text}</Text>
+                    </Pressable>
+                )}
+                style={styles.listContainer}
+                keyExtractor={(item, index) => index.toString()}
+            />
+        </View>
+    );
+};
+
+export default LearnQuiz;

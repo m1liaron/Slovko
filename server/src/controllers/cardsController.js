@@ -28,7 +28,7 @@ const getAllCards = async (req, res) => {
 }
 
 const getAllStatusCards = async (req, res) => {
-    const { status, groupId } = req.body;
+    const { status, groupId } = req.params;
     try {
         const cards = await Card.findAll({
             where: { status, groupId }

@@ -12,6 +12,7 @@ import GroupScreen from "./screens/GroupScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { AppPath } from "./common/app/app";
+import LearnScreen from "./screens/LearnScreen/LearnScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App() {
                     <Stack.Screen name={AppPath.Loading} component={LoadingScreen} />
                     <Stack.Screen name={AppPath.Group} component={GroupScreen} />
                     <Stack.Screen name={AppPath.Home} component={MainScreen} />
+                    <Stack.Screen name={AppPath.Learn} component={LearnScreen} />
                     <Stack.Screen name={AppPath.Quiz} component={QuizScreen} />
                     <Stack.Screen name={AppPath.Word} component={GuessWordScreen} />
                     <Stack.Screen name={AppPath.Study} component={StudyScreen} />

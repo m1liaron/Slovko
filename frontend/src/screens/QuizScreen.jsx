@@ -90,30 +90,30 @@ const QuizScreen = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.crossIcon}>
-                <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
-                <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
-            </View>
-            <Pressable style={styles.card}>
-                <Text style={styles.cardText}>{currentCard.word}</Text>
-            </Pressable>
+                <View style={styles.crossIcon}>
+                    <Entypo name="cross" size={40} color="black"  onPress={leaveStudy} />
+                    <Text style={styles.cardCount}>{displayedIndex + 1}/{cards.length}</Text>
+                </View>
+                <Pressable style={styles.card}>
+                    <Text style={styles.cardText}>{currentCard.word}</Text>
+                </Pressable>
                 <FlatList
                     data={quizOptions}
                     renderItem={({ item }) => (
                         <Pressable
-                        style={[
-                            styles.optionContainer,
-                            {
-                                backgroundColor:
-                                    selectedOption === item
-                                        ? isCorrect === true
-                                            ? '#a1dc93'
-                                            : isCorrect === false
-                                                ? '#df5151'
-                                                : '#8e8e8e'
-                                        : '#d0d0d0',
-                            },
-                        ]} onPress={() => handleOptionPress(item)}>
+                            style={[
+                                styles.optionContainer,
+                                {
+                                    backgroundColor:
+                                        selectedOption === item
+                                            ? isCorrect === true
+                                                ? '#a1dc93'
+                                                : isCorrect === false
+                                                    ? '#df5151'
+                                                    : '#8e8e8e'
+                                            : '#d0d0d0',
+                                },
+                            ]} onPress={() => handleOptionPress(item)}>
                             <Text>{item.text}</Text>
                         </Pressable>
                     )}
