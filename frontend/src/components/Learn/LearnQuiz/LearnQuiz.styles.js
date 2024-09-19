@@ -7,8 +7,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         flex: 1,
     },
+    card: {
+      marginBottom: 40
+    },
     cardCount: {
         fontSize: 18,
+    },
+    cardText: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      borderRadius: 20,
+      borderColor: '#00',
+      borderWidth: 2,
+      padding: 20
     },
     quizCard: {
         borderWidth: 1,

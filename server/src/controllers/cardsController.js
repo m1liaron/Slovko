@@ -9,15 +9,15 @@ const getAllCards = async (req, res) => {
         const cards = await Card.findAll({
             where: { 
                 groupId,
-                [Op.or]: [
-                    { status: 'To Learn' },
-                    {
-                        status: 'Learned',
-                        nextReviewAt: {
-                            [Op.lte]: today
-                        }
-                    }
-                ]
+                // [Op.or]: [
+                //     { status: 'To Learn' },
+                //     {
+                //         status: 'Learned',
+                //         nextReviewAt: {
+                //             [Op.lte]: today
+                //         }
+                //     }
+                // ]
              }
         });
 

@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     },
     wordContainer: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
     },
     word: {

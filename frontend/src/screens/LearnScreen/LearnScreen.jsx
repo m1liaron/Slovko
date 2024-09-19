@@ -34,6 +34,7 @@ const LearnScreen = ({ route }) => {
     }, [dispatch, groupId]);
 
     const handleNextSection = () => {
+        console.log('Show next section');
         switch (currentSection) {
             case 'cards':
                 if (isQuizEnabled) {
@@ -68,6 +69,7 @@ const LearnScreen = ({ route }) => {
                 finishLesson();
                 break;
         }
+        console.log(currentSection);
     };
 
     const finishLesson = () => {

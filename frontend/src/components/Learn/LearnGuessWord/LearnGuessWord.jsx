@@ -19,6 +19,7 @@ const LearnGuessWord = ({ onComplete }) => {
 
     useEffect(() => {
         if (currentWord) generateScrambledWord(currentWord);
+
     }, [currentIndex]);
 
     const generateScrambledWord = (word) => {
@@ -82,13 +83,13 @@ const LearnGuessWord = ({ onComplete }) => {
                 <FlatList
                     horizontal
                     data={scrambledWord}
-                    contentContainerStyle={[styles.wordContainer, { paddingHorizontal: 20, width: width - 100 }]} // Add padding
+                    contentContainerStyle={styles.wordContainer} // Add padding
                     renderItem={({ item, index }) => (
                         <Pressable
                             style={[styles.word, { backgroundColor: letterColors[index] || 'transparent' }]}
                             onPress={() => handleLetterSelection(item, index)}
                         >
-                            <Text style={styles.wordText}>{item}</Text>
+                            <Text style={[styles.wordText, { color: letterColors[index] === 'red' && '#fff' }]}>{item}</Text>
                         </Pressable>
                     )}
                     keyExtractor={(item, index) => index.toString()}
