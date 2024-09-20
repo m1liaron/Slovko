@@ -81,7 +81,7 @@ const LearnQuiz = ({ onComplete }) => {
     }
 
     return (
-        <View style={styles.quizContainer}>
+        <>
             <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
             <View style={styles.card}>
                 <Text style={styles.cardText}>{currentCard.word}</Text>
@@ -109,7 +109,7 @@ const LearnQuiz = ({ onComplete }) => {
                 style={styles.listContainer}
                 keyExtractor={(item, index) => index.toString()}
             />
-        </View>
+        </>
     );
 };
 

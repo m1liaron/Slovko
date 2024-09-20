@@ -76,7 +76,7 @@ const LearnGuessWord = ({ onComplete }) => {
     };
 
     return (
-        <View style={styles.guessWordContainer}>
+        <>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
             <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess}</Text>
             <View style={{ flexDirection: 'row', overflow: 'hidden' }}>
@@ -89,7 +89,7 @@ const LearnGuessWord = ({ onComplete }) => {
                             style={[styles.word, { backgroundColor: letterColors[index] || 'transparent' }]}
                             onPress={() => handleLetterSelection(item, index)}
                         >
-                            <Text style={[styles.wordText, { color: letterColors[index] === 'red' && '#fff' }]}>{item}</Text>
+                            <Text style={[styles.wordText, { color: letterColors[index] === 'red' ? '#fff' : '#000' }]}>{item}</Text>
                         </Pressable>
                     )}
                     keyExtractor={(item, index) => index.toString()}
@@ -99,7 +99,7 @@ const LearnGuessWord = ({ onComplete }) => {
                 <AntDesign name="questioncircleo" size={24} color="black" />
             </Pressable>
             {showWord && <Text>{currentWord}</Text>}
-        </View>
+        </>
     );
 };
 

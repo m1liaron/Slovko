@@ -1,12 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    guessWordContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        flex: 1,
-    },
     wordContainer: {
         flexDirection: 'row',
         alignItems: 'center',

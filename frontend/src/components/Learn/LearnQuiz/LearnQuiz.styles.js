@@ -1,12 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    quizContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        flex: 1,
-    },
     card: {
       marginBottom: 40
     },

@@ -3,17 +3,9 @@ import {Dimensions, StyleSheet} from 'react-native';
 const CARD_WIDTH = Dimensions.get('window').width - 800;
 
 const styles = StyleSheet.create({
-    centeredContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        flex: 1,
-    },
     cardContainer: {
-        mexWidth: CARD_WIDTH,
+        maxWidth: CARD_WIDTH,
         height: '50%',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     card: {
         width: '100%',

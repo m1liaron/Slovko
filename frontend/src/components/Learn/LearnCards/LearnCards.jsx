@@ -15,6 +15,7 @@ const LearnCards = ({ onComplete }) => {
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
+    const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
 
     const rotation = useSharedValue(0);
 
@@ -23,12 +24,12 @@ const LearnCards = ({ onComplete }) => {
         setFlippedCards((prevFlippedCards) => {
             // Check if the card has already been flipped
             if (prevFlippedCards[index]) {
-                console.log('CARD ALREADY FLIPPED, STOP!');
                 return prevFlippedCards; // Return the same state if the card is already flipped
             }
 
             // Flip the card and update the state
             setFlippedIndex(index === flippedIndex ? null : index);
+            setIsSwipeDisabled(true);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
             // Update the flipped cards state
@@ -56,6 +57,7 @@ const LearnCards = ({ onComplete }) => {
     const handleSwipeRight = () => {
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
+        setIsSwipeDisabled(false);
     };
 
     const handleSwipeLeft = (index) => {
@@ -66,9 +68,8 @@ const LearnCards = ({ onComplete }) => {
         updatedCards.splice(index, 1);
         updatedCards.push(currentCard);
         setLearningCards(updatedCards);
+        setIsSwipeDisabled(false);
     };
-
-    console.log(learningCards)
 
     const renderCard = (card, index) => (
         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
@@ -86,30 +87,29 @@ const LearnCards = ({ onComplete }) => {
     );
 
     return (
-        <View style={styles.centeredContainer}>
-                <Swiper
-                    cards={learningCards}
-                    renderCard={(card, index) => renderCard(card, index)}
-                    keyExtractor={(card) => card.id}
-                    onSwipedRight={handleSwipeRight}
-                    onSwipedLeft={handleSwipeLeft}
-                    onSwipedAll={onComplete}
-                    stackSize={3}
-                    cardIndex={0}
-                    backgroundColor={'transparent'}
-                    verticalSwipe={false}
-                    overlayLabels={{
-                        left: {
-                            title: "Don’t know",
-                            style: styles.overlayLabelLeft,
-                        },
-                        right: {
-                            title: 'Know',
-                            style: styles.overlayLabelRight,
-                        },
-                    }}
-                />
-        </View>
+            <Swiper
+                horizontalSwipe={isSwipeDisabled}
+                cards={learningCards}
+                renderCard={(card, index) => renderCard(card, index)}
+                keyExtractor={(card) => card.id}
+                onSwipedRight={handleSwipeRight}
+                onSwipedLeft={handleSwipeLeft}
+                onSwipedAll={onComplete}
+                stackSize={3}
+                cardIndex={0}
+                backgroundColor={'transparent'}
+                verticalSwipe={false}
+                overlayLabels={{
+                    left: {
+                        title: "Don’t know",
+                        style: styles.overlayLabelLeft,
+                    },
+                    right: {
+                        title: 'Know',
+                        style: styles.overlayLabelRight,
+                    },
+                }}
+            />
     );
 };
 
