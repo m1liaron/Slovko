@@ -29,6 +29,13 @@ const LearnGuessWord = ({ onComplete }) => {
             const randomIndex = getRandomInt(0, wordArray.length);
             wordArray.splice(randomIndex, 0, randomLetter);
         }
+
+        for(let i = wordArray.length - 1; i >= 0; i--) {
+            const j = getRandomInt(0, i);
+
+            [wordArray[i], wordArray[j]] = [wordArray[j], wordArray[i]];
+        }
+
         setScrambledWord(wordArray);
     };
 
