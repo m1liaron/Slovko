@@ -16,6 +16,7 @@ const LearnCards = ({ onComplete }) => {
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
     const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
+    const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
     const rotation = useSharedValue(0);
 
@@ -58,16 +59,22 @@ const LearnCards = ({ onComplete }) => {
         setTimeout(() => setShowRightSwipeView(false), 1000);
         setIsSwipeDisabled(false);
         rotation.value = 0;
+        setCurrentCardIndex((prevIndex) => prevIndex + 1);
     };
 
     const handleSwipeLeft = (index) => {
         setShowLeftSwipeView(true);
         setTimeout(() => setShowLeftSwipeView(false), 1000);
+
         const currentCard = learningCards[index];
         const updatedCards = [...learningCards];
-        updatedCards.splice(index, 1);
+
         updatedCards.push(currentCard);
+
+        // Update the learningCards state
         setLearningCards(updatedCards);
+
+        setCurrentCardIndex(index);
         setIsSwipeDisabled(false);
         rotation.value = 0;
     };
@@ -97,7 +104,7 @@ const LearnCards = ({ onComplete }) => {
                 onSwipedLeft={handleSwipeLeft}
                 onSwipedAll={onComplete}
                 stackSize={3}
-                cardIndex={0}
+                cardIndex={currentCardIndex}
                 backgroundColor={'transparent'}
                 verticalSwipe={false}
                 overlayLabels={{
