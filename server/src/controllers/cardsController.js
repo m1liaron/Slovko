@@ -80,7 +80,7 @@ const addCard = async (req, res) => {
 const updateCard = async (req, res) => {
     try {
         const cardId = req.params.id;
-        const updatedCard = await Card.update({
+        const updatedCard = await Card.update(req.body, {
             where: { id: cardId },
             returning: true
         });
