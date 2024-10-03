@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Dimensions} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
 import {login} from "../redux/userSlice";
 import Toast from "react-native-toast-message";
 import {Entypo} from "@expo/vector-icons";
+import {SafeAreaView} from "react-native-safe-area-context";
+
+const { width, height } = Dimensions.get("window");
 
 const LoginScreen = () => {
     const navigation = useNavigation();
@@ -36,7 +39,7 @@ const LoginScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Login</Text>
 
             <TextInput
@@ -70,7 +73,7 @@ const LoginScreen = () => {
             <Pressable onPress={() => navigation.navigate('register')}>
                 <Text style={styles.switchText}>Don't have an account? Register</Text>
             </Pressable>
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -81,6 +84,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         backgroundColor: '#f7f7f7',
+        width: '100%',
     },
     title: {
         fontSize: 28,
@@ -90,6 +94,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
+        maxWidth: 400,
         height: 50,
         borderColor: '#ddd',
         borderWidth: 1,
@@ -103,6 +108,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
+        maxWidth: 400,
         marginBottom: 20,
     },
     iconContainer: {
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '100%',
+        maxWidth: 400,
         height: 50,
         backgroundColor: '#3498db',
         borderRadius: 8,

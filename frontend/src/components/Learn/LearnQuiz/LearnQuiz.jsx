@@ -81,11 +81,8 @@ const LearnQuiz = ({ onComplete }) => {
     }
 
     return (
-        <View style={styles.quizContainer}>
+        <>
             <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
-           <Pressable onPress={onComplete}>
-               <Text>Finish this lesson</Text>
-           </Pressable>
             <View style={styles.card}>
                 <Text style={styles.cardText}>{currentCard.word}</Text>
             </View>
@@ -106,13 +103,13 @@ const LearnQuiz = ({ onComplete }) => {
                                         : '#d0d0d0',
                             },
                         ]} onPress={() => handleOptionPress(item)}>
-                        <Text>{item.text}</Text>
+                        <Text style={{ fontSize: 30 }}>{item.text}</Text>
                     </Pressable>
                 )}
                 style={styles.listContainer}
                 keyExtractor={(item, index) => index.toString()}
             />
-        </View>
+        </>
     );
 };
 

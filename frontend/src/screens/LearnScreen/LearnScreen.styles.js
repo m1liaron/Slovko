@@ -6,6 +6,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    centeredContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        flex: 1,
+    },
     sectionContainer: {
         flexDirection: 'row',
         justifyContent:'center',

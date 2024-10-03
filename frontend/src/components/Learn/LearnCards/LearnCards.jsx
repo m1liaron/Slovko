@@ -10,13 +10,12 @@ import {useSelector} from "react-redux";
 const LearnCards = ({ onComplete }) => {
     const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
-    const [displayedIndex, setDisplayedIndex] = useState(0);
     const [showDefinition, setShowDefinition] = useState(false);
-    const [learnedCards, setLearnedCards] = useState([]);
     const [learningCards, setLearningCards] = useState([...cards]);
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
+    const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
 
     const rotation = useSharedValue(0);
 
@@ -25,12 +24,12 @@ const LearnCards = ({ onComplete }) => {
         setFlippedCards((prevFlippedCards) => {
             // Check if the card has already been flipped
             if (prevFlippedCards[index]) {
-                console.log('CARD ALREADY FLIPPED, STOP!');
                 return prevFlippedCards; // Return the same state if the card is already flipped
             }
 
             // Flip the card and update the state
             setFlippedIndex(index === flippedIndex ? null : index);
+            setIsSwipeDisabled(true);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
             // Update the flipped cards state
@@ -51,50 +50,26 @@ const LearnCards = ({ onComplete }) => {
             top: 0,
             left: 0,
             backfaceVisibility: 'hidden',
-            height: '100%',
         };
     });
 
-    const showNextCard = () => {
-        if (displayedIndex < cards.length - 1) {
-            setDisplayedIndex(displayedIndex + 1);
-            rotation.value = 0;
-            setFlippedIndex(null);
-        } else if (displayedIndex >= cards.length - 1) {
-            onComplete();
-        }
-    };
-
-    const saveCardToLearned = (answer) => {
-        const currentCard = cards[displayedIndex];
-        const updatedCard = { ...currentCard, answer };
-        setLearnedCards((prev) => [...prev, updatedCard]);
-    };
-
     const handleSwipeRight = () => {
-        saveCardToLearned('know');
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
-        showNextCard();
+        setIsSwipeDisabled(false);
+        rotation.value = 0;
     };
 
-    const handleSwipeLeft = () => {
-        saveCardToLearned('don’t know');
+    const handleSwipeLeft = (index) => {
         setShowLeftSwipeView(true);
         setTimeout(() => setShowLeftSwipeView(false), 1000);
-
-        // Update the learning cards
-        const currentCard = learningCards[displayedIndex];
-        const remainingCards = learningCards.filter((_, idx) => idx !== displayedIndex);
-
-        // Append current card to the end of the array
-        const updatedCards = [...remainingCards, currentCard];
+        const currentCard = learningCards[index];
+        const updatedCards = [...learningCards];
+        updatedCards.splice(index, 1);
+        updatedCards.push(currentCard);
         setLearningCards(updatedCards);
-
-        // // Ensure the index is properly updated
-        setDisplayedIndex((prevIndex) => (prevIndex + 1) % updatedCards.length);
+        setIsSwipeDisabled(false);
         rotation.value = 0;
-        setFlippedIndex(null);
     };
 
     const renderCard = (card, index) => (
@@ -113,28 +88,29 @@ const LearnCards = ({ onComplete }) => {
     );
 
     return (
-        <View style={styles.centeredContainer}>
-                <Swiper
-                    cards={learningCards}
-                    renderCard={(card, index) => renderCard(card, index)}
-                    onSwipedRight={handleSwipeRight}
-                    onSwipedLeft={handleSwipeLeft}
-                    stackSize={3}
-                    cardIndex={0}
-                    backgroundColor={'transparent'}
-                    verticalSwipe={false}
-                    overlayLabels={{
-                        left: {
-                            title: "Don’t know",
-                            style: styles.overlayLabelLeft,
-                        },
-                        right: {
-                            title: 'Know',
-                            style: styles.overlayLabelRight,
-                        },
-                    }}
-                />
-        </View>
+            <Swiper
+                horizontalSwipe={isSwipeDisabled}
+                cards={learningCards}
+                renderCard={(card, index) => renderCard(card, index)}
+                keyExtractor={(card) => card.id}
+                onSwipedRight={handleSwipeRight}
+                onSwipedLeft={handleSwipeLeft}
+                onSwipedAll={onComplete}
+                stackSize={3}
+                cardIndex={0}
+                backgroundColor={'transparent'}
+                verticalSwipe={false}
+                overlayLabels={{
+                    left: {
+                        title: "Don’t know",
+                        style: styles.overlayLabelLeft,
+                    },
+                    right: {
+                        title: 'Know',
+                        style: styles.overlayLabelRight,
+                    },
+                }}
+            />
     );
 };
 

@@ -71,7 +71,7 @@ const getUser = async (req, res) => {
         const user = await User.findByPk(userId);
 
         if (!user) {
-            res
+            return res
                 .status(StatusCodes.NOT_FOUND)
                 .json({ error: true, message: 'User does not exist' });
         }

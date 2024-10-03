@@ -15,6 +15,7 @@ const LoadingScreen = (props) => {
             const response = await dispatch(getUser());
             if(getUser.rejected.match(response)) {
                 props.navigation.replace("login")
+                await AsyncStorage.removeItem('token');
             } else {
                 props.navigation.replace("home")
             }

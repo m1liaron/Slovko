@@ -13,6 +13,7 @@ import {useDispatch} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
+import BackButton from "../../components/BackButton/BackButton";
 
 
 const LearnScreen = ({ route }) => {
@@ -34,6 +35,7 @@ const LearnScreen = ({ route }) => {
     }, [dispatch, groupId]);
 
     const handleNextSection = () => {
+        console.log('Show next section');
         switch (currentSection) {
             case 'cards':
                 if (isQuizEnabled) {
@@ -68,6 +70,7 @@ const LearnScreen = ({ route }) => {
                 finishLesson();
                 break;
         }
+        console.log(currentSection);
     };
 
     const finishLesson = () => {
@@ -128,11 +131,12 @@ const LearnScreen = ({ route }) => {
 
     return (
         <SafeAreaView styles={styles.container}>
+            <BackButton/>
             {!isLessonOver ? (
                 <>
-                    { currentSection === 'cards' && <LearnCards onComplete={handleNextSection}/>}
-                    {  currentSection === 'quiz' && isQuizEnabled  && <LearnQuiz onComplete={handleNextSection}/>}
-                    { currentSection === 'word' && isGuessWordEnabled  && <LearnGuessWord onComplete={handleNextSection}/>}
+                    { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
+                    {  currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
+                    { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
 
                     <DefaultModal
                         isVisible={showSettingsModal}

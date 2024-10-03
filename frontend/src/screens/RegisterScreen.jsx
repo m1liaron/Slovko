@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
+        maxWidth: 400,
         height: 50,
         borderColor: '#ddd',
         borderWidth: 1,
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
+        maxWidth: 400,
         marginBottom: 20,
     },
     iconContainer: {
@@ -145,6 +147,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: '100%',
+        maxWidth: 400,
         height: 50,
         backgroundColor: '#3498db',
         borderRadius: 8,
