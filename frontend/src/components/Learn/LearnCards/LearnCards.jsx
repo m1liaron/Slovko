@@ -50,7 +50,6 @@ const LearnCards = ({ onComplete }) => {
             top: 0,
             left: 0,
             backfaceVisibility: 'hidden',
-            height: '100%',
         };
     });
 
@@ -58,6 +57,7 @@ const LearnCards = ({ onComplete }) => {
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
         setIsSwipeDisabled(false);
+        rotation.value = 0;
     };
 
     const handleSwipeLeft = (index) => {
@@ -69,6 +69,7 @@ const LearnCards = ({ onComplete }) => {
         updatedCards.push(currentCard);
         setLearningCards(updatedCards);
         setIsSwipeDisabled(false);
+        rotation.value = 0;
     };
 
     const renderCard = (card, index) => (
