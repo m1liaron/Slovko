@@ -4,7 +4,6 @@ import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
-import {useNavigation} from "@react-navigation/native";
 
 const LearnGuessWord = ({ onComplete }) => {
     const cards = useSelector(selectCard);
@@ -13,13 +12,11 @@ const LearnGuessWord = ({ onComplete }) => {
     const [scrambledWord, setScrambledWord] = useState([]);
     const [letterColors, setLetterColors] = useState({});
     const [showWord, setShowWord] = useState(false);
-    const navigation = useNavigation();
     const currentWord = cards[currentIndex]?.word;
     const { width } = useWindowDimensions();
 
     useEffect(() => {
         if (currentWord) generateScrambledWord(currentWord);
-
     }, [currentIndex]);
 
     const generateScrambledWord = (word) => {
@@ -29,6 +26,13 @@ const LearnGuessWord = ({ onComplete }) => {
             const randomIndex = getRandomInt(0, wordArray.length);
             wordArray.splice(randomIndex, 0, randomLetter);
         }
+
+        for(let i = wordArray.length - 1; i >= 0; i--) {
+            const j = getRandomInt(0, i);
+
+            [wordArray[i], wordArray[j]] = [wordArray[j], wordArray[i]];
+        }
+
         setScrambledWord(wordArray);
     };
 
@@ -79,7 +83,7 @@ const LearnGuessWord = ({ onComplete }) => {
         <>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
             <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess}</Text>
-            <View style={{ flexDirection: 'row', overflow: 'hidden' }}>
+            <View style={{ flexDirection: 'row', width: width - 100 }}>
                 <FlatList
                     horizontal
                     data={scrambledWord}
