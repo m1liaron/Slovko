@@ -50,7 +50,10 @@ const updateCardsAfterReview = async (req, res) => {
             const newReviewCount = card.reviewCount + 1;
             const nextReviewDate = calculateNextReviewDate(newReviewCount);
 
-            card.status = 'Learned';
+            if(card.reviewCount >= 8) {
+                card.status = 'Learned';
+            }
+
             card.learnedAt = new Date();
             card.reviewCount = newReviewCount;
             card.nextReviewAt = nextReviewDate;

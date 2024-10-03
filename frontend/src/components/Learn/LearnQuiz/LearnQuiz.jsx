@@ -4,11 +4,9 @@ import styles from './LearnQuiz.styles';
 import {Audio} from "expo-av";
 import { useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
-import {useNavigation} from "@react-navigation/native";
 
 const LearnQuiz = ({ onComplete }) => {
     const cards = useSelector(selectCard);
-    const navigation = useNavigation()
 
     const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
