@@ -77,6 +77,32 @@ const addCard = async (req, res) => {
     }
 }
 
+const updateCard = async (req, res) => {
+    try {
+        const cardId = req.params.id;
+        const { groupId } = req.body;
+        console.log(req.params)
+        const updatedCard = await Card.update(req.body, {
+            where: { id: cardId, groupId },
+            returning: true
+        });
+
+        if (updatedCard[0] === 0) {
+            return res
+                .status(404)
+                .json({ error: true, message: 'Card not found' });
+        }
+
+        const card = await Card.findOne({
+            where: { id: cardId },
+        });
+
+        res.status(200).json(card);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error login'})
+    }
+}
+
 const removeCard = async (req, res) => {
     try {
         const cardId = req.params.id;
@@ -97,6 +123,7 @@ module.exports = {
     getAllCards,
     addCard,
     removeCard,
+    updateCard,
     updateCardsAfterReview,
     getAllStatusCards
 }

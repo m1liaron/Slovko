@@ -46,6 +46,17 @@ export const removeCard = createAsyncThunk('card/remove', async(data) => {
     }
 })
 
+export const updateCard = createAsyncThunk('card/update', async(data) => {
+    try{
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.patch(`/cards/${data.id}`, data)
+        return response.data
+    } catch (error){
+        console.error('Error fetching cards:', error);
+        throw error;
+    }
+})
+
 export const updateCardsAfterLearn = createAsyncThunk('card/learnCards', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
@@ -118,9 +129,7 @@ const cardSlice = createSlice({
             .addCase(addCard.rejected, (state, action) => {
                 state.status = 'error';
             })
-
-
-
+            // remove card
             .addCase(removeCard.pending, (state, action) => {
                 state.status = 'pending';
             })
@@ -129,6 +138,23 @@ const cardSlice = createSlice({
                 state.cards = state.cards.filter(card => card.id !== action.payload)
             })
             .addCase(removeCard.rejected, (state, action) => {
+                state.status = 'error';
+            })
+            // update card
+            .addCase(updateCard.pending, (state, action) => {
+                state.status = 'pending';
+            })
+            .addCase(updateCard.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.error = null;
+                const updatedCard = action.payload;
+                const index = state.cards.findIndex((card) => card.id === updatedCard.id);
+                if (index !== -1) {
+                    state.cards[index] = updatedCard;
+                    state.cards = [...state.cards];
+                }
+            })
+            .addCase(updateCard.rejected, (state, action) => {
                 state.status = 'error';
             })
     }
