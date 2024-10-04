@@ -29,8 +29,9 @@ const LearnQuiz = ({ onComplete }) => {
     const getIncorrectOptions = () => {
         return cards
             .filter((item, index) => index !== displayedQuizIndex)
-            .map(item => ({text: item.translateWord, isCorrect: false}))
+            .sort(() => Math.random() - 0.5)
             .slice(0, 3)
+            .map(item => ({text: item.translateWord, isCorrect: false}))
     }
 
     const shuffleArray = (array) => {
