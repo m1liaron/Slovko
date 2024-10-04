@@ -4,12 +4,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 
 const DefaultModal = ({
-                          isVisible,
-                          handleClose,
-                          modalStyle,
-                          backgroundColor,
-                          animationType,
-                          children
+      isVisible,
+      handleClose,
+      modalStyle,
+      backgroundColor,
+      animationType,
+      children
                       }) => {
     const opacity = useRef(new Animated.Value(0)).current; // Initial opacity for fade-in
     const scale = useRef(new Animated.Value(0.8)).current; // Initial scale for zoom-in
@@ -49,7 +49,7 @@ const DefaultModal = ({
             visible={isVisible}
             onRequestClose={handleClose}
             transparent={true}
-            animationType="none"
+            animationType={animationType}
         >
             <Pressable
                 style={[

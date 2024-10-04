@@ -1,8 +1,17 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Button, Pressable, Dimensions} from 'react-native';
-import {Audio} from "expo-av";
-import { FontAwesome, Entypo  } from '@expo/vector-icons';
-const CardItem = ({ item, onRemove }) => {
+import {View, Text, StyleSheet, Pressable, Dimensions, TextInput} from 'react-native';
+import { Entypo  } from '@expo/vector-icons';
+import DefaultModal from "../DefaultModal/DefaultModal";
+import Toast from "react-native-toast-message";
+import {useDispatch} from "react-redux";
+import {updateCard} from "../../redux/cardSlice";
+const CardItem = ({ item, onRemove, groupId }) => {
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [title, setTitle] = useState('');
+    const [translate, setTranslate] = useState('');
+
+    const dispatch = useDispatch();
+
     const formatReviewTime = (reviewTime) => {
         const now = new Date();
         const timeDifference = new Date(reviewTime) - now; // Now it's future time, so we subtract now from reviewTime
@@ -29,16 +38,74 @@ const CardItem = ({ item, onRemove }) => {
         }
     };
 
+    const handleUpdateCard = () => {
+        // Check if title and translate are empty
+        if (title.trim() === '' || translate.trim() === '') {
+            return Toast.show({
+                type: 'error',
+                text1: 'Error🔴',
+                text2: 'Inputs must be filled!',
+            });
+        }
+
+        // Dispatch the update card action
+        dispatch(updateCard({
+            id: item.id,
+            word: title,
+            translateWord: translate,
+            groupId
+        }));
+        setTitle('');
+        setTranslate('');
+
+        // Close the modal after updating
+        setShowEditModal(false);
+        Toast.show({
+            type: 'success',
+            text1: 'Success✅',
+            text2: 'Card updated successfully!',
+        });
+    };
+
     return (
         <View style={styles.cardContainer}>
             <View style={styles.titleContainer}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>{item.word}</Text>
                 </View>
-                <Entypo name="cross" onPress={onRemove} size={24} color="black" />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Entypo name="pencil" onPress={() => setShowEditModal(true)} size={24} color="black" />
+                    <Entypo name="cross" onPress={onRemove} size={24} color="black" />
+                </View>
             </View>
             <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
             {item.nextReviewAt && <Text style={styles.reviewDate}>Наступний перегляд: <Text style={{ fontWeight: 'bold' }}>{formatReviewTime(item.nextReviewAt)}</Text></Text>}
+            <DefaultModal
+                isVisible={showEditModal}
+                handleClose={() => setShowEditModal(false)}
+            >
+                <View>
+                    <Text>Слово</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={title}
+                        onChangeText={setTitle}
+                    />
+                </View>
+
+                <View>
+                    <Text>Переклад</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={translate}
+                        onChangeText={setTranslate}
+                    />
+                </View>
+
+                <Pressable style={styles.button} onPress={handleUpdateCard}>
+                    <Text>Змінити</Text>
+                </Pressable>
+            </DefaultModal>
         </View>
     );
 };
@@ -82,6 +149,21 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 10,
         color: '#007bff',
+    },
+    input: {
+        height: 40,
+        borderWidth: 1,
+        borderColor: '#007bff',
+        borderRadius: 5,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginHorizontal: 10,
     },
 });
 

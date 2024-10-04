@@ -28,39 +28,6 @@ const CardList = ({groupId}) => {
     }, [dispatch])
 
 
-    const toastConfig = {
-        success: (props) => (
-            <BaseToast
-                {...props}
-                style={{ borderLeftColor: 'pink' }}
-                contentContainerStyle={{ paddingHorizontal: 15 }}
-                text1Style={{
-                    fontSize: 15,
-                    fontWeight: '400'
-                }}
-            />
-        ),
-        error: (props) => (
-            <ErrorToast
-                {...props}
-                text1={'Не можна!'}
-                text2={'Створіть як найменше 2 картки щоб їх вчити'}
-                text1Style={{
-                    fontSize: 17
-                }}
-                text2Style={{
-                    fontSize: 12
-                }}
-            />
-        ),
-        tomatoToast: ({ text1, props }) => (
-            <View style={{ height: 60, width: '100%', backgroundColor: 'tomato' }}>
-                <Text>{text1}</Text>
-                <Text>{props.uuid}</Text>
-            </View>
-        )
-    };
-
     const onSaveCard = async () => {
             const cardData = {
                 word: value,
@@ -78,20 +45,13 @@ const CardList = ({groupId}) => {
     };
 
     const navigateTo = (name) => {
-        if (cards.length > 1) {
-            navigation.navigate(name, {groupId});
-        } else {
-            Toast.show({
-                type: 'error'
-            });
-        }
+        navigation.navigate(name, {groupId});
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.formContainer}>
                 <Text style={styles.title}>Англійською</Text>
-                <Toast config={toastConfig}/>
                 <TextInput
                     value={value}
                     onChangeText={setValue}
@@ -127,7 +87,7 @@ const CardList = ({groupId}) => {
                     <FlatList
                         data={cards}
                         renderItem={({ item, index }) => (
-                            <CardItem item={item} onRemove={() => onRemoveCard(item.id)} />
+                            <CardItem item={item} onRemove={() => onRemoveCard(item.id)} groupId={groupId} />
                         )}
                         horizontal={true}
                         keyExtractor={(item, index) => index.toString()}

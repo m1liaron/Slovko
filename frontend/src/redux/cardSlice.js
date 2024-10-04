@@ -49,7 +49,7 @@ export const removeCard = createAsyncThunk('card/remove', async(data) => {
 export const updateCard = createAsyncThunk('card/update', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.patch(`/cards/${data}`)
+        const response = await axiosInstance.patch(`/cards/${data.id}`, data)
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);

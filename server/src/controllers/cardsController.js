@@ -80,15 +80,17 @@ const addCard = async (req, res) => {
 const updateCard = async (req, res) => {
     try {
         const cardId = req.params.id;
+        const { groupId } = req.body;
+        console.log(req.params)
         const updatedCard = await Card.update(req.body, {
-            where: { id: cardId },
+            where: { id: cardId, groupId },
             returning: true
         });
 
         if (updatedCard[0] === 0) {
             return res
                 .status(404)
-                .json({ error: true, message: 'Task not found' });
+                .json({ error: true, message: 'Card not found' });
         }
 
         const card = await Card.findOne({

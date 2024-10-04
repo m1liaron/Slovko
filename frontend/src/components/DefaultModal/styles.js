@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         overflow: 'hidden',
         padding: 25,
+        backgroundColor: '#fff'
     },
 });
 
