@@ -1,4 +1,5 @@
 const Group = require('../models/Group');
+const {Card} = require("../models/models");
 
 const getAllGroups = async (req, res) => {
     const userId = req.user.id;
@@ -52,6 +53,9 @@ const removeGroup = async (req, res) => {
         if(!card) {
             res.status(404).send({ error: true, message: 'Card not found'})
         };
+
+        await Card.destroy({ where: { groupId: id } });
+        await card.destroy();
         res.status(200).json(card);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
