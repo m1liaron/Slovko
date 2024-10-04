@@ -19,9 +19,9 @@ export const addGroup = createAsyncThunk(
 )
 
 export const removeGroup = createAsyncThunk(
-    'group/remove', async (data) => {
+    'group/remove', async (id) => {
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.delete('/groups', data);
+        const response = await axiosInstance.delete(`/groups/${id}`);
         return response.data
     }
 )
@@ -67,7 +67,7 @@ const groupSlice = createSlice({
             })
             .addCase(removeGroup.fulfilled, (state, action) => {
                 state.status = 'success';
-                state.groups = state.groups.filter(group => group.id !== action.payload);
+                state.groups = state.groups.filter(group => group.id !== action.payload.id);
             })
             .addCase(removeGroup.rejected, (state) => {
                 state.status = 'rejected';
