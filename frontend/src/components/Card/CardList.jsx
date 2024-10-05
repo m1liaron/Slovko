@@ -15,6 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
 import {AppPath} from "../../common/app/app";
 import noCardsImage from '../../assets/images/no-cards.png';
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 const CardList = ({groupId}) => {
     const cards = useSelector(selectCard);
@@ -66,14 +67,8 @@ const CardList = ({groupId}) => {
                     placeholder="Answer..."
                 />
 
-                <Pressable onPress={onSaveCard} style={styles.button}>
-                    <Text style={styles.buttonText}>Додати</Text>
-                </Pressable>
+                <PressableButton onPress={onSaveCard} text="Додати"/>
             </View>
-
-            {/*<Pressable onPress={showToast}>*/}
-            {/*    <Text>Show Toast</Text>*/}
-            {/*</Pressable>*/}
 
             {!cards.length ? (
                 <View style={{
@@ -98,9 +93,7 @@ const CardList = ({groupId}) => {
 
             {cards.length > 1 && (
                 <View style={{ marginVertical: 20}}>
-                        <Pressable onPress={() => navigateTo(AppPath.Learn)}  disabled={cards.length < 1} style={styles.button}>
-                            <Text style={styles.buttonText}>Вчитися</Text>
-                        </Pressable>
+                        <PressableButton onPress={() => navigateTo(AppPath.Learn)} text="Вчитися"/>
                 </View>
             )}
         </View>
