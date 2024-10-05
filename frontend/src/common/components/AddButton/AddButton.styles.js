@@ -5,11 +5,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#e0e0e0',
         borderRadius: 25,
+        borderColor: '#007AFF',
+        borderWidth: 4,
         height: 50,
         justifyContent: 'center',
         width: 50,
         elevation: 5, // Adds shadow for Android
-        shadowColor: '#000', // Adds shadow for iOS
+        shadowColor: '#536dd1', // Adds shadow for iOS
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,

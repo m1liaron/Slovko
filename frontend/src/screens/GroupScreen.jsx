@@ -4,6 +4,7 @@ import BackButton from "../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch} from "react-redux";
 import {getAllStatusCards} from "../redux/cardSlice";
+import AddButton from "../common/components/AddButton/AddButton";
 
 const GroupScreen = ({route}) => {
     const { groupId } = route.params
@@ -54,6 +55,7 @@ const GroupScreen = ({route}) => {
                 {renderStatusButtons()}
             </View>
             <CardList groupId={groupId} />
+            <AddButton/>
         </SafeAreaView>
     )
 }
