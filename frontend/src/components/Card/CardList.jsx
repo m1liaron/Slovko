@@ -4,10 +4,14 @@ import {
     Text,
     StyleSheet,
     FlatList,
-    TextInput,
-    Image
+    Image,
+    Button,
+    Platform
 } from 'react-native';
 import CardItem from './CardItem';
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as FileSystem from 'expo-file-system';
 import {addCard, getCards, removeCard, selectCard} from '../../redux/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
@@ -23,6 +27,7 @@ const CardList = ({groupId}) => {
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
+    const [imageUri, setImageUri] = useState('');
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -30,11 +35,11 @@ const CardList = ({groupId}) => {
         dispatch(getCards({groupId}));
     }, [dispatch])
 
-
     const onSaveCard = async () => {
             const cardData = {
                 word: value,
                 translateWord: answerWord,
+                imageUri,
                 groupId
             };
 
@@ -51,6 +56,46 @@ const CardList = ({groupId}) => {
         navigation.navigate(name, {groupId});
     };
 
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images, // Only images
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 0.5, // Reduce initial quality
+        });
+    
+        if (!result.canceled) {
+            // Compress and resize the image
+            const compressedResult = await ImageManipulator.manipulateAsync(
+                result.assets[0].uri,
+                [{ resize: { width: 800 } }],
+                { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Compress further
+            );
+    
+            if (Platform.OS === 'web') {
+                // Handle image as a Blob for web
+                const response = await fetch(compressedResult.uri);
+                const blob = await response.blob();
+                const imageUri = URL.createObjectURL(blob); // Create an object URL from the blob
+                setImageUri(imageUri); // Use object URL for web
+                console.log('Image processed for web:', imageUri);
+            } else {
+                // Native: Use expo-file-system for saving locally
+                const localUri = `${FileSystem.documentDirectory}${Date.now()}.jpg`;
+    
+                try {
+                    await FileSystem.moveAsync({
+                        from: compressedResult.uri,
+                        to: localUri,
+                    });
+                    setImageUri(localUri); // Set local URI for native
+                    console.log('Image saved locally at:', localUri);
+                } catch (error) {
+                    console.error('Error saving image locally:', error);
+                }
+            }
+        }
+    };
     return (
         <View style={styles.container}>
             {!cards.length ? (
@@ -101,6 +146,9 @@ const CardList = ({groupId}) => {
                         placeholder="Відповідь..."
                     />
 
+                <PressableButton text="Pick an image from camera roll" onPress={pickImage} />
+                {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+
                     <PressableButton onPress={onSaveCard} text="Додати"/>
                 </View>
             </DefaultModal>
@@ -126,6 +174,23 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         flexWrap:'wrap'
+    },
+    imageUploadButton: {
+        backgroundColor: '#ddd',
+        padding: 10,
+        marginVertical: 10,
+        alignItems: 'center',
+        borderRadius: 5
+    },
+    imageUploadText: {
+        color: '#333',
+        fontSize: 16
+    },
+    previewImage: {
+        width: 100,
+        height: 100,
+        marginVertical: 10,
+        borderRadius: 10
     },
     listContainer:{
         gap: 10

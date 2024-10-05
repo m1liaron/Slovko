@@ -53,6 +53,7 @@ export const GroupList = () => {
                 isVisible={showAddModal}
                 handleClose={() => setShowAddModal(false)}
             >
+                <Text>Додайте Групу!</Text>
                 <AddInput
                     placeholder="Назва Групи"
                     placeholderTextColor="#A0A0A0"
