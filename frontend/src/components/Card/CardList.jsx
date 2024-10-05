@@ -5,7 +5,6 @@ import {
     StyleSheet,
     FlatList,
     TextInput,
-    Pressable,
     Image
 } from 'react-native';
 import CardItem from './CardItem';
@@ -16,6 +15,7 @@ import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
 import {AppPath} from "../../common/app/app";
 import noCardsImage from '../../assets/images/no-cards.png';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import AddInput from "../../common/components/AddInput/AddInput";
 
 const CardList = ({groupId}) => {
     const cards = useSelector(selectCard);
@@ -52,19 +52,19 @@ const CardList = ({groupId}) => {
     return (
         <View style={styles.container}>
             <View style={styles.formContainer}>
-                <Text style={styles.title}>Англійською</Text>
-                <TextInput
+                <Text style={styles.title}>Додайте Карточку!</Text>
+                <AddInput
                     value={value}
                     onChangeText={setValue}
                     style={styles.input}
-                    placeholder="Word..."
+                    placeholder="Слово..."
                 />
 
-                <TextInput
+                <AddInput
                     value={answerWord}
                     onChangeText={setAnswerWord}
                     style={styles.input}
-                    placeholder="Answer..."
+                    placeholder="Відповідь..."
                 />
 
                 <PressableButton onPress={onSaveCard} text="Додати"/>
@@ -113,31 +113,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    input: {
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#007bff',
-        borderRadius: 5,
-        marginBottom: 10,
-        paddingHorizontal: 10,
-    },
-    button: {
-        backgroundColor: '#007bff',
-        borderRadius: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginHorizontal: 10,
-    },
     flex:{
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center',
         flexWrap:'wrap'
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
     },
     listContainer:{
         gap: 10
