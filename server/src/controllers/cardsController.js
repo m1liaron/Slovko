@@ -21,7 +21,17 @@ const getAllCards = async (req, res) => {
              }
         });
 
-        res.status(200).json(cards);
+        const updatedCards = await Promise.all(
+            cards.map(async card => {
+                if(card.status === 'Learned' && card.newReviewCount <= today) {
+                    card.status = 'To Learn';
+                    await card.save();
+                }
+                return card;
+            })
+        )
+
+        res.status(200).json(updatedCards);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get all cards'})
     }
@@ -50,10 +60,11 @@ const updateCardsAfterReview = async (req, res) => {
             const newReviewCount = card.reviewCount + 1;
             const nextReviewDate = calculateNextReviewDate(newReviewCount);
 
-            if(card.reviewCount >= 8) {
-                card.status = 'Learned';
+            if(card.reviewCount >= 20) {
+                card.status = 'Know';
             }
 
+            card.status = 'Learned';
             card.learnedAt = new Date();
             card.reviewCount = newReviewCount;
             card.nextReviewAt = nextReviewDate;
