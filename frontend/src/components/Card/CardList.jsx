@@ -11,16 +11,18 @@ import CardItem from './CardItem';
 import {addCard, getCards, removeCard, selectCard} from '../../redux/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import Toast, {ErrorToast, BaseToast} from "react-native-toast-message";
 import {AppPath} from "../../common/app/app";
 import noCardsImage from '../../assets/images/no-cards.png';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import AddInput from "../../common/components/AddInput/AddInput";
+import AddButton from "../../common/components/AddButton/AddButton";
+import DefaultModal from "../DefaultModal/DefaultModal";
 
 const CardList = ({groupId}) => {
     const cards = useSelector(selectCard);
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
+    const [showAddModal, setShowAddModal] = useState(false);
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -51,25 +53,6 @@ const CardList = ({groupId}) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.formContainer}>
-                <Text style={styles.title}>Додайте Карточку!</Text>
-                <AddInput
-                    value={value}
-                    onChangeText={setValue}
-                    style={styles.input}
-                    placeholder="Слово..."
-                />
-
-                <AddInput
-                    value={answerWord}
-                    onChangeText={setAnswerWord}
-                    style={styles.input}
-                    placeholder="Відповідь..."
-                />
-
-                <PressableButton onPress={onSaveCard} text="Додати"/>
-            </View>
-
             {!cards.length ? (
                 <View style={{
                     justifyContent:'center',
@@ -78,7 +61,7 @@ const CardList = ({groupId}) => {
                     <Image source={noCardsImage} />
                 </View>
             ) : (
-                <View>
+                <View style={{ marginVertical: 10 }}>
                     <FlatList
                         data={cards}
                         renderItem={({ item, index }) => (
@@ -96,6 +79,31 @@ const CardList = ({groupId}) => {
                         <PressableButton onPress={() => navigateTo(AppPath.Learn)} text="Вчитися"/>
                 </View>
             )}
+            <AddButton onPress={() => setShowAddModal(true) }/>
+
+            <DefaultModal
+                isVisible={showAddModal}
+                handleClose={() => setShowAddModal(false)}
+            >
+                <View style={styles.formContainer}>
+                    <Text style={styles.title}>Додайте Карточку!</Text>
+                    <AddInput
+                        value={value}
+                        onChangeText={setValue}
+                        style={styles.input}
+                        placeholder="Слово..."
+                    />
+
+                    <AddInput
+                        value={answerWord}
+                        onChangeText={setAnswerWord}
+                        style={styles.input}
+                        placeholder="Відповідь..."
+                    />
+
+                    <PressableButton onPress={onSaveCard} text="Додати"/>
+                </View>
+            </DefaultModal>
         </View>
     );
 };
