@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import { SafeAreaView  } from "react-native-safe-area-context";
 import {StyleSheet, Text} from "react-native";
 import {GroupList} from "../components/Group/GroupList";
 import {useDispatch} from "react-redux";
 import {getUser} from "../redux/userSlice";
+import AddButton from "../common/components/AddButton/AddButton";
 const MainScreen = () => {
-    const dispatch = useDispatch();
+const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getUser());
@@ -14,6 +15,7 @@ const MainScreen = () => {
     return (
         <SafeAreaView  style={styles.container}>
             <GroupList/>
+            <AddButton/>
         </SafeAreaView >
     );
 };

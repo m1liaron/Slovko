@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import Toast from "react-native-toast-message";
 import noGroupsImage from '../../assets/images/no_groups.png';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import AddInput from "../../common/components/AddInput/AddInput";
 
 export const GroupList = () => {
     const groups = useSelector(selectGroup);
@@ -23,15 +24,13 @@ export const GroupList = () => {
                 text1: "Please enter a title",
             })
         }
-        console.log('add group')
         dispatch(addGroup({ title }));
     }
 
     return (
         <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Title"
+            <AddInput
+                placeholder="Назва Групи"
                 placeholderTextColor="#A0A0A0"
                 value={title}
                 onChangeText={setTitle}
