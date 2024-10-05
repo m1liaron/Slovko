@@ -5,6 +5,7 @@ import {GroupItem} from "./GroupItem";
 import {useEffect, useState} from "react";
 import Toast from "react-native-toast-message";
 import noGroupsImage from '../../assets/images/no_groups.png';
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 export const GroupList = () => {
     const groups = useSelector(selectGroup);
@@ -36,9 +37,7 @@ export const GroupList = () => {
                 onChangeText={setTitle}
             />
 
-            <Pressable style={styles.button} onPress={handleAddGroup}>
-                <Text style={styles.buttonText}>Add Group</Text>
-            </Pressable>
+            <PressableButton onPress={handleAddGroup} text="Додати групу" />
 
             {!groups.length ? (
                 <View style={{
