@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db/sequelize');
 const { v4: uuidv4 } = require('uuid');
 const Group = require("./Group");
+const Image = require("./Image");
 
 const Card = sequelize.define(
     'Card',
@@ -45,6 +46,14 @@ const Card = sequelize.define(
             key: 'id',
         },
     },
+    imageId: {
+      type: DataTypes.UUID,
+      references: {
+          model: Image,
+          key: 'id'
+      },
+      allowNull: true
+    },
     status: {
         type: DataTypes.ENUM('Learned', 'To Learn', 'Know'),
         allowNull: false,
@@ -67,5 +76,8 @@ const Card = sequelize.define(
         tableName: 'Cards',
         timestamps: true,
 });
+
+Card.belongsTo(Image, { foreignKey: 'imageId', as: 'image' });
+Image.hasMany(Card, { foreignKey: 'imageId' });
 
 module.exports = Card;
