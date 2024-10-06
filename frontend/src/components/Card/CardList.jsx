@@ -36,16 +36,29 @@ const CardList = ({groupId}) => {
     }, [dispatch])
 
     const onSaveCard = async () => {
+        let finalImageUri = imageUri;
+
+        if (Platform.OS === 'web' && imageUri.startsWith('blob:')) {
+            try {
+                finalImageUri = await convertBlobToBase64(imageUri);
+            } catch (error) {
+                console.error('Error converting blob to base64:', error);
+                return; // Exit if conversion fails
+            }
+        }
+        console.log(finalImageUri)
+
             const cardData = {
                 word: value,
                 translateWord: answerWord,
-                imageUri,
+                imageUri: finalImageUri,
                 groupId
             };
 
         dispatch(addCard(cardData));
         setValue('');
         setAnswerWord('');
+        setImageUri('');
     };
 
     const onRemoveCard = async (courseId) => {
@@ -55,6 +68,21 @@ const CardList = ({groupId}) => {
     const navigateTo = (name) => {
         navigation.navigate(name, {groupId});
     };
+
+    const convertBlobToBase64 = (blobUri) => {
+        return new Promise((resolve, reject) => {
+            fetch(blobUri)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = () => reject(new Error('Failed to convert blob to base64'));
+                    reader.readAsDataURL(blob);
+                })
+                .catch(error => reject(error));
+        });
+    };
+
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -96,6 +124,9 @@ const CardList = ({groupId}) => {
             }
         }
     };
+
+    console.log('Image uri:', imageUri)
+
     return (
         <View style={styles.container}>
             {!cards.length ? (
