@@ -76,7 +76,6 @@ const LearnCards = ({ onComplete }) => {
 
         setCurrentCardIndex(index);
         setIsSwipeDisabled(false);
-        rotation.value = 0;
     };
 
     const renderCard = (card, index) => (

@@ -2,14 +2,19 @@ import {FlatList, Pressable, Text, TextInput, View, StyleSheet, Image} from "rea
 import {useDispatch, useSelector} from "react-redux";
 import {addGroup, getAllGroups, selectGroup} from "../../redux/groupSlice";
 import {GroupItem} from "./GroupItem";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Toast from "react-native-toast-message";
 import noGroupsImage from '../../assets/images/no_groups.png';
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import AddButton from "../../common/components/AddButton/AddButton";
+import DefaultModal from "../DefaultModal/DefaultModal";
 
 export const GroupList = () => {
     const groups = useSelector(selectGroup);
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
+    const [showAddModal, setShowAddModal] = useState(false);
 
     useEffect(() => {
         dispatch(getAllGroups());
@@ -22,38 +27,42 @@ export const GroupList = () => {
                 text1: "Please enter a title",
             })
         }
-        console.log('add group')
         dispatch(addGroup({ title }));
+        setTitle('');
+        setShowAddModal(false);
     }
 
     return (
         <View style={styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Title"
-                placeholderTextColor="#A0A0A0"
-                value={title}
-                onChangeText={setTitle}
-            />
+            <View style={styles.groupListContainer}>
+                {!groups.length ? (
+                    <View style={styles.noGroupsContainer}>
+                        <Image source={noGroupsImage}/>
+                    </View>
+                ) : (
+                    <FlatList
+                        data={groups}
+                        renderItem={({item}) => <GroupItem item={item} />}
+                        keyExtractor={(item) => item.id}
+                    />
+                )}
+            </View>
+            <AddButton onPress={() => setShowAddModal(true)}/>
 
-            <Pressable style={styles.button} onPress={handleAddGroup}>
-                <Text style={styles.buttonText}>Add Group</Text>
-            </Pressable>
-
-            {!groups.length ? (
-                <View style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}>
-                    <Image source={noGroupsImage}/>
-                </View>
-            ) : (
-                <FlatList
-                    data={groups}
-                    renderItem={({item}) => <GroupItem item={item} />}
-                    keyExtractor={(item) => item.id}
+            <DefaultModal
+                isVisible={showAddModal}
+                handleClose={() => setShowAddModal(false)}
+            >
+                <Text>Додайте Групу!</Text>
+                <AddInput
+                    placeholder="Назва Групи"
+                    placeholderTextColor="#A0A0A0"
+                    value={title}
+                    onChangeText={setTitle}
                 />
-            )}
+
+                <PressableButton onPress={handleAddGroup} text="Додати групу" />
+            </DefaultModal>
         </View>
     )
 }
@@ -64,37 +73,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         width: '90%',
+        flex: 1
     },
-    input: {
-        height: 50,
-        borderColor: '#E0E0E0',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 15,
-        marginBottom: 15,
-        backgroundColor: '#FFF',
-        fontSize: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,  // Android shadow
+    groupListContainer: {
+        flexDirection: 'column',
+        flex: 1,
     },
-    button: {
-        backgroundColor: '#007AFF',
-        paddingVertical: 15,
-        borderRadius: 10,
+    noGroupsContainer: {
+        justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
-        shadowColor: '#007AFF',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-        elevation: 5,
-    },
-    buttonText: {
-        color: '#FFF',
-        fontSize: 16,
-        fontWeight: 'bold',
     },
 });
