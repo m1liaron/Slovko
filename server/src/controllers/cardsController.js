@@ -1,4 +1,5 @@
 const Card =  require("../models/Card");
+const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
 const { Op } = require("sequelize");
 
@@ -79,9 +80,10 @@ const updateCardsAfterReview = async (req, res) => {
 }
 
 const addCard = async (req, res) => {
-    const data = req.body;
+    const { imageUri, ...data} = req.body;
     try {
-        const newCard = await Card.create(data);
+        const image = await Image.create({ url: imageUri });
+        const newCard = await Card.create({ imageId: image.id, ...data});
         return res.status(200).json(newCard);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})

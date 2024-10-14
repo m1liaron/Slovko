@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable, Dimensions} from 'react-native';
+import {View, Text, TextInput, StyleSheet, Pressable, Dimensions, Button} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
 import {login} from "../redux/userSlice";
@@ -25,9 +25,12 @@ const LoginScreen = () => {
                 text2: 'Inputs must be filled!',
             });
         }
+        
         const response = await dispatch(login({ email, password }));
         if (login.rejected.match(response)) {
             const error = response.payload || 'Login failed';
+            console.log(response.payload);
+            
             Toast.show({
                 type: 'error',
                 text1: 'Fail',
@@ -38,10 +41,18 @@ const LoginScreen = () => {
         }
     };
 
+    const showToast = () => {
+        Toast.show({
+          type: 'success',
+          text1: 'Hello',
+          text2: 'This is some something 👋'
+        });
+      }
+
     return (
         <SafeAreaView style={styles.container}>
+            <Toast/>
             <Text style={styles.title}>Login</Text>
-
             <TextInput
                 style={styles.input}
                 placeholder="Email"
