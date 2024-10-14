@@ -5,7 +5,6 @@ import {
     StyleSheet,
     FlatList,
     Image,
-    Button,
     Platform
 } from 'react-native';
 import CardItem from './CardItem';
@@ -119,8 +118,6 @@ const CardList = ({ groupId }) => {
             }
         }
     };
-
-    console.log('Image uri:', imageUri)
 
     return (
         <View style={styles.container}>
