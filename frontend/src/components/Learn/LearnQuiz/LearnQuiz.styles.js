@@ -1,17 +1,18 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform  } from 'react-native';
 
 const styles = StyleSheet.create({
     card: {
-      marginBottom: 40
+        marginBottom: 40,
     },
     cardCount: {
         fontSize: 18,
     },
     cardText: {
+      color: '#000',
       fontSize: 30,
       fontWeight: 'bold',
       borderRadius: 20,
-      borderColor: '#00',
+      borderColor: '#000',
       borderWidth: 2,
       padding: 20
     },

@@ -10,22 +10,25 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { AppPath } from "./common/app/app";
 import LearnScreen from "./screens/LearnScreen/LearnScreen";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
     return (
         <Provider store={store}>
-            <NavigationContainer>
-                <Stack.Navigator headerMode="none" screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name={AppPath.Loading} component={LoadingScreen} />
-                    <Stack.Screen name={AppPath.Group} component={GroupScreen} />
-                    <Stack.Screen name={AppPath.Home} component={MainScreen} />
-                    <Stack.Screen name={AppPath.Learn} component={LearnScreen} />
-                    <Stack.Screen name={AppPath.Login} component={LoginScreen} />
-                    <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-                </Stack.Navigator>
-            </NavigationContainer>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <NavigationContainer>
+                    <Stack.Navigator headerMode="none" screenOptions={{ headerShown: false }}>
+                        <Stack.Screen name={AppPath.Loading} component={LoadingScreen} />
+                        <Stack.Screen name={AppPath.Group} component={GroupScreen} />
+                        <Stack.Screen name={AppPath.Home} component={MainScreen} />
+                        <Stack.Screen name={AppPath.Learn} component={LearnScreen} />
+                        <Stack.Screen name={AppPath.Login} component={LoginScreen} />
+                        <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </GestureHandlerRootView>
         </Provider>
     );
 }

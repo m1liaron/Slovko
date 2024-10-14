@@ -119,8 +119,9 @@ const styles = StyleSheet.create({
         borderColor:'#000',
         shadowOpacity: 0.2,
         shadowRadius: 5, // Adjust the radius for iOS
-        width: '100%',
-        height:Dimensions.get('window').height - 500,
+        width: 300,
+        height: Dimensions.get('window').height - 500,
+        marginRight: 30
     },
     titleContainer:{
       flexDirection:'row',

@@ -140,7 +140,7 @@ const CardList = ({ groupId }) => {
             )}
 
             {cards.length > 1 && (
-                <View style={{ marginVertical: 20 }}>
+                <View style={{ marginHorizontal: 20 }}>
                     <PressableButton onPress={() => navigateTo(AppPath.Learn)} text="Вчитися" />
                 </View>
             )}
@@ -167,7 +167,7 @@ const CardList = ({ groupId }) => {
                     />
 
                     <PressableButton text="Pick an image from camera roll" onPress={pickImage} />
-                    {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+                    {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
 
                     <PressableButton onPress={onSaveCard} text="Додати" />
                 </View>
@@ -196,6 +196,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     listContainer: {
+        marginHorizontal: 30,
         gap: 10
     }
 });
