@@ -3,8 +3,9 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     wordContainer: {
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
-        overflow: 'scroll'
+        overflowX: 'scroll'
     },
     word: {
         padding: 20,

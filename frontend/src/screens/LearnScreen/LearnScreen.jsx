@@ -131,36 +131,38 @@ const LearnScreen = ({ route }) => {
 
     return (
         <SafeAreaView styles={styles.container}>
-            <BackButton showAlert={true} />
-            {!isLessonOver ? (
-                <>
-                    { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
-                    {  currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
-                    { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
+            <View style={{ padding: 20 }}>
+                <BackButton showAlert={true} />
+                {!isLessonOver ? (
+                    <>
+                        { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
+                        {  currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
+                        { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
 
-                    <DefaultModal
-                        isVisible={showSettingsModal}
-                        handleClose={() => toggleSwitch(setShowSettingsModal)}
-                        backgroundColor="none"
-                        modalStyle={{
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 4,
-                            elevation: 5, // for Android shadow
-                        }}
-                    >
-                        {generateSectionContent()}
-                    </DefaultModal>
-                    <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
-                        <AntDesign name="setting" size={30} color="#000"/>
-                    </Pressable>
-                </>
-            ) : (
-                <View>
-                    <Text style={{ fontSize: 50, textAlign: 'center' }}>The lesson is over. Have a good day😁</Text>
-                </View>
-            )}
+                        <DefaultModal
+                            isVisible={showSettingsModal}
+                            handleClose={() => toggleSwitch(setShowSettingsModal)}
+                            backgroundColor="none"
+                            modalStyle={{
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5, // for Android shadow
+                            }}
+                        >
+                            {generateSectionContent()}
+                        </DefaultModal>
+                        <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
+                            <AntDesign name="setting" size={30} color="#000"/>
+                        </Pressable>
+                    </>
+                ) : (
+                    <View>
+                        <Text style={{ fontSize: 50, textAlign: 'center' }}>The lesson is over. Have a good day😁</Text>
+                    </View>
+                )}
+            </View>
         </SafeAreaView>
     )
 }
