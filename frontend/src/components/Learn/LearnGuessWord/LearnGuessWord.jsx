@@ -83,7 +83,6 @@ const LearnGuessWord = ({ onComplete }) => {
         <>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
             <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess}</Text>
-            <View style={{ flexDirection: 'row', width: width - 100 }}>
                 <FlatList
                     horizontal
                     data={scrambledWord}
@@ -98,7 +97,6 @@ const LearnGuessWord = ({ onComplete }) => {
                     )}
                     keyExtractor={(item, index) => index.toString()}
                 />
-            </View>
             <Pressable onPress={() => setShowWord(!showWord)}>
                 <AntDesign name="questioncircleo" size={24} color="black" />
             </Pressable>

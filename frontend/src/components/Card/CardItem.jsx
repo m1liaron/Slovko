@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Pressable, Dimensions, TextInput, Image} from 'react-native';
 import { Entypo  } from '@expo/vector-icons';
 import DefaultModal from "../DefaultModal/DefaultModal";
 import Toast from "react-native-toast-message";
 import {useDispatch} from "react-redux";
 import {updateCard} from "../../redux/cardSlice";
+
 const CardItem = ({ item, onRemove, groupId }) => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [title, setTitle] = useState('');
