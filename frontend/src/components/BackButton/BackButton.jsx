@@ -11,7 +11,7 @@ const BackButton = ({ showAlert }) => {
             showConfirmAlert(
                 "Are you sure you want to go back?",
                 () => navigation.goBack(),
-                () => console.log("Back action cancelled")
+                () => {}
             );
         } else {
             navigation.goBack();

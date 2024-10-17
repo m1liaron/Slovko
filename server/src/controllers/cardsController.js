@@ -1,7 +1,6 @@
 const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
-const { Op } = require("sequelize");
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
@@ -10,7 +9,8 @@ const getAllCards = async (req, res) => {
         const cards = await Card.findAll({
             where: { 
                 groupId
-             }
+             },
+            include: [{ model: Image, as: 'image' }]
         });
 
         const updatedCards = await Promise.all(
@@ -75,7 +75,13 @@ const addCard = async (req, res) => {
     try {
         const image = await Image.create({ url: imageUri });
         const newCard = await Card.create({ imageId: image.id, ...data});
-        return res.status(200).json(newCard);
+
+        const card = await Card.findOne({
+            where: { id: newCard.id },
+            include: [{ model: Image, as: 'image' }]
+        })
+
+        return res.status(200).json(card);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
     }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Pressable, Dimensions, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Dimensions, TextInput, Image} from 'react-native';
 import { Entypo  } from '@expo/vector-icons';
 import DefaultModal from "../DefaultModal/DefaultModal";
 import Toast from "react-native-toast-message";
@@ -80,6 +80,14 @@ const CardItem = ({ item, onRemove, groupId }) => {
             </View>
             <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
             {item.nextReviewAt && <Text style={styles.reviewDate}>Наступний перегляд: <Text style={{ fontWeight: 'bold' }}>{formatReviewTime(item.nextReviewAt)}</Text></Text>}
+
+            {item.image && item.image.url && (
+                <Image
+                    source={{ uri: item.image.url.toString() }}
+                    style={{ width: 100, height: 100 }}
+                />
+            )}
+
             <DefaultModal
                 isVisible={showEditModal}
                 handleClose={() => setShowEditModal(false)}
@@ -119,7 +127,6 @@ const styles = StyleSheet.create({
         borderColor:'#000',
         shadowOpacity: 0.2,
         shadowRadius: 5, // Adjust the radius for iOS
-        width: 300,
         height: Dimensions.get('window').height - 500,
         marginRight: 30
     },
