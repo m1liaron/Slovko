@@ -79,6 +79,10 @@ const LearnQuiz = ({ onComplete }) => {
         }
     }
 
+    if (!cards || cards.length === 0 || !currentCard) {
+        return <Text>No cards available</Text>;  // Add a fallback in case of no data
+    }
+
     return (
         <>
             <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
@@ -101,11 +105,12 @@ const LearnQuiz = ({ onComplete }) => {
                                                 : '#8e8e8e'
                                         : '#d0d0d0',
                             },
-                        ]} onPress={() => handleOptionPress(item)}>
+                        ]}
+                        onPress={() => handleOptionPress(item)}>
                         <Text style={{ fontSize: 30 }}>{item.text}</Text>
                     </Pressable>
                 )}
-                style={styles.listContainer}
+                style={{ flexGrow: 1 }}
                 keyExtractor={(item, index) => index.toString()}
             />
         </>

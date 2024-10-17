@@ -4,8 +4,8 @@ const CARD_WIDTH = Dimensions.get('window').width - 800;
 
 const styles = StyleSheet.create({
     cardContainer: {
-        maxWidth: CARD_WIDTH,
-        height: '50%',
+        width: 'auto',
+        height: '70%'
     },
     card: {
         width: '100%',

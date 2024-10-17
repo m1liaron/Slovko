@@ -34,6 +34,21 @@ const CardList = ({ groupId }) => {
         dispatch(getCards({ groupId }));
     }, [dispatch, groupId]);
 
+    const convertImageToBase64 = async (uri) => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const reader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+            reader.onloadend = () => {
+                const base64data = reader.result.split(',')[1]; // Get the Base64 part
+                resolve(base64data);
+            };
+            reader.onerror = () => reject(new Error('Failed to convert image to base64'));
+            reader.readAsDataURL(blob);
+        });
+    };
+
     const onSaveCard = async () => {
         let finalImageUri = imageUri;
 
@@ -42,6 +57,14 @@ const CardList = ({ groupId }) => {
                 finalImageUri = await convertBlobToBase64(imageUri);
             } catch (error) {
                 console.error('Error converting blob to base64:', error);
+                return;
+            }
+        } else if (finalImageUri) {
+            try {
+                const base64Image = await convertImageToBase64(finalImageUri);
+                finalImageUri = base64Image;
+            } catch (error) {
+                console.error('Error converting image to base64:', error);
                 return;
             }
         }
@@ -140,7 +163,7 @@ const CardList = ({ groupId }) => {
             )}
 
             {cards.length > 1 && (
-                <View style={{ marginVertical: 20 }}>
+                <View style={{ marginHorizontal: 20 }}>
                     <PressableButton onPress={() => navigateTo(AppPath.Learn)} text="Вчитися" />
                 </View>
             )}
@@ -167,7 +190,7 @@ const CardList = ({ groupId }) => {
                     />
 
                     <PressableButton text="Pick an image from camera roll" onPress={pickImage} />
-                    {imageUri && <Image source={{ uri: imageUri }} style={styles.image} />}
+                    {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
 
                     <PressableButton onPress={onSaveCard} text="Додати" />
                 </View>
@@ -196,6 +219,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     listContainer: {
+        marginHorizontal: 30,
         gap: 10
     }
 });

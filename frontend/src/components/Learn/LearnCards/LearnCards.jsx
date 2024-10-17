@@ -58,7 +58,6 @@ const LearnCards = ({ onComplete }) => {
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
         setIsSwipeDisabled(false);
-        rotation.value = 0;
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
     };
 

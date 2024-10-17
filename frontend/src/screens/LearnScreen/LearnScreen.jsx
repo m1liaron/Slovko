@@ -131,7 +131,7 @@ const LearnScreen = ({ route }) => {
 
     return (
         <SafeAreaView styles={styles.container}>
-            <BackButton/>
+            <BackButton showAlert={true} />
             {!isLessonOver ? (
                 <>
                     { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
