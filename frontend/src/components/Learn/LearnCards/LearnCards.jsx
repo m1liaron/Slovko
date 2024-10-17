@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import {View, Text,  Pressable} from 'react-native'
+import {View, Text, Pressable, Image} from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {selectCard} from "../../../redux/cardSlice";
@@ -80,11 +80,15 @@ const LearnCards = ({ onComplete }) => {
     const renderCard = (card, index) => (
         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
             <Animated.View style={[styles.card, frontAnimatedStyle]}>
+                <View style={{ marginTop: 10 }}>
+                    {card.image && card.image.url && (
+                        <Image
+                            source={{ uri: card.image.url.toString() }}
+                            style={{ width: 400, height: 400, borderRadius: 10 }}
+                        />
+                    )}
+                </View>
                 <Text style={styles.cardText}>{card.word}</Text>
-                <Text style={styles.cardDescription}>Нажміть щоб побачити переклад</Text>
-                <Pressable onPress={() => setShowDefinition(!showDefinition)}>
-                    <AntDesign name="questioncircleo" size={24} color="black" />
-                </Pressable>
             </Animated.View>
             <Animated.View style={[styles.card, backAnimatedStyle]}>
                 <Text style={styles.cardText}>{card.translateWord}</Text>

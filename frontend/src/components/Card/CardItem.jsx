@@ -81,12 +81,14 @@ const CardItem = ({ item, onRemove, groupId }) => {
             <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
             {item.nextReviewAt && <Text style={styles.reviewDate}>Наступний перегляд: <Text style={{ fontWeight: 'bold' }}>{formatReviewTime(item.nextReviewAt)}</Text></Text>}
 
-            {item.image && item.image.url && (
-                <Image
-                    source={{ uri: item.image.url.toString() }}
-                    style={{ width: 100, height: 100 }}
-                />
-            )}
+            <View style={{ marginTop: 10 }}>
+                {item.image && item.image.url && (
+                    <Image
+                        source={{ uri: item.image.url.toString() }}
+                        style={{ width: 200, height: 200, borderRadius: 10 }}
+                    />
+                )}
+            </View>
 
             <DefaultModal
                 isVisible={showEditModal}
