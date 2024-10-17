@@ -6,6 +6,7 @@ import {selectCard} from "../../../redux/cardSlice";
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnCards.styles';
 import {useSelector} from "react-redux";
+import * as Speech from 'expo-speech';
 
 const LearnCards = ({ onComplete }) => {
     const cards = useSelector(selectCard);
@@ -32,6 +33,8 @@ const LearnCards = ({ onComplete }) => {
             setFlippedIndex(index === flippedIndex ? null : index);
             setIsSwipeDisabled(true);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
+
+            Speech.speak(learningCards[index].word);
 
             // Update the flipped cards state
             return { ...prevFlippedCards, [index]: true };
