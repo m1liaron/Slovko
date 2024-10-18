@@ -86,7 +86,7 @@ const LearnGuessWord = ({ onComplete }) => {
                 <FlatList
                     horizontal
                     data={scrambledWord}
-                    contentContainerStyle={styles.wordContainer} // Add padding
+                    contentContainerStyle={styles.wordContainer}
                     renderItem={({ item, index }) => (
                         <Pressable
                             style={[styles.word, { backgroundColor: letterColors[index] || 'transparent' }]}
@@ -96,6 +96,7 @@ const LearnGuessWord = ({ onComplete }) => {
                         </Pressable>
                     )}
                     keyExtractor={(item, index) => index.toString()}
+                    scrollEnabled={true}
                 />
             <Pressable onPress={() => setShowWord(!showWord)}>
                 <AntDesign name="questioncircleo" size={24} color="black" />
