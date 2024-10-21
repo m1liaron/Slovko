@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, Pressable, useWindowDimensions} from 'react-native'
+import {View, Text, FlatList, Pressable, useWindowDimensions, Image} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
@@ -11,8 +11,9 @@ const LearnGuessWord = ({ onComplete }) => {
     const [currentGuess, setCurrentGuess] = useState([]);
     const [scrambledWord, setScrambledWord] = useState([]);
     const [letterColors, setLetterColors] = useState({});
-    const [showWord, setShowWord] = useState(false);
-    const currentWord = cards[currentIndex]?.word;
+    const [showTranslate, setShowTranslate] = useState(false);
+    const currentCard = cards[currentIndex];
+    const currentWord = currentCard?.word;
     const { width } = useWindowDimensions();
 
     useEffect(() => {
@@ -95,6 +96,15 @@ const LearnGuessWord = ({ onComplete }) => {
         <>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
             <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess.join(' ')}</Text>
+            <View>
+                {currentCard.image && currentCard.image.url && (
+                    <Image
+                        source={{ uri: currentCard.image.url.toString() }}
+                        style={{ width: 200, height: 200, borderRadius: 10, marginVertical: 20, borderWidth: 5, borderColor: '#000' }}
+                    />
+                )}
+            </View>
+
                 <FlatList
                     horizontal
                     data={scrambledWord}
@@ -110,10 +120,10 @@ const LearnGuessWord = ({ onComplete }) => {
                     keyExtractor={(item, index) => index.toString()}
                     scrollEnabled={true}
                 />
-            <Pressable onPress={() => setShowWord(!showWord)}>
+            <Pressable onPress={() => setShowTranslate(!showTranslate)}>
                 <AntDesign name="questioncircleo" size={24} color="black" />
             </Pressable>
-            {showWord && <Text>{currentWord}</Text>}
+            {showTranslate && <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{currentCard.translateWord}</Text>}
         </>
     );
 };
