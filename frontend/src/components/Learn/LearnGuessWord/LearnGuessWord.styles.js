@@ -2,20 +2,23 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     wordContainer: {
+        width: '100%',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'center',
         alignItems: 'center',
-        overflowX: 'scroll'
+        paddingHorizontal: 20,
     },
     word: {
         padding: 20,
         margin: 5,
-        borderColor: '#8a8a8a',
-        borderWidth: 1,
-        borderRadius: 50,
+        borderColor: '#000',
+        borderWidth: 5,
+        borderRadius: 10,
     },
     wordText: {
-        fontSize: 20,
+        fontSize: 40,
+        fontWeight: 'bold',
     },
 });
 

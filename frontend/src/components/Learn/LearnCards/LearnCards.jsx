@@ -87,13 +87,21 @@ const LearnCards = ({ onComplete }) => {
                     {card.image && card.image.url && (
                         <Image
                             source={{ uri: card.image.url.toString() }}
-                            style={{ width: 400, height: 400, borderRadius: 10 }}
+                            style={{ width: 300, height: 300, borderRadius: 10 }}
                         />
                     )}
                 </View>
                 <Text style={styles.cardText}>{card.word}</Text>
             </Animated.View>
             <Animated.View style={[styles.card, backAnimatedStyle]}>
+                <View style={{ marginTop: 10 }}>
+                    {card.image && card.image.url && (
+                        <Image
+                            source={{ uri: card.image.url.toString() }}
+                            style={{ width: 300, height: 300, borderRadius: 10 }}
+                        />
+                    )}
+                </View>
                 <Text style={styles.cardText}>{card.translateWord}</Text>
             </Animated.View>
         </Pressable>
