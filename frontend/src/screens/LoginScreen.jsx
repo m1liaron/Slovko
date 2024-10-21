@@ -29,8 +29,7 @@ const LoginScreen = () => {
         const response = await dispatch(login({ email, password }));
         if (login.rejected.match(response)) {
             const error = response.payload || 'Login failed';
-            console.log(response.payload);
-            
+
             Toast.show({
                 type: 'error',
                 text1: 'Fail',

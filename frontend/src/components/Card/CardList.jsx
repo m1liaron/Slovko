@@ -124,7 +124,6 @@ const CardList = ({ groupId }) => {
                 const blob = await response.blob();
                 const imageUri = URL.createObjectURL(blob);
                 setImageUri(imageUri);
-                console.log('Image processed for web:', imageUri);
             } else {
                 const localUri = `${FileSystem.documentDirectory}${Date.now()}.jpg`;
 
@@ -134,7 +133,6 @@ const CardList = ({ groupId }) => {
                         to: localUri,
                     });
                     setImageUri(localUri);
-                    console.log('Image saved locally at:', localUri);
                 } catch (error) {
                     console.error('Error saving image locally:', error);
                 }
