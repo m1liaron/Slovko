@@ -8,7 +8,7 @@ import {selectCard} from "../../../redux/cardSlice";
 const LearnGuessWord = ({ onComplete }) => {
     const cards = useSelector(selectCard);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentGuess, setCurrentGuess] = useState('');
+    const [currentGuess, setCurrentGuess] = useState([]);
     const [scrambledWord, setScrambledWord] = useState([]);
     const [letterColors, setLetterColors] = useState({});
     const [showWord, setShowWord] = useState(false);
@@ -16,8 +16,16 @@ const LearnGuessWord = ({ onComplete }) => {
     const { width } = useWindowDimensions();
 
     useEffect(() => {
-        if (currentWord) generateScrambledWord(currentWord);
+        if (currentWord) {
+            generateScrambledWord(currentWord);
+            const dashes = generateDashes(currentWord);
+            setCurrentGuess(dashes);
+        }
     }, [currentIndex]);
+
+    const generateDashes = (word) => {
+        return Array(word.length).fill('_'); // Create an array of underscores representing dashes
+    }
 
     const generateScrambledWord = (word) => {
         let wordArray = word.split('');
@@ -44,8 +52,12 @@ const LearnGuessWord = ({ onComplete }) => {
     };
 
     const handleLetterSelection = (letter, index) => {
-        if (letter === currentWord[currentGuess.length]) {
+        const firstDashIndex = currentGuess.indexOf('_');
+        if (letter === currentWord[firstDashIndex]) {
             setCurrentGuess(currentGuess + letter);
+            const updatedGuess = [...currentGuess];
+            updatedGuess[firstDashIndex] = letter;
+            setCurrentGuess(updatedGuess);
             removeLetterFromScrambled(index);
         } else {
             highlightIncorrectLetter(index);
@@ -64,7 +76,7 @@ const LearnGuessWord = ({ onComplete }) => {
     };
 
     useEffect(() => {
-        if (currentGuess === currentWord) {
+        if (currentGuess.join('') === currentWord) {
             if (currentIndex < cards.length - 1) {
                 setCurrentIndex(currentIndex + 1);
                 resetGameState();
@@ -75,14 +87,14 @@ const LearnGuessWord = ({ onComplete }) => {
     }, [currentGuess]);
 
     const resetGameState = () => {
-        setCurrentGuess('');
+        setCurrentGuess([]);
         setLetterColors({});
     };
 
     return (
         <>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
-            <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess}</Text>
+            <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess.join(' ')}</Text>
                 <FlatList
                     horizontal
                     data={scrambledWord}
