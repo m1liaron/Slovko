@@ -35,7 +35,6 @@ const LearnScreen = ({ route }) => {
     }, [dispatch, groupId]);
 
     const handleNextSection = () => {
-        console.log('Show next section');
         switch (currentSection) {
             case 'cards':
                 if (isQuizEnabled) {
@@ -43,7 +42,6 @@ const LearnScreen = ({ route }) => {
                 } else if (isGuessWordEnabled) {
                     setCurrentSection('word');
                 } else {
-                    console.log('Finish lesson in cards');
                     finishLesson();
                 }
                 break;
@@ -54,7 +52,6 @@ const LearnScreen = ({ route }) => {
                 } else if (isQuizEnabled) {
                     setCurrentSection('quiz');
                 } else {
-                    console.log('Finish lesson in quiz');
                     finishLesson();
                 }
                 break;
@@ -62,7 +59,6 @@ const LearnScreen = ({ route }) => {
                 if(isQuizEnabled && !finishedSections.includes('quiz')) {
                     setCurrentSection('quiz');
                 } else {
-                    console.log('Finish lesson in word');
                     finishLesson();
                 }
                 break;
@@ -70,7 +66,6 @@ const LearnScreen = ({ route }) => {
                 finishLesson();
                 break;
         }
-        console.log(currentSection);
     };
 
     const finishLesson = () => {

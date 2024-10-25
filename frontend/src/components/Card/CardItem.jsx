@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import {View, Text, StyleSheet, Pressable, Dimensions, TextInput, Image} from 'react-native';
 import { Entypo  } from '@expo/vector-icons';
 import DefaultModal from "../DefaultModal/DefaultModal";
 import Toast from "react-native-toast-message";
 import {useDispatch} from "react-redux";
 import {updateCard} from "../../redux/cardSlice";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 const CardItem = ({ item, onRemove, groupId }) => {
     const [showEditModal, setShowEditModal] = useState(false);
@@ -80,15 +81,20 @@ const CardItem = ({ item, onRemove, groupId }) => {
                 </View>
             </View>
             <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
-            {item.nextReviewAt && <Text style={styles.reviewDate}>Наступний перегляд: <Text style={{ fontWeight: 'bold' }}>{formatReviewTime(item.nextReviewAt)}</Text></Text>}
+
+            {
+                item.nextReviewAt && <Text style={styles.reviewDate}>Наступний перегляд:
+                    <Text style={{ fontWeight: 'bold' }}>{formatReviewTime(item.nextReviewAt)}</Text>
+                </Text>
+            }
 
             <View style={{ marginTop: 10 }}>
-                {item.image && item.image.url && (
+                {item.image && item.image.url ? (
                     <Image
                         source={{ uri: item.image.url.toString() }}
                         style={{ width: 200, height: 200, borderRadius: 10 }}
                     />
-                )}
+                ) : null}
             </View>
 
             <DefaultModal
@@ -113,9 +119,7 @@ const CardItem = ({ item, onRemove, groupId }) => {
                     />
                 </View>
 
-                <Pressable style={styles.button} onPress={handleUpdateCard}>
-                    <Text>Змінити</Text>
-                </Pressable>
+                <PressableButton text="Змінити" onPress={handleUpdateCard}/>
             </DefaultModal>
         </View>
     );

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, Pressable, useWindowDimensions} from 'react-native'
+import {View, Text, FlatList, Pressable, useWindowDimensions, Image} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
@@ -8,16 +8,25 @@ import {selectCard} from "../../../redux/cardSlice";
 const LearnGuessWord = ({ onComplete }) => {
     const cards = useSelector(selectCard);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentGuess, setCurrentGuess] = useState('');
+    const [currentGuess, setCurrentGuess] = useState([]);
     const [scrambledWord, setScrambledWord] = useState([]);
     const [letterColors, setLetterColors] = useState({});
-    const [showWord, setShowWord] = useState(false);
-    const currentWord = cards[currentIndex]?.word;
+    const [showTranslate, setShowTranslate] = useState(false);
+    const currentCard = cards[currentIndex];
+    const currentWord = currentCard?.word;
     const { width } = useWindowDimensions();
 
     useEffect(() => {
-        if (currentWord) generateScrambledWord(currentWord);
+        if (currentWord) {
+            generateScrambledWord(currentWord);
+            const dashes = generateDashes(currentWord);
+            setCurrentGuess(dashes);
+        }
     }, [currentIndex]);
+
+    const generateDashes = (word) => {
+        return Array(word.length).fill('_'); // Create an array of underscores representing dashes
+    }
 
     const generateScrambledWord = (word) => {
         let wordArray = word.split('');
@@ -44,8 +53,12 @@ const LearnGuessWord = ({ onComplete }) => {
     };
 
     const handleLetterSelection = (letter, index) => {
-        if (letter === currentWord[currentGuess.length]) {
+        const firstDashIndex = currentGuess.indexOf('_');
+        if (letter === currentWord[firstDashIndex]) {
             setCurrentGuess(currentGuess + letter);
+            const updatedGuess = [...currentGuess];
+            updatedGuess[firstDashIndex] = letter;
+            setCurrentGuess(updatedGuess);
             removeLetterFromScrambled(index);
         } else {
             highlightIncorrectLetter(index);
@@ -64,7 +77,7 @@ const LearnGuessWord = ({ onComplete }) => {
     };
 
     useEffect(() => {
-        if (currentGuess === currentWord) {
+        if (currentGuess.join('') === currentWord) {
             if (currentIndex < cards.length - 1) {
                 setCurrentIndex(currentIndex + 1);
                 resetGameState();
@@ -75,14 +88,23 @@ const LearnGuessWord = ({ onComplete }) => {
     }, [currentGuess]);
 
     const resetGameState = () => {
-        setCurrentGuess('');
+        setCurrentGuess([]);
         setLetterColors({});
     };
 
     return (
         <>
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
-            <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess}</Text>
+            <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess.join(' ')}</Text>
+            <View>
+                {currentCard.image && currentCard.image.url && (
+                    <Image
+                        source={{ uri: currentCard.image.url.toString() }}
+                        style={{ width: 200, height: 200, borderRadius: 10, marginVertical: 20, borderWidth: 5, borderColor: '#000' }}
+                    />
+                )}
+            </View>
+
                 <FlatList
                     horizontal
                     data={scrambledWord}
@@ -98,10 +120,10 @@ const LearnGuessWord = ({ onComplete }) => {
                     keyExtractor={(item, index) => index.toString()}
                     scrollEnabled={true}
                 />
-            <Pressable onPress={() => setShowWord(!showWord)}>
+            <Pressable onPress={() => setShowTranslate(!showTranslate)}>
                 <AntDesign name="questioncircleo" size={24} color="black" />
             </Pressable>
-            {showWord && <Text>{currentWord}</Text>}
+            {showTranslate && <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{currentCard.translateWord}</Text>}
         </>
     );
 };
