@@ -29,6 +29,10 @@ const ProtectedRoute = () => {
     }, [dispatch]);
 
 
+    if(isLoading){
+        return <LoadingScreen />;
+    }
+
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
