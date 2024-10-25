@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { useDispatch } from "react-redux";
 import {getUser} from "../redux/userSlice";
+import {AppPath} from "../common/app/app";
 
 const LoadingScreen = (props) => {
     const dispatch = useDispatch();
@@ -14,13 +15,13 @@ const LoadingScreen = (props) => {
         if (token) {
             const response = await dispatch(getUser());
             if(getUser.rejected.match(response)) {
-                props.navigation.replace("login")
+                props.navigation.replace(AppPath.Login)
                 await AsyncStorage.removeItem('token');
             } else {
-                props.navigation.replace("home")
+                props.navigation.replace(AppPath.Home)
             }
         } else {
-            props.navigation.replace("login")
+            props.navigation.replace(AppPath.Login)
         }
     }
 
