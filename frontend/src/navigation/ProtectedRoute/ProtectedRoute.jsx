@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../../redux/userSlice";
 import LoadingScreen from "../../screens/LoadingScreen";
+import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +39,7 @@ const ProtectedRoute = () => {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {isAuthenticated ? (
                     <>
-                        <Stack.Screen name={AppPath.Home} component={NavigationTab} />
+                        <Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
                     </>
                 ) : (
                     <Stack.Screen name="auth" component={AuthNavigator} />

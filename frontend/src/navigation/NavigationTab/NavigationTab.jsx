@@ -4,6 +4,7 @@ import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 import {Ionicons} from "@expo/vector-icons";
 import {AppPath} from "../../common/app/app";
+import MainScreen from "../../screens/MainScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +41,7 @@ const NavigationTab = () => {
                 },
             })}
         >
-            <Tab.Screen name={AppPath.Home} component={MainStackNavigator} options={{ title: 'Головна' }} />
+            <Tab.Screen name={AppPath.Home} component={MainScreen} options={{ title: 'Головна' }} />
             <Tab.Screen name={AppPath.Profile} component={ProfileScreen} options={{ title: 'Профіль' }} />
         </Tab.Navigator>
     );
