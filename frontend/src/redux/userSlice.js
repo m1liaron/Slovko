@@ -78,5 +78,5 @@ const userSlice = createSlice({
             })
     }
 });
-export const selectUser = (state) => state.user.users;
+export const selectUser = (state) => state.user;
 export const userReducers = userSlice.reducer;
