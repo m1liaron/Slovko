@@ -3,11 +3,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";
 import { AppPath } from "../../common/app/app";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoadingScreen from "../../screens/LoadingScreen";
 import NavigationTab from "../NavigationTab/NavigationTab";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../../redux/userSlice";
+import LoadingScreen from "../../screens/LoadingScreen";
 
 const Stack = createNativeStackNavigator();
 
