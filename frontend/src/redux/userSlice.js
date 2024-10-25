@@ -27,11 +27,14 @@ export const getUser = createAsyncThunk(
     }
 )
 
+const initialState = {
+    users: [],
+    isAuthenticated: false,
+}
+
 const userSlice = createSlice({
     name: 'user',
-    initialState: {
-        users: []
-    },
+    initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
@@ -41,9 +44,11 @@ const userSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.status = 'success'
                 state.users.push(action.payload);
+                state.isAuthenticated = true;
             })
             .addCase(login.rejected, (state) => {
                 state.status = 'rejects'
+                state.isAuthenticated = false;
             })
 
             .addCase(register.pending, (state) => {
@@ -52,9 +57,11 @@ const userSlice = createSlice({
             .addCase(register.fulfilled, (state, action) => {
                 state.status = 'success'
                 state.users.push(action.payload);
+                state.isAuthenticated = true;
             })
             .addCase(register.rejected, (state) => {
                 state.status = 'rejects'
+                state.isAuthenticated = false;
             })
 
             .addCase(getUser.pending, (state) => {
@@ -63,9 +70,11 @@ const userSlice = createSlice({
             .addCase(getUser.fulfilled, (state, action) => {
                 state.status = 'success'
                 state.users = action.payload;
+                state.isAuthenticated = true;
             })
             .addCase(getUser.rejected, (state) => {
-                state.status = 'rejects'
+                state.status = 'rejects';
+                state.isAuthenticated = false;
             })
     }
 });
