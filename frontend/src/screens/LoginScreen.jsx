@@ -6,8 +6,7 @@ import {login} from "../redux/userSlice";
 import Toast from "react-native-toast-message";
 import {Entypo} from "@expo/vector-icons";
 import {SafeAreaView} from "react-native-safe-area-context";
-
-const { width, height } = Dimensions.get("window");
+import {AppPath} from "../common/app/app";
 
 const LoginScreen = () => {
     const navigation = useNavigation();
@@ -35,8 +34,6 @@ const LoginScreen = () => {
                 text1: 'Fail',
                 text2: error,
             });
-        } else {
-            navigation.navigate('home');
         }
     };
 
@@ -80,7 +77,7 @@ const LoginScreen = () => {
                 <Text style={styles.buttonText}>Sign In</Text>
             </Pressable>
 
-            <Pressable onPress={() => navigation.navigate('register')}>
+            <Pressable onPress={() => navigation.navigate(AppPath.Register)}>
                 <Text style={styles.switchText}>Don't have an account? Register</Text>
             </Pressable>
         </SafeAreaView>

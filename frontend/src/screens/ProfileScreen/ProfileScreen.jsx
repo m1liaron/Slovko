@@ -9,11 +9,10 @@ import {
     Platform,
     Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../../redux/userSlice';
+import {logout, selectUser} from '../../redux/userSlice';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
@@ -36,12 +35,11 @@ export default function ProfileScreen() {
         }
     }, [user]);
 
-    const logout = async () => {
+    const handleLogout = async () => {
         if (Platform.OS === 'web') {
             const answer = confirm('Are you sure you want to log out?');
             if (answer) {
-                AsyncStorage.removeItem('token');
-                navigation.navigate('login');
+                dispatch(logout());
             }
         } else {
             Alert.alert(
@@ -186,7 +184,7 @@ export default function ProfileScreen() {
                                     <Text style={styles.textInfo}>Utilities</Text>
                                     <Pressable
                                         style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
-                                        onPress={() => logout()}
+                                        onPress={handleLogout}
                                     >
                                         <View
                                             style={{
