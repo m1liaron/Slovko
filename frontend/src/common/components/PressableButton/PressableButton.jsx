@@ -4,7 +4,8 @@ import styles from './PressableButton.styles';
 
 const PressableButton = ({
     text,
-    onPress
+    onPress,
+    buttonStyle
 }) => {
     return (
         <Pressable onPress={onPress} style={styles.button}>
