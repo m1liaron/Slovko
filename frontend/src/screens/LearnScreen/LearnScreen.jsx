@@ -14,6 +14,7 @@ import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import BackButton from "../../components/BackButton/BackButton";
+import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 
 
 const LearnScreen = ({ route }) => {
@@ -23,6 +24,7 @@ const LearnScreen = ({ route }) => {
 
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
+    const [showExitModal, setShowExitModal] = useState(false);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
     const [currentSection, setCurrentSection] = useState('cards');
     const [finishedSections, setFinishedSections] = useState([]);
@@ -127,12 +129,20 @@ const LearnScreen = ({ route }) => {
     return (
         <SafeAreaView styles={styles.container}>
             <View style={{ padding: 20 }}>
-                <BackButton showAlert={true} />
+                <Pressable onPress={() => setShowExitModal(true)}>
+                    <AntDesign name="arrowleft" size={30} color="#000"/>
+                </Pressable>
                 {!isLessonOver ? (
                     <>
                         { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
                         { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
                         { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
+
+                        <ExitModal
+                            modalVisible={showExitModal}
+                            handleClose={() => setShowExitModal(false)}
+                            text="Вийти з навчання та втратити прогрес?"
+                        />
 
                         <DefaultModal
                             isVisible={showSettingsModal}

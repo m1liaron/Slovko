@@ -10,7 +10,7 @@ const DefaultModal = ({
       backgroundColor,
       animationType,
       children
-                      }) => {
+}) => {
     const opacity = useRef(new Animated.Value(0)).current; // Initial opacity for fade-in
     const scale = useRef(new Animated.Value(0.8)).current; // Initial scale for zoom-in
 
