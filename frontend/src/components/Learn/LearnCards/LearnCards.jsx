@@ -10,7 +10,6 @@ import * as Speech from 'expo-speech';
 const LearnCards = ({ onComplete }) => {
     const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
-    const [showDefinition, setShowDefinition] = useState(false);
     const [learningCards, setLearningCards] = useState([...cards]);
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
@@ -33,7 +32,7 @@ const LearnCards = ({ onComplete }) => {
             setIsSwipeDisabled(true);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
-            Speech.speak(learningCards[index].word);
+            // Speech.speak(learningCards[index].word);
 
             // Update the flipped cards state
             return { ...prevFlippedCards, [index]: true };
@@ -83,25 +82,25 @@ const LearnCards = ({ onComplete }) => {
         <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
             <Animated.View style={[styles.card, frontAnimatedStyle]}>
                 <View style={{ marginTop: 10 }}>
-                    {card.image && card.image.url && (
+                    {card.image && card.image.url ? (
                         <Image
                             source={{ uri: card.image.url.toString() }}
-                            style={{ width: 300, height: 300, borderRadius: 10 }}
+                            style={{ width: '50%', height: '50%', borderRadius: 10 }}
                         />
-                    )}
+                    ) : null}
                 </View>
-                <Text style={styles.cardText}>{card.word}</Text>
+                <Text style={styles.cardText} selectable={false}>{card.word}</Text>
             </Animated.View>
             <Animated.View style={[styles.card, backAnimatedStyle]}>
                 <View style={{ marginTop: 10 }}>
-                    {card.image && card.image.url && (
+                    {card.image && card.image.url ? (
                         <Image
                             source={{ uri: card.image.url.toString() }}
                             style={{ width: 300, height: 300, borderRadius: 10 }}
                         />
-                    )}
+                    ) : null}
                 </View>
-                <Text style={styles.cardText}>{card.translateWord}</Text>
+                <Text style={styles.cardText} selectable={false}>{card.translateWord}</Text>
             </Animated.View>
         </Pressable>
     );
@@ -121,11 +120,11 @@ const LearnCards = ({ onComplete }) => {
                 verticalSwipe={false}
                 overlayLabels={{
                     left: {
-                        title: "Don’t know",
+                        title: "Не знаю",
                         style: styles.overlayLabelLeft,
                     },
                     right: {
-                        title: 'Know',
+                        title: 'Знаю',
                         style: styles.overlayLabelRight,
                     },
                 }}
