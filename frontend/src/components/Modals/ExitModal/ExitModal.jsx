@@ -23,7 +23,7 @@ const ExitModal = ({
             handleClose={handleClose}
         >
             <View>
-                {text}
+                <Text>{text}</Text>
             </View>
             <View style={styles.buttonsContainer}>
                 <PressableButton text="Так" onPress={exitModal} />
