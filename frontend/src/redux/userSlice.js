@@ -28,14 +28,20 @@ export const getUser = createAsyncThunk(
 )
 
 const initialState = {
-    users: [],
+    user: {},
     isAuthenticated: false,
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
-    reducers: {},
+    reducers: {
+        logout: (state) => {
+            state.isAuthenticated = false;
+            state.user = {};
+            localStorage.removeItem('token');
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {
@@ -43,7 +49,7 @@ const userSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.status = 'success'
-                state.users.push(action.payload);
+                state.user = action.payload;
                 state.isAuthenticated = true;
             })
             .addCase(login.rejected, (state) => {
@@ -56,7 +62,7 @@ const userSlice = createSlice({
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.status = 'success'
-                state.users.push(action.payload);
+                state.user = action.payload;
                 state.isAuthenticated = true;
             })
             .addCase(register.rejected, (state) => {
@@ -69,7 +75,7 @@ const userSlice = createSlice({
             })
             .addCase(getUser.fulfilled, (state, action) => {
                 state.status = 'success'
-                state.users = action.payload;
+                state.user = action.payload;
                 state.isAuthenticated = true;
             })
             .addCase(getUser.rejected, (state) => {
@@ -78,5 +84,7 @@ const userSlice = createSlice({
             })
     }
 });
+
+export const { logout } = userSlice.actions;
 export const selectUser = (state) => state.user;
 export const userReducers = userSlice.reducer;

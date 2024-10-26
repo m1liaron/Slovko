@@ -4,7 +4,6 @@ import {Linking, Pressable, StyleSheet, Text, View} from "react-native";
 import { GroupList } from "../components/Group/GroupList";
 import { useDispatch } from "react-redux";
 import { getUser } from "../redux/userSlice";
-import {Link} from "@react-navigation/native";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
