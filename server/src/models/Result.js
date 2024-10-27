@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../db/sequelize');
 const { v4: uuidv4 } = require('uuid');
+const { User } = require('./models');
 
 const Result = sequelize.define(
     'Result',
@@ -18,7 +19,7 @@ const Result = sequelize.define(
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: 'User',
+                model: User,
                 key: 'id'
             }
         }
