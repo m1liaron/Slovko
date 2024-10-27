@@ -10,6 +10,10 @@ const Result = sequelize.define(
             defaultValue: uuidv4,
             primaryKey: true,
         },
+        title: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
         userId: {
             type: DataTypes.UUID,
             allowNull: false,
