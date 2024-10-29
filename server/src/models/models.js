@@ -28,5 +28,8 @@ WordResult.belongsTo(ResultMode, { foreignKey: 'resultModeId', as: 'resultMode' 
 module.exports = {
     Card,
     User,
-    Group
+    Group,
+    Result,
+    ResultMode,
+    WordResult
 }

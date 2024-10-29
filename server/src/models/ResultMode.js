@@ -11,6 +11,10 @@ const ResultMode = sequelize.define(
             defaultValue: uuidv4,
             primaryKey: true,
         },
+        mode: {
+          type: DataTypes.ENUM('flashCards', 'quiz', 'guessWord'),
+          allowNull: false,
+        },
         resultId: {
             type: DataTypes.UUID,
             references: {
