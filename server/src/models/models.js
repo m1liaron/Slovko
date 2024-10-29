@@ -18,7 +18,7 @@ User.hasMany(Result, { foreignKey: 'userId', as: 'results' });
 Result.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 // Result - ResultMode
-Result.hasMany(ResultMode, { foreignKey: 'userId', as: 'mode' });
+Result.hasMany(ResultMode, { foreignKey: 'resultId', as: 'mode' });
 ResultMode.belongsTo(Result, { foreignKey: 'resultId', as: 'result' });
 
 // ResultMode - WordResult

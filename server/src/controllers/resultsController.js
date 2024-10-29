@@ -4,42 +4,66 @@ const saveResults = async (req, res) => {
     const {
         body: {
             title,
-            data,
+            ...data
         },
         user: { id }
     } = req;
-    try {
-        const newResult = await Result.create({ title, userId: id });
-        const resultMode = await Promise.all(Object.keys(data).map(item => {
-            return ResultMode.create({
-                mode: item,
-                resultId: newResult.id
-            });
-        }));
-        await Promise.all(Object.values(data).map(item => {
-            return ResultMode.create({
-                word: item.word,
-                translate: item.translateWord,
-                isCorrect: item.isCorrect,
-                resultModeId: resultMode.id
-            });
-        }));
 
+    try {
+        // Step 1: Create a new Result entry
+        const newResult = await Result.create({ title, userId: id });
+
+        // Step 2: Create ResultMode entries and map mode names to their ids
+        const resultModes = await Promise.all(
+            Object.keys(data).map(mode =>
+                ResultMode.create({
+                    mode: mode,
+                    resultId: newResult.id
+                })
+            )
+        );
+
+        // Step 3: Create WordResult entries, associating each with the correct ResultMode
+        await Promise.all(
+            Object.entries(data).map(([mode, words]) => {
+                // Find the associated ResultMode entry
+                const resultMode = resultModes.find(rm => rm.mode === mode);
+                return Promise.all(
+                    words.map(word =>
+                        WordResult.create({
+                            word: word.word,
+                            translate: word.translateWord,
+                            isCorrect: word.isCorrect,
+                            resultModeId: resultMode.id
+                        })
+                    )
+                );
+            })
+        );
+
+        // Step 4: Fetch and include related entries for the response
         const result = await Result.findOne({
-            where: { userId: id, id: newResult.id},
+            where: { userId: id, id: newResult.id },
             include: {
                 model: ResultMode,
+                as: 'mode',
                 include: [
                     {
                         model: WordResult,
-                        attributes: [ 'word', 'translate', 'isCorrect' ]
+                        as: 'words',
                     }
                 ]
             }
-        })
+        });
 
+        // Return the result as a response
         res.status(200).json(result);
+
     } catch (error) {
-        res.status(400).send({ error: true, message: error.message || 'Error save results'});
+        res.status(400).send({ error: true, message: error.message || 'Error saving results' });
     }
-}
+};
+
+module.exports = {
+    saveResults
+};
