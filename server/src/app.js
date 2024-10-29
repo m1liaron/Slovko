@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const { connectDB, sequelize } = require('./db/sequelize');
-const { userRoute, cardRoute, groupRoute} = require('./routes/routes');
+const { userRoute, cardRoute, groupRoute, resultRoute} = require('./routes/routes');
 const authMiddleware = require('./middlewares/authenticationMiddleware');
 
 app.use(express.json());
@@ -11,6 +11,7 @@ app.use(cors());
 app.use('/users', userRoute);
 app.use('/cards', authMiddleware, cardRoute);
 app.use('/groups', authMiddleware, groupRoute);
+app.use('/results', authMiddleware, resultRoute);
 
 const port = process.env.PORT || 3000;
 
