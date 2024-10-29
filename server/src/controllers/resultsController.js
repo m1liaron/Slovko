@@ -4,6 +4,21 @@ const getResults = async (req, res) => {
     try {
         const result = await Result.findAll({
             where: { userId: req.user.id },
+        });
+        if(!result) {
+            return res.status(404).send({ error: true, message: 'Result is not find' })
+        }
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error saving results' });
+    }
+}
+
+const getResultDetails = async (req, res) => {
+    const { resultId } = req.params;
+    try {
+        const result = await Result.findOne({
+            where: { userId: req.user.id, id: resultId },
             include: {
                 model: ResultMode,
                 as: 'mode',
@@ -90,5 +105,6 @@ const saveResults = async (req, res) => {
 
 module.exports = {
     saveResults,
-    getResults
+    getResults,
+    getResultDetails
 };
