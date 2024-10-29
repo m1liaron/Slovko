@@ -18,9 +18,11 @@ const ResultsScreen = () => {
             <FlatList
                 data={results}
                 renderItem={({ item }) => (
-                    <View style={styles.resultItem}>
-                        <Text>{item.title}</Text>
-                        <Text>{item.createdAt}</Text>
+                    <View style={styles.itemContainer}>
+                        <View style={styles.flex}>
+                            <Text>{item.title}</Text>
+                            <Text>{item.createdAt}</Text>
+                        </View>
                     </View>
                 )}
             />
