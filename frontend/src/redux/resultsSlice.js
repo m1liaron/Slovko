@@ -2,17 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../utils/createAuthorizedInstance";
 
 export const saveResults = createAsyncThunk(
-    'user/login', async (data) => {
-        const axiosInstance = createAuthorizedInstance();
+    'results/save', async (data) => {
+        const axiosInstance = await createAuthorizedInstance();
         const response = await axiosInstance.post(`/results`, data);
         return response.data
     }
 )
 
 export const getResults = createAsyncThunk(
-    'user/login', async (id) => {
-        const axiosInstance = createAuthorizedInstance();
-        const response = await axiosInstance.get(`/results/${id}`);
+    'results/get', async () => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get(`/results`);
         return response.data
     }
 )
