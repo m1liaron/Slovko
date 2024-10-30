@@ -17,6 +17,14 @@ export const getResults = createAsyncThunk(
     }
 )
 
+export const getResultDetails = createAsyncThunk(
+    'resultDetails/get', async (id) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get(`/results/${id}`);
+        return response.data
+    }
+)
+
 const initialState = {
     results: [],
     isLoading: false,
@@ -53,6 +61,19 @@ const resultSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(getResults.rejected, (state, action) => {
+                state.status = 'error';
+                state.isLoading = false;
+            })
+            .addCase(getResultDetails.pending, (state, action) => {
+                state.status = 'loading';
+                state.isLoading = true;
+            })
+            .addCase(getResultDetails.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.results = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(getResultDetails.rejected, (state, action) => {
                 state.status = 'error';
                 state.isLoading = false;
             })
