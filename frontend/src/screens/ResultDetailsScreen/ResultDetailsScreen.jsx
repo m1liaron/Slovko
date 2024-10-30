@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native'
+import {View, Text, FlatList} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import styles from './ResultDetailsScreen.styles';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
@@ -13,7 +13,7 @@ const ResultDetailsScreen = ({ route }) => {
 
     useEffect(() => {
         dispatch(getResultDetails(resultId));
-    });
+    }, []);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -25,9 +25,11 @@ const ResultDetailsScreen = ({ route }) => {
             </View>
             <View>
                 <FlatList
-                    data={results}
+                    data={results.mode}
                     renderItem={({ item }) => (
-                        <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "41ff12" : "f50000"}]}></View>
+                        <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "41ff12" : "f50000"}]}>
+                            <Text>{item.word}</Text>
+                        </View>
                     )}
                 />
             </View>

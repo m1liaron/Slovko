@@ -4,6 +4,8 @@ import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
 import {getResults} from "../../redux/resultsSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {Link} from "@react-navigation/native";
+import {AppPath} from "../../common/app/app";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
@@ -18,12 +20,12 @@ const ResultsScreen = () => {
             <FlatList
                 data={results}
                 renderItem={({ item }) => (
-                    <View style={styles.itemContainer}>
+                    <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
                         <View style={styles.flex}>
                             <Text>{item.title}</Text>
                             <Text>{item.createdAt}</Text>
                         </View>
-                    </View>
+                    </Link>
                 )}
             />
             <Text></Text>
