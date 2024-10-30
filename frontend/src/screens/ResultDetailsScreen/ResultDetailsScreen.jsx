@@ -25,7 +25,7 @@ const ResultDetailsScreen = ({ route }) => {
             </View>
             <View>
                 <FlatList
-                    data={}
+                    data={results}
                     renderItem={({ item }) => (
                         <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "41ff12" : "f50000"}]}></View>
                     )}
