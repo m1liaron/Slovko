@@ -38,12 +38,14 @@ const LearnScreen = ({ route }) => {
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
-    const startLearnDate = new Date();
+    const [startLearnDate, setStartLearnDate] = useState(null);
+    const [elapsedTime, setElapsedTime] = useState('');
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
     useEffect(() => {
-        dispatch(getCards({ groupId }))
+        setStartLearnDate(new Date());
+        dispatch(getCards({ groupId }));
     }, [dispatch, groupId]);
 
     const handleNextSection = () => {
@@ -119,8 +121,12 @@ const LearnScreen = ({ route }) => {
         setFinishedSections([]);
         setCurrentSection('cards');
         setIsLessonOver(true);
-        setResulModal(true);
-    }
+
+        const endLearnDate = new Date();
+        const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
+        setElapsedTime(formatTime(totalLearnedTime));
+        setResulModal(true)
+    };
 
     const saveLessonResults = () => {
         setResulModal(false);
@@ -171,6 +177,15 @@ const LearnScreen = ({ route }) => {
             </View>
         ))
     }
+
+    const formatTime = (milliseconds) => {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const millisecondsPart = Math.floor((milliseconds % 1000) / 10); // two decimal places
+
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
+    };
 
     return (
         <SafeAreaView styles={styles.container}>
@@ -227,7 +242,7 @@ const LearnScreen = ({ route }) => {
                                         <Entypo name="pencil" size={30} color="#000" />
                                     </Pressable>
                                 </View>
-                                <Text>Ви займались: </Text>
+                                <Text>Ви займались: {elapsedTime}</Text>
                             </View>
                             <PressableButton text="Зберегти" onPress={saveLessonResults}/>
                         </DefaultModal>
