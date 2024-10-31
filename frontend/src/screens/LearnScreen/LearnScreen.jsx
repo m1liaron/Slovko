@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable } from "react-native";
+import {View, Text, Pressable, TextInput} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {AntDesign, MaterialIcons} from "@expo/vector-icons";
+import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
@@ -15,6 +15,7 @@ import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultsSlice";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 
 const LearnScreen = ({ route }) => {
@@ -31,6 +32,9 @@ const LearnScreen = ({ route }) => {
     const [isLessonOver, setIsLessonOver] = useState(false);
 
     // results data
+    const [resultModal, setResulModal] = useState(false);
+    const [resultTitle, setResultTitle] = useState('Крутяк!');
+    const [resultTitleReadOnly, setResultTitleReadOnly] = useState(false);
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
@@ -98,7 +102,7 @@ const LearnScreen = ({ route }) => {
     };
     const handleSaveResults = () => {
         const resultData = {
-            title: 'Ну таке собі😥!',
+            title: resultTitle || 'Крутяк!😍',
             flashCards,
             quiz: quizCards,
             guessWord: guessWordCards,
@@ -115,11 +119,14 @@ const LearnScreen = ({ route }) => {
         setFinishedSections([]);
         setCurrentSection('cards');
         setIsLessonOver(true);
-        setTimeout(() => {
-            navigation.navigate(AppPath.Home);
-            dispatch(updateCardsAfterLearn({ groupId }));
-            handleSaveResults();
-        }, 2000);
+        setResulModal(true);
+    }
+
+    const saveLessonResults = () => {
+        setResulModal(false);
+        navigation.navigate(AppPath.Home);
+        dispatch(updateCardsAfterLearn({ groupId }));
+        handleSaveResults();
     }
 
     const switchSection = (changeState, sectionName) => {
@@ -165,7 +172,6 @@ const LearnScreen = ({ route }) => {
         ))
     }
 
-
     return (
         <SafeAreaView styles={styles.container}>
             <View style={{ padding: 20 }}>
@@ -193,7 +199,7 @@ const LearnScreen = ({ route }) => {
                                 shadowOffset: { width: 0, height: 2 },
                                 shadowOpacity: 0.25,
                                 shadowRadius: 4,
-                                elevation: 5, // for Android shadow
+                                elevation: 5,
                             }}
                         >
                             {generateSectionContent()}
@@ -204,7 +210,27 @@ const LearnScreen = ({ route }) => {
                     </>
                 ) : (
                     <View>
-                        <Text style={{ fontSize: 50, textAlign: 'center' }}>The lesson is over. Have a good day😁</Text>
+                        <DefaultModal
+                            isVisible={resultModal}
+                            modalStyle={{ width: '60%'}}
+                            handleClose={saveLessonResults}
+                        >
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <TextInput
+                                        value={resultTitle}
+                                        editable={resultTitleReadOnly}
+                                        onChangeText={setResultTitle}
+                                        style={{ textDecorationStyle: 'underline', fontSize: 40 }}
+                                    />
+                                    <Pressable onPress={() => setResultTitleReadOnly(!resultTitleReadOnly)}>
+                                        <Entypo name="pencil" size={30} color="#000" />
+                                    </Pressable>
+                                </View>
+                                <Text>Ви займались: </Text>
+                            </View>
+                            <PressableButton text="Зберегти" onPress={saveLessonResults}/>
+                        </DefaultModal>
                     </View>
                 )}
             </View>
