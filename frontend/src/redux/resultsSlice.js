@@ -45,7 +45,7 @@ const resultSlice = createSlice({
             })
             .addCase(saveResults.fulfilled, (state, action) => {
                 state.status = 'success';
-                state.results = [ state.results, ...action.payload ];
+                state.results .push(action.payload)
                 state.isLoading = false;
             })
             .addCase(saveResults.rejected, (state, action) => {

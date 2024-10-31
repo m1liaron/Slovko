@@ -4,7 +4,7 @@ const {v4: uuidv4} = require("uuid");
 const { Result } = require("./models");
 
 const ResultMode = sequelize.define(
-"ResultMode",
+    "ResultMode",
 {
         id: {
             type: DataTypes.UUID,

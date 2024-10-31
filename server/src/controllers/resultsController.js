@@ -44,16 +44,16 @@ const saveResults = async (req, res) => {
     const {
         body: {
             title,
+            startedLearn,
+            completionTime,
             ...data
         },
         user: { id }
     } = req;
 
     try {
-        // Step 1: Create a new Result entry
-        const newResult = await Result.create({ title, userId: id });
+        const newResult = await Result.create({ title, userId: id, startedLearn, completionTime });
 
-        // Step 2: Create ResultMode entries and map mode names to their ids
         const resultModes = await Promise.all(
             Object.keys(data).map(mode =>
                 ResultMode.create({
@@ -63,7 +63,6 @@ const saveResults = async (req, res) => {
             )
         );
 
-        // Step 3: Create WordResult entries, associating each with the correct ResultMode
         await Promise.all(
             Object.entries(data).map(([mode, words]) => {
                 // Find the associated ResultMode entry

@@ -30,10 +30,11 @@ const LearnScreen = ({ route }) => {
     const [finishedSections, setFinishedSections] = useState([]);
     const [isLessonOver, setIsLessonOver] = useState(false);
 
-    // data
+    // results data
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
+    const startLearnDate = new Date();
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
@@ -100,7 +101,9 @@ const LearnScreen = ({ route }) => {
             title: 'Ну таке собі😥!',
             flashCards,
             quiz: quizCards,
-            guessWord: guessWordCards
+            guessWord: guessWordCards,
+            startedLearn: startLearnDate,
+            completionTime: new Date()
         }
         dispatch(saveResults(resultData));
     }

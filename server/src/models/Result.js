@@ -28,9 +28,8 @@ const Result = sequelize.define(
             allowNull: false,
         },
         completionTime: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATE, // For timestamps with timezone
             allowNull: false,
-            defaultValue: Date.now()
         }
 },
 {
