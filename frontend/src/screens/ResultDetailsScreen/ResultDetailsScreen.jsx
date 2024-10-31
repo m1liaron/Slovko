@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import styles from './ResultDetailsScreen.styles';
@@ -11,6 +11,8 @@ const ResultDetailsScreen = ({ route }) => {
     const { resultId } = route.params
     const { results, isLoading } = useSelector(state => state.results);
     const dispatch = useDispatch();
+    const [selectedMode, setSelectedMode] = useState(0); // 0 - flashCards, 1 - quiz, 2 - guessWord
+
 
     useEffect(() => {
         dispatch(getResultDetails(resultId));
@@ -20,15 +22,15 @@ const ResultDetailsScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.header}></View>
             <View style={styles.buttonsContainer}>
-                <PressableButton text="Картки"/>
-                <PressableButton text="Вікторина"/>
-                <PressableButton text="Вгадай слово"/>
+                <PressableButton text="Картки" onPress={() => setSelectedMode(0)}/>
+                <PressableButton text="Вікторина" onPress={() => setSelectedMode(1)}/>
+                <PressableButton text="Вгадай слово" onPress={() => setSelectedMode(2)}/>
             </View>
             {isLoading && <Loading /> }
             {results.mode ? (
                 <View>
                     <FlatList
-                        data={results.mode[0].words}
+                        data={results.mode[selectedMode].words}
                         renderItem={({ item }) => (
                             <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "#32ba11" : "#f50000"}]}>
                                 <Text style={{ color: '#fff'}}>{item.word}</Text>
