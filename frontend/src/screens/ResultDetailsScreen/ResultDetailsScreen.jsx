@@ -10,7 +10,7 @@ import BackButton from "../../components/BackButton/BackButton";
 
 const ResultDetailsScreen = ({ route }) => {
     const { resultId } = route.params
-    const { results, isLoading } = useSelector(state => state.results);
+    const { result, isLoading } = useSelector(state => state.results);
     const dispatch = useDispatch();
     const [selectedMode, setSelectedMode] = useState(0); // 0 - flashCards, 1 - quiz, 2 - guessWord
 
@@ -23,8 +23,8 @@ const ResultDetailsScreen = ({ route }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.header}>
                 <BackButton />
-                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{results.title}</Text>
-                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{results.createdAt}</Text>
+                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{result.title}</Text>
+                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{result.createdAt}</Text>
             </View>
             <View style={styles.buttonsContainer}>
                 <PressableButton text="Картки" onPress={() => setSelectedMode(0)}/>
@@ -32,10 +32,10 @@ const ResultDetailsScreen = ({ route }) => {
                 <PressableButton text="Вгадай слово" onPress={() => setSelectedMode(2)}/>
             </View>
             {isLoading && <Loading /> }
-            {results.mode ? (
+            {result.mode ? (
                 <View>
                     <FlatList
-                        data={results.mode[selectedMode].words}
+                        data={result.mode[selectedMode].words}
                         renderItem={({ item }) => (
                             <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "#32ba11" : "#f50000"}]}>
                                 <Text style={{ color: '#fff'}}>{item.word}</Text>
