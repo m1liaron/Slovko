@@ -4,6 +4,7 @@ const getResults = async (req, res) => {
     try {
         const result = await Result.findAll({
             where: { userId: req.user.id },
+            order: [['createdAt', 'DESC']],
         });
         if(!result) {
             return res.status(404).send({ error: true, message: 'Result is not find' })
@@ -83,16 +84,6 @@ const saveResults = async (req, res) => {
         // Step 4: Fetch and include related entries for the response
         const result = await Result.findOne({
             where: { userId: id, id: newResult.id },
-            include: {
-                model: ResultMode,
-                as: 'mode',
-                include: [
-                    {
-                        model: WordResult,
-                        as: 'words',
-                    }
-                ]
-            }
         });
 
         // Return the result as a response
