@@ -27,6 +27,7 @@ export const getResultDetails = createAsyncThunk(
 
 const initialState = {
     results: [],
+    result: {},
     isLoading: false,
     error: null,
     status: 'ide'
@@ -70,7 +71,7 @@ const resultSlice = createSlice({
             })
             .addCase(getResultDetails.fulfilled, (state, action) => {
                 state.status = 'success';
-                state.results = action.payload;
+                state.result = action.payload;
                 state.isLoading = false;
             })
             .addCase(getResultDetails.rejected, (state, action) => {
