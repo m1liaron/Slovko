@@ -67,11 +67,11 @@ const login = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const user = await User.findByPk(userId);
 
         if (!user) {
-            res
+            return res
                 .status(StatusCodes.NOT_FOUND)
                 .json({ error: true, message: 'User does not exist' });
         }

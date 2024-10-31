@@ -1,0 +1,43 @@
+#version: '3.8'
+
+services: 
+  backend:
+    build: ./server
+    container_name: backend
+    environment:
+      - DATABASE_USER_NAME=${DB_USER}
+      - DATABASE_PASSWORD=${DB_PASSWORD}
+      - DATABASE_NAME=${DB_NAME}
+    ports: 
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes: 
+      - ./server:/app
+      - /app/node_modules
+    command: npm run dev
+
+  frontend: 
+    build: ./frontend
+    container_name: frontend
+    env_file: .env
+    ports: 
+      - "8081:8081"
+    volumes:
+      - ./frontend:/app
+  
+  db:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_DB=${DB_HOST}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
