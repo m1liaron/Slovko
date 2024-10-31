@@ -5,10 +5,11 @@ import styles from './ResultDetailsScreen.styles';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useDispatch, useSelector} from "react-redux";
 import {getResultDetails, selectResult} from "../../redux/resultsSlice";
+import Loading from "../Loading";
 
 const ResultDetailsScreen = ({ route }) => {
     const { resultId } = route.params
-    const { results } = useSelector(selectResult);
+    const { results, isLoading } = useSelector(state => state.results);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -23,16 +24,20 @@ const ResultDetailsScreen = ({ route }) => {
                 <PressableButton text="Вікторина"/>
                 <PressableButton text="Вгадай слово"/>
             </View>
-            <View>
-                <FlatList
-                    data={results.mode}
-                    renderItem={({ item }) => (
-                        <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "41ff12" : "f50000"}]}>
-                            <Text>{item.word}</Text>
-                        </View>
-                    )}
-                />
-            </View>
+            {isLoading && <Loading /> }
+            {results.mode ? (
+                <View>
+                    <FlatList
+                        data={results.mode[0].words}
+                        renderItem={({ item }) => (
+                            <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "41ff12" : "f50000"}]}>
+                                <Text>{item.word}</Text>
+                            </View>
+                        )}
+                    />
+                </View>
+            ) : null}
+
         </SafeAreaView>
     );
 };
