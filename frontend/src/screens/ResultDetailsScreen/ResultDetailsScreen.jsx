@@ -19,11 +19,26 @@ const ResultDetailsScreen = ({ route }) => {
         dispatch(getResultDetails(resultId));
     }, []);
 
+    const formatTime = (milliseconds) => {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const millisecondsRemainder = Math.floor((milliseconds % 1000) / 10); // Get the last two digits of milliseconds
+
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsRemainder).padStart(2, '0')}`;
+    };
+
+    // Calculate the result time
+    const resultTime = new Date(result.completionTime) - new Date(result.startedLearn);
+    const formattedTime = formatTime(resultTime);
+    
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.header}>
                 <BackButton />
                 <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{result.title}</Text>
+                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Витрачений час: {formattedTime}</Text>
                 <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{result.createdAt}</Text>
             </View>
             <View style={styles.buttonsContainer}>
