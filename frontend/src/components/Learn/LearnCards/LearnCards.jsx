@@ -7,7 +7,7 @@ import styles from './LearnCards.styles';
 import {useSelector} from "react-redux";
 import * as Speech from 'expo-speech';
 
-const LearnCards = ({ onComplete }) => {
+const LearnCards = ({ onComplete, setFlashCards }) => {
     const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [learningCards, setLearningCards] = useState([...cards]);
@@ -60,6 +60,7 @@ const LearnCards = ({ onComplete }) => {
         setTimeout(() => setShowRightSwipeView(false), 1000);
         setIsSwipeDisabled(false);
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
+        setFlashCards(learningCards[currentCardIndex])
     };
 
     const handleSwipeLeft = (index) => {
@@ -76,6 +77,7 @@ const LearnCards = ({ onComplete }) => {
 
         setCurrentCardIndex(index);
         setIsSwipeDisabled(false);
+        setFlashCards(learningCards[currentCardIndex])
     };
 
     const renderCard = (card, index) => (

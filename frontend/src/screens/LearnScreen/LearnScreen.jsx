@@ -13,7 +13,6 @@ import {useDispatch} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
-import BackButton from "../../components/BackButton/BackButton";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 
 
@@ -29,6 +28,11 @@ const LearnScreen = ({ route }) => {
     const [currentSection, setCurrentSection] = useState('cards');
     const [finishedSections, setFinishedSections] = useState([]);
     const [isLessonOver, setIsLessonOver] = useState(false);
+
+    // data
+    const [flashCards, setFlashCards] = useState([]);
+    const [quizCards, setQuizCards] = useState([]);
+    const [guessWordCards, setGuessWordCards] = useState([]);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
@@ -69,6 +73,22 @@ const LearnScreen = ({ route }) => {
                 break;
         }
     };
+
+    const handleSetData = (card) => {
+        setFlashCards((prevFlashCards) => {
+            // Only add card if it does not exist in flashCards already
+            const cardExists = prevFlashCards.some(
+                (item) => item.word === card.word && item.translate === card.translateWord
+            );
+            return cardExists
+                ? prevFlashCards
+                : [...prevFlashCards, { word: card.word, translate: card.translateWord, isCorrect: false }];
+        });
+    };
+
+    const handleSaveResults = () => {
+
+    }
 
     const finishLesson = () => {
         setIsQuizEnabled(true);
@@ -126,6 +146,8 @@ const LearnScreen = ({ route }) => {
         ))
     }
 
+
+    console.log(flashCards)
     return (
         <SafeAreaView styles={styles.container}>
             <View style={{ padding: 20 }}>
@@ -134,7 +156,7 @@ const LearnScreen = ({ route }) => {
                 </Pressable>
                 {!isLessonOver ? (
                     <>
-                        { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
+                        { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
                         { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
                         { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
 
