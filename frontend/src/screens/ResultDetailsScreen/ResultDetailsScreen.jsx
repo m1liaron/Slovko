@@ -4,7 +4,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import styles from './ResultDetailsScreen.styles';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useDispatch, useSelector} from "react-redux";
-import {getResultDetails, selectResult} from "../../redux/resultsSlice";
+import {getResultDetails} from "../../redux/resultsSlice";
 import Loading from "../Loading";
 
 const ResultDetailsScreen = ({ route }) => {
@@ -30,10 +30,12 @@ const ResultDetailsScreen = ({ route }) => {
                     <FlatList
                         data={results.mode[0].words}
                         renderItem={({ item }) => (
-                            <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "41ff12" : "f50000"}]}>
-                                <Text>{item.word}</Text>
+                            <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "#32ba11" : "#f50000"}]}>
+                                <Text style={{ color: '#fff'}}>{item.word}</Text>
+                                <Text style={{ color: '#fff'}}> - {item.translate}</Text>
                             </View>
                         )}
+                        contentContainerStyle={{justifyContent: 'center', flex: 1, margin: 20, gap: 20}}
                     />
                 </View>
             ) : null}
