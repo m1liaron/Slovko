@@ -14,6 +14,7 @@ import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
+import {saveResults} from "../../redux/resultsSlice";
 
 
 const LearnScreen = ({ route }) => {
@@ -74,8 +75,8 @@ const LearnScreen = ({ route }) => {
         }
     };
 
-    const handleSetData = (card) => {
-        const newCard = { word: card.word, translate: card.translateWord, isCorrect: false };
+    const handleSetData = (card, isCorrect) => {
+        const newCard = { word: card.word, translateWord: card.translateWord, isCorrect };
 
         if (currentSection === 'cards') {
             setFlashCards((prev) => {
@@ -95,7 +96,13 @@ const LearnScreen = ({ route }) => {
         }
     };
     const handleSaveResults = () => {
-
+        const resultData = {
+            title: 'Ну таке собі😥!',
+            flashCards,
+            quiz: quizCards,
+            guessWord: guessWordCards
+        }
+        dispatch(saveResults(resultData));
     }
 
     const finishLesson = () => {
@@ -108,6 +115,7 @@ const LearnScreen = ({ route }) => {
         setTimeout(() => {
             navigation.navigate(AppPath.Home);
             dispatch(updateCardsAfterLearn({ groupId }));
+            handleSaveResults();
         }, 2000);
     }
 

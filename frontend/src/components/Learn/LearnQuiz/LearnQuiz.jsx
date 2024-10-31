@@ -55,10 +55,10 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
             await playSuccessSound();
             setIsCorrect(true);
             moveToNextCard();
-            handleSetData(currentCard)
+            handleSetData(currentCard, true)
         } else {
             setIsCorrect(false);
-            handleSetData(currentCard)
+            handleSetData(currentCard, false)
         }
 
         setTimeout(() => {
