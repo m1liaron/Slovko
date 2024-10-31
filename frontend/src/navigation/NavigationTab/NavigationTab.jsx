@@ -28,6 +28,8 @@ const NavigationTab = () => {
                         iconName = focused ? 'home' : 'home-outline'; // Change icons based on focus
                     } else if (route.name === AppPath.Profile) {
                         iconName = focused ? 'person' : 'person-outline';
+                    } else if (route.name === AppPath.Results) {
+                        iconName = focused ? 'search' : 'search-outline';
                     }
 
                     // Return the icon component
@@ -42,8 +44,8 @@ const NavigationTab = () => {
             })}
         >
             <Tab.Screen name={AppPath.Home} component={MainScreen} options={{ title: 'Головна' }} />
-            <Tab.Screen name={AppPath.Profile} component={ProfileScreen} options={{ title: 'Профіль' }} />
             <Tab.Screen name={AppPath.Results} component={ResultsScreen} options={{ title: 'Результати' }} />
+            <Tab.Screen name={AppPath.Profile} component={ProfileScreen} options={{ title: 'Профіль' }} />
         </Tab.Navigator>
     );
 };
