@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#cdcdcd',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        padding: 20
     },
     buttonsContainer: {
         flexDirection: 'row',

@@ -6,6 +6,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import {useDispatch, useSelector} from "react-redux";
 import {getResultDetails} from "../../redux/resultsSlice";
 import Loading from "../Loading";
+import BackButton from "../../components/BackButton/BackButton";
 
 const ResultDetailsScreen = ({ route }) => {
     const { resultId } = route.params
@@ -20,7 +21,11 @@ const ResultDetailsScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.header}></View>
+            <View style={styles.header}>
+                <BackButton />
+                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{results.title}</Text>
+                <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{results.createdAt}</Text>
+            </View>
             <View style={styles.buttonsContainer}>
                 <PressableButton text="Картки" onPress={() => setSelectedMode(0)}/>
                 <PressableButton text="Вікторина" onPress={() => setSelectedMode(1)}/>
