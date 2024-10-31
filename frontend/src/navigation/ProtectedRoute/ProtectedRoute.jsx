@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../../redux/userSlice";
-import LoadingScreen from "../../screens/LoadingScreen";
+import Loading from "../../screens/Loading";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 
 const Stack = createNativeStackNavigator();
@@ -30,7 +30,7 @@ const ProtectedRoute = () => {
 
 
     if(isLoading){
-        return <LoadingScreen />;
+        return <Loading />;
     }
 
     return (

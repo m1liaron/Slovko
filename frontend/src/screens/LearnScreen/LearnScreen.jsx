@@ -13,8 +13,8 @@ import {useDispatch} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
-import BackButton from "../../components/BackButton/BackButton";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
+import {saveResults} from "../../redux/resultsSlice";
 
 
 const LearnScreen = ({ route }) => {
@@ -29,6 +29,11 @@ const LearnScreen = ({ route }) => {
     const [currentSection, setCurrentSection] = useState('cards');
     const [finishedSections, setFinishedSections] = useState([]);
     const [isLessonOver, setIsLessonOver] = useState(false);
+
+    // data
+    const [flashCards, setFlashCards] = useState([]);
+    const [quizCards, setQuizCards] = useState([]);
+    const [guessWordCards, setGuessWordCards] = useState([]);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
@@ -70,6 +75,36 @@ const LearnScreen = ({ route }) => {
         }
     };
 
+    const handleSetData = (card, isCorrect) => {
+        const newCard = { word: card.word, translateWord: card.translateWord, isCorrect };
+
+        if (currentSection === 'cards') {
+            setFlashCards((prev) => {
+                const exists = prev.some(item => item.word === card.word && item.translate === card.translateWord);
+                return exists ? prev : [...prev, newCard];
+            });
+        } else if (currentSection === 'quiz') {
+            setQuizCards((prev) => {
+                const exists = prev.some(item => item.word === card.word && item.translate === card.translateWord);
+                return exists ? prev : [...prev, newCard];
+            });
+        } else if (currentSection === 'word') {
+            setGuessWordCards((prev) => {
+                const exists = prev.some(item => item.word === card.word && item.translate === card.translateWord);
+                return exists ? prev : [...prev, newCard];
+            });
+        }
+    };
+    const handleSaveResults = () => {
+        const resultData = {
+            title: 'Ну таке собі😥!',
+            flashCards,
+            quiz: quizCards,
+            guessWord: guessWordCards
+        }
+        dispatch(saveResults(resultData));
+    }
+
     const finishLesson = () => {
         setIsQuizEnabled(true);
         setIsGuessWordEnabled(true);
@@ -80,6 +115,7 @@ const LearnScreen = ({ route }) => {
         setTimeout(() => {
             navigation.navigate(AppPath.Home);
             dispatch(updateCardsAfterLearn({ groupId }));
+            handleSaveResults();
         }, 2000);
     }
 
@@ -126,6 +162,7 @@ const LearnScreen = ({ route }) => {
         ))
     }
 
+
     return (
         <SafeAreaView styles={styles.container}>
             <View style={{ padding: 20 }}>
@@ -134,9 +171,9 @@ const LearnScreen = ({ route }) => {
                 </Pressable>
                 {!isLessonOver ? (
                     <>
-                        { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection}/></View>}
-                        { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
-                        { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
+                        { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
+                        { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
+                        { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
 
                         <ExitModal
                             modalVisible={showExitModal}

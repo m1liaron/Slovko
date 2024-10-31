@@ -1,9 +1,8 @@
 import {
     ActivityIndicator,
 } from 'react-native';
-const LoadingScreen = () => {
-
+const Loading = () => {
     return <ActivityIndicator size="large" color="blue"/>
 };
 
-export default LoadingScreen;
+export default Loading;

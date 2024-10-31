@@ -5,16 +5,16 @@ import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 
-const LearnGuessWord = ({ onComplete }) => {
+const LearnGuessWord = ({ onComplete, handleSetDate }) => {
     const cards = useSelector(selectCard);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState([]);
     const [scrambledWord, setScrambledWord] = useState([]);
     const [letterColors, setLetterColors] = useState({});
     const [showTranslate, setShowTranslate] = useState(false);
+    const [correctAnswers, setCorrectAnswers] = useState([]);
     const currentCard = cards[currentIndex];
     const currentWord = currentCard?.word;
-    const { width } = useWindowDimensions();
 
     useEffect(() => {
         if (currentWord) {
@@ -60,6 +60,7 @@ const LearnGuessWord = ({ onComplete }) => {
             updatedGuess[firstDashIndex] = letter;
             setCurrentGuess(updatedGuess);
             removeLetterFromScrambled(index);
+            setCorrectAnswers(prevState => [...prevState, true]);
         } else {
             highlightIncorrectLetter(index);
         }
@@ -80,6 +81,11 @@ const LearnGuessWord = ({ onComplete }) => {
         if (currentGuess.join('') === currentWord) {
             if (currentIndex < cards.length - 1) {
                 setCurrentIndex(currentIndex + 1);
+                if(correctAnswers.length % 2 === currentWord.length) {
+                    handleSetDate(currentCard, true);
+                } else {
+                    handleSetDate(currentCard, false);
+                }
                 resetGameState();
             } else {
                 onComplete()
@@ -97,12 +103,12 @@ const LearnGuessWord = ({ onComplete }) => {
             <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
             <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess.join(' ')}</Text>
             <View>
-                {currentCard.image && currentCard.image.url && (
+                {currentCard.image && currentCard.image.url ? (
                     <Image
                         source={{ uri: currentCard.image.url.toString() }}
                         style={{ width: 200, height: 200, borderRadius: 10, marginVertical: 20, borderWidth: 5, borderColor: '#000' }}
                     />
-                )}
+                ) : null}
             </View>
 
                 <FlatList

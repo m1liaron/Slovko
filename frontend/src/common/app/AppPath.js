@@ -8,6 +8,8 @@ const AppPath = {
     Quiz: 'quiz',
     Word: 'word',
     Study: 'study',
+    Results: 'results',
+    ResultDetails: 'results/resultId',
     Login: 'login',
     Register: 'register'
 }
