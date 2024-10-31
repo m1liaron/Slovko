@@ -75,17 +75,25 @@ const LearnScreen = ({ route }) => {
     };
 
     const handleSetData = (card) => {
-        setFlashCards((prevFlashCards) => {
-            // Only add card if it does not exist in flashCards already
-            const cardExists = prevFlashCards.some(
-                (item) => item.word === card.word && item.translate === card.translateWord
-            );
-            return cardExists
-                ? prevFlashCards
-                : [...prevFlashCards, { word: card.word, translate: card.translateWord, isCorrect: false }];
-        });
-    };
+        const newCard = { word: card.word, translate: card.translateWord, isCorrect: false };
 
+        if (currentSection === 'cards') {
+            setFlashCards((prev) => {
+                const exists = prev.some(item => item.word === card.word && item.translate === card.translateWord);
+                return exists ? prev : [...prev, newCard];
+            });
+        } else if (currentSection === 'quiz') {
+            setQuizCards((prev) => {
+                const exists = prev.some(item => item.word === card.word && item.translate === card.translateWord);
+                return exists ? prev : [...prev, newCard];
+            });
+        } else if (currentSection === 'word') {
+            setGuessWordCards((prev) => {
+                const exists = prev.some(item => item.word === card.word && item.translate === card.translateWord);
+                return exists ? prev : [...prev, newCard];
+            });
+        }
+    };
     const handleSaveResults = () => {
 
     }
@@ -147,7 +155,6 @@ const LearnScreen = ({ route }) => {
     }
 
 
-    console.log(flashCards)
     return (
         <SafeAreaView styles={styles.container}>
             <View style={{ padding: 20 }}>
@@ -157,8 +164,8 @@ const LearnScreen = ({ route }) => {
                 {!isLessonOver ? (
                     <>
                         { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
-                        { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection}/></View>}
-                        { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection}/></View>}
+                        { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
+                        { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
 
                         <ExitModal
                             modalVisible={showExitModal}

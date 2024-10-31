@@ -5,7 +5,7 @@ import {Audio} from "expo-av";
 import { useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 
-const LearnQuiz = ({ onComplete }) => {
+const LearnQuiz = ({ onComplete, handleSetData }) => {
     const cards = useSelector(selectCard);
 
     const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
@@ -55,8 +55,10 @@ const LearnQuiz = ({ onComplete }) => {
             await playSuccessSound();
             setIsCorrect(true);
             moveToNextCard();
+            handleSetData(currentCard)
         } else {
             setIsCorrect(false);
+            handleSetData(currentCard)
         }
 
         setTimeout(() => {

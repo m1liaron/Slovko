@@ -5,7 +5,7 @@ import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 
-const LearnGuessWord = ({ onComplete }) => {
+const LearnGuessWord = ({ onComplete, handleSetData }) => {
     const cards = useSelector(selectCard);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState([]);
@@ -14,7 +14,6 @@ const LearnGuessWord = ({ onComplete }) => {
     const [showTranslate, setShowTranslate] = useState(false);
     const currentCard = cards[currentIndex];
     const currentWord = currentCard?.word;
-    const { width } = useWindowDimensions();
 
     useEffect(() => {
         if (currentWord) {
@@ -60,8 +59,10 @@ const LearnGuessWord = ({ onComplete }) => {
             updatedGuess[firstDashIndex] = letter;
             setCurrentGuess(updatedGuess);
             removeLetterFromScrambled(index);
+            handleSetData(currentCard)
         } else {
             highlightIncorrectLetter(index);
+            handleSetData(currentCard)
         }
     };
 
