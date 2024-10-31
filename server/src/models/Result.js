@@ -22,6 +22,15 @@ const Result = sequelize.define(
                 model: User,
                 key: 'id'
             }
+        },
+        startedLearn: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        completionTime: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Date.now()
         }
 },
 {
