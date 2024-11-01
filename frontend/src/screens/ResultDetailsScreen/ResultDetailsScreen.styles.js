@@ -19,6 +19,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
         borderRadius: 10
+    },
+    mistakesAmountContainer: {
+        padding: 10,
+        borderRadius: 100,
+        backgroundColor: '#ff0000',
+        marginRight: 20
+    },
+    itemContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flex: 1,
+        alignItems: 'center',
+        borderRadius: 10,
+        backgroundColor: '#BEBEBE'
+    },
+    title: {
+        color: '#fff',
+        fontSize:35,
+        fontWeight: 'bold'
     }
 });
 

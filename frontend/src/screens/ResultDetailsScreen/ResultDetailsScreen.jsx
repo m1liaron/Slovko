@@ -52,9 +52,16 @@ const ResultDetailsScreen = ({ route }) => {
                     <FlatList
                         data={result.mode[selectedMode].words}
                         renderItem={({ item }) => (
-                            <View style={[styles.resultContainer, { backgroundColor: item.isCorrect ? "#32ba11" : "#f50000"}]}>
-                                <Text style={{ color: '#fff'}}>{item.word}</Text>
-                                <Text style={{ color: '#fff'}}> - {item.translate}</Text>
+                            <View style={styles.itemContainer}>
+                                <View style={styles.resultContainer}>
+                                    <Text style={styles.title}>{item.word}</Text>
+                                    <Text style={styles.title}> - {item.translate}</Text>
+                                </View>
+                                <View>
+                                    <View style={styles.mistakesAmountContainer}>
+                                        <Text style={styles.title}>{item.mistakesAmount}</Text>
+                                    </View>
+                                </View>
                             </View>
                         )}
                         contentContainerStyle={{justifyContent: 'center', flex: 1, margin: 20, gap: 20}}
