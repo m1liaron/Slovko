@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TextInput, Pressable} from 'react-native'
 import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
-import {getResults} from "../../redux/resultsSlice";
+import { filterResults, getResults, resetResults } from "../../redux/resultsSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import formatDMTDate from "../../utils/formatDMTDate";
-import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome, FontAwesome6, MaterialIcons} from "@expo/vector-icons";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
@@ -18,10 +19,6 @@ const ResultsScreen = () => {
     useEffect(() => {
         dispatch(getResults());
     }, []);
-
-    useEffect(() => {
-
-    }, [showFilterInput]);
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -40,7 +37,7 @@ const ResultsScreen = () => {
                     </View>
                 </View>
                 { showFilterInput &&
-                    <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
                         <TextInput
                             style={{
                                 borderWidth: 4,
@@ -54,6 +51,30 @@ const ResultsScreen = () => {
                             value={filterValue}
                             onChangeText={setFilterValue}
                         />
+                        <Pressable
+                            style={{
+                                borderWidth: 4,
+                                borderRadius: 20,
+                                borderColor: '#000',
+                                padding: 15,
+                                alignSelf: 'end'
+                            }}
+                            onPress={() => dispatch(filterResults(filterValue))}
+                        >
+                            <Text>Фільтрувати</Text>
+                        </Pressable>
+                        <Pressable
+                            style={{
+                                borderWidth: 4,
+                                borderRadius: 20,
+                                borderColor: '#000',
+                                padding: 15,
+                                alignSelf: 'end'
+                            }}
+                            onPress={() => dispatch(resetResults())}
+                        >
+                            <FontAwesome6 name="arrow-rotate-left" />
+                        </Pressable>
                     </View>
                 }
                 <FlatList

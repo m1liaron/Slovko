@@ -27,6 +27,7 @@ export const getResultDetails = createAsyncThunk(
 
 const initialState = {
     results: [],
+    filteredResults: [],
     result: {},
     isLoading: false,
     error: null,
@@ -38,10 +39,13 @@ const resultSlice = createSlice({
     initialState,
     reducers: {
         filterResults: (state, action) => {
-            state.results = state.results.filter(item => item.startsWith(action.payload));
+            state.results = state.filteredResults.filter(item => item.title.startsWith(action.payload));
         },
         sortResults: (state, action) => {
             state.results = state.results.sort((a, b) => a[action.payload] - b[action.payload]);
+        },
+        resetResults: (state) => {
+            state.results = [...state.filteredResults];
         }
     },
     extraReducers: (builder) => {
@@ -52,7 +56,8 @@ const resultSlice = createSlice({
             })
             .addCase(saveResults.fulfilled, (state, action) => {
                 state.status = 'success';
-                state.results .push(action.payload)
+                state.results.push(action.payload)
+                state.filteredResults.push(action.payload)
                 state.isLoading = false;
             })
             .addCase(saveResults.rejected, (state, action) => {
@@ -66,6 +71,7 @@ const resultSlice = createSlice({
             .addCase(getResults.fulfilled, (state, action) => {
                 state.status = 'success';
                 state.results = action.payload;
+                state.filteredResults = action.payload;
                 state.isLoading = false;
             })
             .addCase(getResults.rejected, (state, action) => {
@@ -88,6 +94,6 @@ const resultSlice = createSlice({
     }
 });
 
-export const { filterResults, sortResults } = resultSlice.actions;
+export const { filterResults, sortResults, resetResults } = resultSlice.actions;
 export const selectResult = (state) => state.results;
 export const resultReducers = resultSlice.reducer;
