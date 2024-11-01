@@ -7,6 +7,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import formatDMTDate from "../../utils/formatDMTDate";
+import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,15 @@ const ResultsScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ justifyContent: 'center' }}>
+                <View style={styles.header}>
+                    <Text style={{ fontSize: 40, fontWeight: 'bold' }}>2024</Text>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 20 }}>
+                        <FontAwesome name="search" color="#000" size={40} />
+                        <MaterialIcons name="sort" color="#000" size={40} />
+                    </View>
+                </View>
+            </View>
             <FlatList
                 data={results}
                 renderItem={({ item }) => (

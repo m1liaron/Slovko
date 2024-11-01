@@ -1,6 +1,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginHorizontal: 80
+    },
     flex: {
         alignItems: 'center',
         flexDirection: 'row',
