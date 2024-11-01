@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     header: {
         width: '100%',
-        backgroundColor: '#cdcdcd',
+        backgroundColor: '#919191',
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 20
@@ -32,12 +32,19 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         borderRadius: 10,
-        backgroundColor: '#BEBEBE'
+        backgroundColor: '#969696'
     },
     title: {
         color: '#fff',
         fontSize:35,
         fontWeight: 'bold'
+    },
+    wastedTimeContainer: {
+        borderRadius: 10,
+        borderColor: '#000',
+        borderWidth: 6,
+        padding: 10,
+        backgroundColor: '#bcbcbc'
     }
 });
 
