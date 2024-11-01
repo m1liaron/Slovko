@@ -37,10 +37,10 @@ const resultSlice = createSlice({
     name: 'results',
     initialState,
     reducers: {
-        filter: (state, action) => {
+        filterResults: (state, action) => {
             state.results = state.results.filter(item => item.startsWith(action.payload));
         },
-        sort: (state, action) => {
+        sortResults: (state, action) => {
             state.results = state.results.sort((a, b) => a[action.payload] - b[action.payload]);
         }
     },
@@ -88,5 +88,6 @@ const resultSlice = createSlice({
     }
 });
 
+export const { filterResults, sortResults } = resultSlice.actions;
 export const selectResult = (state) => state.results;
 export const resultReducers = resultSlice.reducer;
