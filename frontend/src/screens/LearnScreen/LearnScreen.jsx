@@ -83,21 +83,24 @@ const LearnScreen = ({ route }) => {
     };
 
     const handleSetData = (card, isCorrect) => {
-        let newCard = { word: card.word, translateWord: card.translateWord, mistakesAmount: 0 };
+        let newCard = { wordId: card.id, word: card.word, translateWord: card.translateWord, mistakesAmount: 0 };
         if(!isCorrect) {
             newCard.mistakesAmount = 1;
         }
 
         const updateOrAddCard = (cards, setCards) => {
             setCards((prev) => {
-                const existingCardIndex = prev.findIndex(item => item.word === card.word || item.translateWord === card.translateWord);
+                const existingCardIndex = prev.findIndex(item => item.wordId === card.id);
 
+                if(existingCardIndex !== -1 && isCorrect) {
+                    return prev;
+                }
                 if (existingCardIndex !== -1) {
                     // If card exists, increment mistakesAmount
                     const updatedCards = [...prev];
                     updatedCards[existingCardIndex] = {
                         ...updatedCards[existingCardIndex],
-                        mistakesAmount: updatedCards[existingCardIndex].mistakesAmount + (isCorrect ? 0 : 1),
+                        mistakesAmount: updatedCards[existingCardIndex].mistakesAmount + 1,
                     };
                     return updatedCards;
                 } else {

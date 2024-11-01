@@ -75,7 +75,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
         // Update the learningCards state
         setLearningCards(updatedCards);
 
-        setCurrentCardIndex(index);
+        setCurrentCardIndex((prevIndex) => prevIndex + 1);
         setFlashCards(learningCards[currentCardIndex], false)
     };
 
