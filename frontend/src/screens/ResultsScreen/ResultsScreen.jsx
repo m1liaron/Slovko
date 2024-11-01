@@ -2,23 +2,28 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TextInput, Pressable} from 'react-native'
 import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
-import { filterResults, getResults, resetResults } from "../../redux/resultsSlice";
+import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultsSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import formatDMTDate from "../../utils/formatDMTDate";
 import {FontAwesome, FontAwesome6, MaterialIcons} from "@expo/vector-icons";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
     const { results } = useSelector(state => state.results);
     const [filterValue, setFilterValue] = useState("");
     const [showFilterInput, setShowFilterInput] = useState(false);
+    const [sortOrder, setSortOrder] = useState('asc');
 
     useEffect(() => {
         dispatch(getResults());
     }, []);
+
+    const handleSort = () => {
+        dispatch(sortResults({ key: 'title', direction: sortOrder }));
+        setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -30,9 +35,9 @@ const ResultsScreen = () => {
                             <Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
                                 <FontAwesome name="search" color="#000" size={40} />
                             </Pressable>
-                           <Pressable>
-                               <MaterialIcons name="sort" color="#000" size={40} />
-                           </Pressable>
+                            <Pressable onPress={handleSort}>
+                                <FontAwesome name={sortOrder === 'asc' ? "sort-alpha-asc" : "sort-alpha-desc"} color="#000" size={40} />
+                            </Pressable>
                         </View>
                     </View>
                 </View>

@@ -42,7 +42,12 @@ const resultSlice = createSlice({
             state.results = state.filteredResults.filter(item => item.title.startsWith(action.payload));
         },
         sortResults: (state, action) => {
-            state.results = state.results.sort((a, b) => a[action.payload] - b[action.payload]);
+            const { key, direction } = action.payload;
+            state.results = [...state.results].sort((a, b) => {
+                if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
+                if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
         },
         resetResults: (state) => {
             state.results = [...state.filteredResults];
