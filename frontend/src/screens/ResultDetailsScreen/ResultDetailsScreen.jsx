@@ -14,7 +14,6 @@ const ResultDetailsScreen = ({ route }) => {
     const dispatch = useDispatch();
     const [selectedMode, setSelectedMode] = useState(0); // 0 - flashCards, 1 - quiz, 2 - guessWord
 
-
     useEffect(() => {
         dispatch(getResultDetails(resultId));
     }, []);
@@ -42,9 +41,9 @@ const ResultDetailsScreen = ({ route }) => {
                 <Text style={{ fontSize: 30, fontWeight: 'bold' }}>{result.createdAt}</Text>
             </View>
             <View style={styles.buttonsContainer}>
-                <PressableButton text="Картки" onPress={() => setSelectedMode(0)}/>
-                <PressableButton text="Вікторина" onPress={() => setSelectedMode(1)}/>
-                <PressableButton text="Вгадай слово" onPress={() => setSelectedMode(2)}/>
+                <PressableButton text="Картки" buttonStyle={{ backgroundColor: selectedMode === 0 ? "#004da4" : "#007AFF"}} onPress={() => setSelectedMode(0)}/>
+                <PressableButton text="Вікторина" buttonStyle={{ backgroundColor: selectedMode === 1 ? "#004da4" : "#007AFF"}} onPress={() => setSelectedMode(1)}/>
+                <PressableButton text="Вгадай слово" buttonStyle={{ backgroundColor: selectedMode === 2 ? "#004da4" : "#007AFF"}} onPress={() => setSelectedMode(2)}/>
             </View>
             {isLoading && <Loading /> }
             {result.mode ? (

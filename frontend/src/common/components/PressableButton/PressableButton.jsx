@@ -8,7 +8,7 @@ const PressableButton = ({
     buttonStyle
 }) => {
     return (
-        <Pressable onPress={onPress} style={styles.button}>
+        <Pressable onPress={onPress} style={[styles.button, {...buttonStyle}]}>
             <Text style={styles.buttonText}>{text}</Text>
         </Pressable>
     );
