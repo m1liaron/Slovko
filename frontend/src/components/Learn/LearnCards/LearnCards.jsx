@@ -23,6 +23,9 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
         // Use the current state of flippedCards
         setFlippedCards((prevFlippedCards) => {
 
+            if (prevFlippedCards[index]) {
+                return prevFlippedCards;
+            }
             // Flip the card and update the state
             setFlippedIndex(index === flippedIndex ? null : index);
             setIsSwipeDisabled(true);
@@ -52,14 +55,15 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     });
 
     const handleSwipeRight = () => {
+        setIsSwipeDisabled(false);
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
-        setIsSwipeDisabled(false);
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
         setFlashCards(learningCards[currentCardIndex], true)
     };
 
     const handleSwipeLeft = (index) => {
+        setIsSwipeDisabled(false);
         setShowLeftSwipeView(true);
         setTimeout(() => setShowLeftSwipeView(false), 1000);
 
@@ -72,7 +76,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
         setLearningCards(updatedCards);
 
         setCurrentCardIndex(index);
-        setIsSwipeDisabled(false);
         setFlashCards(learningCards[currentCardIndex], false)
     };
 
