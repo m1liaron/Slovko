@@ -32,6 +32,15 @@ const ResultDetailsScreen = ({ route }) => {
     const resultTime = new Date(result.completionTime) - new Date(result.startedLearn);
     const formattedTime = formatTime(resultTime);
 
+    const calculateCorrectPercentage = () => {
+        const words = result.mode ? result.mode[selectedMode].words : [];
+        const totalWords = words.length;
+        const correctWords = words.filter(word => word.mistakesAmount === 0).length;
+        return totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0;
+    };
+
+    const correctPercentage = calculateCorrectPercentage();
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.header}>
@@ -45,6 +54,17 @@ const ResultDetailsScreen = ({ route }) => {
                 </View>
                 <Text style={styles.title}>{formatDMTDate(result.createdAt)}</Text>
             </View>
+
+
+                <View style={{
+                    borderWidth: 4,
+                    borderColor: '#fff',
+                    backgroundColor: '#40FF80',
+                    borderRadius: 100,
+                    padding: 10
+                }}>
+                    <Text style={{ fontSize: 30, color: '#fff'}}>{correctPercentage}% Вірно</Text>
+                </View>
 
             <View style={{ marginHorizontal: 100 }}>
                 <View style={styles.buttonsContainer}>

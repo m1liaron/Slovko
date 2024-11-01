@@ -82,6 +82,7 @@ const ResultsScreen = () => {
                         </Pressable>
                     </View>
                 }
+
                 <FlatList
                     data={results}
                     renderItem={({ item }) => (
