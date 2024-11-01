@@ -36,7 +36,14 @@ const initialState = {
 const resultSlice = createSlice({
     name: 'results',
     initialState,
-    reducers: {},
+    reducers: {
+        filter: (state, action) => {
+            state.results = state.results.filter(item => item.startsWith(action.payload));
+        },
+        sort: (state, action) => {
+            state.results = state.results.sort((a, b) => a[action.payload] - b[action.payload]);
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(saveResults.pending, (state, action) => {
