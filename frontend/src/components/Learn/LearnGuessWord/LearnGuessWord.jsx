@@ -61,8 +61,10 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
             setCurrentGuess(updatedGuess);
             removeLetterFromScrambled(index);
             setCorrectAnswers(prevState => [...prevState, true]);
+            handleSetDate(currentCard, true);
         } else {
             highlightIncorrectLetter(index);
+            handleSetDate(currentCard, false);
         }
     };
 
@@ -81,11 +83,6 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
         if (currentGuess.join('') === currentWord) {
             if (currentIndex < cards.length - 1) {
                 setCurrentIndex(currentIndex + 1);
-                if(correctAnswers.length % 2 === currentWord.length) {
-                    handleSetDate(currentCard, true);
-                } else {
-                    handleSetDate(currentCard, false);
-                }
                 resetGameState();
             } else {
                 onComplete()

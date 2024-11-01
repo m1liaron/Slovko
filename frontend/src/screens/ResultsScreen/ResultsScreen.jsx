@@ -6,6 +6,7 @@ import {getResults} from "../../redux/resultsSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
+import formatDMTDate from "../../utils/formatDMTDate";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const ResultsScreen = () => {
                     <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
                         <View style={styles.flex}>
                             <Text>{item.title}</Text>
-                            <Text>{item.createdAt}</Text>
+                            <Text>{formatDMTDate(item.createdAt)}</Text>
                         </View>
                     </Link>
                 )}

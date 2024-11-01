@@ -72,7 +72,7 @@ const saveResults = async (req, res) => {
                         WordResult.create({
                             word: word.word,
                             translate: word.translateWord,
-                            isCorrect: word.isCorrect,
+                            mistakesAmount: word.mistakesAmount,
                             resultModeId: resultMode.id
                         })
                     )

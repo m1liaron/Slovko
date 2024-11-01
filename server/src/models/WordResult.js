@@ -26,9 +26,10 @@ const WordResult = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        isCorrect: {
-            type: DataTypes.BOOLEAN,
+        mistakesAmount: {
+            type: DataTypes.INTEGER,
             allowNull: false,
+            defaultValue: 0,
         }
     }, {
         tableName: 'WordsResult',
