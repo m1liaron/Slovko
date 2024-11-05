@@ -1,35 +1,100 @@
-import React, {useEffect} from 'react';
-import {View, Text, FlatList} from 'react-native'
+import React, {useEffect, useState} from 'react';
+import {View, Text, FlatList, TextInput, Pressable} from 'react-native'
 import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
-import {getResults} from "../../redux/resultsSlice";
+import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultsSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import formatDMTDate from "../../utils/formatDMTDate";
+import {FontAwesome, FontAwesome6, MaterialIcons} from "@expo/vector-icons";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
     const { results } = useSelector(state => state.results);
+    const [filterValue, setFilterValue] = useState("");
+    const [showFilterInput, setShowFilterInput] = useState(false);
+    const [sortOrder, setSortOrder] = useState('asc');
 
     useEffect(() => {
         dispatch(getResults());
     }, []);
 
+    const handleSort = () => {
+        dispatch(sortResults({ key: 'title', direction: sortOrder }));
+        setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
+    };
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <FlatList
-                data={results}
-                renderItem={({ item }) => (
-                    <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
-                        <View style={styles.flex}>
-                            <Text>{item.title}</Text>
-                            <Text>{formatDMTDate(item.createdAt)}</Text>
+            <View style={{ marginHorizontal: 60 }}>
+                <View style={{ justifyContent: 'center' }}>
+                    <View style={styles.header}>
+                        <Text style={{ fontSize: 40, fontWeight: 'bold' }}>2024</Text>
+                        <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 20 }}>
+                            <Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
+                                <FontAwesome name="search" color="#000" size={40} />
+                            </Pressable>
+                            <Pressable onPress={handleSort}>
+                                <FontAwesome name={sortOrder === 'asc' ? "sort-alpha-asc" : "sort-alpha-desc"} color="#000" size={40} />
+                            </Pressable>
                         </View>
-                    </Link>
-                )}
-            />
-            <Text></Text>
+                    </View>
+                </View>
+                { showFilterInput &&
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <TextInput
+                            style={{
+                                borderWidth: 4,
+                                borderRadius: 20,
+                                borderColor: '#000',
+                                padding: 15,
+                                width: '30%',
+                                alignSelf: 'end'
+                            }}
+                            placeholder="Фільтр"
+                            value={filterValue}
+                            onChangeText={setFilterValue}
+                        />
+                        <Pressable
+                            style={{
+                                borderWidth: 4,
+                                borderRadius: 20,
+                                borderColor: '#000',
+                                padding: 15,
+                                alignSelf: 'end'
+                            }}
+                            onPress={() => dispatch(filterResults(filterValue))}
+                        >
+                            <Text>Фільтрувати</Text>
+                        </Pressable>
+                        <Pressable
+                            style={{
+                                borderWidth: 4,
+                                borderRadius: 20,
+                                borderColor: '#000',
+                                padding: 15,
+                                alignSelf: 'end'
+                            }}
+                            onPress={() => dispatch(resetResults())}
+                        >
+                            <FontAwesome6 name="arrow-rotate-left" />
+                        </Pressable>
+                    </View>
+                }
+
+                <FlatList
+                    data={results}
+                    renderItem={({ item }) => (
+                        <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
+                            <View style={styles.flex}>
+                                <Text>{item.title}</Text>
+                                <Text>{formatDMTDate(item.createdAt)}</Text>
+                            </View>
+                        </Link>
+                    )}
+                />
+            </View>
         </SafeAreaView>
     );
 };
