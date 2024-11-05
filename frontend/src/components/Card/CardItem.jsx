@@ -6,11 +6,13 @@ import Toast from "react-native-toast-message";
 import {useDispatch} from "react-redux";
 import {updateCard} from "../../redux/cardSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import pickImage from "../../utils/pickImage";
 
 const CardItem = ({ item, onRemove, groupId }) => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [title, setTitle] = useState('');
     const [translate, setTranslate] = useState('');
+    const [imageUri, setImageUri] = useState('');
 
     const dispatch = useDispatch();
 
@@ -55,6 +57,7 @@ const CardItem = ({ item, onRemove, groupId }) => {
             id: item.id,
             word: title,
             translateWord: translate,
+            imageUri,
             groupId
         }));
         setTitle('');
@@ -102,6 +105,7 @@ const CardItem = ({ item, onRemove, groupId }) => {
                 handleClose={() => setShowEditModal(false)}
             >
                 <View>
+                    <Text>Оновити карточку!</Text>
                     <Text>Слово</Text>
                     <TextInput
                         style={styles.input}
@@ -118,6 +122,9 @@ const CardItem = ({ item, onRemove, groupId }) => {
                         onChangeText={setTranslate}
                     />
                 </View>
+
+                <PressableButton text="Виберіть зображення з галереї" onPress={() => pickImage(imageUri, setImageUri)} />
+                {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
 
                 <PressableButton text="Змінити" onPress={handleUpdateCard}/>
             </DefaultModal>
@@ -178,6 +185,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 20,
         marginHorizontal: 10,
+    },
+    image: {
+        width: 100,
+        height: 100,
+        marginVertical: 10,
+        borderRadius: 10,
     },
 });
 

@@ -20,6 +20,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import AddInput from "../../common/components/AddInput/AddInput";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../DefaultModal/DefaultModal";
+import pickImage from "../../utils/pickImage";
 
 const CardList = ({ groupId }) => {
     const cards = useSelector(selectCard);
@@ -104,42 +105,6 @@ const CardList = ({ groupId }) => {
         });
     };
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.5,
-        });
-
-        if (!result.canceled) {
-            const compressedResult = await ImageManipulator.manipulateAsync(
-                result.assets[0].uri,
-                [{ resize: { width: 800 } }],
-                { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG }
-            );
-
-            if (Platform.OS === 'web') {
-                const response = await fetch(compressedResult.uri);
-                const blob = await response.blob();
-                const imageUri = URL.createObjectURL(blob);
-                setImageUri(imageUri);
-            } else {
-                const localUri = `${FileSystem.documentDirectory}${Date.now()}.jpg`;
-
-                try {
-                    await FileSystem.moveAsync({
-                        from: compressedResult.uri,
-                        to: localUri,
-                    });
-                    setImageUri(localUri);
-                } catch (error) {
-                    console.error('Error saving image locally:', error);
-                }
-            }
-        }
-    };
-
     return (
         <View style={styles.container}>
             {!cards.length ? (
@@ -187,7 +152,7 @@ const CardList = ({ groupId }) => {
                         placeholder="Відповідь..."
                     />
 
-                    <PressableButton text="Pick an image from camera roll" onPress={pickImage} />
+                    <PressableButton text="Pick an image from camera roll" onPress={() => pickImage(imageUri, setImageUri)} />
                     {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
 
                     <PressableButton onPress={onSaveCard} text="Додати" />
