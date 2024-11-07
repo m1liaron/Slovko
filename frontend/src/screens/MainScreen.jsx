@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import {Linking, Pressable, StyleSheet, Text, View} from "react-native";
 import { GroupList } from "../components/Group/GroupList";
-import { useDispatch } from "react-redux";
-import { getUser } from "../redux/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {getUser, selectUser} from "../redux/userSlice";
+import {FontAwesome6} from "@expo/vector-icons";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
+    const { user } = useSelector(selectUser);
     const [daysPassed, setDaysPassed] = useState('');
 
     function daysSince(dateString) {
         const targetDate = new Date(dateString);
         const now = new Date();
 
-        // Визначаємо кількість днів, що минули
         const totalDays = Math.floor((now - targetDate) / (1000 * 3600 * 24));
         return `${totalDays} днів`;
     }
@@ -31,10 +32,18 @@ const MainScreen = () => {
         Linking.openURL('https://savelife.in.ua/en/');
     };
 
+    const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString();
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Слава Україні!</Text>
-            <Text style={styles.subtitle}>Героям слава!</Text>
+            <View style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                paddingHorizontal: 20
+            }}>
+                <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : "#000"} />
+                <Text style={{ color: isStreakFire ? "#F5712A" : "#000", fontSize: 35 }}>{user.streak}</Text>
+            </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
             <GroupList/>
             <View style={styles.anouncement}>

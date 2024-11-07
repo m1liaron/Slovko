@@ -24,7 +24,6 @@ const ResultDetailsScreen = ({ route }) => {
         const hours = Math.floor(totalSeconds / 360);
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
-        const millisecondsRemainder = Math.floor((milliseconds % 1000) / 10); // Get the last two digits of milliseconds
 
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };

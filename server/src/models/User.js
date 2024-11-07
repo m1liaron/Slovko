@@ -55,6 +55,16 @@ User.init(
                 len: [6],
             },
         },
+        streak: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        lastReviewAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Date.now(),
+        }
     },
     {
         sequelize,
