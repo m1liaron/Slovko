@@ -1,6 +1,7 @@
 const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
+const {User} = require("../models/models");
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
@@ -63,6 +64,9 @@ const updateCardsAfterReview = async (req, res) => {
 
             await card.save();
         }
+
+        const user = await User.findOne({ where: { id: req.user.id }});
+        user.streak += 1;
 
         res.status(200).json(groupCards);
     } catch (error) {
