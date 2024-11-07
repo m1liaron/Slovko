@@ -5,12 +5,12 @@ import {Ionicons} from "@expo/vector-icons";
 import {AppPath} from "../../common/app/app";
 import MainScreen from "../../screens/MainScreen";
 import ResultsScreen from "../../screens/ResultsScreen/ResultsScreen";
-import {useTheme} from "../../contexts/ThemeProvider";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const Tab = createBottomTabNavigator();
 
 const NavigationTab = () => {
-    const { theme } = useTheme();
+    const { theme } = useAppTheme();
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({

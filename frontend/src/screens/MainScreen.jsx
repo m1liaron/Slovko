@@ -5,12 +5,12 @@ import { GroupList } from "../components/Group/GroupList";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../redux/userSlice";
 import {FontAwesome6} from "@expo/vector-icons";
-import {useTheme} from "../contexts/ThemeProvider";
+import {useAppTheme} from "../contexts/ThemeProvider";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(selectUser);
-    const { theme } = useTheme();
+    const { theme } = useAppTheme();
     const [daysPassed, setDaysPassed] = useState('');
 
     function daysSince(dateString) {

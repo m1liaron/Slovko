@@ -3,8 +3,10 @@ import {Link, useNavigation} from "@react-navigation/native";
 import {Entypo} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
 import {removeGroup} from "../../redux/groupSlice";
+import {useAppTheme, useTheme} from "../../contexts/ThemeProvider";
 
 export const GroupItem = ({item: { id, title }}) => {
+    const { theme } = useAppTheme();
     const dispatch = useDispatch();
 
     const handleRemoveGroup = () => {
@@ -17,7 +19,7 @@ export const GroupItem = ({item: { id, title }}) => {
                 <Text style={{fontSize:30}}>{title}</Text>
             </Link>
             <Pressable onPress={handleRemoveGroup}>
-                <Entypo name="trash" size={30} color="#000" />
+                <Entypo name="trash" size={30} color={theme.colors.iconColor} />
             </Pressable>
         </View>
     )
