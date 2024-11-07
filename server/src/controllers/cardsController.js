@@ -24,6 +24,14 @@ const getAllCards = async (req, res) => {
             })
         )
 
+        const user = await User.findByPk(req.user.id);
+        if (user) {
+            console.log('update user streak', user.streak);
+            user.streak += 1;
+            await user.save();
+        }
+        console.log('after update', user.streak);
+
         res.status(200).json(updatedCards);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get all cards'})
@@ -64,9 +72,6 @@ const updateCardsAfterReview = async (req, res) => {
 
             await card.save();
         }
-
-        const user = await User.findOne({ where: { id: req.user.id }});
-        user.streak += 1;
 
         res.status(200).json(groupCards);
     } catch (error) {

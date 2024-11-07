@@ -59,6 +59,11 @@ User.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        },
+        lastReviewAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: Date.now(),
         }
     },
     {
