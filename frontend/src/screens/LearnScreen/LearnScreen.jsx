@@ -16,9 +16,11 @@ import {AppPath} from "../../common/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultsSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 
 const LearnScreen = ({ route }) => {
+    const { theme } = useAppTheme();
     const { groupId } = route.params;
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -204,10 +206,10 @@ const LearnScreen = ({ route }) => {
     };
 
     return (
-        <SafeAreaView styles={styles.container}>
+        <SafeAreaView styles={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
                 <Pressable onPress={() => setShowExitModal(true)}>
-                    <AntDesign name="arrowleft" size={30} color="#000"/>
+                    <AntDesign name="arrowleft" size={30} color={theme.colors.iconColor}/>
                 </Pressable>
                 {!isLessonOver ? (
                     <>

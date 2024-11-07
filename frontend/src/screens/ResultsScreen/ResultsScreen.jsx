@@ -7,10 +7,12 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
 import formatDMTDate from "../../utils/formatDMTDate";
-import {FontAwesome, FontAwesome6, MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
+    const { theme } = useAppTheme();
     const { results } = useSelector(state => state.results);
     const [filterValue, setFilterValue] = useState("");
     const [showFilterInput, setShowFilterInput] = useState(false);
@@ -26,17 +28,17 @@ const ResultsScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
             <View style={{ marginHorizontal: 60 }}>
                 <View style={{ justifyContent: 'center' }}>
                     <View style={styles.header}>
-                        <Text style={{ fontSize: 40, fontWeight: 'bold' }}>2024</Text>
+                        <Text style={{ fontSize: 40, fontWeight: 'bold', color: theme.colors.primary }}>2024</Text>
                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 20 }}>
                             <Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
-                                <FontAwesome name="search" color="#000" size={40} />
+                                <FontAwesome name="search" color={theme.colors.iconColor} size={40} />
                             </Pressable>
                             <Pressable onPress={handleSort}>
-                                <FontAwesome name={sortOrder === 'asc' ? "sort-alpha-asc" : "sort-alpha-desc"} color="#000" size={40} />
+                                <FontAwesome name={sortOrder === 'asc' ? "sort-alpha-asc" : "sort-alpha-desc"} color={theme.colors.iconColor} size={40} />
                             </Pressable>
                         </View>
                     </View>

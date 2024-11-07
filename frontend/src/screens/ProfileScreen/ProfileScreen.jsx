@@ -16,9 +16,11 @@ import {logout, selectUser} from '../../redux/userSlice';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 export default function ProfileScreen() {
     const { user } = useSelector(selectUser);
+    const { theme } = useAppTheme();
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [image, setImage] = useState('');
@@ -122,20 +124,20 @@ export default function ProfileScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>Ваш профіль</Text>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <Text style={[styles.title, { color: theme.colors.primary }]}>Ваш профіль</Text>
 
                 <View style={styles.container}>
                     {user ? (
                         <View>
                             {!isEditing ? (
-                                    <Text style={styles.title}>{user.name}</Text>
+                                    <Text style={[styles.title, { color: theme.colors.primary }]}>{user.name}</Text>
                             ) : null}
                             <Pressable onPress={onEditInfo}>
                                 <Text style={styles.editTitle}>Редагувати</Text>
                             </Pressable>
                             {!isEditing ? (
-                                <Text style={styles.textInfo}>Особиста інформація</Text>
+                                <Text style={[styles.textInfo, { color: theme.colors.primary } ]}>Особиста інформація</Text>
                             ) : null}
                             {isEditing ? (
                                 <View>
@@ -181,7 +183,7 @@ export default function ProfileScreen() {
 
                             {!isEditing ? (
                                 <View style={styles.infoList}>
-                                    <Text style={styles.textInfo}>Utilities</Text>
+                                    <Text style={[styles.textInfo, { color: theme.colors.primary }]}>Взаємодія</Text>
                                     <Pressable
                                         style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
                                         onPress={handleLogout}
@@ -228,6 +230,7 @@ const styles = StyleSheet.create({
         width: 200,
     },
     container: {
+        flex: 1,
         justifyContent: 'center',
         padding: 10,
     },
