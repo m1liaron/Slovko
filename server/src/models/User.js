@@ -55,6 +55,11 @@ User.init(
                 len: [6],
             },
         },
+        streak: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        }
     },
     {
         sequelize,
