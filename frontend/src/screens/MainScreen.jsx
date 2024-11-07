@@ -5,10 +5,12 @@ import { GroupList } from "../components/Group/GroupList";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../redux/userSlice";
 import {FontAwesome6} from "@expo/vector-icons";
+import {useTheme} from "../contexts/ThemeProvider";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(selectUser);
+    const { theme } = useTheme();
     const [daysPassed, setDaysPassed] = useState('');
 
     function daysSince(dateString) {
@@ -34,7 +36,7 @@ const MainScreen = () => {
 
     const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString();
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
