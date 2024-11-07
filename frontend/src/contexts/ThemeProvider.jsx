@@ -1,4 +1,4 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {darkTheme, lightTheme} from "../common/app/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -33,3 +33,5 @@ export const ThemeProvider = ({children}) => {
         </ThemeContext.Provider>
     );
 };
+
+export const useTheme = () => useContext(ThemeContext);

@@ -3,6 +3,7 @@ const lightTheme = {
     colors: {
         primary: '#12171D',
         background: '#fff',
+        iconColor: '#12171D',
         text: '#12171D',
     },
 };
@@ -12,6 +13,7 @@ const darkTheme = {
     colors: {
         primary: '#fff',
         background: '#12171D',
+        iconColor: '#fff',
         text: '#fff',
     },
 };
