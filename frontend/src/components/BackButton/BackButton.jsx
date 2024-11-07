@@ -2,9 +2,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Pressable } from "react-native";
 import {showConfirmAlert} from "../../utils/showConfirmAlert";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const BackButton = ({ showAlert, iconSize = 30 }) => {
     const navigation = useNavigation();
+    const { theme } = useAppTheme();
 
     const handleBack = () => {
         if (showAlert) {
@@ -20,7 +22,7 @@ const BackButton = ({ showAlert, iconSize = 30 }) => {
 
     return (
         <Pressable onPress={handleBack}>
-            <AntDesign name="arrowleft" size={iconSize} color="#000"/>
+            <AntDesign name="arrowleft" size={iconSize} color={theme.colors.iconColor}/>
         </Pressable>
     )
 }

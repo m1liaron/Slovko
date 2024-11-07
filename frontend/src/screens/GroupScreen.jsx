@@ -4,8 +4,10 @@ import BackButton from "../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch} from "react-redux";
 import {getAllStatusCards} from "../redux/cardSlice";
+import {useAppTheme} from "../contexts/ThemeProvider";
 
 const GroupScreen = ({route}) => {
+    const { theme } = useAppTheme();
     const { groupId } = route.params
     const dispatch = useDispatch();
 
@@ -41,7 +43,7 @@ const GroupScreen = ({route}) => {
     };
 
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background }}>
             <BackButton />
             <View
                 style={{
