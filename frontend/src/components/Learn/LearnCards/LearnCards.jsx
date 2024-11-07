@@ -14,7 +14,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
-    const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
     const rotation = useSharedValue(0);
@@ -23,12 +22,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
         // Use the current state of flippedCards
         setFlippedCards((prevFlippedCards) => {
 
-            // if (prevFlippedCards[index]) {
-            //     return prevFlippedCards;
-            // }
-            // Flip the card and update the state
             setFlippedIndex(index === flippedIndex ? null : index);
-            setIsSwipeDisabled(true);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
             // Speech.speak(learningCards[index].word);
@@ -55,7 +49,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     });
 
     const handleSwipeRight = () => {
-        setIsSwipeDisabled(false);
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
@@ -63,7 +56,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     };
 
     const handleSwipeLeft = (index) => {
-        setIsSwipeDisabled(false);
         setShowLeftSwipeView(true);
         setTimeout(() => setShowLeftSwipeView(false), 1000);
 
@@ -108,7 +100,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 
     return (
             <Swiper
-                horizontalSwipe={isSwipeDisabled}
                 cards={learningCards}
                 renderCard={(card, index) => renderCard(card, index)}
                 keyExtractor={(card) => card.id}
