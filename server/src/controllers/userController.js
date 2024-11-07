@@ -54,9 +54,13 @@ const login = async (req, res) => {
         }
 
         const token = user.createJWT();
+        const {
+            password: uselessPassword,
+            ...mainUserData
+        } = user;
         res
             .status(StatusCodes.OK)
-            .json({ user: { name: user.name, email: user.email }, token });
+            .json({ user: mainUserData, token });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             error: true,
