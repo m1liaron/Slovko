@@ -26,11 +26,20 @@ const getAllCards = async (req, res) => {
 
         const user = await User.findByPk(req.user.id);
         if (user) {
-            console.log('update user streak', user.streak);
-            user.streak += 1;
+            const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Check if the user reviewed on a consecutive day
+            if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
+                user.streak += 1
+            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
+                user.streak = 1;
+            }
+
+            user.lastReviewAt = today; // Update last review date
             await user.save();
         }
-        console.log('after update', user.streak);
 
         res.status(200).json(updatedCards);
     } catch (error) {
