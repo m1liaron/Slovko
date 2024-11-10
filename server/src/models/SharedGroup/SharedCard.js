@@ -1,4 +1,5 @@
-const { sequelize, DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../../db/sequelize');
 const {v4: uuidv4} = require("uuid");
 const { SharedGroup } = require("../models");
 
@@ -37,10 +38,10 @@ const SharedCard = sequelize.define("SharedCard", {
     sharedGroupId: {
         type: DataTypes.UUID,
         references: {
-            model: SharedGroup,
+            model: "SharedGroups",
             key: 'id',
         }
     },
 });
 
-module.exports = SharedGroup;
+module.exports = SharedCard;

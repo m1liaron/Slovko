@@ -1,10 +1,10 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../../db/sequelize');
 const { v4: uuidv4 } = require('uuid');
-const { User } = require('../models');
+const User = require('../User');
 
 const SharedGroup = sequelize.define(
-    'Group',
+    'SharedGroup',
     {
         id: {
             type: DataTypes.UUID,
@@ -34,7 +34,7 @@ const SharedGroup = sequelize.define(
         },
     },
     {
-        tableName: 'Groups',
+        tableName: 'SharedGroups',
         timestamps: true,
     });
 

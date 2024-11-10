@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const {User, SharedGroup} = require("../models");
 
 const SharedCardLikes = sequelize.define(
-    'Group',
+    'SharedCardLike',
     {
         id: {
             type: DataTypes.UUID,
@@ -15,7 +15,7 @@ const SharedCardLikes = sequelize.define(
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: SharedGroup,
+                model: 'SharedGroups',
                 key: 'id',
             },
         },
@@ -23,13 +23,13 @@ const SharedCardLikes = sequelize.define(
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-                model: User,
+                model: 'Users',
                 key: 'id',
             },
         }
     },
     {
-        tableName: 'Groups',
+        tableName: 'SharedCardLikes',
         timestamps: true,
     });
 
