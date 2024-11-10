@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Modal, Pressable, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const DefaultModal = ({
       isVisible,
@@ -11,6 +12,7 @@ const DefaultModal = ({
       animationType,
       children
 }) => {
+    const { theme } = useAppTheme();
     const opacity = useRef(new Animated.Value(0)).current; // Initial opacity for fade-in
     const scale = useRef(new Animated.Value(0.8)).current; // Initial scale for zoom-in
 
@@ -62,7 +64,7 @@ const DefaultModal = ({
                     style={[
                         styles.modalContent,
                         modalStyle,
-                        { opacity: opacity, transform: [{ scale: scale }] }, // Applying animated opacity and scale
+                        { opacity: opacity, transform: [{ scale: scale }], backgroundColor: theme.colors.background }, // Applying animated opacity and scale
                     ]}
                 >
                     <View style={styles.header}>
@@ -70,6 +72,7 @@ const DefaultModal = ({
                             name="times"
                             size={30}
                             onPress={handleClose}
+                            color={theme.colors.primary}
                         />
                     </View>
                     {children}

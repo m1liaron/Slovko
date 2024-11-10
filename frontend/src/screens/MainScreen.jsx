@@ -43,8 +43,8 @@ const MainScreen = () => {
                 alignItems: 'center',
                 paddingHorizontal: 20
             }}>
-                <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : "#000"} />
-                <Text style={{ color: isStreakFire ? "#F5712A" : "#000", fontSize: 35 }}>{user.streak}</Text>
+                <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : theme.colors.iconColor} />
+                <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
             <GroupList/>

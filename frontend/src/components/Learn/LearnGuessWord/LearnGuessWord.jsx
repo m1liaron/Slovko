@@ -4,8 +4,10 @@ import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
+import {useAppTheme} from "../../../contexts/ThemeProvider";
 
 const LearnGuessWord = ({ onComplete, handleSetDate }) => {
+    const { theme: { colors } } = useAppTheme();
     const cards = useSelector(selectCard);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentGuess, setCurrentGuess] = useState([]);
@@ -97,8 +99,8 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 
     return (
         <>
-            <Text style={styles.cardCount}>{currentIndex + 1}/{cards.length}</Text>
-            <Text style={{ fontSize: 50, fontWeight: 'bold'}}>{currentGuess.join(' ')}</Text>
+            <Text style={[styles.cardCount, { color: colors.primary }]}>{currentIndex + 1}/{cards.length}</Text>
+            <Text style={{ fontSize: 50, fontWeight: 'bold', color: colors.primary }}>{currentGuess.join(' ')}</Text>
             <View>
                 {currentCard.image && currentCard.image.url ? (
                     <Image
@@ -114,10 +116,10 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
                     contentContainerStyle={styles.wordContainer}
                     renderItem={({ item, index }) => (
                         <Pressable
-                            style={[styles.word, { backgroundColor: letterColors[index] || 'transparent' }]}
+                            style={[styles.word, { backgroundColor: letterColors[index] || 'transparent', borderColor: colors.primary }]}
                             onPress={() => handleLetterSelection(item, index)}
                         >
-                            <Text style={[styles.wordText, { color: letterColors[index] === 'red' ? '#fff' : '#000' }]}>{item}</Text>
+                            <Text style={[styles.wordText, { color: letterColors[index] === 'red' ? '#fff' : colors.primary }]}>{item}</Text>
                         </Pressable>
                     )}
                     keyExtractor={(item, index) => index.toString()}

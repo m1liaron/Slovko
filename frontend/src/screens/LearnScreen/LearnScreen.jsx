@@ -182,7 +182,7 @@ const LearnScreen = ({ route }) => {
         return sections.map(({iconName, text, state, changeState, sectionName}, idx) => (
             <View style={styles.sectionContainer} key={idx}>
                 <View style={styles.sectionContainer}>
-                    <MaterialIcons name={iconName} size={30} color="#00" />
+                    <MaterialIcons name={iconName} size={30} color={theme.colors.iconColor} />
                     <Text>{text}</Text>
                 </View>
                 <Switch
@@ -206,7 +206,7 @@ const LearnScreen = ({ route }) => {
     };
 
     return (
-        <SafeAreaView styles={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
                 <Pressable onPress={() => setShowExitModal(true)}>
                     <AntDesign name="arrowleft" size={30} color={theme.colors.iconColor}/>
@@ -226,7 +226,7 @@ const LearnScreen = ({ route }) => {
                         <DefaultModal
                             isVisible={showSettingsModal}
                             handleClose={() => toggleSwitch(setShowSettingsModal)}
-                            backgroundColor="none"
+                            backgroundColor={theme.colors.background}
                             modalStyle={{
                                 shadowColor: '#000',
                                 shadowOffset: { width: 0, height: 2 },
@@ -238,14 +238,15 @@ const LearnScreen = ({ route }) => {
                             {generateSectionContent()}
                         </DefaultModal>
                         <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
-                            <AntDesign name="setting" size={30} color="#000"/>
+                            <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
                         </Pressable>
                     </>
                 ) : (
                     <View>
                         <DefaultModal
                             isVisible={resultModal}
-                            modalStyle={{ width: '60%'}}
+                            modalStyle={{ width: '60%' }}
+                            backgroundColor={theme.colors.background}
                             handleClose={saveLessonResults}
                         >
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -257,7 +258,7 @@ const LearnScreen = ({ route }) => {
                                         style={{ textDecorationStyle: 'underline', fontSize: 40 }}
                                     />
                                     <Pressable onPress={() => setResultTitleReadOnly(!resultTitleReadOnly)}>
-                                        <Entypo name="pencil" size={30} color="#000" />
+                                        <Entypo name="pencil" size={30} color={theme.colors.iconColor} />
                                     </Pressable>
                                 </View>
                                 <Text>Ви займались: {elapsedTime}</Text>
