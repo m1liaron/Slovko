@@ -5,10 +5,12 @@ import { GroupList } from "../components/Group/GroupList";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../redux/userSlice";
 import {FontAwesome6} from "@expo/vector-icons";
+import {useAppTheme} from "../contexts/ThemeProvider";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(selectUser);
+    const { theme } = useAppTheme();
     const [daysPassed, setDaysPassed] = useState('');
 
     function daysSince(dateString) {
@@ -34,15 +36,15 @@ const MainScreen = () => {
 
     const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString();
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 paddingHorizontal: 20
             }}>
-                <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : "#000"} />
-                <Text style={{ color: isStreakFire ? "#F5712A" : "#000", fontSize: 35 }}>{user.streak}</Text>
+                <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : theme.colors.iconColor} />
+                <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
             <GroupList/>

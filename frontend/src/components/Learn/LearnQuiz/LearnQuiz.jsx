@@ -4,9 +4,11 @@ import styles from './LearnQuiz.styles';
 import {Audio} from "expo-av";
 import { useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
+import {useAppTheme} from "../../../contexts/ThemeProvider";
 
 const LearnQuiz = ({ onComplete, handleSetData }) => {
     const cards = useSelector(selectCard);
+    const { theme: { colors } } = useAppTheme();
 
     const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
     const [quizOptions, setQuizOptions] = useState([]);
@@ -87,9 +89,9 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 
     return (
         <>
-            <Text>{displayedQuizIndex + 1}/{cards.length}</Text>
+            <Text style={{ color: colors.primary }}>{displayedQuizIndex + 1}/{cards.length}</Text>
             <View style={styles.card}>
-                <Text style={styles.cardText}>{currentCard.word}</Text>
+                <Text style={[styles.cardText, { color: colors.primary, borderColor: colors.primary }]}>{currentCard.word}</Text>
             </View>
             <FlatList
                 data={quizOptions}

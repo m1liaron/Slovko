@@ -164,8 +164,7 @@ const CardList = ({ groupId }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
+        flex: 1
     },
     formContainer: {
         padding: 20

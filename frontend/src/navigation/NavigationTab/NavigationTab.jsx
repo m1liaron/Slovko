@@ -5,21 +5,23 @@ import {Ionicons} from "@expo/vector-icons";
 import {AppPath} from "../../common/app/app";
 import MainScreen from "../../screens/MainScreen";
 import ResultsScreen from "../../screens/ResultsScreen/ResultsScreen";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const Tab = createBottomTabNavigator();
 
 const NavigationTab = () => {
+    const { theme } = useAppTheme();
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: '#ffffff', // Customize the background color
+                    backgroundColor: theme.colors.background, // Customize the background color
                     borderTopWidth: 0, // Remove the border
                     elevation: 0, // For Android shadow
                     shadowOpacity: 0.2, // For iOS shadow
                     shadowRadius: 10, // For iOS shadow
-                    shadowColor: '#000', // Shadow color for iOS
+                    shadowColor: theme.colors.background, // Shadow color for iOS
                 },
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName;
@@ -35,7 +37,7 @@ const NavigationTab = () => {
                     // Return the icon component
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: '#007AFF', // Active icon color
+                tabBarActiveTintColor: theme.colors.iconColor, // Active icon color
                 tabBarInactiveTintColor: '#8e8e93', // Inactive icon color
                 tabBarLabelStyle: {
                     fontSize: 12, // Customize label style

@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
     word: {
         padding: 20,
         margin: 5,
-        borderColor: '#000',
         borderWidth: 5,
         borderRadius: 10,
     },

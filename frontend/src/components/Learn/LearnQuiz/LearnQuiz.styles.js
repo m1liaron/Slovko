@@ -5,25 +5,14 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     cardCount: {
-        fontSize: 18,
+        fontSize: 30,
     },
     cardText: {
-      color: '#000',
       fontSize: 30,
       fontWeight: 'bold',
       borderRadius: 20,
-      borderColor: '#000',
       borderWidth: 2,
       padding: 20
-    },
-    quizCard: {
-        borderWidth: 1,
-        borderColor: '#000000',
-        borderRadius: 8,
-        padding: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white',
     },
     quizCardText: {
         fontSize: 20,
