@@ -183,7 +183,7 @@ const LearnScreen = ({ route }) => {
             <View style={styles.sectionContainer} key={idx}>
                 <View style={styles.sectionContainer}>
                     <MaterialIcons name={iconName} size={30} color={theme.colors.iconColor} />
-                    <Text>{text}</Text>
+                    <Text style={{ color: theme.colors.primary }}>{text}</Text>
                 </View>
                 <Switch
                     trackColor={{false: '#767577', true: '#81b0ff'}}
@@ -226,7 +226,6 @@ const LearnScreen = ({ route }) => {
                         <DefaultModal
                             isVisible={showSettingsModal}
                             handleClose={() => toggleSwitch(setShowSettingsModal)}
-                            backgroundColor={theme.colors.background}
                             modalStyle={{
                                 shadowColor: '#000',
                                 shadowOffset: { width: 0, height: 2 },
@@ -255,13 +254,13 @@ const LearnScreen = ({ route }) => {
                                         value={resultTitle}
                                         editable={resultTitleReadOnly}
                                         onChangeText={setResultTitle}
-                                        style={{ textDecorationStyle: 'underline', fontSize: 40 }}
+                                        style={{ textDecorationStyle: 'underline', fontSize: 40, color: theme.colors.primary }}
                                     />
                                     <Pressable onPress={() => setResultTitleReadOnly(!resultTitleReadOnly)}>
                                         <Entypo name="pencil" size={30} color={theme.colors.iconColor} />
                                     </Pressable>
                                 </View>
-                                <Text>Ви займались: {elapsedTime}</Text>
+                                <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви займались: {elapsedTime}</Text>
                             </View>
                             <PressableButton text="Зберегти" onPress={saveLessonResults}/>
                         </DefaultModal>

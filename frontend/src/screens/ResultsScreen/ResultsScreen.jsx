@@ -12,7 +12,7 @@ import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const ResultsScreen = () => {
     const dispatch = useDispatch();
-    const { theme } = useAppTheme();
+    const { theme: { colors } } = useAppTheme();
     const { results } = useSelector(state => state.results);
     const [filterValue, setFilterValue] = useState("");
     const [showFilterInput, setShowFilterInput] = useState(false);
@@ -28,17 +28,17 @@ const ResultsScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor:colors.background }}>
             <View style={{ marginHorizontal: 60 }}>
                 <View style={{ justifyContent: 'center' }}>
                     <View style={styles.header}>
-                        <Text style={{ fontSize: 40, fontWeight: 'bold', color: theme.colors.primary }}>2024</Text>
+                        <Text style={{ fontSize: 40, fontWeight: 'bold', color: colors.primary }}>2024</Text>
                         <View style={{ justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 20 }}>
                             <Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
-                                <FontAwesome name="search" color={theme.colors.iconColor} size={40} />
+                                <FontAwesome name="search" color={colors.iconColor} size={40} />
                             </Pressable>
                             <Pressable onPress={handleSort}>
-                                <FontAwesome name={sortOrder === 'asc' ? "sort-alpha-asc" : "sort-alpha-desc"} color={theme.colors.iconColor} size={40} />
+                                <FontAwesome name={sortOrder === 'asc' ? "sort-alpha-asc" : "sort-alpha-desc"} color={colors.iconColor} size={40} />
                             </Pressable>
                         </View>
                     </View>
@@ -49,12 +49,14 @@ const ResultsScreen = () => {
                             style={{
                                 borderWidth: 4,
                                 borderRadius: 20,
-                                borderColor: '#000',
+                                borderColor: colors.primary,
                                 padding: 15,
                                 width: '30%',
-                                alignSelf: 'end'
+                                alignSelf: 'end',
+                                color: colors.primary,
                             }}
                             placeholder="Фільтр"
+                            placeholderTextColor={colors.primary}
                             value={filterValue}
                             onChangeText={setFilterValue}
                         />
@@ -62,25 +64,25 @@ const ResultsScreen = () => {
                             style={{
                                 borderWidth: 4,
                                 borderRadius: 20,
-                                borderColor: '#000',
+                                borderColor: colors.primary,
                                 padding: 15,
                                 alignSelf: 'end'
                             }}
                             onPress={() => dispatch(filterResults(filterValue))}
                         >
-                            <Text>Фільтрувати</Text>
+                            <Text style={{ color: colors.primary }}>Фільтрувати</Text>
                         </Pressable>
                         <Pressable
                             style={{
                                 borderWidth: 4,
                                 borderRadius: 20,
-                                borderColor: '#000',
+                                borderColor: colors.primary,
                                 padding: 15,
                                 alignSelf: 'end'
                             }}
                             onPress={() => dispatch(resetResults())}
                         >
-                            <FontAwesome6 name="arrow-rotate-left" />
+                            <FontAwesome6 name="arrow-rotate-left" color={colors.iconColor}/>
                         </Pressable>
                     </View>
                 }
