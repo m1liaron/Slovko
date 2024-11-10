@@ -8,6 +8,6 @@ const {
 } = require('../controllers/sharedGroupController');
 
 router.route('/').get(getAllSharedGroup).post(createSharedGroup);
-router.route('/:id').get(getSharedGroup).post(copySharedGroup)
+router.route('/:sharedGroupId').get(getSharedGroup).post(copySharedGroup)
 
 module.exports = router;

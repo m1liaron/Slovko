@@ -13,8 +13,8 @@ User.hasMany(Group, { foreignKey: 'userId', as: 'groups' });
 Group.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 // // User - SharedGroup
-// User.hasMany(SharedGroup, { foreignKey: 'userId', as: 'groups' });
-// SharedGroup.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(SharedGroup, { foreignKey: 'userId', as: 'sharedGroups' });
+SharedGroup.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 // Group - Card
 Group.hasMany(Card, { foreignKey: 'userId', as: 'cards' });
@@ -33,12 +33,12 @@ ResultMode.hasMany(WordResult, { foreignKey: 'resultModeId', as: 'words' });
 WordResult.belongsTo(ResultMode, { foreignKey: 'resultModeId', as: 'resultMode' })
 
 // // SharedGroup - SharedCard
-// SharedGroup.hasMany(SharedCard, { foreignKey: 'sharedGroupId', as: 'cards' });
-// SharedCard.belongsTo(SharedGroup, { foreignKey: 'sharedGroupId', as: 'sharedGroup' });
+SharedGroup.hasMany(SharedCard, { foreignKey: 'sharedGroupId', as: 'sharedCards' });
+SharedCard.belongsTo(SharedGroup, { foreignKey: 'sharedGroupId', as: 'sharedGroup' });
 
 // SharedCard - SharedCardLikes
-// SharedCard.hasMany(SharedCardLikes, { foreignKey: 'sharedGroupId', as: 'likes' });
-// SharedCardLikes.belongsTo(SharedCard, { foreignKey: 'sharedGroupId', as: 'sharedCard' });
+SharedCard.hasMany(SharedCardLikes, { foreignKey: 'sharedGroupId', as: 'likes' });
+SharedCardLikes.belongsTo(SharedCard, { foreignKey: 'sharedGroupId', as: 'sharedCard' });
 
 module.exports = {
     Card,
