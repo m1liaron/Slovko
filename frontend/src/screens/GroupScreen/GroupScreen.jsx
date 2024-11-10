@@ -1,10 +1,10 @@
-import CardList from "../components/Card/CardList";
+import CardList from "../../components/Card/CardList";
     import {SafeAreaView} from "react-native-safe-area-context";
-import BackButton from "../components/BackButton/BackButton";
+import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch} from "react-redux";
-import {getAllStatusCards} from "../redux/cardSlice";
-import {useAppTheme} from "../contexts/ThemeProvider";
+import {getAllStatusCards} from "../../redux/cardSlice";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const GroupScreen = ({route}) => {
     const { theme } = useAppTheme();
