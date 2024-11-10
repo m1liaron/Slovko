@@ -87,9 +87,22 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
         return <Text>No cards available</Text>;  // Add a fallback in case of no data
     }
 
+    const procentLeft  = (displayedQuizIndex + 1) / cards.length * 100;
+
     return (
         <>
-            <Text style={{ color: colors.primary }}>{displayedQuizIndex + 1}/{cards.length}</Text>
+            <View style={styles.progressContainer}>
+                <View
+                    style={[
+                        styles.progressInsideContainer,
+                        { width: `${procentLeft}%` },
+                    ]}
+                >
+                    <Text style={{ fontSize: 25, margin: 5 }}>
+                        {displayedQuizIndex + 1}/{cards.length}
+                    </Text>
+                </View>
+            </View>
             <View style={styles.card}>
                 <Text style={[styles.cardText, { color: colors.primary, borderColor: colors.primary }]}>{currentCard.word}</Text>
             </View>
