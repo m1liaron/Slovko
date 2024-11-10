@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const {  } = require('../controllers/sharedGroupController');
+const {
+    createSharedGroup,
+    getAllSharedGroup,
+    getSharedGroup,
+    copySharedGroup,
+} = require('../controllers/sharedGroupController');
 
-router.get('/').post('/')
-router.get('/:id').post('/:id')
+router.route('/').get(getAllSharedGroup).post(createSharedGroup);
+router.route('/:id').get(getSharedGroup).post(copySharedGroup)
 
 module.exports = router;
