@@ -1,7 +1,7 @@
-const {sequelize} = require("../db/sequelize");
+const {sequelize} = require("../../db/sequelize");
 const {DataTypes} = require("sequelize");
 const {v4: uuidv4} = require("uuid");
-const { Result } = require("./models");
+const { Result } = require("../models");
 
 const ResultMode = sequelize.define(
     "ResultMode",

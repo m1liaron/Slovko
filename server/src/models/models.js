@@ -1,9 +1,9 @@
 const Card = require('./Card');
 const Group = require('./Group');
 const User = require('./User');
-const Result = require('./Result');
-const ResultMode = require('./ResultMode');
-const WordResult = require('./WordResult');
+const Result = require('./Result/Result');
+const ResultMode = require('./Result/ResultMode');
+const WordResult = require('./Result/WordResult');
 
 // User - Group
 User.hasMany(Group, { foreignKey: 'userId', as: 'groups' });
