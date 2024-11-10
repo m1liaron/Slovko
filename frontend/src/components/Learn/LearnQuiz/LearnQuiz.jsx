@@ -5,6 +5,7 @@ import {Audio} from "expo-av";
 import { useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 import {useAppTheme} from "../../../contexts/ThemeProvider";
+import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 
 const LearnQuiz = ({ onComplete, handleSetData }) => {
     const cards = useSelector(selectCard);
@@ -89,7 +90,7 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 
     return (
         <>
-            <Text style={{ color: colors.primary }}>{displayedQuizIndex + 1}/{cards.length}</Text>
+            <ProgressContainer index={displayedQuizIndex} length={cards.length} />
             <View style={styles.card}>
                 <Text style={[styles.cardText, { color: colors.primary, borderColor: colors.primary }]}>{currentCard.word}</Text>
             </View>
