@@ -97,6 +97,40 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
         setLetterColors({});
     };
 
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            const pressedLetter = event.key;
+            const firstDashIndex = currentGuess.indexOf('_');
+            const expectedLetter = currentWord[firstDashIndex];
+
+            const isUppercase = event.shiftKey; // Check if Shift is held down
+            const targetLetter = isUppercase ? pressedLetter.toUpperCase() : pressedLetter.toLowerCase();
+
+            if (targetLetter === expectedLetter) {
+                const updatedGuess = [...currentGuess];
+                updatedGuess[firstDashIndex] = targetLetter; // Update the guess
+                setCurrentGuess(updatedGuess);
+
+                const letterIndex = scrambledWord.indexOf(targetLetter);
+                if (letterIndex !== -1) {
+                    removeLetterFromScrambled(letterIndex);
+                }
+
+                setCorrectAnswers(prevState => [...prevState, true]);
+                handleSetDate(currentCard, true);
+            } else {
+                highlightIncorrectLetter(firstDashIndex);
+                handleSetDate(currentCard, false);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [currentGuess, currentWord, scrambledWord, currentCard, handleSetDate]);
+
     return (
         <>
             <Text style={[styles.cardCount, { color: colors.primary }]}>{currentIndex + 1}/{cards.length}</Text>
