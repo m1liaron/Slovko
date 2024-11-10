@@ -6,6 +6,7 @@ const ResultMode = require('./Result/ResultMode');
 const WordResult = require('./Result/WordResult');
 const SharedGroup = require('./SharedGroup/SharedGroup');
 const SharedCard = require('./SharedGroup/SharedCard');
+const SharedCardLikes = require('./SharedGroup/SharedCardLikes');
 
 // User - Group
 User.hasMany(Group, { foreignKey: 'userId', as: 'groups' });
@@ -31,6 +32,14 @@ ResultMode.belongsTo(Result, { foreignKey: 'resultId', as: 'result' });
 ResultMode.hasMany(WordResult, { foreignKey: 'resultModeId', as: 'words' });
 WordResult.belongsTo(ResultMode, { foreignKey: 'resultModeId', as: 'resultMode' })
 
+// SharedGroup - SharedCard
+SharedGroup.hasMany(SharedCard, { foreignKey: 'sharedGroupId', as: 'cards' });
+SharedCard.belongsTo(SharedGroup, { foreignKey: 'sharedGroupId', as: 'sharedGroup' });
+
+// SharedCard - SharedCardLikes
+SharedCard.hasMany(SharedCardLikes, { foreignKey: 'sharedGroupId', as: 'likes' });
+SharedCardLikes.belongsTo(SharedCard, { foreignKey: 'sharedGroupId', as: 'sharedGroup' });
+
 module.exports = {
     Card,
     User,
@@ -39,5 +48,6 @@ module.exports = {
     ResultMode,
     WordResult,
     SharedGroup,
-    SharedCard
+    SharedCard,
+    SharedCardLikes
 }
