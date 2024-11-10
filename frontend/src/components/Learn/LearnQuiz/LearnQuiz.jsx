@@ -5,6 +5,7 @@ import {Audio} from "expo-av";
 import { useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 import {useAppTheme} from "../../../contexts/ThemeProvider";
+import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 
 const LearnQuiz = ({ onComplete, handleSetData }) => {
     const cards = useSelector(selectCard);
@@ -87,22 +88,9 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
         return <Text>No cards available</Text>;  // Add a fallback in case of no data
     }
 
-    const procentLeft  = (displayedQuizIndex + 1) / cards.length * 100;
-
     return (
         <>
-            <View style={styles.progressContainer}>
-                <View
-                    style={[
-                        styles.progressInsideContainer,
-                        { width: `${procentLeft}%` },
-                    ]}
-                >
-                    <Text style={{ fontSize: 25, margin: 5 }}>
-                        {displayedQuizIndex + 1}/{cards.length}
-                    </Text>
-                </View>
-            </View>
+            <ProgressContainer index={displayedQuizIndex} length={cards.length} />
             <View style={styles.card}>
                 <Text style={[styles.cardText, { color: colors.primary, borderColor: colors.primary }]}>{currentCard.word}</Text>
             </View>

@@ -5,6 +5,7 @@ import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
 import {selectCard} from "../../../redux/cardSlice";
 import {useAppTheme} from "../../../contexts/ThemeProvider";
+import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 
 const LearnGuessWord = ({ onComplete, handleSetDate }) => {
     const { theme: { colors } } = useAppTheme();
@@ -133,7 +134,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 
     return (
         <>
-            <Text style={[styles.cardCount, { color: colors.primary }]}>{currentIndex + 1}/{cards.length}</Text>
+            <ProgressContainer index={currentIndex} length={cards.length} />
             <Text style={{ fontSize: 50, fontWeight: 'bold', color: colors.primary }}>{currentGuess.join(' ')}</Text>
             <View>
                 {currentCard.image && currentCard.image.url ? (
