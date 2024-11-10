@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TextInput, Pressable} from 'react-native'
+import {View, Text, FlatList, TextInput, Pressable, ScrollView} from 'react-native'
 import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
 import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultsSlice";
@@ -29,7 +29,6 @@ const ResultsScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor:colors.background }}>
-            <View style={{ marginHorizontal: 60 }}>
                 <View style={{ justifyContent: 'center' }}>
                     <View style={styles.header}>
                         <Text style={{ fontSize: 40, fontWeight: 'bold', color: colors.primary }}>2024</Text>
@@ -87,18 +86,18 @@ const ResultsScreen = () => {
                     </View>
                 }
 
-                <FlatList
-                    data={results}
-                    renderItem={({ item }) => (
-                        <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
-                            <View style={styles.flex}>
-                                <Text>{item.title}</Text>
-                                <Text>{formatDMTDate(item.createdAt)}</Text>
-                            </View>
-                        </Link>
-                    )}
-                />
-            </View>
+                    <FlatList
+                        data={results}
+                        renderItem={({ item }) => (
+                            <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
+                                <View style={styles.flex}>
+                                    <Text>{item.title}</Text>
+                                    <Text>{formatDMTDate(item.createdAt)}</Text>
+                                </View>
+                            </Link>
+                        )}
+                        contentContainerStyle={{ marginBottom: 20 }}
+                    />
         </SafeAreaView>
     );
 };
