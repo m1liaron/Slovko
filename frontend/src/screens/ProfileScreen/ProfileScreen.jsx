@@ -17,10 +17,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
 import {useAppTheme} from "../../contexts/ThemeProvider";
+import {Switch} from "react-native-gesture-handler";
+import {Feather} from "@expo/vector-icons";
 
 export default function ProfileScreen() {
     const { user } = useSelector(selectUser);
-    const { theme } = useAppTheme();
+    const { theme, toggleTheme } = useAppTheme();
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [image, setImage] = useState('');
@@ -28,6 +30,7 @@ export default function ProfileScreen() {
     const [userName, setUserName] = useState('');
     const [userEmail, setUserEmail] = useState('');
 
+    const [isThemeDark, setThemeDark] = useState(theme.dark === true);
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
@@ -123,6 +126,11 @@ export default function ProfileScreen() {
         setIsEditing(!isEditing);
     };
 
+    const changeTheme = () => {
+        setThemeDark(!isThemeDark);
+        toggleTheme();
+    }
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <Text style={[styles.title, { color: theme.colors.primary }]}>Ваш профіль</Text>
@@ -204,6 +212,29 @@ export default function ProfileScreen() {
                                         </View>
                                         <AntDesign name="arrowright" size={35} color="#000" />
                                     </Pressable>
+
+                                    <View
+                                        style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                                gap: 10,
+                                            }}
+                                        >
+                                            {isThemeDark ?
+                                                <Feather name="moon"  size={35} color="#000" />
+                                                        :
+                                                <Feather name="sun" size={35} color="#000" />
+                                            }
+                                            <Text style={styles.keyName}>Змінити тему</Text>
+                                        </View>
+                                        <Switch
+                                            value={isThemeDark}
+                                            onValueChange={changeTheme}
+                                        />
+                                    </View>
                                 </View>
                             ) : (
                                 <View>
@@ -254,6 +285,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     infoItem: {
+        marginTop: 10,
         alignItems: 'center',
         backgroundColor: '#ebebeb',
         borderRadius: 20,
