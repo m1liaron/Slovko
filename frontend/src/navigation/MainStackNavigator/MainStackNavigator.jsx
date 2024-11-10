@@ -1,8 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 import {AppPath} from "../../common/app/app";
-import GroupScreen from "../../screens/GroupScreen";
-import LearnScreen from "../../screens/LearnScreen/LearnScreen";
+import { GroupScreen, LearnScreen } from "../../screens/index";
 import NavigationTab from "../NavigationTab/NavigationTab";
 import ResultDetailsScreen from "../../screens/ResultDetailsScreen/ResultDetailsScreen";
 

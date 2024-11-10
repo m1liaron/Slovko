@@ -1,54 +1,68 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet, Pressable, Dimensions, Button} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
-import {login} from "../redux/userSlice";
 import Toast from "react-native-toast-message";
+import { register} from "../../redux/userSlice";
 import {Entypo} from "@expo/vector-icons";
-import {SafeAreaView} from "react-native-safe-area-context";
-import {AppPath} from "../common/app/app";
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [notShowPassword, setNotShowPassword] = useState(true);
 
     const handleSubmit = async () => {
-        if (!email.length || !password.length) {
+        if(!email.length || !password.length) {
             return Toast.show({
                 type: 'error',
                 text1: 'Fail',
-                text2: 'Inputs must be filled!',
-            });
+                text2: 'Inputs must be filled!'
+            })
         }
-        
-        const response = await dispatch(login({ email, password }));
-        if (login.rejected.match(response)) {
-            const error = response.payload || 'Login failed';
-
-            Toast.show({
+        if(password !== confirmPassword) {
+            return Toast.show({
                 type: 'error',
                 text1: 'Fail',
-                text2: error,
-            });
+                text2: 'Passwords do not match!'
+            })
         }
-    };
 
-    const showToast = () => {
-        Toast.show({
-          type: 'success',
-          text1: 'Hello',
-          text2: 'This is some something 👋'
-        });
-      }
+        const registerData = {
+            name,
+            email,
+            password
+        }
 
+        const response = await dispatch(register(registerData));
+        if(register.rejected.match(response)) {
+            const error = response.payload || 'Registration failed';
+            return Toast.show({
+                type: 'error',
+                text1: 'Fail',
+                text2: error
+            })
+        }
+        navigation.navigate('home');
+    }
     return (
-        <SafeAreaView style={styles.container}>
-            <Toast/>
-            <Text style={styles.title}>Login</Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Register</Text>
+
+            <TextInput
+                style={styles.input}
+                placeholder="Name"
+                placeholderTextColor="#ccc"
+                keyboardType="default"
+                autoCapitalize="none"
+                value={name}
+                onChangeText={setName}
+            />
+
             <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -73,14 +87,23 @@ const LoginScreen = () => {
                 </Pressable>
             </View>
 
+            <TextInput
+                style={styles.input}
+                placeholder="Confirm Password"
+                placeholderTextColor="#ccc"
+                secureTextEntry={notShowPassword}
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+            />
+
             <Pressable style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Sign In</Text>
+                <Text style={styles.buttonText}>Sign Up</Text>
             </Pressable>
 
-            <Pressable onPress={() => navigation.navigate(AppPath.Register)}>
-                <Text style={styles.switchText}>Don't have an account? Register</Text>
+            <Pressable onPress={() => navigation.navigate('login')}>
+                <Text style={styles.switchText}>Already have an account? Login</Text>
             </Pressable>
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -91,7 +114,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         backgroundColor: '#f7f7f7',
-        width: '100%',
     },
     title: {
         fontSize: 28,
@@ -144,4 +166,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

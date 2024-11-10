@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../../redux/userSlice";
-import Loading from "../../screens/Loading";
+import Loading from "../../components/Loading";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 
 const Stack = createNativeStackNavigator();

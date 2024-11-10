@@ -1,10 +1,8 @@
 import React from 'react';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import ProfileScreen from "../../screens/ProfileScreen/ProfileScreen";
 import {Ionicons} from "@expo/vector-icons";
 import {AppPath} from "../../common/app/app";
-import MainScreen from "../../screens/MainScreen";
-import ResultsScreen from "../../screens/ResultsScreen/ResultsScreen";
+import { MainScreen, ResultsScreen, ProfileScreen } from "../../screens/index";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const Tab = createBottomTabNavigator();
