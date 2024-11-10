@@ -17,9 +17,12 @@ const createSharedGroup = async (req, res) => {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
     }
 }
+
 const getAllSharedGroup = async (req, res) => {
     try {
+        const allSharedGroups = await SharedGroup.findAll({ where: { userId: req.user.id } });
 
+        res.status(200).json(allSharedGroups);
     } catch(error) {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
     }
