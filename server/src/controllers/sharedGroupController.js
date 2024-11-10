@@ -1,31 +1,42 @@
+const {SharedGroup, SharedCard} = require("../models/models");
 
-const createSharedGroup = (req, res) => {
-try {
+const createSharedGroup = async (req, res) => {
+    const {
+        title,
+        cards, // [ { word, translate, image }, {}, {}, {} ]
+        user: { id }
+    } = req;
+    try {
+        const sharedGroup = await SharedGroup.create({ title, userId: id });
+        await Promise.all(cards.map(async (card) => {
+            SharedCard.create(card);
+        }))
 
-} catch(error) {
-    res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+        res.status(200).json(sharedGroup);
+    } catch(error) {
+        res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    }
 }
-}
-const getAllSharedGroup = (req, res) => {
-try {
+const getAllSharedGroup = async (req, res) => {
+    try {
 
-} catch(error) {
-    res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    } catch(error) {
+        res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    }
 }
-}
-const getSharedGroup = (req, res) => {
-try {
+const getSharedGroup = async (req, res) => {
+    try {
 
-} catch(error) {
-    res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    } catch(error) {
+        res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    }
 }
-}
-const copySharedGroup = (req, res) => {
-try {
+const copySharedGroup = async (req, res) => {
+    try {
 
-} catch(error) {
-    res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
-}
+    } catch(error) {
+        res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    }
 }
 
 module.exports = {
