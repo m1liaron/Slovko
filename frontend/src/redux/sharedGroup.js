@@ -28,7 +28,30 @@ const sharedGroupSlice = createSlice({
         error: null
     },
     reducers:{},
-    extraReducers: (builder) => {}
+    extraReducers: (builder) => {
+        builder
+            .addCase(getAllSharedGroups.pending, state => {
+                state.status = 'pending';
+            })
+            .addCase(getAllSharedGroups.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.sharedGroups = action.payload;
+            })
+            .addCase(getAllSharedGroups.rejected, state => {
+                state.status = 'error';
+            })
+
+            .addCase(saveSharedGroup.pending, state => {
+                state.status = 'pending';
+            })
+            .addCase(saveSharedGroup.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.sharedGroups.push(action.payload);
+            })
+            .addCase(saveSharedGroup.rejected, state => {
+                state.status = 'error';
+            })
+    }
 })
 
 export const selectGroup= (state) => state.sharedGroups.sharedGroups;
