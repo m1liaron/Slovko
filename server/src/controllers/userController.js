@@ -17,7 +17,7 @@ const register = async (req, res) => {
         const {
             password: uselessPassword,
             ...mainUserData
-        } = user;
+        } = user.dataValues;
         res.status(StatusCodes.CREATED).json({ user: mainUserData, token });
     } catch (error) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
