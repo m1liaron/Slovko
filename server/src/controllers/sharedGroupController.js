@@ -2,14 +2,17 @@ const {SharedGroup, SharedCard} = require("../models/models");
 
 const createSharedGroup = async (req, res) => {
     const {
-        title,
-        cards, // [ { word, translate, image }, {}, {}, {} ]
+        body: {
+            title,
+            cards // [ { word, translate, image }, {}, {}, {} ]
+        },
         user: { id }
     } = req;
     try {
+        console.log(cards)
         const sharedGroup = await SharedGroup.create({ title, userId: id });
         await Promise.all(cards.map(async (card) => {
-            SharedCard.create(card);
+            await SharedCard.create({ ...card, sharedGroupId: sharedGroup.id });
         }))
 
         res.status(200).json(sharedGroup);
@@ -47,10 +50,12 @@ const copySharedGroup = async (req, res) => {
         if(!sharedGroup) {
             return res.status(404).json({ error: true, message: 'Shared group is not found' });
         }
-        const newSharedGroup = await SharedGroup.create({ title, userId: id });
+        const newSharedGroup = await SharedGroup.create({ title: sharedGroup.title , userId: req.user.id });
         await Promise.all(sharedGroup.sharedCards.map(async (card) => {
             SharedCard.create(card);
-        }))
+        }));
+
+        res.status(200).json(newSharedGroup);
     } catch(error) {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
     }
