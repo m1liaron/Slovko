@@ -1,4 +1,4 @@
-import {FlatList, Pressable, Text, TextInput, View, StyleSheet, Image} from "react-native";
+import {FlatList, Text, View, StyleSheet, Image} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {addGroup, getAllGroups, selectGroup} from "../../redux/groupSlice";
 import {GroupItem} from "./GroupItem";

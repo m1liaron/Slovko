@@ -4,6 +4,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllSharedGroups} from "../../redux/sharedGroup";
+import styles from './SharedGroupScreen.styles';
 
 const SharedGroupScreen = () => {
     const { theme: { colors } } = useAppTheme();
@@ -16,12 +17,16 @@ const SharedGroupScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-            <Text></Text>
             <FlatList
                 data={sharedGroups}
+                contentContainerStyle={{
+                    flexDirection: 'column',
+                    gap: 20,
+                    padding: 10
+                }}
                 renderItem={({ item }) => (
-                    <View>
-                        <Text>{item.title}</Text>
+                    <View style={styles.container}>
+                        <Text style={{ color: colors.primary }}>{item.title}</Text>
                     </View>
                 )}
             />
