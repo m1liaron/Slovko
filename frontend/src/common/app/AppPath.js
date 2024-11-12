@@ -2,6 +2,7 @@
 const AppPath = {
     Loading: 'loading',
     Group: 'group',
+    SharedGroup: 'shared-group',
     Home: 'home',
     Profile: 'profile',
     Learn: 'learn',
