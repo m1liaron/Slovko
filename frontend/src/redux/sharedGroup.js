@@ -23,4 +23,4 @@ const sharedGroupSlice = createSlice({
 })
 
 export const selectGroup= (state) => state.sharedGroups.sharedGroups;
-export const groupReducers = sharedGroupSlice.reducer;
+export const sharedGroupReducers = sharedGroupSlice.reducer;
