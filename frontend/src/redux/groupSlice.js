@@ -42,11 +42,7 @@ const groupSlice = createSlice({
         status:'idle',
         error: null
     },
-    reducers:{
-        removeCard: (state, action) => {
-            state.groups = state.groups.filter((item, index) => index !== action.payload)
-        }
-    },
+    reducers:{},
     extraReducers: (builder) => {
         builder
             .addCase(getAllGroups.pending, (state) => {
@@ -92,8 +88,6 @@ const groupSlice = createSlice({
             })
     }
 })
-
-// export const {removeGroup, } = cardSlice.actions;
 
 export const selectGroup= (state) => state.groups.groups;
 

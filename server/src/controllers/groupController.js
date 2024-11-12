@@ -15,7 +15,7 @@ const getAllGroups = async (req, res) => {
 }
 
 const getGroup = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     const userId = req.user.id;
     try {
         const card = await Group.findOne({
