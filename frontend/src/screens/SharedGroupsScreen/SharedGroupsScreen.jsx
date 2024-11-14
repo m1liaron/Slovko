@@ -4,9 +4,11 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllSharedGroups} from "../../redux/sharedGroup";
-import styles from './SharedGroupScreen.styles';
+import styles from './SharedGroupsScreen.styles';
+import {Link} from "@react-navigation/native";
+import {AppPath} from "../../common/app/app";
 
-const SharedGroupScreen = () => {
+const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
     const dispatch = useDispatch();
     const sharedGroups = useSelector(state => state.sharedGroups.sharedGroups);
@@ -25,13 +27,13 @@ const SharedGroupScreen = () => {
                     padding: 10
                 }}
                 renderItem={({ item }) => (
-                    <View style={styles.container}>
+                    <Link style={styles.container} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
                         <Text style={{ color: colors.primary }}>{item.title}</Text>
-                    </View>
+                    </Link>
                 )}
             />
         </SafeAreaView>
     );
 };
 
-export default SharedGroupScreen;
+export default SharedGroupsScreen;

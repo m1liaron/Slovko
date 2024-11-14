@@ -1,9 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 import {AppPath} from "../../common/app/app";
-import { GroupScreen, LearnScreen } from "../../screens/index";
+import { GroupScreen, LearnScreen, SharedGroupDetailsScreen, ResultDetailsScreen } from "../../screens";
 import NavigationTab from "../NavigationTab/NavigationTab";
-import ResultDetailsScreen from "../../screens/ResultDetailsScreen/ResultDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -14,6 +13,7 @@ const MainStackNavigator = () => {
             <Stack.Screen name={AppPath.Group} component={GroupScreen} />
             <Stack.Screen name={AppPath.Learn} component={LearnScreen} />
             <Stack.Screen name={AppPath.ResultDetails} component={ResultDetailsScreen} />
+            <Stack.Screen name={AppPath.SharedGroupDetails} component={SharedGroupDetailsScreen} />
         </Stack.Navigator>
     );
 };

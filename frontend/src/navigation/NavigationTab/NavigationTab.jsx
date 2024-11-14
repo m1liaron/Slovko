@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {Ionicons} from "@expo/vector-icons";
 import {AppPath} from "../../common/app/app";
-import { MainScreen, ResultsScreen, ProfileScreen, SharedGroupScreen } from "../../screens";
+import { MainScreen, ResultsScreen, ProfileScreen, SharedGroupsScreen } from "../../screens";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const Tab = createBottomTabNavigator();
@@ -46,7 +46,7 @@ const NavigationTab = () => {
             })}
         >
             <Tab.Screen name={AppPath.Home} component={MainScreen} options={{ title: 'Головна' }} />
-            <Tab.Screen name={AppPath.SharedGroup} component={SharedGroupScreen} options={{ title: 'Поширені групи' }} />
+            <Tab.Screen name={AppPath.SharedGroup} component={SharedGroupsScreen} options={{ title: 'Поширені групи' }} />
             <Tab.Screen name={AppPath.Results} component={ResultsScreen} options={{ title: 'Результати' }} />
             <Tab.Screen name={AppPath.Profile} component={ProfileScreen} options={{ title: 'Профіль' }} />
         </Tab.Navigator>
