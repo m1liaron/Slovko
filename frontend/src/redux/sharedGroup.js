@@ -18,12 +18,19 @@ export const saveSharedGroup = createAsyncThunk(
     }
 )
 
-
+export const getSharedGroup = createAsyncThunk(
+    'sharedGroup/get', async (id) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.post(`/sharedGroups/${id}`);
+        return response.data
+    }
+)
 
 const sharedGroupSlice = createSlice({
     name:'sharedGroup',
     initialState: {
         sharedGroups: [],
+        sharedGroup: {},
         status:'idle',
         error: null
     },
@@ -49,6 +56,17 @@ const sharedGroupSlice = createSlice({
                 state.sharedGroups.push(action.payload);
             })
             .addCase(saveSharedGroup.rejected, state => {
+                state.status = 'error';
+            })
+            // getSharedGroup
+            .addCase(getSharedGroup.pending, state => {
+                state.status = 'pending';
+            })
+            .addCase(getSharedGroup.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.sharedGroup = action.payload;
+            })
+            .addCase(getSharedGroup.rejected, state => {
                 state.status = 'error';
             })
     }
