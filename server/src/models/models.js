@@ -12,7 +12,7 @@ const SharedCardLikes = require('./SharedGroup/SharedCardLikes');
 User.hasMany(Group, { foreignKey: 'userId', as: 'groups' });
 Group.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-// // User - SharedGroup
+// User - SharedGroup
 User.hasMany(SharedGroup, { foreignKey: 'userId', as: 'sharedGroups' });
 SharedGroup.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 

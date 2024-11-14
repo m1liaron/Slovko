@@ -1,4 +1,4 @@
-const {SharedGroup, SharedCard} = require("../models/models");
+const { SharedGroup, SharedCard} = require("../models/models");
 
 const createSharedGroup = async (req, res) => {
     const {
@@ -35,7 +35,12 @@ const getSharedGroup = async (req, res) => {
     try {
         const sharedGroup = await SharedGroup.findOne({
             where: { id: req.params.sharedGroupId },
-            include: [{ model: SharedCard }]
+            include: [
+                {
+                    model: SharedCard,
+                    as: 'sharedCards'
+                }
+            ]
         });
         res.status(200).json(sharedGroup);
     } catch(error) {
