@@ -1,19 +1,24 @@
-const { SharedGroup, SharedCard} = require("../models/models");
+const { SharedGroup, SharedCard, Group, Card} = require("../models/models");
 
 const createSharedGroup = async (req, res) => {
     const {
-        body: {
-            title,
-            cards // [ { word, translate, image }, {}, {}, {} ]
-        },
+        body: { groupId },
         user: { id }
     } = req;
     try {
-        console.log(cards)
-        const sharedGroup = await SharedGroup.create({ title, userId: id });
-        await Promise.all(cards.map(async (card) => {
-            await SharedCard.create({ ...card, sharedGroupId: sharedGroup.id });
-        }))
+        const group = await Group.findOne({
+            where: { id: groupId },
+            include: [{ model: Card, as: 'cards '}]
+        });
+        if(!group) {
+            res.status(404).json({ error: true, message: "Group is not defined"});
+        }
+        const sharedGroup = await SharedGroup.create({ title: group.title, userId: id });
+        if(group.cards) {
+            await Promise.all(group.cards.map(async (card) => {
+                await SharedCard.create({ ...card, sharedGroupId: sharedGroup.id });
+            }))
+        }
 
         res.status(200).json(sharedGroup);
     } catch(error) {
