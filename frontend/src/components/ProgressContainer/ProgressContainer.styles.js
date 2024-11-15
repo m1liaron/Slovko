@@ -2,8 +2,6 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     progressContainer: {
-        backgroundColor: '#c3c3c3',
-        borderColor: '#000',
         borderRadius: 20,
         borderWidth: 2,
         width: '80%',
