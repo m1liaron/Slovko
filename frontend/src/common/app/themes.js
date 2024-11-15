@@ -13,6 +13,7 @@ const darkTheme = {
     colors: {
         primary: '#fff',
         background: '#12171D',
+        lightBackground: '#2f3336',
         iconColor: '#fff',
         text: '#fff',
     },
