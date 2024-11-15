@@ -2,7 +2,7 @@ const { SharedGroup, SharedCard, Group, Card} = require("../models/models");
 
 const createSharedGroup = async (req, res) => {
     const {
-        body: { groupId },
+        body: { groupId, title },
         user: { id }
     } = req;
     try {
@@ -18,7 +18,7 @@ const createSharedGroup = async (req, res) => {
         if(!group) {
             res.status(404).json({ error: true, message: "Group is not defined"});
         }
-        const sharedGroup = await SharedGroup.create({ title: group.title, userId: id });
+        const sharedGroup = await SharedGroup.create({ title: title ? title : group.title, userId: id });
         if(group.cards.length) {
             await Promise.all(group.cards.map(async (card) => {
                 await SharedCard.create({

@@ -12,6 +12,7 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {selectGroup} from "../../redux/groupSlice";
 import { selectSharedGroup } from '../../redux/sharedGroup'
+import AddInput from "../../common/components/AddInput/AddInput";
 
 const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
@@ -21,20 +22,28 @@ const SharedGroupsScreen = () => {
     const groups = useSelector(selectGroup);
     const [showAddModal, setShowModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [sharedGroupTitle, setSharedGroupTitle] = useState('' || selectedGroup?.title);
 
 
     useEffect(() => {
         dispatch(getAllSharedGroups());
     }, []);
 
-    const addRemoveSelectedGroup = (newGroup) => setSelectedGroup(!selectedGroup ? newGroup : null);
+    const addRemoveSelectedGroup = (newGroup) => {
+        setSelectedGroup(!selectedGroup ? newGroup : null);
+        setSharedGroupTitle(!sharedGroupTitle ? newGroup.title : '');
+    }
 
     const shareGroup = () => {
         if(!selectedGroup) {
             alert("Please select a shared group");
         }
 
-        dispatch(saveSharedGroup(selectedGroup.id));
+        const sharedGroupData = {
+            groupId: selectedGroup.id,
+            title: sharedGroupTitle
+        }
+        dispatch(saveSharedGroup(sharedGroupData));
     }
 
     return (
@@ -57,6 +66,11 @@ const SharedGroupsScreen = () => {
                 isVisible={showAddModal}
                 handleClose={() => setShowModal(false)}
             >
+                <AddInput
+                    value={sharedGroupTitle}
+                    onChangeText={setSharedGroupTitle}
+                    placeholder="Назва групи"
+                />
                 {groups.length ?
                     (
                         <FlatList
