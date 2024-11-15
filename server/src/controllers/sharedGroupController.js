@@ -71,10 +71,15 @@ const copySharedGroup = async (req, res) => {
         if(!sharedGroup) {
             return res.status(404).json({ error: true, message: 'Shared group is not found' });
         }
-        const newSharedGroup = await SharedGroup.create({ title: sharedGroup.title , userId: req.user.id });
-        await Promise.all(sharedGroup.sharedCards.map(async (card) => {
-            SharedCard.create(card);
-        }));
+        if(sharedGroup.userId !== req.user.id) {
+            res.status(400).json({ error: true, message: 'You are not owner of this group!' });
+        }
+        const newSharedGroup = await Group.create({ title: sharedGroup.title , userId: req.user.id });
+        if(sharedGroup.sharedCards.length) {
+            await Promise.all(sharedGroup.sharedCards.map(async (card) => {
+                Card.create(card);
+            }));
+        }
 
         res.status(200).json(newSharedGroup);
     } catch(error) {
