@@ -7,8 +7,10 @@ import {useDispatch} from "react-redux";
 import {updateCard} from "../../redux/cardSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import pickImage from "../../utils/pickImage";
+import { useAppTheme } from '../../contexts/ThemeProvider';
 
 const CardItem = ({ item, onRemove, groupId }) => {
+    const { theme: { colors }} = useAppTheme();
     const [showEditModal, setShowEditModal] = useState(false);
     const [title, setTitle] = useState('');
     const [translate, setTranslate] = useState('');
@@ -73,17 +75,17 @@ const CardItem = ({ item, onRemove, groupId }) => {
     };
 
     return (
-        <View style={styles.cardContainer}>
+        <View style={[styles.cardContainer, { backgroundColor: colors.lightBackground}]}>
             <View style={styles.titleContainer}>
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>{item.word}</Text>
+                    <Text style={[styles.title, { color: colors.primary }]}>{item.word}</Text>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Entypo name="pencil" onPress={() => setShowEditModal(true)} size={24} color="black" />
-                    <Entypo name="cross" onPress={onRemove} size={24} color="black" />
+                    <Entypo name="pencil" onPress={() => setShowEditModal(true)} size={24} color={colors.iconColor} />
+                    <Entypo name="cross" onPress={onRemove} size={24} color={colors.iconColor} />
                 </View>
             </View>
-            <Text style={styles.translate}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
+            <Text style={[styles.translate, { color: colors.primary }]}>Переклад: <Text style={{fontWeight:'bold'}}>{item.translateWord}</Text></Text>
 
             {
                 item.nextReviewAt && <Text style={styles.reviewDate}>Наступний перегляд:

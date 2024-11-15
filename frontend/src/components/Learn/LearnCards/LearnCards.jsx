@@ -6,8 +6,10 @@ import {selectCard} from "../../../redux/cardSlice";
 import styles from './LearnCards.styles';
 import {useSelector} from "react-redux";
 import * as Speech from 'expo-speech';
+import { useAppTheme } from '../../../contexts/ThemeProvider';
 
 const LearnCards = ({ onComplete, setFlashCards }) => {
+    const { theme: { colors }} = useAppTheme();
     const cards = useSelector(selectCard);
     const [flippedIndex, setFlippedIndex] = useState(null);
     const [learningCards, setLearningCards] = useState([...cards]);
@@ -37,14 +39,13 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
             transform: [{ rotateY: `${interpolate(rotation.value, [0, 180], [0, Math.PI])}rad` }],
         };
     });
-
+    
     const backAnimatedStyle = useAnimatedStyle(() => {
         return {
             transform: [{ rotateY: `${interpolate(rotation.value, [0, 180], [Math.PI, 0])}rad` }],
             position: 'absolute',
             top: 0,
             left: 0,
-            backfaceVisibility: 'hidden',
         };
     });
 
@@ -72,8 +73,14 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     };
 
     const renderCard = (card, index) => (
-        <Pressable onPress={() => handleFlipCard(index)} style={styles.cardContainer}>
-            <Animated.View style={[styles.card, frontAnimatedStyle]}>
+        <Pressable onPress={() => handleFlipCard(index)} style={[styles.cardContainer]}>
+            <Animated.View 
+                style={[
+                    styles.card,
+                    { backgroundColor: colors.lightBackground, backfaceVisibility: 'hidden' },
+                    frontAnimatedStyle,
+                ]}
+            >
                 <View style={{ marginTop: 10 }}>
                     {card.image && card.image.url ? (
                         <Image
@@ -82,9 +89,15 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
                         />
                     ) : null}
                 </View>
-                <Text style={styles.cardText} selectable={false}>{card.word}</Text>
+                <Text style={[styles.cardText, { color: colors.primary}]} selectable={false}>{card.word}</Text>
             </Animated.View>
-            <Animated.View style={[styles.card, backAnimatedStyle]}>
+            <Animated.View
+                style={[
+                    styles.card,
+                    { backgroundColor: colors.lightBackground, backfaceVisibility: 'hidden' },
+                    backAnimatedStyle,
+                ]}
+            >
                 <View style={{ marginTop: 10 }}>
                     {card.image && card.image.url ? (
                         <Image
@@ -93,7 +106,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
                         />
                     ) : null}
                 </View>
-                <Text style={styles.cardText} selectable={false}>{card.translateWord}</Text>
+                <Text style={[styles.cardText, { color: colors.primary}]} selectable={false}>{card.translateWord}</Text>
             </Animated.View>
         </Pressable>
     );

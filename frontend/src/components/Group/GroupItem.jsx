@@ -1,12 +1,12 @@
 import {Text, View, StyleSheet, Pressable} from "react-native";
-import {Link, useNavigation} from "@react-navigation/native";
+import { Link } from "@react-navigation/native";
 import {Entypo} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
 import {removeGroup} from "../../redux/groupSlice";
-import {useAppTheme, useTheme} from "../../contexts/ThemeProvider";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 export const GroupItem = ({item: { id, title }}) => {
-    const { theme } = useAppTheme();
+    const { theme: { colors } } = useAppTheme();
     const dispatch = useDispatch();
 
     const handleRemoveGroup = () => {
@@ -14,12 +14,12 @@ export const GroupItem = ({item: { id, title }}) => {
     }
 
     return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Link key={id} style={styles.item} to={{screen: 'group', params:{groupId: id}}}>
-                <Text style={{fontSize:30}}>{title}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Link key={id} style={[styles.item, { backgroundColor: colors.lightBackground }]} to={{screen: 'group', params:{groupId: id}}}>
+                <Text style={{fontSize:30, color: colors.primary }}>{title}</Text>
             </Link>
             <Pressable onPress={handleRemoveGroup}>
-                <Entypo name="trash" size={30} color={theme.colors.iconColor} />
+                <Entypo name="trash" size={30} color={colors.iconColor} />
             </Pressable>
         </View>
     )
@@ -28,7 +28,6 @@ export const GroupItem = ({item: { id, title }}) => {
 const styles = StyleSheet.create({
     item: {
         width:'100%',
-        backgroundColor: '#dadada',
         padding:10,
         margin:10,
         borderRadius:5,

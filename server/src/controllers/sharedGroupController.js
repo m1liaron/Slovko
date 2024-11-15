@@ -1,19 +1,32 @@
-const {SharedGroup, SharedCard} = require("../models/models");
+const { SharedGroup, SharedCard, Group, Card} = require("../models/models");
 
 const createSharedGroup = async (req, res) => {
     const {
-        body: {
-            title,
-            cards // [ { word, translate, image }, {}, {}, {} ]
-        },
+        body: { groupId, title },
         user: { id }
     } = req;
     try {
-        console.log(cards)
-        const sharedGroup = await SharedGroup.create({ title, userId: id });
-        await Promise.all(cards.map(async (card) => {
-            await SharedCard.create({ ...card, sharedGroupId: sharedGroup.id });
-        }))
+        const group = await Group.findOne({
+            where: { id: groupId },
+            include: [
+                {
+                    model: Card,
+                    as: 'cards'
+                }
+            ],
+        })
+        if(!group) {
+            res.status(404).json({ error: true, message: "Group is not defined"});
+        }
+        const sharedGroup = await SharedGroup.create({ title: title ? title : group.title, userId: id });
+        if(group.cards.length) {
+            await Promise.all(group.cards.map(async (card) => {
+                await SharedCard.create({
+                    word: card.word,
+                    translateWord: card.translateWord,
+                    sharedGroupId: sharedGroup.id });
+            }))
+        }
 
         res.status(200).json(sharedGroup);
     } catch(error) {
@@ -33,7 +46,15 @@ const getAllSharedGroup = async (req, res) => {
 
 const getSharedGroup = async (req, res) => {
     try {
-        const sharedGroup = await SharedGroup.findOne({ where: { id: req.params.sharedGroupId }});
+        const sharedGroup = await SharedGroup.findOne({
+            where: { id: req.params.sharedGroupId },
+            include: [
+                {
+                    model: SharedCard,
+                    as: 'sharedCards'
+                }
+            ]
+        });
         res.status(200).json(sharedGroup);
     } catch(error) {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
@@ -45,17 +66,26 @@ const copySharedGroup = async (req, res) => {
     try {
         const sharedGroup = await SharedGroup.findOne({
             where: { id: sharedGroupId },
-            include: { model: 'SharedGroup', as: 'sharedCards'}
+            include: { model: SharedCard, as: 'sharedCards'}
         });
         if(!sharedGroup) {
             return res.status(404).json({ error: true, message: 'Shared group is not found' });
         }
-        const newSharedGroup = await SharedGroup.create({ title: sharedGroup.title , userId: req.user.id });
-        await Promise.all(sharedGroup.sharedCards.map(async (card) => {
-            SharedCard.create(card);
-        }));
+        if(sharedGroup.userId !== req.user.id) {
+            res.status(400).json({ error: true, message: 'You are not owner of this group!' });
+        }
+        const newGroup = await Group.create({ title: sharedGroup.title , userId: req.user.id });
+        if(sharedGroup.sharedCards.length) {
+            await Promise.all(sharedGroup.sharedCards.map(async (card) => {
+                Card.create({
+                    word: card.word,
+                    translateWord: card.translateWord,
+                    groupId: newGroup.id
+                });
+            }));
+        }
 
-        res.status(200).json(newSharedGroup);
+        res.status(200).json(newGroup);
     } catch(error) {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
     }

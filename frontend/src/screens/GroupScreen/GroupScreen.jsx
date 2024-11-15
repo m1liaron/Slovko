@@ -2,14 +2,21 @@ import CardList from "../../components/Card/CardList";
     import {SafeAreaView} from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getAllStatusCards} from "../../redux/cardSlice";
 import {useAppTheme} from "../../contexts/ThemeProvider";
+import {useEffect} from "react";
+import {getGroup} from "../../redux/groupSlice";
 
 const GroupScreen = ({route}) => {
-    const { theme } = useAppTheme();
+    const { theme: { colors } } = useAppTheme();
     const { groupId } = route.params
     const dispatch = useDispatch();
+    const { group } = useSelector(state => state.groups);
+
+    useEffect(() => {
+        dispatch(getGroup(groupId));
+    }, []);
 
     const statusCardsButtons = [
         { title: 'To Learn', status: 'To Learn' },
@@ -43,8 +50,16 @@ const GroupScreen = ({route}) => {
     };
 
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.background }}>
-            <BackButton />
+        <SafeAreaView style={{flex: 1, backgroundColor: colors.background }}>
+            <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+            }}>
+                <BackButton />
+                <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{group.title}</Text>
+            </View>
             <View
                 style={{
                     display: 'flex',

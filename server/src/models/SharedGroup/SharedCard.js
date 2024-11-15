@@ -38,10 +38,12 @@ const SharedCard = sequelize.define("SharedCard", {
     sharedGroupId: {
         type: DataTypes.UUID,
         references: {
-            model: "SharedGroups",
+            model: SharedGroup,
             key: 'id',
         }
     },
+}, {
+    modelName: 'SharedCards'
 });
 
 module.exports = SharedCard;

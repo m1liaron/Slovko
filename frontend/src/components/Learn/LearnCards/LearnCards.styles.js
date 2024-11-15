@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 6,
         elevation: 6,
-        backgroundColor: '#ffffff',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
@@ -24,7 +23,6 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 35,
         fontWeight: '700',
-        color: '#333',
         textAlign: 'center',
         marginBottom: 10,
         flexWrap: 'wrap',

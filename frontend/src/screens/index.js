@@ -6,6 +6,8 @@ import LearnScreen from "./LearnScreen/LearnScreen";
 import ProfileScreen from "./ProfileScreen/ProfileScreen";
 import ResultDetailsScreen from "./ResultDetailsScreen/ResultDetailsScreen";
 import ResultsScreen from "./ResultsScreen/ResultsScreen";
+import SharedGroupsScreen from "./SharedGroupsScreen/SharedGroupsScreen";
+import SharedGroupDetailsScreen from "./SharedGroupDetailsScreen/SharedGroupDetailsScreen";
 
 export {
     MainScreen,
@@ -15,5 +17,7 @@ export {
     LearnScreen,
     ProfileScreen,
     ResultDetailsScreen,
-    ResultsScreen
+    ResultsScreen,
+    SharedGroupsScreen,
+    SharedGroupDetailsScreen
 }

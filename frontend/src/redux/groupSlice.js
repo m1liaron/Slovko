@@ -18,6 +18,14 @@ export const addGroup = createAsyncThunk(
     }
 )
 
+export const getGroup = createAsyncThunk(
+    'group/get', async (id) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get(`/groups/${id}`);
+        return response.data;
+    }
+)
+
 export const removeGroup = createAsyncThunk(
     'group/remove', async (id) => {
         const axiosInstance = await createAuthorizedInstance();
@@ -30,14 +38,11 @@ const groupSlice = createSlice({
     name:'groups',
     initialState: {
         groups: [],
+        group: {},
         status:'idle',
         error: null
     },
-    reducers:{
-        removeCard: (state, action) => {
-            state.groups = state.groups.filter((item, index) => index !== action.payload)
-        }
-    },
+    reducers:{},
     extraReducers: (builder) => {
         builder
             .addCase(getAllGroups.pending, (state) => {
@@ -61,7 +66,16 @@ const groupSlice = createSlice({
             .addCase(addGroup.rejected, (state) => {
                 state.status = 'rejected';
             })
-
+            .addCase(getGroup.pending, (state) => {
+                state.status = 'pending';
+            })
+            .addCase(getGroup.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.group = action.payload;
+            })
+            .addCase(getGroup.rejected, (state) => {
+                state.status = 'rejected';
+            })
             .addCase(removeGroup.pending, (state) => {
                 state.status = 'pending';
             })
@@ -74,8 +88,6 @@ const groupSlice = createSlice({
             })
     }
 })
-
-// export const {removeGroup, } = cardSlice.actions;
 
 export const selectGroup= (state) => state.groups.groups;
 

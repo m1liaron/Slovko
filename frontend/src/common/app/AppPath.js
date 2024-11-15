@@ -2,6 +2,8 @@
 const AppPath = {
     Loading: 'loading',
     Group: 'group',
+    SharedGroup: 'shared-group',
+    SharedGroupDetails: 'shared-group/sharedGroupId',
     Home: 'home',
     Profile: 'profile',
     Learn: 'learn',
