@@ -1,21 +1,33 @@
-import React, {useEffect} from 'react';
-import {FlatList, Text, View} from 'react-native'
+import React, {useEffect, useState} from 'react';
+import {FlatList, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
 import {getAllSharedGroups} from "../../redux/sharedGroup";
 import styles from './SharedGroupsScreen.styles';
-import {Link} from "@react-navigation/native";
+import {Link, useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
+import AddButton from "../../common/components/AddButton/AddButton";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import {selectGroup} from "../../redux/groupSlice";
+import { selectSharedGroup } from '../../redux/sharedGroup'
 
 const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
     const dispatch = useDispatch();
-    const sharedGroups = useSelector(state => state.sharedGroups.sharedGroups);
+    const navigation = useNavigation();
+    const { sharedGroups } = useSelector(selectSharedGroup);
+    const groups = useSelector(selectGroup);
+    const [showAddModal, setShowModal] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState(null);
+
 
     useEffect(() => {
         dispatch(getAllSharedGroups());
     }, []);
+
+    const addRemoveSelectedGroup = (newGroup) => setSelectedGroup(!selectedGroup ? newGroup : null);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -32,6 +44,43 @@ const SharedGroupsScreen = () => {
                     </Link>
                 )}
             />
+            <AddButton onPress={() => setShowModal(true)}/>
+            <DefaultModal
+                isVisible={showAddModal}
+                handleClose={() => setShowModal(false)}
+            >
+                {groups.length ?
+                    (
+                        <FlatList
+                            data={groups}
+                            renderItem={({ item }) => (
+                                <Pressable onPress={() => addRemoveSelectedGroup(item)}>
+                                    <Text style={{
+                                        color: colors.primary,
+                                        borderColor: selectedGroup?.title === item.title ? "#007AFF" : colors.primary,
+                                        borderWidth: 2,
+                                        borderRadius: 10,
+                                        fontSize: 30,
+                                        padding: 20
+                                    }}
+                                    >{item.title}</Text>
+                                </Pressable>
+                            )}
+                        />
+                    )
+                        :
+                    (
+                        <View>
+                            <Text style={{
+                                color: colors.primary,
+                                fontSize: 30
+                            }}>Немає груп</Text>
+                            <PressableButton text="Створити групу" onPress={() => navigation.navigate(AppPath.Home)} buttonStyle={{ padding: 20 }}/>
+                        </View>
+                    )
+                }
+                <PressableButton text="Поширити"/>
+            </DefaultModal>
         </SafeAreaView>
     );
 };
