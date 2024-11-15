@@ -66,7 +66,7 @@ const copySharedGroup = async (req, res) => {
     try {
         const sharedGroup = await SharedGroup.findOne({
             where: { id: sharedGroupId },
-            include: { model: 'SharedGroup', as: 'sharedCards'}
+            include: { model: SharedCard, as: 'sharedCards'}
         });
         if(!sharedGroup) {
             return res.status(404).json({ error: true, message: 'Shared group is not found' });
@@ -74,14 +74,18 @@ const copySharedGroup = async (req, res) => {
         if(sharedGroup.userId !== req.user.id) {
             res.status(400).json({ error: true, message: 'You are not owner of this group!' });
         }
-        const newSharedGroup = await Group.create({ title: sharedGroup.title , userId: req.user.id });
+        const newGroup = await Group.create({ title: sharedGroup.title , userId: req.user.id });
         if(sharedGroup.sharedCards.length) {
             await Promise.all(sharedGroup.sharedCards.map(async (card) => {
-                Card.create(card);
+                Card.create({
+                    word: card.word,
+                    translateWord: card.translateWord,
+                    groupId: newGroup.id
+                });
             }));
         }
 
-        res.status(200).json(newSharedGroup);
+        res.status(200).json(newGroup);
     } catch(error) {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
     }

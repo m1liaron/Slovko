@@ -26,6 +26,14 @@ export const getSharedGroup = createAsyncThunk(
     }
 )
 
+export const copySharedGroup = createAsyncThunk(
+    'sharedGroup/copy', async (sharedGroupId) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.post(`/sharedGroups/${sharedGroupId}`);
+        return response.data
+    }
+)
+
 const sharedGroupSlice = createSlice({
     name:'sharedGroup',
     initialState: {

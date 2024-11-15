@@ -3,7 +3,7 @@ import {FlatList, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllSharedGroups, saveSharedGroup} from "../../redux/sharedGroup";
+import {copySharedGroup, getAllSharedGroups, saveSharedGroup} from "../../redux/sharedGroup";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
@@ -13,6 +13,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import {selectGroup} from "../../redux/groupSlice";
 import { selectSharedGroup } from '../../redux/sharedGroup'
 import AddInput from "../../common/components/AddInput/AddInput";
+import {AntDesign} from "@expo/vector-icons";
 
 const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
@@ -56,9 +57,17 @@ const SharedGroupsScreen = () => {
                     padding: 10
                 }}
                 renderItem={({ item }) => (
-                    <Link style={styles.container} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
-                        <Text style={{ color: colors.primary }}>{item.title}</Text>
-                    </Link>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center'
+                    }}>
+                        <Link style={styles.container} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
+                            <Text style={{ color: colors.primary }}>{item.title}</Text>
+                        </Link>
+                        <Pressable onPress={() => dispatch(copySharedGroup(item.id))} >
+                            <AntDesign name="download" color={colors.primary} size={30}/>
+                        </Pressable>
+                    </View>
                 )}
             />
             <AddButton onPress={() => setShowModal(true)}/>
