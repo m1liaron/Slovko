@@ -11,9 +11,9 @@ export const getAllSharedGroups = createAsyncThunk(
 )
 
 export const saveSharedGroup = createAsyncThunk(
-    'sharedGroup/save', async (data) => {
+    'sharedGroup/save', async (groupId) => {
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.post('/sharedGroups', data);
+        const response = await axiosInstance.post(`/sharedGroups`, {groupId});
         return response.data
     }
 )

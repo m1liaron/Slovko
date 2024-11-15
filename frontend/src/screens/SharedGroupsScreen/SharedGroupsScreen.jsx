@@ -3,7 +3,7 @@ import {FlatList, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllSharedGroups} from "../../redux/sharedGroup";
+import {getAllSharedGroups, saveSharedGroup} from "../../redux/sharedGroup";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
@@ -17,7 +17,7 @@ const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { sharedGroups } = useSelector(selectSharedGroup);
+    const sharedGroups = useSelector(selectSharedGroup);
     const groups = useSelector(selectGroup);
     const [showAddModal, setShowModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
@@ -28,6 +28,14 @@ const SharedGroupsScreen = () => {
     }, []);
 
     const addRemoveSelectedGroup = (newGroup) => setSelectedGroup(!selectedGroup ? newGroup : null);
+
+    const shareGroup = () => {
+        if(!selectedGroup) {
+            alert("Please select a shared group");
+        }
+
+        dispatch(saveSharedGroup(selectedGroup.id));
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -79,7 +87,7 @@ const SharedGroupsScreen = () => {
                         </View>
                     )
                 }
-                <PressableButton text="Поширити"/>
+                <PressableButton text="Поширити" onPress={shareGroup}/>
             </DefaultModal>
         </SafeAreaView>
     );

@@ -17,7 +17,7 @@ User.hasMany(SharedGroup, { foreignKey: 'userId', as: 'sharedGroups' });
 SharedGroup.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 // Group - Card
-Group.hasMany(Card, { foreignKey: 'userId', as: 'cards' });
+Group.hasMany(Card, { foreignKey: 'groupId', as: 'cards' });
 Card.belongsTo(Group, { foreignKey: 'groupId', as: 'group' });
 
 // User - Result

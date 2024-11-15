@@ -8,15 +8,23 @@ const createSharedGroup = async (req, res) => {
     try {
         const group = await Group.findOne({
             where: { id: groupId },
-            include: [{ model: Card, as: 'cards '}]
-        });
+            include: [
+                {
+                    model: Card,
+                    as: 'cards'
+                }
+            ],
+        })
         if(!group) {
             res.status(404).json({ error: true, message: "Group is not defined"});
         }
         const sharedGroup = await SharedGroup.create({ title: group.title, userId: id });
-        if(group.cards) {
+        if(group.cards.length) {
             await Promise.all(group.cards.map(async (card) => {
-                await SharedCard.create({ ...card, sharedGroupId: sharedGroup.id });
+                await SharedCard.create({
+                    word: card.word,
+                    translateWord: card.translateWord,
+                    sharedGroupId: sharedGroup.id });
             }))
         }
 
