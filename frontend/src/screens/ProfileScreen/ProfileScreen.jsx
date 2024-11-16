@@ -7,6 +7,7 @@ import {
     Pressable,
     Platform,
     Alert,
+    Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +21,7 @@ import {Switch} from "react-native-gesture-handler";
 import {Feather} from "@expo/vector-icons";
 import styles from './ProfileScreen.styles';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import AvatarImage from '../../../assets/images/avatar.png'
 
 export default function ProfileScreen() {
     const { user } = useSelector(selectUser);
@@ -140,6 +142,17 @@ export default function ProfileScreen() {
                 <View style={styles.container}>
                     {user ? (
                         <View>
+                            <Pressable onPress={uploadImage} style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                alignSelf: 'center'
+                            }}>
+                                <Image
+                                    style={styles.avatarPhoto}
+                                    source={image ? { uri: image } : AvatarImage}
+                                />
+                            </Pressable>
                             {!isEditing && <Text style={[styles.title, { color: colors.primary }]}>{user.name}</Text> }
                             <Pressable onPress={onEditInfo}>
                                 <Text style={styles.editTitle}>Редагувати</Text>
