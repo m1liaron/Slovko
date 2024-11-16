@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
     login,
     register,
-    getUser
+    getUser,
+    updateUser
 } from './userThunk';
 import {DataStatus} from "../../common/enums/app/app";
 
@@ -59,6 +60,19 @@ const userSlice = createSlice({
                 state.isAuthenticated = true;
             })
             .addCase(getUser.rejected, (state) => {
+                state.status = DataStatus.ERROR
+                state.isAuthenticated = false;
+            })
+
+            .addCase(updateUser.pending, (state) => {
+                state.status = DataStatus.PENDING
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS
+                state.user = action.payload;
+                state.isAuthenticated = true;
+            })
+            .addCase(updateUser.rejected, (state) => {
                 state.status = DataStatus.ERROR
                 state.isAuthenticated = false;
             })

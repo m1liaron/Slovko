@@ -90,7 +90,7 @@ const SharedGroupsScreen = () => {
                             <View style={{ flexDirection: 'row', gap: 20,  alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', display: 'flex', gap: 10}}>
                                     <Image
-                                        source={AvatarImage}
+                                        source={item.user.image || AvatarImage}
                                         style={{
                                             width: 40,
                                             height: 40,
