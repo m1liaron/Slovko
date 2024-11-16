@@ -8,8 +8,10 @@ import {getResultDetails} from "../../redux/resultsSlice";
 import Loading from "../../components/Loading";
 import BackButton from "../../components/BackButton/BackButton";
 import formatDMTDate from "../../utils/formatDMTDate";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const ResultDetailsScreen = ({ route }) => {
+    const { theme: {colors} } = useAppTheme();
     const { resultId } = route.params
     const { result, isLoading } = useSelector(state => state.results);
     const dispatch = useDispatch();
@@ -41,17 +43,17 @@ const ResultDetailsScreen = ({ route }) => {
     const correctPercentage = calculateCorrectPercentage();
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.header}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+            <View style={[styles.header, { backgroundColor: colors.lightBackground }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 20}}>
                     <BackButton />
-                    <Text style={styles.title}>{result.title}</Text>
+                    <Text style={[styles.title, { color: colors.primary}]}>{result.title}</Text>
 
-                    <View style={styles.wastedTimeContainer}>
-                        <Text style={styles.title}>{formattedTime}</Text>
+                    <View style={[styles.wastedTimeContainer, { borderColor: colors.primary } ]}>
+                        <Text style={[styles.title, { color: colors.primary }]}>{formattedTime}</Text>
                     </View>
                 </View>
-                <Text style={styles.title}>{formatDMTDate(result.createdAt)}</Text>
+                <Text style={[styles.title, { color: colors.primary }]}>{formatDMTDate(result.createdAt)}</Text>
             </View>
 
 
@@ -78,14 +80,14 @@ const ResultDetailsScreen = ({ route }) => {
                         <FlatList
                             data={result.mode[selectedMode].words}
                             renderItem={({ item }) => (
-                                <View style={styles.itemContainer}>
+                                <View style={[styles.itemContainer, { backgroundColor: colors.lightBackground }]}>
                                     <View style={styles.resultContainer}>
-                                        <Text style={styles.title}>{item.word}</Text>
-                                        <Text style={styles.title}> - {item.translate}</Text>
+                                        <Text style={[styles.title, { color: colors.primary }]}>{item.word}</Text>
+                                        <Text style={[styles.title, { color: colors.primary }]}> - {item.translate}</Text>
                                     </View>
                                     <View>
                                         <View style={styles.mistakesAmountContainer}>
-                                            <Text style={styles.title}>{item.mistakesAmount}</Text>
+                                            <Text style={[styles.title, { color: colors.primary }]}>{item.mistakesAmount}</Text>
                                         </View>
                                     </View>
                                 </View>

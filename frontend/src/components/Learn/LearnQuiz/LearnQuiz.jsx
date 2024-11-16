@@ -104,15 +104,15 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
                                 backgroundColor:
                                     selectedOption === item
                                         ? isCorrect === true
-                                            ? '#a1dc93'
+                                            ? '#7eac73'
                                             : isCorrect === false
-                                                ? '#df5151'
+                                                ? '#a03030'
                                                 : '#8e8e8e'
-                                        : '#d0d0d0',
+                                        : colors.lightBackground,
                             },
                         ]}
                         onPress={() => handleOptionPress(item)}>
-                        <Text style={{ fontSize: 30 }}>{item.text}</Text>
+                        <Text style={{ fontSize: 30, color: colors.primary }}>{item.text}</Text>
                     </Pressable>
                 )}
                 style={{ flexGrow: 1 }}

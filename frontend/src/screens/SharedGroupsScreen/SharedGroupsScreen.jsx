@@ -59,9 +59,11 @@ const SharedGroupsScreen = () => {
                 renderItem={({ item }) => (
                     <View style={{
                         flexDirection: 'row',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 20
                     }}>
-                        <Link style={styles.container} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
+                        <Link style={[styles.container, { backgroundColor: colors.lightBackground }]} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
                             <Text style={{ color: colors.primary }}>{item.title}</Text>
                         </Link>
                         <Pressable onPress={() => dispatch(copySharedGroup(item.id))} >

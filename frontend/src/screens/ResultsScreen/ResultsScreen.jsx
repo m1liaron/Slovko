@@ -89,10 +89,10 @@ const ResultsScreen = () => {
                     <FlatList
                         data={results}
                         renderItem={({ item }) => (
-                            <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
+                            <Link style={[styles.itemContainer, { backgroundColor: colors.lightBackground}]} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
                                 <View style={styles.flex}>
-                                    <Text>{item.title}</Text>
-                                    <Text>{formatDMTDate(item.createdAt)}</Text>
+                                    <Text style={{ color: colors.primary, fontWeight: 'bold', fontSize: 30}}>{item.title}</Text>
+                                    <Text style={{ color: colors.primary}}>{formatDMTDate(item.createdAt)}</Text>
                                 </View>
                             </Link>
                         )}
