@@ -26,3 +26,11 @@ export const getUser = createAsyncThunk(
         return response.data.user
     }
 )
+
+export const updateUser = createAsyncThunk(
+    'user/update', async ({id, data}) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.put(`/users/${id}`, data);
+        return response.data
+    }
+)

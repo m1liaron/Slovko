@@ -22,6 +22,8 @@ import {Feather} from "@expo/vector-icons";
 import styles from './ProfileScreen.styles';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import AvatarImage from '../../../assets/images/avatar.png'
+import {updateUser} from "../../redux/userReducer/userThunk";
+import pickImage from "../../utils/pickImage";
 
 export default function ProfileScreen() {
     const { user } = useSelector(selectUser);
@@ -69,60 +71,61 @@ export default function ProfileScreen() {
         }
     };
 
-    const uploadImage = async (mode) => {
-        try {
-            let result = {};
+    const convertBlobToBase64 = (blobUri) => {
+        return new Promise((resolve, reject) => {
+            fetch(blobUri)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = () => reject(new Error('Failed to convert blob to base64'));
+                    reader.readAsDataURL(blob);
+                })
+                .catch(error => reject(error));
+        });
+    };
 
-            if (mode === 'gallery') {
-                await ImagePicker.requestMediaLibraryPermissionsAsync();
-                result = await ImagePicker.getMediaLibraryPermissionsAsync({
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
-            } else {
-                await ImagePicker.requestCameraPermissionsAsync();
-                result = await ImagePicker.launchCameraAsync({
-                    cameraType: ImagePicker.CameraType.front,
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
+    const convertImageToBase64 = async (uri) => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const reader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+            reader.onloadend = () => {
+                const base64data = reader.result.split(',')[1]; // Get the Base64 part
+                resolve(base64data);
+            };
+            reader.onerror = () => reject(new Error('Failed to convert image to base64'));
+            reader.readAsDataURL(blob);
+        });
+    };
+
+    const handleUpdateUser = async () => {
+        let finalImageUri = image;
+
+        if (Platform.OS === 'web' && image.startsWith('blob:')) {
+            try {
+                finalImageUri = await convertBlobToBase64(image);
+            } catch (error) {
+                console.error('Error converting blob to base64:', error);
+                return;
             }
-
-            if (!result.canceled) {
-                await onSaveImage(result.assets[0].uri);
+        } else if (finalImageUri) {
+            try {
+                const base64Image = await convertImageToBase64(finalImageUri);
+                finalImageUri = base64Image;
+            } catch (error) {
+                console.error('Error converting image to base64:', error);
+                return;
             }
-        } catch (error) {
-            console.error(error);
-            setModalVisible(false);
         }
-    };
 
-    const onSaveImage = async (image) => {
-        try {
-            setImage(image);
-            setModalVisible(false);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const removeImage = async () => {
-        try {
-            onSaveImage(null);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
-    const handleUpdateUser = () => {
         const data = {
+            image: finalImageUri,
             name: userName,
             email: userEmail,
         };
-        dispatch(updateUser({ data, id: user._id }));
+        dispatch(updateUser({data, id: user.id}));
         setIsEditing(false);
     };
 
@@ -142,17 +145,35 @@ export default function ProfileScreen() {
                 <View style={styles.container}>
                     {user ? (
                         <View>
-                            <Pressable onPress={uploadImage} style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                alignSelf: 'center'
-                            }}>
-                                <Image
-                                    style={styles.avatarPhoto}
-                                    source={image ? { uri: image } : AvatarImage}
-                                />
-                            </Pressable>
+                            {!isEditing ? (
+                                <View
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignSelf: 'center'
+                                    }}
+                                >
+                                    <Image
+                                        style={styles.avatarPhoto}
+                                        source={image ? { uri: image } : user.image}
+                                    />
+                                </View>
+                            ) : (
+                                <Pressable
+                                   onPress={() => pickImage(image, setImage)}
+                                   style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignSelf: 'center'
+                                }}>
+                                    <Image
+                                        style={styles.avatarPhoto}
+                                        source={image ? { uri: image } : AvatarImage}
+                                    />
+                                </Pressable>
+                            )}
                             {!isEditing && <Text style={[styles.title, { color: colors.primary }]}>{user.name}</Text> }
                             <Pressable onPress={onEditInfo}>
                                 <Text style={styles.editTitle}>Редагувати</Text>

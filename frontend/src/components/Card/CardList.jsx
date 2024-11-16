@@ -8,9 +8,6 @@ import {
     Platform
 } from 'react-native';
 import CardItem from './CardItem';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
 import { addCard, getCards, removeCard, selectCard } from '../../redux/cardReducer/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';

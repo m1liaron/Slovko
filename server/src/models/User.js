@@ -58,9 +58,6 @@ User.init(
         image: {
             type: DataTypes.TEXT,
             allowNull: true,
-            validate: {
-                isUrl: true,
-            },
         },
         streak: {
             type: DataTypes.INTEGER,
