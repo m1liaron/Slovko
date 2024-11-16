@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 20,
         height: Dimensions.get('window').height - 500,
+        marginTop: 20
     },
     cardContainer: {
         minWidth: 300,
