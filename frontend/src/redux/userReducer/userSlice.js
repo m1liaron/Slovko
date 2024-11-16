@@ -65,4 +65,5 @@ const userSlice = createSlice({
 
 export const { logout } = userSlice.actions;
 export const selectUser = (state) => state.user;
+export { login, register, getUser } from './userThunk';
 export const userReducers = userSlice.reducer;

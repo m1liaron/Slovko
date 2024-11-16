@@ -26,10 +26,3 @@ export const getUser = createAsyncThunk(
         return response.data.user
     }
 )
-
-
-export {
-    login,
-    register,
-    getUser
-}
