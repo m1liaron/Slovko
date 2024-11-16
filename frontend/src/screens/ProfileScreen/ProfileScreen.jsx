@@ -19,6 +19,7 @@ import {useAppTheme} from "../../contexts/ThemeProvider";
 import {Switch} from "react-native-gesture-handler";
 import {Feather} from "@expo/vector-icons";
 import styles from './ProfileScreen.styles';
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 export default function ProfileScreen() {
     const { user } = useSelector(selectUser);
@@ -175,10 +176,10 @@ export default function ProfileScreen() {
                             ) : (
                                 <>
                                     <Text style={styles.keyName}>Пошта</Text>
-                                    <View style={styles.editInputContainer}>
-                                        <MaterialIcons name="email" size={35} color="#000" />
+                                    <View style={[styles.editInputContainer, { backgroundColor: colors.lightBackground} ]}>
+                                        <MaterialIcons name="email" size={35} color={colors.iconColor} />
                                         <TextInput
-                                            style={styles.textInputStyle}
+                                            style={[styles.textInputStyle, { textDecorationStyle: colors.primary, color: colors.primary }]}
                                             value={userEmail}
                                             onChangeText={(text) => setUserEmail(text)}
                                         />
@@ -187,10 +188,10 @@ export default function ProfileScreen() {
                             )}
 
                             {!isEditing ? (
-                                <View style={styles.infoList}>
+                                <View>
                                     <Text style={[styles.textInfo, { color: colors.primary }]}>Взаємодія</Text>
                                     <Pressable
-                                        style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
+                                        style={[styles.infoItem, { backgroundColor: colors.lightBackground }]}
                                         onPress={handleLogout}
                                     >
                                         <View
@@ -203,15 +204,15 @@ export default function ProfileScreen() {
                                             <MaterialIcons
                                                 name="exit-to-app"
                                                 size={35}
-                                                color="#000"
+                                                color={colors.iconColor}
                                             />
-                                            <Text style={styles.keyName}>Вийти з акаунту</Text>
+                                            <Text style={[styles.keyName, { color: colors.primary }]}>Вийти з акаунту</Text>
                                         </View>
-                                        <AntDesign name="arrowright" size={35} color="#000" />
+                                        <AntDesign name="arrowright" size={35} color={colors.iconColor} />
                                     </Pressable>
 
                                     <View
-                                        style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
+                                        style={[styles.infoItem, { backgroundColor: colors.lightBackground }]}
                                     >
                                         <View
                                             style={{
@@ -221,28 +222,28 @@ export default function ProfileScreen() {
                                             }}
                                         >
                                             {isThemeDark ?
-                                                <Feather name="moon"  size={35} color="#000" />
+                                                <Feather name="moon"  size={35} color={colors.iconColor} />
                                                         :
-                                                <Feather name="sun" size={35} color="#000" />
+                                                <Feather name="sun" size={35} color={colors.iconColor} />
                                             }
-                                            <Text style={styles.keyName}>Змінити тему</Text>
+                                            <Text style={[styles.keyName, { color: colors.primary }]}>Змінити тему</Text>
                                         </View>
                                         <Switch
                                             value={isThemeDark}
                                             onValueChange={changeTheme}
+                                            trackColor={{
+                                                false: colors.background,
+                                                true: colors.primary,
+                                            }}
+                                            thumbColor={isThemeDark ? colors.primary : colors.lightBackground}
+                                            ios_backgroundColor={colors.lightBackground}
+                                            style={{
+                                                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+                                            }}
                                         />
                                     </View>
                                 </View>
-                            ) : (
-                                <View>
-                                    <Pressable
-                                        style={styles.saveButton}
-                                        onPress={handleUpdateUser}
-                                    >
-                                        <Text>Зберегти зміни</Text>
-                                    </Pressable>
-                                </View>
-                            )}
+                            ) : <PressableButton text="Зберегти зміни" onPress={handleUpdateUser}/>}
                         </View>
                     ) : (
                         <View>
