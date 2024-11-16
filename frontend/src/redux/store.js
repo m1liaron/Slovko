@@ -1,7 +1,7 @@
 import {configureStore} from "@reduxjs/toolkit";
 import {cardReducers} from "./cardSlice";
 import {userReducers} from "./userReducer/userSlice";
-import {groupReducers} from "./groupSlice";
+import {groupReducers} from "./groupReducer/groupSlice";
 import {resultReducers} from "./resultsSlice";
 import { sharedGroupReducers } from "./sharedGroup";
 

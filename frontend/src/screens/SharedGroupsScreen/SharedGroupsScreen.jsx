@@ -10,7 +10,7 @@ import {AppPath} from "../../common/app/app";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import {selectGroup} from "../../redux/groupSlice";
+import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import { selectSharedGroup } from '../../redux/sharedGroup'
 import AddInput from "../../common/components/AddInput/AddInput";
 import {AntDesign} from "@expo/vector-icons";
