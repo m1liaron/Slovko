@@ -4,7 +4,7 @@ import { Entypo  } from '@expo/vector-icons';
 import DefaultModal from "../DefaultModal/DefaultModal";
 import Toast from "react-native-toast-message";
 import {useDispatch} from "react-redux";
-import {updateCard} from "../../redux/cardSlice";
+import {updateCard} from "../../redux/cardReducer/cardSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import pickImage from "../../utils/pickImage";
 import { useAppTheme } from '../../contexts/ThemeProvider';
