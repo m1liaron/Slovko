@@ -1,4 +1,4 @@
-const { SharedGroup, SharedCard, Group, Card} = require("../models/models");
+const { SharedGroup, SharedCard, Group, Card, User} = require("../models/models");
 
 const createSharedGroup = async (req, res) => {
     const {
@@ -12,6 +12,11 @@ const createSharedGroup = async (req, res) => {
                 {
                     model: Card,
                     as: 'cards'
+                },
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: { exclude: ['password'] }
                 }
             ],
         })
@@ -36,7 +41,14 @@ const createSharedGroup = async (req, res) => {
 
 const getAllSharedGroup = async (req, res) => {
     try {
-        const allSharedGroups = await SharedGroup.findAll({ where: { userId: req.user.id } });
+        const allSharedGroups = await SharedGroup.findAll({
+            where: { userId: req.user.id },
+            include: {
+                model: User,
+                as: 'user',
+                attributes: { exclude: ['password'] }
+            }
+        });
 
         res.status(200).json(allSharedGroups);
     } catch(error) {
@@ -52,6 +64,11 @@ const getSharedGroup = async (req, res) => {
                 {
                     model: SharedCard,
                     as: 'sharedCards'
+                },
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: { exclude: ['password'] }
                 }
             ]
         });
