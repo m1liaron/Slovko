@@ -89,8 +89,37 @@ const getUser = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    const {
+        params: { userId },
+        body,
+    } = req;
+    try {
+        const updatedUser = await User.update(body, {
+            where: { id: userId },
+            returning: true,
+            plain: true,
+        });
+
+        if (!updatedUser) {
+            return res
+                .status(StatusCodes.NOT_FOUND)
+                .json({ error: true, message: 'User does not found' });
+        }
+
+        const userObject = updatedUser[1].get();
+        const { password, ...userWithoutPassword } = userObject;
+        res.status(200).json(userWithoutPassword);
+    } catch (error) {
+        res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: error.message || 'Internal Server Error' });
+    }
+};
+
 module.exports = {
     register,
     getUser,
-    login
+    login,
+    updateUser
 }
