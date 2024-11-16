@@ -3,7 +3,7 @@ import {cardReducers} from "./cardReducer/cardSlice";
 import {userReducers} from "./userReducer/userSlice";
 import {groupReducers} from "./groupReducer/groupSlice";
 import {resultReducers} from "./resultReducer/resultsSlice";
-import { sharedGroupReducers } from "./sharedGroup";
+import { sharedGroupReducers } from "./sharedGroupReducer/sharedGroup";
 
 export const store = configureStore({
     reducer:{
