@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {Linking, Pressable, Text, View} from "react-native";
 import { GroupList } from "../../components/Group/GroupList";
 import {useDispatch, useSelector} from "react-redux";
-import {getUser, selectUser} from "../../redux/userSlice";
+import {getUser, selectUser} from "../../redux/userReducer/userSlice";
 import {FontAwesome6} from "@expo/vector-icons";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import styles from './MainScreen.styles';

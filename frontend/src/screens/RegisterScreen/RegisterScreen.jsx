@@ -3,7 +3,7 @@ import {View, Text, TextInput, TouchableOpacity, StyleSheet, Pressable} from 're
 import {useNavigation} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
 import Toast from "react-native-toast-message";
-import { register} from "../../redux/userSlice";
+import { register} from "../../redux/userReducer/userSlice";
 import {Entypo} from "@expo/vector-icons";
 
 const RegisterScreen = () => {
