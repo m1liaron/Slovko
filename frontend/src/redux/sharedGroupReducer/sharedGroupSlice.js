@@ -1,38 +1,5 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {createAuthorizedInstance} from "../utils/createAuthorizedInstance";
-
-
-export const getAllSharedGroups = createAsyncThunk(
-    'sharedGroup/getAll', async () => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get('/sharedGroups');
-        return response.data
-    }
-)
-
-export const saveSharedGroup = createAsyncThunk(
-    'sharedGroup/save', async (data) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.post(`/sharedGroups`, data);
-        return response.data
-    }
-)
-
-export const getSharedGroup = createAsyncThunk(
-    'sharedGroup/get', async (id) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get(`/sharedGroups/${id}`);
-        return response.data
-    }
-)
-
-export const copySharedGroup = createAsyncThunk(
-    'sharedGroup/copy', async (sharedGroupId) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.post(`/sharedGroups/${sharedGroupId}`);
-        return response.data
-    }
-)
+import { createSlice } from "@reduxjs/toolkit";
+import { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup } from './sharedGroupThunk';
 
 const sharedGroupSlice = createSlice({
     name:'sharedGroup',
@@ -81,4 +48,5 @@ const sharedGroupSlice = createSlice({
 })
 
 export const selectSharedGroup= (state) => state.sharedGroups.sharedGroups;
+export { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup } from './sharedGroupThunk';
 export const sharedGroupReducers = sharedGroupSlice.reducer;

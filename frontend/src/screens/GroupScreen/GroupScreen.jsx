@@ -3,10 +3,10 @@ import CardList from "../../components/Card/CardList";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllStatusCards} from "../../redux/cardSlice";
+import {getAllStatusCards} from "../../redux/cardReducer/cardSlice";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useEffect} from "react";
-import {getGroup} from "../../redux/groupSlice";
+import {getGroup} from "../../redux/groupReducer/groupSlice";
 
 const GroupScreen = ({route}) => {
     const { theme: { colors } } = useAppTheme();

@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import {View, Text, Pressable, Image} from 'react-native'
 import Swiper from "react-native-deck-swiper";
 import Animated, {interpolate, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
-import {selectCard} from "../../../redux/cardSlice";
+import {selectCard} from "../../../redux/cardReducer/cardSlice";
 import styles from './LearnCards.styles';
 import {useSelector} from "react-redux";
 import * as Speech from 'expo-speech';

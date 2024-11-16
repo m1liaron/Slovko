@@ -3,7 +3,7 @@ import {View, Text, FlatList, Pressable, useWindowDimensions, Image} from 'react
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
-import {selectCard} from "../../../redux/cardSlice";
+import {selectCard} from "../../../redux/cardReducer/cardSlice";
 import {useAppTheme} from "../../../contexts/ThemeProvider";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 
