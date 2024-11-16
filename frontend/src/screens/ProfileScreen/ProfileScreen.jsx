@@ -170,7 +170,7 @@ export default function ProfileScreen() {
                                 }}>
                                     <Image
                                         style={styles.avatarPhoto}
-                                        source={image ? { uri: image } : AvatarImage}
+                                        source={image ? { uri: image } : user.image}
                                     />
                                 </Pressable>
                             )}
