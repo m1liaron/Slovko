@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Pressable, Text, View} from 'react-native'
+import {FlatList, Image, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
@@ -13,6 +13,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import AddInput from "../../common/components/AddInput/AddInput";
 import {AntDesign} from "@expo/vector-icons";
+import AvatarImage from '../../../assets/images/avatar.png';
 
 const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
@@ -63,7 +64,22 @@ const SharedGroupsScreen = () => {
                         gap: 20
                     }}>
                         <Link style={[styles.container, { backgroundColor: colors.lightBackground }]} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
-                            <Text style={{ color: colors.primary }}>{item.title}</Text>
+                            <View style={{ flexDirection: 'row', display: 'flex', gap: 10}}>
+                                <Image
+                                    source={AvatarImage}
+                                    style={{
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: 100,
+                                        borderWidth: 2,
+                                        borderColor: colors.primary
+                                    }}
+                                />
+                                    <Text style={{ color: colors.primary, fontSize: 30 }}>{item.user.name}</Text>
+                            </View>
+                            <View style={{ borderWidth: 2, borderColor: colors.primary, borderRadius: 10, padding: 5}}>
+                                <Text style={{ color: colors.primary, fontSize: 30 }}>{item.title}</Text>
+                            </View>
                         </Link>
                         <Pressable onPress={() => dispatch(copySharedGroup(item.id))} >
                             <AntDesign name="download" color={colors.primary} size={30}/>
@@ -71,6 +87,7 @@ const SharedGroupsScreen = () => {
                     </View>
                 )}
             />
+
             <AddButton onPress={() => setShowModal(true)}/>
             <DefaultModal
                 isVisible={showAddModal}
