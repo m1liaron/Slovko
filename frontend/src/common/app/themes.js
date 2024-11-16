@@ -3,6 +3,7 @@ const lightTheme = {
     colors: {
         primary: '#12171D',
         background: '#fff',
+        lightBackground: '#d5d5d5',
         iconColor: '#12171D',
         text: '#12171D',
     },
