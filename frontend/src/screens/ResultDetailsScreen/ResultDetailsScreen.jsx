@@ -4,7 +4,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import styles from './ResultDetailsScreen.styles';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useDispatch, useSelector} from "react-redux";
-import {getResultDetails} from "../../redux/resultReducer/resultsSlice";
+import {getResultDetails} from "../../redux/resultReducer/resultSlice";
 import Loading from "../../components/Loading";
 import BackButton from "../../components/BackButton/BackButton";
 import formatDMTDate from "../../utils/formatDMTDate";

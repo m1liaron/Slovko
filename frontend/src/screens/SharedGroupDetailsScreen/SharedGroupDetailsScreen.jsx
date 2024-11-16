@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {View, Text, FlatList} from 'react-native'
 import styles from './SharedGroupDetailsScreen.styles'
 import {useDispatch, useSelector} from "react-redux";
-import {getSharedGroup} from "../../redux/sharedGroupReducer/sharedGroup";
+import {getSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";

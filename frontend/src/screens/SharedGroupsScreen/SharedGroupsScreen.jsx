@@ -3,7 +3,7 @@ import {FlatList, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {copySharedGroup, getAllSharedGroups, saveSharedGroup} from "../../redux/sharedGroupReducer/sharedGroup";
+import {copySharedGroup, getAllSharedGroups, saveSharedGroup, selectSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";
@@ -11,7 +11,6 @@ import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
-import { selectSharedGroup } from '../../redux/sharedGroupReducer/sharedGroup'
 import AddInput from "../../common/components/AddInput/AddInput";
 import {AntDesign} from "@expo/vector-icons";
 
