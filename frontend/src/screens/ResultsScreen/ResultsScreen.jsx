@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TextInput, Pressable, ScrollView} from 'react-native'
 import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
-import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultsSlice";
+import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultReducer/resultsSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
 import {AppPath} from "../../common/app/app";

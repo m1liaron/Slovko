@@ -2,7 +2,7 @@ import {configureStore} from "@reduxjs/toolkit";
 import {cardReducers} from "./cardReducer/cardSlice";
 import {userReducers} from "./userReducer/userSlice";
 import {groupReducers} from "./groupReducer/groupSlice";
-import {resultReducers} from "./resultsSlice";
+import {resultReducers} from "./resultReducer/resultsSlice";
 import { sharedGroupReducers } from "./sharedGroup";
 
 export const store = configureStore({
