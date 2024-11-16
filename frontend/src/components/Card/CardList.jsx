@@ -14,7 +14,7 @@ import * as FileSystem from 'expo-file-system';
 import { addCard, getCards, removeCard, selectCard } from '../../redux/cardReducer/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { AppPath } from "../../common/app/app";
+import { AppPath } from "../../common/enums/app/app";
 import noCardsImage from '../../assets/images/no-cards.png';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import AddInput from "../../common/components/AddInput/AddInput";

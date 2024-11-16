@@ -1,7 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {Ionicons} from "@expo/vector-icons";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import { MainScreen, ResultsScreen, ProfileScreen, SharedGroupsScreen } from "../../screens";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 

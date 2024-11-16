@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";
-import { AppPath } from "../../common/app/app";
+import { AppPath } from "../../common/enums/app/app";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useDispatch, useSelector} from "react-redux";

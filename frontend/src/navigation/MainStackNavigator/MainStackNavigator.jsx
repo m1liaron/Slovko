@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import { GroupScreen, LearnScreen, SharedGroupDetailsScreen, ResultDetailsScreen } from "../../screens";
 import NavigationTab from "../NavigationTab/NavigationTab";
 

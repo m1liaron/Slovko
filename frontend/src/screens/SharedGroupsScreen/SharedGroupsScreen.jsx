@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {copySharedGroup, getAllSharedGroups, saveSharedGroup, selectSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";

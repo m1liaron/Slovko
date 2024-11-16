@@ -12,7 +12,7 @@ import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord
 import {useDispatch} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
 import {useNavigation} from "@react-navigation/native";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
