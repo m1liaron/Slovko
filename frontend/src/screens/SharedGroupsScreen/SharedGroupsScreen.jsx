@@ -47,6 +47,29 @@ const SharedGroupsScreen = () => {
         dispatch(saveSharedGroup(sharedGroupData));
     }
 
+    const formatTime = (createdAt) => {
+        const now = new Date();
+        const timeDifference = now - new Date(createdAt);
+
+        const oneDay = 24 * 60 * 60 * 1000;
+        const sevenDays = 7 * oneDay;
+        const oneHour = 60 * 60 * 1000;
+        const oneMinute = 60 * 1000;
+
+        if (timeDifference < oneHour) {
+            const minutes = Math.floor(timeDifference / oneMinute);
+            return `${minutes} хвилин${minutes === 1 ? 'a' : minutes >= 3 && minutes <= 4 ? 'и' : ''} тому`;
+        } else if (timeDifference < oneDay) {
+            const hours = Math.floor(timeDifference / (60 * 60 * 1000));
+            return `${hours} годин${hours === 1 ? 'a' : hours >= 3 ? 'и' : ''} тому`;
+        } else if (timeDifference < sevenDays) {
+            const days = Math.floor(timeDifference / oneDay);
+            return `${days} днів тому`;
+        } else {
+            return new Date(createdAt).toLocaleTimeString();
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <FlatList
@@ -61,25 +84,29 @@ const SharedGroupsScreen = () => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        gap: 20
+                        gap: 20,
                     }}>
                         <Link style={[styles.container, { backgroundColor: colors.lightBackground }]} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
-                            <View style={{ flexDirection: 'row', display: 'flex', gap: 10}}>
-                                <Image
-                                    source={AvatarImage}
-                                    style={{
-                                        width: 40,
-                                        height: 40,
-                                        borderRadius: 100,
-                                        borderWidth: 2,
-                                        borderColor: colors.primary
-                                    }}
-                                />
+                            <View style={{ flexDirection: 'row', gap: 20,  alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', display: 'flex', gap: 10}}>
+                                    <Image
+                                        source={AvatarImage}
+                                        style={{
+                                            width: 40,
+                                            height: 40,
+                                            borderRadius: 100,
+                                            borderWidth: 2,
+                                            borderColor: colors.primary
+                                        }}
+                                    />
                                     <Text style={{ color: colors.primary, fontSize: 30 }}>{item.user.name}</Text>
+                                </View>
+                                <View style={{ borderWidth: 2, borderColor: colors.primary, borderRadius: 10, padding: 5}}>
+                                    <Text style={{ color: colors.primary, fontSize: 30 }}>{item.title}</Text>
+                                </View>
                             </View>
-                            <View style={{ borderWidth: 2, borderColor: colors.primary, borderRadius: 10, padding: 5}}>
-                                <Text style={{ color: colors.primary, fontSize: 30 }}>{item.title}</Text>
-                            </View>
+
+                            <Text style={{ color: colors.primary, fontSize: 30 }}>{formatTime(item.createdAt)}</Text>
                         </Link>
                         <Pressable onPress={() => dispatch(copySharedGroup(item.id))} >
                             <AntDesign name="download" color={colors.primary} size={30}/>
