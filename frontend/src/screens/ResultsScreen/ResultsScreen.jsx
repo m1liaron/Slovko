@@ -37,7 +37,7 @@ const ResultsScreen = () => {
         }, {});
     };
 
-    console.log(groupedResults)
+    console.log(Object.entries(groupedResults))
 
     useEffect(() => {
         dispatch(getResults());
@@ -108,11 +108,11 @@ const ResultsScreen = () => {
                 }
 
                 <FlatList
-                    data={Object.entries(groupedResults)} // Convert grouped results to an array of [date, items]
-                    keyExtractor={(item) => item[0]} // Use the date as the key
+                    data={Object.entries(groupedResults)}
+                    keyExtractor={(item) => item[0]}
                     renderItem={({ item }) => (
                         <View style={{ marginBottom: 20 }}>
-                            <Text style={{ fontSize: 25, color: colors.primary, fontWeight: 'bold' }}>
+                            <Text style={{ fontSize: 25, color: colors.lightBackground, fontWeight: 'bold', textAlign: 'center' }}>
                                 {item[0]} {/* Date */}
                             </Text>
                             {item[1].map(result => (
