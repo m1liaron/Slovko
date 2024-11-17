@@ -95,6 +95,10 @@ const updateUser = async (req, res) => {
         body,
     } = req;
     try {
+        if (body.image === "") {
+            delete body.image; // Prevent overwriting the image with an empty string
+        }
+
         const updatedUser = await User.update(body, {
             where: { id: userId },
             returning: true,

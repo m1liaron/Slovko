@@ -4,6 +4,7 @@ import styles from './ExitModal.styles';
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import {useNavigation} from "@react-navigation/native";
+import {useAppTheme} from "../../../contexts/ThemeProvider";
 
 const ExitModal = ({
     modalVisible,
@@ -11,6 +12,7 @@ const ExitModal = ({
     text,
 }) => {
     const navigation = useNavigation();
+    const { theme: { colors }} = useAppTheme();
 
     const exitModal = () => {
         handleClose();
@@ -23,11 +25,11 @@ const ExitModal = ({
             handleClose={handleClose}
         >
             <View>
-                <Text>{text}</Text>
+                <Text style={{ color: colors.primary, fontWeight: 'bold', fontSize: 40 }}>{text}</Text>
             </View>
             <View style={styles.buttonsContainer}>
-                <PressableButton text="Так" onPress={exitModal} />
-                <PressableButton text="Ні" onPress={handleClose} />
+                <PressableButton text="Так" onPress={exitModal} buttonStyle={{ flex: 1 }}/>
+                <PressableButton text="Ні" onPress={handleClose} buttonStyle={{ flex: 1 }} />
             </View>
         </DefaultModal>
     );
