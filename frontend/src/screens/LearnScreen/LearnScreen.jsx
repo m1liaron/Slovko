@@ -209,13 +209,17 @@ const LearnScreen = ({ route }) => {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
                 <Pressable onPress={() => setShowExitModal(true)}>
-                    <AntDesign name="arrowleft" size={30} color={theme.colors.iconColor}/>
+                    <Entypo name="cross" size={35} color={theme.colors.iconColor}/>
                 </Pressable>
                 {!isLessonOver ? (
                     <>
                         { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
                         { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
                         { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
+
+                        <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
+                            <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
+                        </Pressable>
 
                         <ExitModal
                             modalVisible={showExitModal}
@@ -236,9 +240,6 @@ const LearnScreen = ({ route }) => {
                         >
                             {generateSectionContent()}
                         </DefaultModal>
-                        <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
-                            <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
-                        </Pressable>
                     </>
                 ) : (
                     <View>

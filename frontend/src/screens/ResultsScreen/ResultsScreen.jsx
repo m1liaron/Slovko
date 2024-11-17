@@ -37,7 +37,6 @@ const ResultsScreen = () => {
         }, {});
     };
 
-    console.log(Object.entries(groupedResults))
 
     useEffect(() => {
         dispatch(getResults());
