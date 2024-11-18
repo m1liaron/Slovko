@@ -66,15 +66,25 @@ const updateCardsAfterReview = async (req, res) => {
     try {
         const groupCards = await Card.findAll({ where: { groupId } });
 
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         for(let card of groupCards){
+            const cardNextReview = card.nextReviewAt ? new Date(card.nextReviewAt).setHours(0, 0, 0, 0) : null;
+
+            if (cardNextReview && cardNextReview >= today.getTime()) {
+                continue;
+            }
+
             const newReviewCount = card.reviewCount + 1;
             const nextReviewDate = calculateNextReviewDate(newReviewCount);
 
-            if(card.reviewCount >= 20) {
+            if (card.reviewCount >= 20) {
                 card.status = 'Know';
+            } else {
+                card.status = 'Learned';
             }
 
-            card.status = 'Learned';
             card.learnedAt = new Date();
             card.reviewCount = newReviewCount;
             card.nextReviewAt = nextReviewDate;
