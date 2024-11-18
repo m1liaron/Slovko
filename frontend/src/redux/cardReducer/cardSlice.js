@@ -13,10 +13,15 @@ const cardSlice = createSlice({
     name:'cards',
     initialState: {
         cards: [],
+        filteredCards: [],
         status: DataStatus.IDLE,
         error: null
     },
-    reducers:{},
+    reducers:{
+        filterCardsByStatus: (state, action) => {
+            state.cards = state.filteredCards.filter(card => card.status === action.payload.status)
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getCards.pending, (state) => {
@@ -25,6 +30,7 @@ const cardSlice = createSlice({
             .addCase(getCards.fulfilled, (state, action) => {
                 state.status = DataStatus.SUCCESS;
                 state.cards = action.payload;
+                state.filteredCards = action.payload;
             })
             .addCase(getCards.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
@@ -37,6 +43,7 @@ const cardSlice = createSlice({
             .addCase(getAllStatusCards.fulfilled, (state, action) => {
                 state.status = DataStatus.SUCCESS;
                 state.cards = action.payload;
+                state.filteredCards = action.payload;
             })
             .addCase(getAllStatusCards.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
@@ -49,6 +56,7 @@ const cardSlice = createSlice({
             .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
                 state.status = DataStatus.SUCCESS;
                 state.cards = action.payload;
+                state.filteredCards = action.payload;
             })
             .addCase(updateCardsAfterLearn.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
@@ -61,6 +69,7 @@ const cardSlice = createSlice({
             .addCase(addCard.fulfilled, (state, action) => {
                 state.status = DataStatus.SUCCESS;
                 state.cards.push(action.payload)
+                state.filteredCards.push(action.payload)
             })
             .addCase(addCard.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
@@ -72,6 +81,7 @@ const cardSlice = createSlice({
             .addCase(removeCard.fulfilled, (state, action) => {
                 state.status =  DataStatus.SUCCESS;
                 state.cards = state.cards.filter(card => card.id !== action.payload)
+                state.filteredCards = state.filteredCards.filter(card => card.id !== action.payload)
             })
             .addCase(removeCard.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
@@ -87,7 +97,9 @@ const cardSlice = createSlice({
                 const index = state.cards.findIndex((card) => card.id === updatedCard.id);
                 if (index !== -1) {
                     state.cards[index] = updatedCard;
+                    state.filteredCards[index] = updatedCard;
                     state.cards = [...state.cards];
+                    state.filteredCards = [...state.filteredCards];
                 }
             })
             .addCase(updateCard.rejected, (state, action) => {
@@ -96,6 +108,7 @@ const cardSlice = createSlice({
     }
 })
 
+export const { filterCardsByStatus } = cardSlice.actions;
 export const selectCard = (state) => state.cards.cards;
 export {
     getCards,
