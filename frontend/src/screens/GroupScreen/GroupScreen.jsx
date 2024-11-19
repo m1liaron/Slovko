@@ -34,7 +34,7 @@ const GroupScreen = ({route}) => {
             { title: 'Вивченні', status: 'Learned', amount: group.learnedCardsAmount || 0, color: '#62CBE9' },
             { title: 'Знаю', status: 'Know', amount: group.knowCardsAmount || 0, color: '#a8a800' },
         ]
-    })
+    }, [group])
 
     const renderStatusButtons = () => {
         return statusCardsButtons.map(({ status, title, amount, color }, id) => (
