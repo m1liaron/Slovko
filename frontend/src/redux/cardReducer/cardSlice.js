@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
     getCards,
-    getAllStatusCards,
     addCard,
     removeCard,
     updateCard,
@@ -33,19 +32,6 @@ const cardSlice = createSlice({
                 state.filteredCards = action.payload;
             })
             .addCase(getCards.rejected, (state, action) => {
-                state.status = DataStatus.ERROR;
-                state.error = action.error.message;
-            })
-
-            .addCase(getAllStatusCards.pending, (state) => {
-                state.status =  DataStatus.PENDING
-            })
-            .addCase(getAllStatusCards.fulfilled, (state, action) => {
-                state.status = DataStatus.SUCCESS;
-                state.cards = action.payload;
-                state.filteredCards = action.payload;
-            })
-            .addCase(getAllStatusCards.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
                 state.error = action.error.message;
             })
@@ -112,7 +98,6 @@ export const { filterCardsByStatus } = cardSlice.actions;
 export const selectCard = (state) => state.cards.cards;
 export {
     getCards,
-    getAllStatusCards,
     addCard,
     removeCard,
     updateCard,
