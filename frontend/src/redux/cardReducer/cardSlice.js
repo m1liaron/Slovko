@@ -13,6 +13,7 @@ const cardSlice = createSlice({
     name:'cards',
     initialState: {
         cards: [],
+        isLoading: false,
         status: DataStatus.IDLE,
         error: null
     },
@@ -21,26 +22,32 @@ const cardSlice = createSlice({
         builder
             .addCase(getCards.pending, (state) => {
                 state.status = DataStatus.PENDING
+                state.isLoading = true;
             })
             .addCase(getCards.fulfilled, (state, action) => {
                 state.status = DataStatus.SUCCESS;
                 state.cards = action.payload;
+                state.isLoading = false;
             })
             .addCase(getCards.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
                 state.error = action.error.message;
+                state.isLoading = false;
             })
 
             .addCase(getAllStatusCards.pending, (state) => {
                 state.status =  DataStatus.PENDING
+                state.isLoading = true;
             })
             .addCase(getAllStatusCards.fulfilled, (state, action) => {
                 state.status = DataStatus.SUCCESS;
                 state.cards = action.payload;
+                state.isLoading = false;
             })
             .addCase(getAllStatusCards.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
                 state.error = action.error.message;
+                state.isLoading = false;
             })
 
             .addCase(updateCardsAfterLearn.pending, (state) => {

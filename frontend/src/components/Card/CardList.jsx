@@ -18,9 +18,10 @@ import AddInput from "../../common/components/AddInput/AddInput";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../DefaultModal/DefaultModal";
 import pickImage from "../../utils/pickImage";
+import Loading from "../Loading";
 
 const CardList = ({ groupId }) => {
-    const cards = useSelector(selectCard);
+    const { cards, isLoading } = useSelector(state => state.cards);
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
@@ -104,6 +105,7 @@ const CardList = ({ groupId }) => {
 
     return (
         <View style={styles.container}>
+            {isLoading && <Loading/>}
             {!cards.length ? (
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={noCardsImage} />
