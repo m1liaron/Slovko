@@ -1,5 +1,6 @@
 const Group = require('../models/Group');
 const {Card} = require("../models/models");
+const { sequelize } = require('../db/sequelize');
 
 const getAllGroups = async (req, res) => {
     const userId = req.user.id;
@@ -18,14 +19,42 @@ const getGroup = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id;
     try {
-        const card = await Group.findOne({
-            where: { id, userId }
+        const group = await Group.findOne({
+            where: { id, userId },
+            include: [
+                {
+                    model: Card,
+                    as: 'cards',
+                    attributes: [] // Exclude individual cards from being returned
+                }
+            ],
+            attributes: {
+                include: [
+                    // Calculate the count of cards with 'To Learn' status
+                    [
+                        sequelize.fn('COUNT', sequelize.literal(`CASE WHEN cards.status = 'To Learn' THEN 1 END`)),
+                        'learnToCardsAmount'
+                    ],
+                    // Calculate the count of cards with 'Learned' status
+                    [
+                        sequelize.fn('COUNT', sequelize.literal(`CASE WHEN cards.status = 'Learned' THEN 1 END`)),
+                        'learnedCardsAmount'
+                    ],
+                    // Calculate the count of cards with 'Know' status
+                    [
+                        sequelize.fn('COUNT', sequelize.literal(`CASE WHEN cards.status = 'Know' THEN 1 END`)),
+                        'knowCardsAmount'
+                    ]
+                ]
+            },
+            group: ['Group.id'], // Ensure correct grouping
+            subQuery: false // Necessary for aggregation queries with associations
         });
-        if(!card) {
+        if(!group) {
             res.status(200).send({ error: true, message: "Group does not exist" });
         }
 
-        res.status(200).json(card);
+        res.status(200).json(group);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error login'})
     }

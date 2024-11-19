@@ -1,45 +1,40 @@
 import CardList from "../../components/Card/CardList";
-    import {SafeAreaView} from "react-native-safe-area-context";
+import {SafeAreaView} from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {getAllStatusCards, selectCard} from "../../redux/cardReducer/cardSlice";
-import {useAppTheme} from "../../contexts/ThemeProvider";
-import {useEffect, useMemo, useState} from "react";
+import {filterCardsByStatus } from "../../redux/cardReducer/cardSlice";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import {useEffect, useMemo} from "react";
 import {getGroup} from "../../redux/groupReducer/groupSlice";
+import {DataStatus} from "../../common/enums/app/app";
+import {useNavigation} from "@react-navigation/native";
 
 const GroupScreen = ({route}) => {
     const { theme: { colors } } = useAppTheme();
     const { groupId } = route.params
-    const dispatch = useDispatch();
     const { group } = useSelector(state => state.groups);
-    const cards = useSelector(selectCard);
-    const [toLearnAmountCards, setToLearnAmountCards] = useState(0);
-    const [learnedAmountCards, setLearnedAmountCards] = useState(0);
-    const [knowAmountCards, setKnowAmountCards] = useState(0);
+    const dispatch = useDispatch();
+    const navigation = useNavigation();
+
+    if(!group && group.status === DataStatus.ERROR) {
+        navigation.goBack();
+    }
 
     useEffect(() => {
-        dispatch(getGroup(groupId));
-    }, [dispatch, groupId]);
+        if(!group || group.id !== groupId) {
+            dispatch(getGroup(groupId));
+        }
+    }, [dispatch, group, groupId]);
 
-    const cardCounts = useMemo(() => {
-        return cards.reduce((acc, curr) => {
-            if (curr.status === 'To learn') {
-                acc.toLearn += 1; // Increment the 'To learn' count
-            } else if (curr.status === 'Learned') {
-                acc.learned += 1; // Increment the 'Learned' count
-            } else if(curr.status === 'Know') {
-                acc.know += 1;
-            }
-            return acc;
-        }, { toLearn: 0, learned: 0, know: 0 }); // Initialize counts
-    }, [cards]);
-
-    const statusCardsButtons = [
-        { title: 'Вивчаю', status: 'To Learn', amount: cardCounts.toLearn, color: '#32C74D' },
-        { title: 'Вивченні', status: 'Learned', amount: cardCounts.learned, color: '#62CBE9' },
-        { title: 'Знаю', status: 'Know', amount: cardCounts.know, color: '#a8a800' },
-    ];
+    const statusCardsButtons = useMemo(() => {
+        if(!group) return [];
+        return [
+            { title: 'Вивчаю', status: 'To Learn', amount: group.learnToCardsAmount || 0, color: '#32C74D' },
+            { title: 'Вивченні', status: 'Learned', amount: group.learnedCardsAmount || 0, color: '#62CBE9' },
+            { title: 'Знаю', status: 'Know', amount: group.knowCardsAmount || 0, color: '#a8a800' },
+        ]
+    }, [group])
 
     const renderStatusButtons = () => {
         return statusCardsButtons.map(({ status, title, amount, color }, id) => (
@@ -52,7 +47,7 @@ const GroupScreen = ({route}) => {
                     borderColor: color,
                     marginHorizontal: 10,
                 }}
-                onPress={() => dispatch(getAllStatusCards({ groupId, status }))}
+                onPress={() => dispatch(filterCardsByStatus({ status }))}
             >
                 <Text style={{ color, fontWeight: 'bold' }}>{amount} {title}</Text>
             </Pressable>
