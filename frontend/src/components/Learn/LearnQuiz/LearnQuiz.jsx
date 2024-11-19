@@ -3,7 +3,7 @@ import {View, Text, FlatList, Pressable} from 'react-native'
 import styles from './LearnQuiz.styles';
 import {Audio} from "expo-av";
 import { useSelector} from "react-redux";
-import {selectCard} from "../../../redux/cardSlice";
+import {selectCard} from "../../../redux/cardReducer/cardSlice";
 import {useAppTheme} from "../../../contexts/ThemeProvider";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 

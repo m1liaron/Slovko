@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet, Pressable, Dimensions, Button} from 'react-native';
 import {useNavigation} from "@react-navigation/native";
 import {useDispatch} from "react-redux";
-import {login} from "../../redux/userSlice";
+import {login} from "../../redux/userReducer/userSlice";
 import Toast from "react-native-toast-message";
 import {Entypo} from "@expo/vector-icons";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 
 const LoginScreen = () => {
     const navigation = useNavigation();

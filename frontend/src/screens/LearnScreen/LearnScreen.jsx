@@ -10,11 +10,11 @@ import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch} from "react-redux";
-import {getCards, updateCardsAfterLearn} from "../../redux/cardSlice";
+import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
 import {useNavigation} from "@react-navigation/native";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
-import {saveResults} from "../../redux/resultsSlice";
+import {saveResults} from "../../redux/resultReducer/resultSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 
@@ -209,13 +209,17 @@ const LearnScreen = ({ route }) => {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
                 <Pressable onPress={() => setShowExitModal(true)}>
-                    <AntDesign name="arrowleft" size={30} color={theme.colors.iconColor}/>
+                    <Entypo name="cross" size={35} color={theme.colors.iconColor}/>
                 </Pressable>
                 {!isLessonOver ? (
                     <>
                         { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
                         { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
                         { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
+
+                        <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
+                            <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
+                        </Pressable>
 
                         <ExitModal
                             modalVisible={showExitModal}
@@ -236,9 +240,6 @@ const LearnScreen = ({ route }) => {
                         >
                             {generateSectionContent()}
                         </DefaultModal>
-                        <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
-                            <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
-                        </Pressable>
                     </>
                 ) : (
                     <View>

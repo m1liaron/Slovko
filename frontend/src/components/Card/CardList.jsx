@@ -8,22 +8,20 @@ import {
     Platform
 } from 'react-native';
 import CardItem from './CardItem';
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
-import { addCard, getCards, removeCard, selectCard } from '../../redux/cardSlice';
+import { addCard, getCards, removeCard, selectCard } from '../../redux/cardReducer/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { AppPath } from "../../common/app/app";
+import { AppPath } from "../../common/enums/app/app";
 import noCardsImage from '../../assets/images/no-cards.png';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import AddInput from "../../common/components/AddInput/AddInput";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../DefaultModal/DefaultModal";
 import pickImage from "../../utils/pickImage";
+import Loading from "../Loading";
 
 const CardList = ({ groupId }) => {
-    const cards = useSelector(selectCard);
+    const { cards, isLoading } = useSelector(state => state.cards);
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
@@ -107,6 +105,7 @@ const CardList = ({ groupId }) => {
 
     return (
         <View style={styles.container}>
+            {isLoading && <Loading/>}
             {!cards.length ? (
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={noCardsImage} />

@@ -38,6 +38,7 @@ const Card = sequelize.define(
             },
         },
     },
+    
     groupId: {
         type: DataTypes.UUID,
         allowNull: false,

@@ -1,6 +1,6 @@
 import {FlatList, Text, View, StyleSheet, Image} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {addGroup, getAllGroups, selectGroup} from "../../redux/groupSlice";
+import {addGroup, getAllGroups, selectGroup} from "../../redux/groupReducer/groupSlice";
 import {GroupItem} from "./GroupItem";
 import React, {useEffect, useState} from "react";
 import Toast from "react-native-toast-message";

@@ -55,6 +55,10 @@ User.init(
                 len: [6],
             },
         },
+        image: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
         streak: {
             type: DataTypes.INTEGER,
             allowNull: false,

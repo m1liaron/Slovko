@@ -1,38 +1,11 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {createAuthorizedInstance} from "../utils/createAuthorizedInstance";
+import { createSlice} from "@reduxjs/toolkit";
+import {
+    getAllGroups,
+    getGroup,
+    addGroup,
+    removeGroup
+} from './groupThunk';
 
-
-export const getAllGroups = createAsyncThunk(
-    'group/getAll', async (data) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get('/groups', data);
-        return response.data
-    }
-)
-
-export const addGroup = createAsyncThunk(
-    'group/add', async (data) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.post('/groups', data);
-        return response.data
-    }
-)
-
-export const getGroup = createAsyncThunk(
-    'group/get', async (id) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get(`/groups/${id}`);
-        return response.data;
-    }
-)
-
-export const removeGroup = createAsyncThunk(
-    'group/remove', async (id) => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.delete(`/groups/${id}`);
-        return response.data
-    }
-)
 
 const groupSlice = createSlice({
     name:'groups',
@@ -90,5 +63,5 @@ const groupSlice = createSlice({
 })
 
 export const selectGroup= (state) => state.groups.groups;
-
+export { getAllGroups, getGroup, addGroup, removeGroup } from './groupThunk';
 export const groupReducers = groupSlice.reducer;

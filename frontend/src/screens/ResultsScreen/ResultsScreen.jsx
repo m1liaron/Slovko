@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TextInput, Pressable, ScrollView} from 'react-native'
+import { View, Text, FlatList, TextInput, Pressable } from 'react-native'
 import styles from './ResultsScreen.styles';
 import {useDispatch, useSelector} from "react-redux";
-import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultsSlice";
+import {filterResults, getResults, resetResults, sortResults} from "../../redux/resultReducer/resultSlice";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {Link} from "@react-navigation/native";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import formatDMTDate from "../../utils/formatDMTDate";
 import {FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import {useAppTheme} from "../../contexts/ThemeProvider";
@@ -17,6 +17,26 @@ const ResultsScreen = () => {
     const [filterValue, setFilterValue] = useState("");
     const [showFilterInput, setShowFilterInput] = useState(false);
     const [sortOrder, setSortOrder] = useState('asc');
+    const [groupedResults, setGroupedResults] = useState({});
+
+    useEffect(() => {
+        if (results.length > 0) {
+            const groupedData = groupResultsByDay(results);
+            setGroupedResults(groupedData);
+        }
+    }, [results]);
+
+    const groupResultsByDay = (results) => {
+        return results.reduce((groups, item) => {
+            const date = new Date(item.createdAt).toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            if (!groups[date]) {
+                groups[date] = [];
+            }
+            groups[date].push(item);
+            return groups;
+        }, {});
+    };
+
 
     useEffect(() => {
         dispatch(getResults());
@@ -86,18 +106,34 @@ const ResultsScreen = () => {
                     </View>
                 }
 
-                    <FlatList
-                        data={results}
-                        renderItem={({ item }) => (
-                            <Link style={styles.itemContainer} to={{screen: AppPath.ResultDetails, params:{resultId: item.id}}}>
-                                <View style={styles.flex}>
-                                    <Text>{item.title}</Text>
-                                    <Text>{formatDMTDate(item.createdAt)}</Text>
-                                </View>
-                            </Link>
-                        )}
-                        contentContainerStyle={{ marginBottom: 20 }}
-                    />
+                <FlatList
+                    data={Object.entries(groupedResults)}
+                    keyExtractor={(item) => item[0]}
+                    renderItem={({ item }) => (
+                        <View style={{ marginBottom: 20 }}>
+                            <Text style={{ fontSize: 25, color: colors.lightBackground, fontWeight: 'bold', textAlign: 'center' }}>
+                                {item[0]} {/* Date */}
+                            </Text>
+                            {item[1].map(result => (
+                                <Link
+                                    key={result.id}
+                                    style={[styles.itemContainer, { backgroundColor: colors.lightBackground }]}
+                                    to={{ screen: AppPath.ResultDetails, params: { resultId: result.id } }}
+                                >
+                                    <View style={styles.flex}>
+                                        <Text style={{ color: colors.primary, fontWeight: 'bold', fontSize: 30 }}>
+                                            {result.title}
+                                        </Text>
+                                        <Text style={{ color: colors.primary }}>
+                                            {new Date(result.createdAt).toLocaleTimeString()} {/* Show time */}
+                                        </Text>
+                                    </View>
+                                </Link>
+                            ))}
+                        </View>
+                    )}
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                />
         </SafeAreaView>
     );
 };

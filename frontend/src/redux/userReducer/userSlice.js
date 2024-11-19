@@ -1,35 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { createAuthorizedInstance } from "../utils/createAuthorizedInstance";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-export const login = createAsyncThunk(
-    'user/login', async (data) => {
-        const response = await axios.post(`http://localhost:3000/users/login`, data);
-        await AsyncStorage.setItem('token', response.data.token)
-        return response.data
-    }
-)
-
-export const register = createAsyncThunk(
-    'user/register', async (data) => {
-        const response = await axios.post(`http://localhost:30000/users/register`, data);
-        await AsyncStorage.setItem('token', response.data.token)
-        return response.data
-    }
-)
-
-export const getUser = createAsyncThunk(
-    'user/get', async () => {
-        const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get('/users');
-        return response.data.user
-    }
-)
+import { createSlice } from "@reduxjs/toolkit";
+import {
+    login,
+    register,
+    getUser,
+    updateUser
+} from './userThunk';
+import {DataStatus} from "../../common/enums/app/app";
 
 const initialState = {
     user: {},
     isAuthenticated: false,
+    status: DataStatus.IDLE
 }
 
 const userSlice = createSlice({
@@ -45,41 +26,54 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {
-                state.status = 'pending'
+                state.status = DataStatus.PENDING
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.status = 'success'
+                state.status = DataStatus.SUCCESS
                 state.user = action.payload;
                 state.isAuthenticated = true;
             })
             .addCase(login.rejected, (state) => {
-                state.status = 'rejects'
+                state.status = DataStatus.ERROR
                 state.isAuthenticated = false;
             })
 
             .addCase(register.pending, (state) => {
-                state.status = 'pending'
+                state.status = DataStatus.PENDING
             })
             .addCase(register.fulfilled, (state, action) => {
-                state.status = 'success'
+                state.status = DataStatus.SUCCESS
                 state.user = action.payload;
                 state.isAuthenticated = true;
             })
             .addCase(register.rejected, (state) => {
-                state.status = 'rejects'
+                state.status = DataStatus.ERROR
                 state.isAuthenticated = false;
             })
 
             .addCase(getUser.pending, (state) => {
-                state.status = 'pending'
+                state.status = DataStatus.PENDING
             })
             .addCase(getUser.fulfilled, (state, action) => {
-                state.status = 'success'
+                state.status = DataStatus.SUCCESS
                 state.user = action.payload;
                 state.isAuthenticated = true;
             })
             .addCase(getUser.rejected, (state) => {
-                state.status = 'rejects';
+                state.status = DataStatus.ERROR
+                state.isAuthenticated = false;
+            })
+
+            .addCase(updateUser.pending, (state) => {
+                state.status = DataStatus.PENDING
+            })
+            .addCase(updateUser.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS
+                state.user = action.payload;
+                state.isAuthenticated = true;
+            })
+            .addCase(updateUser.rejected, (state) => {
+                state.status = DataStatus.ERROR
                 state.isAuthenticated = false;
             })
     }
@@ -87,4 +81,5 @@ const userSlice = createSlice({
 
 export const { logout } = userSlice.actions;
 export const selectUser = (state) => state.user;
+export { login, register, getUser } from './userThunk';
 export const userReducers = userSlice.reducer;

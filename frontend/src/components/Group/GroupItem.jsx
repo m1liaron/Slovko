@@ -2,7 +2,7 @@ import {Text, View, StyleSheet, Pressable} from "react-native";
 import { Link } from "@react-navigation/native";
 import {Entypo} from "@expo/vector-icons";
 import {useDispatch} from "react-redux";
-import {removeGroup} from "../../redux/groupSlice";
+import {removeGroup} from "../../redux/groupReducer/groupSlice";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 
 export const GroupItem = ({item: { id, title }}) => {

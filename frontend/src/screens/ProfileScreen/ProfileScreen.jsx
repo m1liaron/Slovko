@@ -4,25 +4,31 @@ import {
     View,
     Text,
     TextInput,
-    StyleSheet,
     Pressable,
     Platform,
     Alert,
+    Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import {logout, selectUser} from '../../redux/userSlice';
+import {logout, selectUser} from '../../redux/userReducer/userSlice';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {Switch} from "react-native-gesture-handler";
 import {Feather} from "@expo/vector-icons";
+import styles from './ProfileScreen.styles';
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import AvatarImage from '../../../assets/images/avatar.png'
+import {updateUser} from "../../redux/userReducer/userThunk";
+import pickImage from "../../utils/pickImage";
 
 export default function ProfileScreen() {
     const { user } = useSelector(selectUser);
     const { theme, toggleTheme } = useAppTheme();
+    const colors = theme.colors;
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [image, setImage] = useState('');
@@ -65,60 +71,61 @@ export default function ProfileScreen() {
         }
     };
 
-    const uploadImage = async (mode) => {
-        try {
-            let result = {};
+    const convertBlobToBase64 = (blobUri) => {
+        return new Promise((resolve, reject) => {
+            fetch(blobUri)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = () => reject(new Error('Failed to convert blob to base64'));
+                    reader.readAsDataURL(blob);
+                })
+                .catch(error => reject(error));
+        });
+    };
 
-            if (mode === 'gallery') {
-                await ImagePicker.requestMediaLibraryPermissionsAsync();
-                result = await ImagePicker.getMediaLibraryPermissionsAsync({
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
-            } else {
-                await ImagePicker.requestCameraPermissionsAsync();
-                result = await ImagePicker.launchCameraAsync({
-                    cameraType: ImagePicker.CameraType.front,
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 1,
-                });
+    const convertImageToBase64 = async (uri) => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const reader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+            reader.onloadend = () => {
+                const base64data = reader.result.split(',')[1]; // Get the Base64 part
+                resolve(base64data);
+            };
+            reader.onerror = () => reject(new Error('Failed to convert image to base64'));
+            reader.readAsDataURL(blob);
+        });
+    };
+
+    const handleUpdateUser = async () => {
+        let finalImageUri = image;
+
+        if (Platform.OS === 'web' && image.startsWith('blob:')) {
+            try {
+                finalImageUri = await convertBlobToBase64(image);
+            } catch (error) {
+                console.error('Error converting blob to base64:', error);
+                return;
             }
-
-            if (!result.canceled) {
-                await onSaveImage(result.assets[0].uri);
+        } else if (finalImageUri) {
+            try {
+                const base64Image = await convertImageToBase64(finalImageUri);
+                finalImageUri = base64Image;
+            } catch (error) {
+                console.error('Error converting image to base64:', error);
+                return;
             }
-        } catch (error) {
-            console.error(error);
-            setModalVisible(false);
         }
-    };
 
-    const onSaveImage = async (image) => {
-        try {
-            setImage(image);
-            setModalVisible(false);
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const removeImage = async () => {
-        try {
-            onSaveImage(null);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
-    const handleUpdateUser = () => {
         const data = {
+            image: finalImageUri,
             name: userName,
             email: userEmail,
         };
-        dispatch(updateUser({ data, id: user._id }));
+        dispatch(updateUser({data, id: user.id}));
         setIsEditing(false);
     };
 
@@ -132,68 +139,93 @@ export default function ProfileScreen() {
     }
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <Text style={[styles.title, { color: theme.colors.primary }]}>Ваш профіль</Text>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+            <Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
 
                 <View style={styles.container}>
                     {user ? (
                         <View>
                             {!isEditing ? (
-                                    <Text style={[styles.title, { color: theme.colors.primary }]}>{user.name}</Text>
-                            ) : null}
+                                <View
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignSelf: 'center'
+                                    }}
+                                >
+                                    <Image
+                                        style={styles.avatarPhoto}
+                                        source={image ? { uri: image } : user.image}
+                                    />
+                                </View>
+                            ) : (
+                                <Pressable
+                                   onPress={() => pickImage(image, setImage)}
+                                   style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    alignSelf: 'center'
+                                }}>
+                                    <Image
+                                        style={styles.avatarPhoto}
+                                        source={image ? { uri: image } : user.image}
+                                    />
+                                </Pressable>
+                            )}
+                            {!isEditing && <Text style={[styles.title, { color: colors.primary }]}>{user.name}</Text> }
                             <Pressable onPress={onEditInfo}>
                                 <Text style={styles.editTitle}>Редагувати</Text>
                             </Pressable>
-                            {!isEditing ? (
-                                <Text style={[styles.textInfo, { color: theme.colors.primary } ]}>Особиста інформація</Text>
-                            ) : null}
-                            {isEditing ? (
+                            {!isEditing && <Text style={[styles.textInfo, { color: colors.primary } ]}>Особиста інформація</Text> }
+                            {isEditing && (
                                 <View>
                                     <Text style={styles.keyName}>Ім'я</Text>
-                                    <View style={styles.editInputContainer}>
+                                    <View style={[styles.editInputContainer, { backgroundColor: colors.lightBackground}]}>
                                         <MaterialIcons
                                             name="supervised-user-circle"
                                             size={35}
-                                            color="#000"
+                                            color={colors.iconColor}
                                         />
                                         <TextInput
-                                            style={styles.textInputStyle}
+                                            style={[styles.textInputStyle, { textDecorationStyle: colors.primary, color: colors.primary }]}
                                             value={userName}
                                             onChangeText={(text) => setUserName(text)}
-                                        />
-                                    </View>
-                                </View>
-                            ) : null}
-
-                            {!isEditing ? (
-                                <View style={styles.infoList}>
-                                    <View style={styles.infoItem}>
-                                        <View style={styles.flex}>
-                                            <MaterialIcons name="email" size={35} color="#000" />
-                                            <Text style={styles.keyName}>Пошта</Text>
-                                        </View>
-                                        <Text style={styles.userInfoText}>{user.email}</Text>
-                                    </View>
-                                </View>
-                            ) : (
-                                <View>
-                                    <Text style={styles.keyName}>Пошта</Text>
-                                    <View style={styles.editInputContainer}>
-                                        <MaterialIcons name="email" size={35} color="#000" />
-                                        <TextInput
-                                            style={styles.textInputStyle}
-                                            value={userEmail}
-                                            onChangeText={(text) => setUserEmail(text)}
                                         />
                                     </View>
                                 </View>
                             )}
 
                             {!isEditing ? (
-                                <View style={styles.infoList}>
-                                    <Text style={[styles.textInfo, { color: theme.colors.primary }]}>Взаємодія</Text>
+                                <>
+                                    <View style={[styles.infoItem, { backgroundColor: colors.lightBackground }]}>
+                                        <View style={styles.flex}>
+                                            <MaterialIcons name="email" size={35} color={colors.iconColor} />
+                                            <Text style={[styles.keyName, { color: colors.primary}]}>Пошта</Text>
+                                        </View>
+                                        <Text style={[styles.userInfoText, { color: colors.primary}]}>{user.email}</Text>
+                                    </View>
+                                </>
+                            ) : (
+                                <>
+                                    <Text style={styles.keyName}>Пошта</Text>
+                                    <View style={[styles.editInputContainer, { backgroundColor: colors.lightBackground} ]}>
+                                        <MaterialIcons name="email" size={35} color={colors.iconColor} />
+                                        <TextInput
+                                            style={[styles.textInputStyle, { textDecorationStyle: colors.primary, color: colors.primary }]}
+                                            value={userEmail}
+                                            onChangeText={(text) => setUserEmail(text)}
+                                        />
+                                    </View>
+                                </>
+                            )}
+
+                            {!isEditing ? (
+                                <View>
+                                    <Text style={[styles.textInfo, { color: colors.primary }]}>Взаємодія</Text>
                                     <Pressable
-                                        style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
+                                        style={[styles.infoItem, { backgroundColor: colors.lightBackground }]}
                                         onPress={handleLogout}
                                     >
                                         <View
@@ -206,15 +238,15 @@ export default function ProfileScreen() {
                                             <MaterialIcons
                                                 name="exit-to-app"
                                                 size={35}
-                                                color="#000"
+                                                color={colors.iconColor}
                                             />
-                                            <Text style={styles.keyName}>Вийти з акаунту</Text>
+                                            <Text style={[styles.keyName, { color: colors.primary }]}>Вийти з акаунту</Text>
                                         </View>
-                                        <AntDesign name="arrowright" size={35} color="#000" />
+                                        <AntDesign name="arrowright" size={35} color={colors.iconColor} />
                                     </Pressable>
 
                                     <View
-                                        style={[styles.infoItem, { backgroundColor: '#dcdcdc' }]}
+                                        style={[styles.infoItem, { backgroundColor: colors.lightBackground }]}
                                     >
                                         <View
                                             style={{
@@ -224,114 +256,35 @@ export default function ProfileScreen() {
                                             }}
                                         >
                                             {isThemeDark ?
-                                                <Feather name="moon"  size={35} color="#000" />
+                                                <Feather name="moon"  size={35} color={colors.iconColor} />
                                                         :
-                                                <Feather name="sun" size={35} color="#000" />
+                                                <Feather name="sun" size={35} color={colors.iconColor} />
                                             }
-                                            <Text style={styles.keyName}>Змінити тему</Text>
+                                            <Text style={[styles.keyName, { color: colors.primary }]}>Змінити тему</Text>
                                         </View>
                                         <Switch
                                             value={isThemeDark}
                                             onValueChange={changeTheme}
+                                            trackColor={{
+                                                false: colors.background,
+                                                true: colors.primary,
+                                            }}
+                                            thumbColor={isThemeDark ? colors.primary : colors.lightBackground}
+                                            ios_backgroundColor={colors.lightBackground}
+                                            style={{
+                                                transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+                                            }}
                                         />
                                     </View>
                                 </View>
-                            ) : (
-                                <View>
-                                    <Pressable
-                                        style={styles.saveButton}
-                                        onPress={handleUpdateUser}
-                                    >
-                                        <Text>Зберегти зміни</Text>
-                                    </Pressable>
-                                </View>
-                            )}
+                            ) : <PressableButton text="Зберегти зміни" onPress={handleUpdateUser}/>}
                         </View>
-                    ) : null}
+                    ) : (
+                        <View>
+                            <Text style={{ color: colors.primary }}>Немає інформації про данного користувача, перезайдіть у застосунок або в акаунт.</Text>
+                        </View>
+                    )}
                 </View>
         </SafeAreaView>
     );
 }
-
-const styles = StyleSheet.create({
-    avatarPhoto: {
-        borderRadius: 100,
-        height: 200,
-        marginRight: 8,
-        width: 200,
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 10,
-    },
-    editInputContainer: {
-        alignItems: 'center',
-        backgroundColor: '#ebebeb',
-        borderRadius: 20,
-        flexDirection: 'row',
-        gap: 10,
-        padding: 15,
-    },
-    editTitle: {
-        color: '#828282',
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'right',
-    },
-    flex: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: 10,
-    },
-    infoItem: {
-        marginTop: 10,
-        alignItems: 'center',
-        backgroundColor: '#ebebeb',
-        borderRadius: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 15,
-    },
-    infoList: {},
-    keyName: {
-        color: '#828282',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    saveButton: {
-        backgroundColor: '#d2d2d2',
-        borderRadius: 10,
-        padding: 10,
-        textAlign: 'center',
-    },
-    textContainer: {},
-    textInfo: {
-        alignItems: 'flex-start',
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginVertical: 15,
-        textAlign: 'left',
-    },
-    textInputStyle: {
-        textDecorationColor: '#000',
-        textDecorationLine: 'underline',
-        textDecorationStyle: 'solid',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginTop: 16,
-        textAlign: 'center',
-    },
-    userInfo: {
-        alignItems: 'center',
-    },
-    userInfoContainer: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end', // Align to the right
-    },
-    userInfoText: {
-        fontSize: 17,
-    },
-});

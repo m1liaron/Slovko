@@ -1,19 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Pressable, Text, View} from 'react-native'
+import {FlatList, Image, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {copySharedGroup, getAllSharedGroups, saveSharedGroup} from "../../redux/sharedGroup";
+import {copySharedGroup, getAllSharedGroups, saveSharedGroup, selectSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
-import {AppPath} from "../../common/app/app";
+import {AppPath} from "../../common/enums/app/app";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import {selectGroup} from "../../redux/groupSlice";
-import { selectSharedGroup } from '../../redux/sharedGroup'
+import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import AddInput from "../../common/components/AddInput/AddInput";
 import {AntDesign} from "@expo/vector-icons";
+import AvatarImage from '../../../assets/images/avatar.png';
 
 const SharedGroupsScreen = () => {
     const { theme: { colors } } = useAppTheme();
@@ -47,6 +47,29 @@ const SharedGroupsScreen = () => {
         dispatch(saveSharedGroup(sharedGroupData));
     }
 
+    const formatTime = (createdAt) => {
+        const now = new Date();
+        const timeDifference = now - new Date(createdAt);
+
+        const oneDay = 24 * 60 * 60 * 1000;
+        const sevenDays = 7 * oneDay;
+        const oneHour = 60 * 60 * 1000;
+        const oneMinute = 60 * 1000;
+
+        if (timeDifference < oneHour) {
+            const minutes = Math.floor(timeDifference / oneMinute);
+            return `${minutes} хвилин${minutes === 1 ? 'a' : minutes >= 3 && minutes <= 4 ? 'и' : ''} тому`;
+        } else if (timeDifference < oneDay) {
+            const hours = Math.floor(timeDifference / (60 * 60 * 1000));
+            return `${hours} годин${hours === 1 ? 'a' : hours >= 3 ? 'и' : ''} тому`;
+        } else if (timeDifference < sevenDays) {
+            const days = Math.floor(timeDifference / oneDay);
+            return `${days} днів тому`;
+        } else {
+            return new Date(createdAt).toLocaleTimeString();
+        }
+    };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <FlatList
@@ -59,10 +82,31 @@ const SharedGroupsScreen = () => {
                 renderItem={({ item }) => (
                     <View style={{
                         flexDirection: 'row',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 20,
                     }}>
-                        <Link style={styles.container} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
-                            <Text style={{ color: colors.primary }}>{item.title}</Text>
+                        <Link style={[styles.container, { backgroundColor: colors.lightBackground }]} to={{ screen: AppPath.SharedGroupDetails, params: { sharedGroupId: item.id}}}>
+                            <View style={{ flexDirection: 'row', gap: 20,  alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', display: 'flex', gap: 10}}>
+                                    <Image
+                                        source={item.user.image || AvatarImage}
+                                        style={{
+                                            width: 40,
+                                            height: 40,
+                                            borderRadius: 100,
+                                            borderWidth: 2,
+                                            borderColor: colors.primary
+                                        }}
+                                    />
+                                    <Text style={{ color: colors.primary, fontSize: 30 }}>{item.user.name}</Text>
+                                </View>
+                                <View style={{ borderWidth: 2, borderColor: colors.primary, borderRadius: 10, padding: 5}}>
+                                    <Text style={{ color: colors.primary, fontSize: 30 }}>{item.title}</Text>
+                                </View>
+                            </View>
+
+                            <Text style={{ color: colors.primary, fontSize: 30 }}>{formatTime(item.createdAt)}</Text>
                         </Link>
                         <Pressable onPress={() => dispatch(copySharedGroup(item.id))} >
                             <AntDesign name="download" color={colors.primary} size={30}/>
@@ -70,6 +114,7 @@ const SharedGroupsScreen = () => {
                     </View>
                 )}
             />
+
             <AddButton onPress={() => setShowModal(true)}/>
             <DefaultModal
                 isVisible={showAddModal}
