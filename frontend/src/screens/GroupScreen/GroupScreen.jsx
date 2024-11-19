@@ -3,26 +3,38 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {filterCardsByStatus, getAllStatusCards, selectCard} from "../../redux/cardReducer/cardSlice";
-import {useAppTheme} from "../../contexts/ThemeProvider";
-import {useEffect} from "react";
+import {filterCardsByStatus } from "../../redux/cardReducer/cardSlice";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import {useEffect, useMemo} from "react";
 import {getGroup} from "../../redux/groupReducer/groupSlice";
+import {DataStatus} from "../../common/enums/app/app";
+import {useNavigation} from "@react-navigation/native";
 
 const GroupScreen = ({route}) => {
     const { theme: { colors } } = useAppTheme();
     const { groupId } = route.params
     const { group } = useSelector(state => state.groups);
     const dispatch = useDispatch();
+    const navigation = useNavigation();
+
+    if(!group && group.status === DataStatus.ERROR) {
+        navigation.goBack();
+    }
 
     useEffect(() => {
-        dispatch(getGroup(groupId));
-    }, [dispatch, groupId]);
+        if(!group || group.id !== groupId) {
+            dispatch(getGroup(groupId));
+        }
+    }, [dispatch, group, groupId]);
 
-    const statusCardsButtons = [
-        { title: 'Вивчаю', status: 'To Learn', amount: group.learnToCardsAmount, color: '#32C74D' },
-        { title: 'Вивченні', status: 'Learned', amount: group.learnedCardsAmount, color: '#62CBE9' },
-        { title: 'Знаю', status: 'Know', amount: group.knowCardsAmount, color: '#a8a800' },
-    ];
+    const statusCardsButtons = useMemo(() => {
+        if(!group) return [];
+        return [
+            { title: 'Вивчаю', status: 'To Learn', amount: group.learnToCardsAmount || 0, color: '#32C74D' },
+            { title: 'Вивченні', status: 'Learned', amount: group.learnedCardsAmount || 0, color: '#62CBE9' },
+            { title: 'Знаю', status: 'Know', amount: group.knowCardsAmount || 0, color: '#a8a800' },
+        ]
+    })
 
     const renderStatusButtons = () => {
         return statusCardsButtons.map(({ status, title, amount, color }, id) => (
