@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {memo, useEffect, useMemo, useState} from 'react';
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
     Platform
 } from 'react-native';
 import CardItem from './CardItem';
-import { addCard, getCards, removeCard, selectCard } from '../../redux/cardReducer/cardSlice';
+import { addCard, getCards, removeCard } from '../../redux/cardReducer/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { AppPath } from "../../common/enums/app/app";
@@ -20,7 +20,10 @@ import DefaultModal from "../DefaultModal/DefaultModal";
 import pickImage from "../../utils/pickImage";
 import Loading from "../Loading";
 
+const MemoCardItem = memo(CardItem);
+
 const CardList = ({ groupId }) => {
+    const { group } = useSelector(state => state.groups);
     const { cards, isLoading } = useSelector(state => state.cards);
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
@@ -30,7 +33,9 @@ const CardList = ({ groupId }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getCards({ groupId }));
+        if(group.id !== groupId) {
+            dispatch(getCards({ groupId }));
+        }
     }, [dispatch, groupId]);
 
     const convertImageToBase64 = async (uri) => {
@@ -115,7 +120,7 @@ const CardList = ({ groupId }) => {
                     <FlatList
                         data={cards}
                         renderItem={({ item }) => (
-                            <CardItem item={item} onRemove={() => onRemoveCard(item.id)} groupId={groupId} />
+                            <MemoCardItem item={item} onRemove={() => onRemoveCard(item.id)} groupId={groupId} />
                         )}
                         horizontal={true}
                         keyExtractor={(item) => item.id}
