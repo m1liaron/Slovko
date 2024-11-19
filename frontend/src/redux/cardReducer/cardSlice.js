@@ -19,6 +19,9 @@ const cardSlice = createSlice({
     reducers:{
         filterCardsByStatus: (state, action) => {
             state.cards = state.filteredCards.filter(card => card.status === action.payload.status)
+        },
+        resetFilter: (state, action) => {
+            state.cards = [...state.filteredCards];
         }
     },
     extraReducers: (builder) => {
@@ -94,7 +97,7 @@ const cardSlice = createSlice({
     }
 })
 
-export const { filterCardsByStatus } = cardSlice.actions;
+export const { filterCardsByStatus, resetFilter } = cardSlice.actions;
 export const selectCard = (state) => state.cards.cards;
 export {
     getCards,

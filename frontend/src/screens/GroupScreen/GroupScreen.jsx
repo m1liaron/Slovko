@@ -3,12 +3,13 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {filterCardsByStatus } from "../../redux/cardReducer/cardSlice";
+import {filterCardsByStatus, resetFilter} from "../../redux/cardReducer/cardSlice";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import {useEffect, useMemo} from "react";
 import {getGroup} from "../../redux/groupReducer/groupSlice";
 import {DataStatus} from "../../common/enums/app/app";
 import {useNavigation} from "@react-navigation/native";
+import {Entypo} from "@expo/vector-icons";
 
 const GroupScreen = ({route}) => {
     const { theme: { colors } } = useAppTheme();
@@ -74,6 +75,18 @@ const GroupScreen = ({route}) => {
                 }}
             >
                 {renderStatusButtons()}
+                <Pressable
+                    style={{
+                        padding: 10,
+                        borderRadius: 10,
+                        borderWidth: 2,
+                        borderColor: '#bcbcbc',
+                        marginHorizontal: 10,
+                    }}
+                    onPress={() => dispatch(resetFilter())}
+                >
+                    <Entypo name="back-in-time" size={30} color="#bcbcbc" />
+                </Pressable>
             </View>
             <CardList groupId={groupId} />
         </SafeAreaView>
