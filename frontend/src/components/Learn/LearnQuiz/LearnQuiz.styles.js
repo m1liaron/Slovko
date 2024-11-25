@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
 
     progressInsideContainer: {
-        backgroundColor: '#e5e511',
+        backgroundColor: '#c5c50b',
         borderRadius: 20,
         flexDirection: 'row',
         alignItems: 'center',

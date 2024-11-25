@@ -66,7 +66,7 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 
         setTimeout(() => {
             setSelectedOption(null);
-        }, 1000);
+        }, 2000);
     };
 
     const playSuccessSound = async () => {
@@ -82,10 +82,6 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
         } catch (error) {
             console.error('Error playing sound', error);
         }
-    }
-
-    if (!cards || cards.length === 0 || !currentCard) {
-        return <Text>No cards available</Text>;  // Add a fallback in case of no data
     }
 
     return (

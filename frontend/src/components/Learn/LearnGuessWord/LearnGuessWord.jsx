@@ -14,6 +14,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
     const [currentGuess, setCurrentGuess] = useState([]);
     const [scrambledWord, setScrambledWord] = useState([]);
     const [letterColors, setLetterColors] = useState({});
+    const [inCorrectLetter, setInCorrectLetter] = useState(null);
     const [showTranslate, setShowTranslate] = useState(false);
     const [correctAnswers, setCorrectAnswers] = useState([]);
     const currentCard = cards[currentIndex];
@@ -79,6 +80,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 
     const highlightIncorrectLetter = (index) => {
         setLetterColors({ ...letterColors, [index]: 'red' });
+        setInCorrectLetter(currentWord[index]);
         setTimeout(() => setLetterColors({}), 1000);
     };
 
@@ -107,12 +109,13 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
             const isUppercase = event.shiftKey; // Check if Shift is held down
             const targetLetter = isUppercase ? pressedLetter.toUpperCase() : pressedLetter.toLowerCase();
 
+            const letterIndex = scrambledWord.indexOf(targetLetter);
             if (targetLetter === expectedLetter) {
                 const updatedGuess = [...currentGuess];
                 updatedGuess[firstDashIndex] = targetLetter; // Update the guess
                 setCurrentGuess(updatedGuess);
 
-                const letterIndex = scrambledWord.indexOf(targetLetter);
+
                 if (letterIndex !== -1) {
                     removeLetterFromScrambled(letterIndex);
                 }
@@ -120,7 +123,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
                 setCorrectAnswers(prevState => [...prevState, true]);
                 handleSetDate(currentCard, true);
             } else {
-                highlightIncorrectLetter(firstDashIndex);
+                highlightIncorrectLetter(letterIndex);
                 handleSetDate(currentCard, false);
             }
         };
