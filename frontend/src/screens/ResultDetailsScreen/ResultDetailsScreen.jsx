@@ -75,29 +75,23 @@ const ResultDetailsScreen = ({ route }) => {
                 </View>
 
                 {isLoading && <Loading /> }
-                {result.mode ? (
-                    <View>
-                        <FlatList
-                            data={result.mode[selectedMode].words}
-                            renderItem={({ item }) => (
-                                <View style={[styles.itemContainer, { backgroundColor: colors.lightBackground }]}>
-                                    <View style={styles.resultContainer}>
-                                        <Text style={[styles.title, { color: colors.primary }]}>{item.word}</Text>
-                                        <Text style={[styles.title, { color: colors.primary }]}> - {item.translate}</Text>
-                                    </View>
-                                    <View>
-                                        <View style={styles.mistakesAmountContainer}>
-                                            <Text style={[styles.title, { color: colors.primary }]}>{item.mistakesAmount}</Text>
-                                        </View>
-                                    </View>
+                {result.mode && (
+                    <FlatList
+                        data={result.mode[selectedMode].words}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <View style={[styles.itemContainer, { backgroundColor: colors.lightBackground }]}>
+                                <View style={styles.resultContainer}>
+                                    <Text style={[styles.title, { color: colors.primary }]}>{item.word} - {item.translate}</Text>
                                 </View>
-                            )}
-                            contentContainerStyle={{justifyContent: 'center', flex: 1, margin: 20, gap: 20}}
-                        />
-                    </View>
-                ) : null}
+                                <View style={styles.mistakesAmountContainer}>
+                                    <Text style={[styles.title, { color: colors.primary }]}>{item.mistakesAmount}</Text>
+                                </View>
+                            </View>
+                        )}
+                    />
+                )}
             </View>
-
         </SafeAreaView>
     );
 };
