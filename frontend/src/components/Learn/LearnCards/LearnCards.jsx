@@ -17,19 +17,25 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     const [showRightSwipeView, setShowRightSwipeView] = useState(false);
     const [flippedCards, setFlippedCards] = useState({});
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
+    const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false);
+    const [isFlippedCard, setIsFlippedCard] = useState(false);
 
     const rotation = useSharedValue(0);
 
     const handleFlipCard = (index) => {
         // Use the current state of flippedCards
         setFlippedCards((prevFlippedCards) => {
-
+            if(isFlippedCard) {
+                return prevFlippedCards;
+            }
             setFlippedIndex(index === flippedIndex ? null : index);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
-            // Speech.speak(learningCards[index].word);
+            setIsHorizontalSwipe(true);
+            Speech.speak(learningCards[index].word);
 
             // Update the flipped cards state
+            setIsFlippedCard(true)
             return { ...prevFlippedCards, [index]: true };
         });
     };
@@ -52,8 +58,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     const handleSwipeRight = () => {
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
-        setCurrentCardIndex((prevIndex) => prevIndex + 1);
-        setFlashCards(learningCards[currentCardIndex], true)
+        setCurrentIndexCardsSwipeFlipped();
     };
 
     const handleSwipeLeft = (index) => {
@@ -68,9 +73,15 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
         // Update the learningCards state
         setLearningCards(updatedCards);
 
+        setCurrentIndexCardsSwipeFlipped();
+    };
+
+    const setCurrentIndexCardsSwipeFlipped = () => {
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
         setFlashCards(learningCards[currentCardIndex], false)
-    };
+        setIsHorizontalSwipe(false)
+        setIsFlippedCard(false);
+    }
 
     const renderCard = (card, index) => (
         <Pressable onPress={() => handleFlipCard(index)} style={[styles.cardContainer]}>
@@ -123,6 +134,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
                 cardIndex={currentCardIndex}
                 backgroundColor={'transparent'}
                 verticalSwipe={false}
+                horizontalSwipe={isHorizontalSwipe}
                 overlayLabels={{
                     left: {
                         title: "Не знаю",

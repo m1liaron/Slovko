@@ -13,11 +13,7 @@ const styles = StyleSheet.create({
         gap: 20
     },
     resultContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
         padding: 20,
-        borderRadius: 10
     },
     mistakesAmountContainer: {
         padding: 10,
@@ -28,9 +24,9 @@ const styles = StyleSheet.create({
     itemContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        flex: 1,
         alignItems: 'center',
         borderRadius: 10,
+        marginTop: 10
     },
     title: {
         fontSize:35,
