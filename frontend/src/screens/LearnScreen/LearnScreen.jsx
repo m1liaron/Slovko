@@ -205,6 +205,8 @@ const LearnScreen = ({ route }) => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
     };
 
+    console.log(guessWordCards)
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>

@@ -58,7 +58,8 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     const handleSwipeRight = () => {
         setShowRightSwipeView(true);
         setTimeout(() => setShowRightSwipeView(false), 1000);
-        setCurrentIndexCardsSwipeFlipped();
+        setCurrentIndexCardsFlipped();
+        setFlashCards(learningCards[currentCardIndex], true)
     };
 
     const handleSwipeLeft = (index) => {
@@ -73,12 +74,12 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
         // Update the learningCards state
         setLearningCards(updatedCards);
 
-        setCurrentIndexCardsSwipeFlipped();
+        setCurrentIndexCardsFlipped();
+        setFlashCards(learningCards[currentCardIndex], false)
     };
 
-    const setCurrentIndexCardsSwipeFlipped = () => {
+    const setCurrentIndexCardsFlipped = () => {
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
-        setFlashCards(learningCards[currentCardIndex], false)
         setIsHorizontalSwipe(false)
         setIsFlippedCard(false);
     }

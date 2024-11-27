@@ -103,10 +103,11 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
     useEffect(() => {
         const handleKeyDown = (event) => {
             const pressedLetter = event.key;
+            if(event.key === 'Shift') return;
             const firstDashIndex = currentGuess.indexOf('_');
             const expectedLetter = currentWord[firstDashIndex];
 
-            const isUppercase = event.shiftKey; // Check if Shift is held down
+            const isUppercase = event.shiftKey;
             const targetLetter = isUppercase ? pressedLetter.toUpperCase() : pressedLetter.toLowerCase();
 
             const letterIndex = scrambledWord.indexOf(targetLetter);
