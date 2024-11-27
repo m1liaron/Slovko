@@ -9,7 +9,7 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
@@ -17,11 +17,13 @@ import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
+import {selectGroup} from "../../redux/groupReducer/groupSlice";
 
 
 const LearnScreen = ({ route }) => {
     const { theme } = useAppTheme();
     const { groupId } = route.params;
+    const groups = useSelector(selectGroup);
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -35,13 +37,13 @@ const LearnScreen = ({ route }) => {
 
     // results data
     const [resultModal, setResulModal] = useState(false);
-    const [resultTitle, setResultTitle] = useState('Крутяк!');
-    const [resultTitleReadOnly, setResultTitleReadOnly] = useState(false);
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
     const [startLearnDate, setStartLearnDate] = useState(null);
     const [elapsedTime, setElapsedTime] = useState('');
+
+    const { title: projectName } = groups?.filter(group => group.id === groupId);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
@@ -122,7 +124,7 @@ const LearnScreen = ({ route }) => {
 
     const handleSaveResults = () => {
         const resultData = {
-            title: resultTitle || 'Крутяк!😍',
+            title: projectName,
             flashCards,
             quiz: quizCards,
             guessWord: guessWordCards,
@@ -205,7 +207,21 @@ const LearnScreen = ({ route }) => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
     };
 
-    console.log(guessWordCards)
+
+    useEffect(() => {
+        const handleBeforeUnload = (event) => {
+            event.preventDefault();
+
+            event.returnValue = 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
+            return 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
+        }
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        }
+    }, []);
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -253,15 +269,7 @@ const LearnScreen = ({ route }) => {
                         >
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                    <TextInput
-                                        value={resultTitle}
-                                        editable={resultTitleReadOnly}
-                                        onChangeText={setResultTitle}
-                                        style={{ textDecorationStyle: 'underline', fontSize: 40, color: theme.colors.primary }}
-                                    />
-                                    <Pressable onPress={() => setResultTitleReadOnly(!resultTitleReadOnly)}>
-                                        <Entypo name="pencil" size={30} color={theme.colors.iconColor} />
-                                    </Pressable>
+                                    <Text style={{ color: theme.colors.primary }}>Молодець! Гарно позаймався/лась</Text>
                                 </View>
                                 <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви займались: {elapsedTime}</Text>
                             </View>
