@@ -68,6 +68,11 @@ User.init(
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: Date.now(),
+        },
+        points: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         }
     },
     {
