@@ -53,12 +53,15 @@ const saveResults = async (req, res) => {
 
     try {
         const newResult = await Result.create({ title, userId: id, startedLearn, completionTime });
-        const user = await User.findByPk(id);
         const correctAnswersAmount = Object.values(data)
             .filter((key) => Array.isArray(key))
             .reduce((total, key) => {
                 return total + key.filter(item => item.mistakesAmount === 0).length
-            }, 0)
+        }, 0)
+        await User.update({points: correctAnswersAmount * 10 }, {
+            where: { id },
+        });
+
 
         const resultModes = await Promise.all(
             Object.keys(data).map(mode =>
