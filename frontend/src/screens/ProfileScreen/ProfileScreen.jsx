@@ -174,7 +174,26 @@ export default function ProfileScreen() {
                                     />
                                 </Pressable>
                             )}
-                            {!isEditing && <Text style={[styles.title, { color: colors.primary }]}>{user.name}</Text> }
+                            {!isEditing && (
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 10 }}>
+                                    <Text style={[styles.title, { color: colors.primary }]}>{user.name}</Text>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        gap: 5
+                                    }}>
+                                        <View style={{
+                                            padding: 10,
+                                            backgroundColor: '#e8fc41',
+                                            alignSelf: 'center',
+                                            borderRadius: 10
+                                        }}>
+                                            <Text>{user.points}</Text>
+                                        </View>
+                                            <Text style={{ color: colors.primary }}>Очків</Text>
+                                    </View>
+                                </View>
+                            ) }
                             <Pressable onPress={onEditInfo}>
                                 <Text style={styles.editTitle}>Редагувати</Text>
                             </Pressable>
