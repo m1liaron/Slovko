@@ -79,7 +79,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
     };
 
     const highlightIncorrectLetter = (index) => {
-        setLetterColors({ ...letterColors, [index]: 'red' });
+        setLetterColors({ [index]: 'red' });
         setInCorrectLetter(currentWord[index]);
         setTimeout(() => setLetterColors({}), 1000);
     };
