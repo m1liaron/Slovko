@@ -9,8 +9,11 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
+import {useSelector} from "react-redux";
+import {selectResult} from "../../redux/resultReducer/resultSlice";
 
 const StatisticsScreen = () => {
+    const results = useSelector(selectResult);
     return (
         <View>
             <LineChart
