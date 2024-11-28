@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Dimensions} from 'react-native'
 import styles from './StatisticsScreen.styles';
 import {
@@ -9,11 +9,18 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {selectResult} from "../../redux/resultReducer/resultSlice";
+import {getResultsDetails} from "../../redux/resultReducer/resultThunk";
 
 const StatisticsScreen = () => {
     const results = useSelector(selectResult);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getResultsDetails());
+    }, []);
+
     return (
         <View>
             <LineChart
