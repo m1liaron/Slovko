@@ -11,6 +11,7 @@ const AppPath = {
     Word: 'word',
     Study: 'study',
     Results: 'results',
+    Statistics: 'statistics',
     ResultDetails: 'results/resultId',
     Login: 'login',
     Register: 'register'
