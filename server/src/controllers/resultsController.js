@@ -1,5 +1,27 @@
 const { Result, ResultMode, WordResult, User} = require('../models/models');
 
+const getResultsDetails = async (req, res) => {
+    try {
+        const results = await Result.findAll({
+            where: { userId: req.user.id },
+            include: [{
+                model: ResultMode,
+                as: 'mode',
+                include: [
+                    {
+                        model: WordResult,
+                        as: 'words',
+                    }
+                ]
+            }]
+        });
+
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error saving results' });
+    }
+}
+
 const getResults = async (req, res) => {
     try {
         const result = await Result.findAll({
@@ -105,5 +127,6 @@ const saveResults = async (req, res) => {
 module.exports = {
     saveResults,
     getResults,
-    getResultDetails
+    getResultDetails,
+    getResultsDetails
 };
