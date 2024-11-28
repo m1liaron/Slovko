@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveResults, getResults, getResultDetails } from './resultThunk';
+import { saveResults, getResults, getResultDetails, getResultsDetails } from './resultThunk';
 
 const initialState = {
     results: [],
@@ -69,6 +69,20 @@ const resultSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(getResultDetails.rejected, (state, action) => {
+                state.status = 'error';
+                state.isLoading = false;
+            })
+
+            .addCase(getResultsDetails.pending, (state, action) => {
+                state.status = 'loading';
+                state.isLoading = true;
+            })
+            .addCase(getResultsDetails.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.results = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(getResultsDetails.rejected, (state, action) => {
                 state.status = 'error';
                 state.isLoading = false;
             })
