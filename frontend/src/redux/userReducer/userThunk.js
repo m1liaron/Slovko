@@ -2,10 +2,11 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {createAuthorizedInstance} from "../../utils/createAuthorizedInstance";
+const url = 'http://localhost:3000';
 
 export const login = createAsyncThunk(
     'user/login', async (data) => {
-        const response = await axios.post(`http://localhost:3000/users/login`, data);
+        const response = await axios.post(`${url}/users/login`, data);
         await AsyncStorage.setItem('token', response.data.token)
         return response.data
     }
@@ -13,7 +14,7 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
     'user/register', async (data) => {
-        const response = await axios.post(`http://localhost:30000/users/register`, data);
+        const response = await axios.post(`${url}/users/register`, data);
         await AsyncStorage.setItem('token', response.data.token)
         return response.data
     }

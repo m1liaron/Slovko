@@ -106,6 +106,8 @@ const ResultsScreen = () => {
                     </View>
                 }
 
+                <Link to={`/${AppPath.Statistics}`} style={{ color: colors.primary }}>Ваша статистика</Link>
+
                 <FlatList
                     data={Object.entries(groupedResults)}
                     keyExtractor={(item) => item[0]}

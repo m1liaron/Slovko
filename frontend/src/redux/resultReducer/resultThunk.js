@@ -24,3 +24,11 @@ export const getResultDetails = createAsyncThunk(
         return response.data
     }
 )
+
+export const getResultsStatistics = createAsyncThunk(
+    'resultsDetails/get', async () => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get(`/results/statistics`);
+        return response.data
+    }
+)

@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveResults, getResults, getResultDetails } from './resultThunk';
+import { saveResults, getResults, getResultDetails, getResultsStatistics } from './resultThunk';
 
 const initialState = {
     results: [],
     filteredResults: [],
+    statistics: {},
     result: {},
     isLoading: false,
     error: null,
@@ -72,10 +73,24 @@ const resultSlice = createSlice({
                 state.status = 'error';
                 state.isLoading = false;
             })
+
+            .addCase(getResultsStatistics.pending, (state, action) => {
+                state.status = 'loading';
+                state.isLoading = true;
+            })
+            .addCase(getResultsStatistics.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.statistics = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(getResultsStatistics.rejected, (state, action) => {
+                state.status = 'error';
+                state.isLoading = false;
+            })
     }
 });
 
 export const { filterResults, sortResults, resetResults } = resultSlice.actions;
 export const selectResult = (state) => state.results;
-export { saveResults, getResults, getResultDetails } from './resultThunk';
+export { saveResults, getResults, getResultDetails, getResultsStatistics } from './resultThunk';
 export const resultReducers = resultSlice.reducer;
