@@ -30,13 +30,11 @@ const StatisticsScreen = () => {
     }, []);
 
     const modesOptions = [
-        { label: 'Картки', value: 'flashCards' },
         { label: 'Вікторина', value: 'quiz' },
         { label: 'Відгадай слово', value: 'guessWord' },
     ];
 
     const wordsModeOptions = [
-        { label: 'Помилок', value: 'mistakes' },
         { label: 'Кількість слів', value: 'wordLength' },
     ];
 
@@ -47,8 +45,15 @@ const StatisticsScreen = () => {
                 <RNPickerSelect 
                     onValueChange={(value) => setSelectedMode(value)}
                     items={modesOptions}
-                    values={selectedMode}
+                    value={selectedMode}
+                    placeholder={{ label: 'Картки', value: 'flashCards'}}
                     style={{
+                        inputWeb: {
+                            color: "#000",
+                            padding: 10,
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: 5,
+                        },
                         inputIOS: {
                             color: "#000",
                             padding: 10,
@@ -72,8 +77,14 @@ const StatisticsScreen = () => {
                         onValueChange={(value) => setSelectedWordsMode(value)}
                         items={wordsModeOptions}
                         value={selectedWordsMode}
-                        placeholder={{ label: "Оберіть тип статистики", value: null }}
+                        placeholder={{ label: 'Помилок', value: 'mistakes'}}
                         style={{
+                            inputWeb: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            },
                             inputIOS: {
                                 color: "#000",
                                 padding: 10,
@@ -88,7 +99,7 @@ const StatisticsScreen = () => {
                             }
                         }}
                     />
-                </View>
+            </View>
 
                 {(statistics && statistics.amountMistakesCards) && (
                     <LineChart
@@ -143,9 +154,6 @@ const StatisticsScreen = () => {
                         }}
                     />
                 )}
-                <Text>Статистика:</Text>
-                <PressableButton buttonStyle={{ backgroundColor: selectedWordsMode === 'mistakes' ? "#004186" : "#007AFF"}} onPress={() => setSelectedWordsMode('mistakes')} text="Помилок"/>
-                <PressableButton buttonStyle={{ backgroundColor: selectedWordsMode === 'wordLength' ? "#004186" : "#007AFF"}} onPress={() => setSelectedWordsMode('wordLength')} text="Кількість слів"/>
         </SafeAreaView>
     );
 };
