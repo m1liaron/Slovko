@@ -38,7 +38,6 @@ const getResultsStatistics = async (req, res) => {
             }]
         });
 
-        const selectedMode = 0;
         const months = ["January", "February", "March", "April", "May", "Jule", "June", "August", "September", "October", "November", "December"]
         const resultsMonths = [];
 
@@ -49,7 +48,32 @@ const getResultsStatistics = async (req, res) => {
             }
         });
 
-        res.status(200).json(results);
+
+        function getAllWordsMode(results) {
+            const modeMonthSum = {};
+
+            results.forEach(result => {
+                const month = months[new Date(result.createdAt).getMonth()];
+                const index = resultsMonths.indexOf(month); // Find the month index in resultsMonthes
+
+                if (index !== -1) {
+                    result.mode.forEach(modeItem => {
+                        if (!modeMonthSum[modeItem.mode]) {
+                            modeMonthSum[modeItem.mode] = new Array(resultsMonths.length).fill(0);
+                        }
+
+                        const mistakesForCard = modeItem.words.reduce((acc, curr) => acc + curr.mistakesAmount, 0);
+                        modeMonthSum[modeItem.mode][index] += mistakesForCard;
+                    });
+                }
+            });
+
+            // Convert modeMonthSum object into an array format (if required)
+            return modeMonthSum;
+        }
+
+        const amountMistakesCards = getAllWordsMode(results);
+        res.status(200).json(amountMistakesCards);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error saving results' });
     }
