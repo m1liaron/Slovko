@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Dimensions} from 'react-native'
 import styles from './StatisticsScreen.styles';
 import {
@@ -11,62 +11,92 @@ import {
 } from "react-native-chart-kit";
 import {useDispatch, useSelector} from "react-redux";
 import {selectResult} from "../../redux/resultReducer/resultSlice";
-import {getResultsDetails} from "../../redux/resultReducer/resultThunk";
+import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
+import {SafeAreaView} from "react-native-safe-area-context";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import BackButton from "../../components/BackButton/BackButton";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const StatisticsScreen = () => {
-    const results = useSelector(selectResult);
+    const { theme: { colors }} = useAppTheme();
+    const { statistics } = useSelector(selectResult);
     const dispatch = useDispatch();
+    const [selectedMode, setSelectedMode] = useState('flashCards');
 
     useEffect(() => {
-        dispatch(getResultsDetails());
+        dispatch(getResultsStatistics());
     }, []);
 
+
     return (
-        <View>
-            <LineChart
-                data={{
-                    labels: ["January", "February", "March", "April", "May", "June"],
-                    datasets: [
-                        {
-                            data: [
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100,
-                                Math.random() * 100
-                            ]
-                        }
-                    ]
-                }}
-                width={Dimensions.get("window").width} // from react-native
-                height={220}
-                yAxisLabel="$"
-                yAxisSuffix="k"
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                    backgroundColor: "#e26a00",
-                    backgroundGradientFrom: "#fb8c00",
-                    backgroundGradientTo: "#ffa726",
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    style: {
-                        borderRadius: 16
-                    },
-                    propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "#ffa726"
-                    }
-                }}
-                bezier
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+            <BackButton />
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                <PressableButton text="Картки" onPress={() => setSelectedMode('flashCards')}/>
+                <PressableButton text="Вікторина" onPress={() => setSelectedMode('quiz')}/>
+                <PressableButton text="Вгадай слово" onPress={() => setSelectedMode('guessWord')}/>
+            </View>
+
+            <View
                 style={{
-                    marginVertical: 8,
-                    borderRadius: 16
+                    margin: 15,
                 }}
-            />
-        </View>
+            >
+                {(statistics && statistics.amountMistakesCards) && (
+                    <LineChart
+                        data={{
+                            labels: statistics.resultsMonths,
+                            datasets: [
+                                {
+                                    data: statistics.amountMistakesCards[selectedMode]
+                                }
+                            ]
+                        }}
+                        width={Dimensions.get("window").width - 200 } // from react-native
+                        height={220}
+                        yAxisLabel=""
+                        yAxisSuffix=""
+                        yAxisInterval={1} // optional, defaults to 1
+                        chartConfig={{
+                            backgroundColor: "#e26a00",
+                            backgroundGradientFrom: "#fb8c00",
+                            backgroundGradientTo: "#ffa726",
+                            decimalPlaces: 2, // optional, defaults to 2dp
+                            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            style: {
+                                borderRadius: 16,
+                            },
+                            propsForDots: {
+                                r: "6",
+                                strokeWidth: "2",
+                                stroke: "#ffa726"
+                            },
+                        }}
+                        renderDotContent={({ x, y, index }) => (
+                            <Text
+                                key={index}
+                                style={{
+                                    position: "absolute",
+                                    top: y - 20, // Position above the circle
+                                    left: x - 10, // Center horizontally
+                                    fontSize: 10,
+                                    color: "#000",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                {statistics.amountMistakesCards.flashCards[index]}
+                            </Text>
+                        )}
+                        bezier
+                        style={{
+                            marginVertical: 8,
+                            borderRadius: 16
+                        }}
+                    />
+                )}
+            </View>
+        </SafeAreaView>
     );
 };
 
