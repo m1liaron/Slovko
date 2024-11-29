@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Dimensions} from 'react-native'
+import {View, Text, Dimensions, FlatList} from 'react-native'
 import styles from './StatisticsScreen.styles';
 import {
     LineChart,
@@ -28,14 +28,23 @@ const StatisticsScreen = () => {
         dispatch(getResultsStatistics());
     }, []);
 
+    const modesButtons = [
+        { text: 'Картки', mode: 'flashCards'},
+        { text: 'Вікторина', mode: 'quiz'},
+        { text: 'Відгадай слово', mode: 'guessWord'},
+    ];
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <BackButton />
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                <PressableButton buttonStyle={{ backgroundColor: selectedMode === 'flashCards' ? "#004186" : "#007AFF"}} text="Картки" onPress={() => setSelectedMode('flashCards')}/>
-                <PressableButton buttonStyle={{ backgroundColor: selectedMode === 'quiz' ? "#004186" : "#007AFF"}} text="Вікторина" onPress={() => setSelectedMode('quiz')}/>
-                <PressableButton buttonStyle={{ backgroundColor: selectedMode === 'guessWord' ? "#004186" : "#007AFF"}} text="Вгадай слово" onPress={() => setSelectedMode('guessWord')}/>
+                <FlatList 
+                    data={modesButtons}
+                    keyExtractor={(item) => item.text}
+                    renderItem={({ item: { text, mode } }) => (
+                        <PressableButton buttonStyle={{ backgroundColor: selectedMode === mode ? "#004186" : "#007AFF"}} text={text} onPress={() => setSelectedMode(mode)}/>
+                    )}
+                />
             </View>
 
             <View
