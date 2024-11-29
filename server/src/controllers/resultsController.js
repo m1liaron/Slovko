@@ -22,6 +22,39 @@ const getResultsDetails = async (req, res) => {
     }
 }
 
+const getResultsStatistics = async (req, res) => {
+    try {
+        const results = await Result.findAll({
+            where: { userId: req.user.id },
+            include: [{
+                model: ResultMode,
+                as: 'mode',
+                include: [
+                    {
+                        model: WordResult,
+                        as: 'words',
+                    }
+                ]
+            }]
+        });
+
+        const selectedMode = 0;
+        const months = ["January", "February", "March", "April", "May", "Jule", "June", "August", "September", "October", "November", "December"]
+        const resultsMonths = [];
+
+        results.map(result => {
+            const month = months[new Date(result.createdAt).getMonth()];
+            if(!resultsMonths.includes(month)){
+                return resultsMonths.push(month)
+            }
+        });
+
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error saving results' });
+    }
+}
+
 const getResults = async (req, res) => {
     try {
         const result = await Result.findAll({
