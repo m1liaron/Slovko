@@ -67,11 +67,29 @@ const StatisticsScreen = () => {
                 />
             </View>
 
-            <View
-                style={{
-                    margin: 15,
-                }}
-            >
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                <RNPickerSelect
+                        onValueChange={(value) => setSelectedWordsMode(value)}
+                        items={wordsModeOptions}
+                        value={selectedWordsMode}
+                        placeholder={{ label: "Оберіть тип статистики", value: null }}
+                        style={{
+                            inputIOS: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            },
+                            inputAndroid: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            }
+                        }}
+                    />
+                </View>
+
                 {(statistics && statistics.amountMistakesCards) && (
                     <LineChart
                         data={{
@@ -128,7 +146,6 @@ const StatisticsScreen = () => {
                 <Text>Статистика:</Text>
                 <PressableButton buttonStyle={{ backgroundColor: selectedWordsMode === 'mistakes' ? "#004186" : "#007AFF"}} onPress={() => setSelectedWordsMode('mistakes')} text="Помилок"/>
                 <PressableButton buttonStyle={{ backgroundColor: selectedWordsMode === 'wordLength' ? "#004186" : "#007AFF"}} onPress={() => setSelectedWordsMode('wordLength')} text="Кількість слів"/>
-            </View>
         </SafeAreaView>
     );
 };
