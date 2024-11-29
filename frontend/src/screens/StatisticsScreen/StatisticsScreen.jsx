@@ -22,6 +22,7 @@ const StatisticsScreen = () => {
     const { statistics } = useSelector(selectResult);
     const dispatch = useDispatch();
     const [selectedMode, setSelectedMode] = useState('flashCards');
+    const [selectedWordsMode, setSelectedWordsMode] = useState('wordLength'); // Mistakes || wordLength;
 
     useEffect(() => {
         dispatch(getResultsStatistics());
@@ -48,7 +49,7 @@ const StatisticsScreen = () => {
                             labels: statistics.resultsMonths,
                             datasets: [
                                 {
-                                    data: statistics.amountMistakesCards[selectedMode]
+                                    data: statistics.amountMistakesCards[selectedMode][selectedWordsMode]
                                 }
                             ]
                         }}
