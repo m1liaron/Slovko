@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Dimensions, FlatList} from 'react-native'
-import styles from './StatisticsScreen.styles';
+import {View, Text, Dimensions } from 'react-native'
 import {
     LineChart,
     BarChart,
@@ -18,12 +17,22 @@ import BackButton from "../../components/BackButton/BackButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import RNPickerSelect from "react-native-picker-select";
 
+const graphOptions = [
+    { label: "Line Chart", value: LineChart },
+    { label: "Bar Chart", value: BarChart },
+    { label: "Pie Chart", value: PieChart },
+    { label: "Progress Chart", value: ProgressChart },
+    { label: "Contribution Graph", value: ContributionGraph },
+    { label: "Stacked Bar Chart", value: StackedBarChart },
+];
+
 const StatisticsScreen = () => {
     const { theme: { colors }} = useAppTheme();
     const { statistics } = useSelector(selectResult);
     const dispatch = useDispatch();
     const [selectedMode, setSelectedMode] = useState('flashCards');
     const [selectedWordsMode, setSelectedWordsMode] = useState('wordLength'); // Mistakes || wordLength;
+    const [selectedGraph, setSelectedGraph] = useState(LineChart);
 
     useEffect(() => {
         dispatch(getResultsStatistics());
@@ -98,8 +107,35 @@ const StatisticsScreen = () => {
                                 borderRadius: 5,
                             }
                         }}
-                    />
+                />
             </View>
+
+            <View>
+            <RNPickerSelect
+                        onValueChange={(value) => setSelectedGraph(value)}
+                        items={graphOptions}
+                        value={selectedGraph}
+                        style={{
+                            inputWeb: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            },
+                            inputIOS: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            },
+                            inputAndroid: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            }
+                        }}
+                />
 
                 {(statistics && statistics.amountMistakesCards) && (
                     <LineChart
@@ -154,6 +190,7 @@ const StatisticsScreen = () => {
                         }}
                     />
                 )}
+            </View>
         </SafeAreaView>
     );
 };
