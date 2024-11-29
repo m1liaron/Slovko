@@ -12,19 +12,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {selectResult} from "../../redux/resultReducer/resultSlice";
 import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
 import {SafeAreaView} from "react-native-safe-area-context";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
 import BackButton from "../../components/BackButton/BackButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import RNPickerSelect from "react-native-picker-select";
-
-const graphOptions = [
-    { label: "Line Chart", value: LineChart },
-    { label: "Bar Chart", value: BarChart },
-    { label: "Pie Chart", value: PieChart },
-    { label: "Progress Chart", value: ProgressChart },
-    { label: "Contribution Graph", value: ContributionGraph },
-    { label: "Stacked Bar Chart", value: StackedBarChart },
-];
 
 const StatisticsScreen = () => {
     const { theme: { colors }} = useAppTheme();
@@ -32,7 +22,6 @@ const StatisticsScreen = () => {
     const dispatch = useDispatch();
     const [selectedMode, setSelectedMode] = useState('flashCards');
     const [selectedWordsMode, setSelectedWordsMode] = useState('wordLength'); // Mistakes || wordLength;
-    const [selectedGraph, setSelectedGraph] = useState(LineChart);
 
     useEffect(() => {
         dispatch(getResultsStatistics());
