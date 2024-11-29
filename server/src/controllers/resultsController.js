@@ -59,14 +59,15 @@ const getResultsStatistics = async (req, res) => {
                 if (index !== -1) {
                     result.mode.forEach(modeItem => {
                         if (!modeMonthSum[modeItem.mode]) {
-                            modeMonthSum[modeItem.mode] = new Array(resultsMonths.length).fill(null).map(() => ({ mistakes: 0, wordLength: 0}));
+                            const array = new Array(resultsMonths.length).fill(0);
+                            modeMonthSum[modeItem.mode] = { mistakes: [...array], wordLength: [...array] };
                         }
 
                         const mistakesForCard = modeItem.words.reduce((acc, curr) => acc + curr.mistakesAmount, 0);
                         const wordCountForCard = modeItem.words.length;
 
-                        modeMonthSum[modeItem.mode][index].mistakes += mistakesForCard;
-                        modeMonthSum[modeItem.mode][index].wordLength += wordCountForCard;
+                        modeMonthSum[modeItem.mode].mistakes[index] += mistakesForCard;
+                        modeMonthSum[modeItem.mode].wordLength[index] += wordCountForCard;
                     });
                 }
             });
