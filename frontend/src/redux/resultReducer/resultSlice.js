@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { saveResults, getResults, getResultDetails, getResultsDetails } from './resultThunk';
+import { saveResults, getResults, getResultDetails, getResultsStatistics } from './resultThunk';
 
 const initialState = {
     results: [],
     filteredResults: [],
+    statistics: {},
     result: {},
     isLoading: false,
     error: null,
@@ -73,16 +74,16 @@ const resultSlice = createSlice({
                 state.isLoading = false;
             })
 
-            .addCase(getResultsDetails.pending, (state, action) => {
+            .addCase(getResultsStatistics.pending, (state, action) => {
                 state.status = 'loading';
                 state.isLoading = true;
             })
-            .addCase(getResultsDetails.fulfilled, (state, action) => {
+            .addCase(getResultsStatistics.fulfilled, (state, action) => {
                 state.status = 'success';
-                state.results = action.payload;
+                state.statistics = action.payload;
                 state.isLoading = false;
             })
-            .addCase(getResultsDetails.rejected, (state, action) => {
+            .addCase(getResultsStatistics.rejected, (state, action) => {
                 state.status = 'error';
                 state.isLoading = false;
             })
@@ -91,5 +92,5 @@ const resultSlice = createSlice({
 
 export const { filterResults, sortResults, resetResults } = resultSlice.actions;
 export const selectResult = (state) => state.results;
-export { saveResults, getResults, getResultDetails } from './resultThunk';
+export { saveResults, getResults, getResultDetails, getResultsStatistics } from './resultThunk';
 export const resultReducers = resultSlice.reducer;
