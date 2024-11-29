@@ -73,7 +73,7 @@ const getResultsStatistics = async (req, res) => {
         }
 
         const amountMistakesCards = getAllWordsMode(results);
-        res.status(200).json(amountMistakesCards);
+        res.status(200).json({ resultsMonths, amountMistakesCards});
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error saving results' });
     }
@@ -185,5 +185,6 @@ module.exports = {
     saveResults,
     getResults,
     getResultDetails,
-    getResultsDetails
+    getResultsDetails,
+    getResultsStatistics
 };
