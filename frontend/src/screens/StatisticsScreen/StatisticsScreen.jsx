@@ -33,9 +33,9 @@ const StatisticsScreen = () => {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <BackButton />
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                <PressableButton text="Картки" onPress={() => setSelectedMode('flashCards')}/>
-                <PressableButton text="Вікторина" onPress={() => setSelectedMode('quiz')}/>
-                <PressableButton text="Вгадай слово" onPress={() => setSelectedMode('guessWord')}/>
+                <PressableButton buttonStyle={{ backgroundColor: selectedMode === 'flashCards' ? "#004186" : "#007AFF"}} text="Картки" onPress={() => setSelectedMode('flashCards')}/>
+                <PressableButton buttonStyle={{ backgroundColor: selectedMode === 'quiz' ? "#004186" : "#007AFF"}} text="Вікторина" onPress={() => setSelectedMode('quiz')}/>
+                <PressableButton buttonStyle={{ backgroundColor: selectedMode === 'guessWord' ? "#004186" : "#007AFF"}} text="Вгадай слово" onPress={() => setSelectedMode('guessWord')}/>
             </View>
 
             <View
@@ -96,6 +96,9 @@ const StatisticsScreen = () => {
                         }}
                     />
                 )}
+                <Text>Статистика:</Text>
+                <PressableButton buttonStyle={{ backgroundColor: selectedWordsMode === 'mistakes' ? "#004186" : "#007AFF"}} onPress={() => setSelectedWordsMode('mistakes')} text="Помилок"/>
+                <PressableButton buttonStyle={{ backgroundColor: selectedWordsMode === 'wordLength' ? "#004186" : "#007AFF"}} onPress={() => setSelectedWordsMode('wordLength')} text="Кількість слів"/>
             </View>
         </SafeAreaView>
     );
