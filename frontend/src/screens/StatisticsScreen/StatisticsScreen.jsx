@@ -16,6 +16,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import BackButton from "../../components/BackButton/BackButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
+import RNPickerSelect from "react-native-picker-select";
 
 const StatisticsScreen = () => {
     const { theme: { colors }} = useAppTheme();
@@ -28,22 +29,41 @@ const StatisticsScreen = () => {
         dispatch(getResultsStatistics());
     }, []);
 
-    const modesButtons = [
-        { text: 'Картки', mode: 'flashCards'},
-        { text: 'Вікторина', mode: 'quiz'},
-        { text: 'Відгадай слово', mode: 'guessWord'},
+    const modesOptions = [
+        { label: 'Картки', value: 'flashCards' },
+        { label: 'Вікторина', value: 'quiz' },
+        { label: 'Відгадай слово', value: 'guessWord' },
+    ];
+
+    const wordsModeOptions = [
+        { label: 'Помилок', value: 'mistakes' },
+        { label: 'Кількість слів', value: 'wordLength' },
     ];
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <BackButton />
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                <FlatList 
-                    data={modesButtons}
-                    keyExtractor={(item) => item.text}
-                    renderItem={({ item: { text, mode } }) => (
-                        <PressableButton buttonStyle={{ backgroundColor: selectedMode === mode ? "#004186" : "#007AFF"}} text={text} onPress={() => setSelectedMode(mode)}/>
-                    )}
+                <RNPickerSelect 
+                    onValueChange={(value) => setSelectedMode(value)}
+                    items={modesOptions}
+                    values={selectedMode}
+                    style={{
+                        inputIOS: {
+                            color: "#000",
+                            padding: 10,
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: 5,
+                            marginBottom: 10,
+                        },
+                        inputAndroid: {
+                            color: "#000",
+                            padding: 10,
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: 5,
+                            marginBottom: 10,
+                        }
+                    }}
                 />
             </View>
 
