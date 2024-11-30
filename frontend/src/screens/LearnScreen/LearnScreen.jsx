@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable, TextInput} from "react-native";
+import {View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
@@ -224,7 +224,7 @@ const LearnScreen = ({ route }) => {
     const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
 
     const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
-    const incorrectAnswersAmount = resultsData.filter(item => item.mistakesAmount >= 1).length;
+    const procentRight = Math.floor((correctAnswersAmount / resultsData.length) * 100);
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -263,17 +263,25 @@ const LearnScreen = ({ route }) => {
                         </DefaultModal>
                     </>
                 ) : (
-                    <View>
-                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ color: theme.colors.primary }}>Молодець! Гарно позаймався/лась</Text>
+                    <>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                            <Text style={{ color: theme.colors.primary, textAlign: 'center', fontSize: 30 }}>Молодець! Гарно позаймався/лась</Text>
+
+                            <View>
+                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{elapsedTime}</Text>
+                                </View>
+
+                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{correctAnswersAmount * 10} очок</Text>
+                                </View>
+                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{procentRight}% точність</Text>
+                                </View>
                             </View>
-                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви займались: {elapsedTime}</Text>
-                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви заробили: {correctAnswersAmount * 10} очків</Text>
-                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви зробили: {incorrectAnswersAmount} помилок</Text>
                         </View>
                         <PressableButton text="Зберегти" onPress={saveLessonResults}/>
-                    </View>
+                    </>
                 )}
             </View>
         </SafeAreaView>
