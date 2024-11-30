@@ -42,6 +42,12 @@ const ResultDetailsScreen = ({ route }) => {
 
     const correctPercentage = calculateCorrectPercentage();
 
+    const modesOptionsButtons = [
+        { label: 'Картки'},
+        { label: 'Вікторина'},
+        { label: 'Вгадай слово'},
+    ]
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <View style={[styles.header, { backgroundColor: colors.lightBackground }]}>
@@ -69,9 +75,20 @@ const ResultDetailsScreen = ({ route }) => {
 
             <View style={{ marginHorizontal: 100 }}>
                 <View style={styles.buttonsContainer}>
-                    <PressableButton text="Картки" buttonStyle={{ backgroundColor: selectedMode === 0 ? "#004da4" : "#007AFF"}} onPress={() => setSelectedMode(0)}/>
-                    <PressableButton text="Вікторина" buttonStyle={{ backgroundColor: selectedMode === 1 ? "#004da4" : "#007AFF"}} onPress={() => setSelectedMode(1)}/>
-                    <PressableButton text="Вгадай слово" buttonStyle={{ backgroundColor: selectedMode === 2 ? "#004da4" : "#007AFF"}} onPress={() => setSelectedMode(2)}/>
+                    <FlatList 
+                        data={modesOptionsButtons.filter((_, index) => result.mode && result.mode[index]?.words?.length > 0)} // Do not show buttons that mode's words length equal 0
+                        keyExtractor={item => item.label}
+                        renderItem={({ item: { label }, index }) => (
+                            <PressableButton 
+                                text={label} 
+                                buttonStyle={{
+                                    backgroundColor: selectedMode === index ? "#004da4" : "#007AFF"
+                                }} 
+                                onPress={() => setSelectedMode(index)}
+                            />
+                        )}
+                        contentContainerStyle={styles.buttonsContainer}
+                    />
                 </View>
 
                 {isLoading && <Loading /> }

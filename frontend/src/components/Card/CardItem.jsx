@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import {View, Text, StyleSheet, Pressable, Dimensions, TextInput, Image} from 'react-native';
+import {View, Text, StyleSheet , Dimensions, TextInput, Image} from 'react-native';
 import { Entypo  } from '@expo/vector-icons';
 import DefaultModal from "../DefaultModal/DefaultModal";
 import Toast from "react-native-toast-message";
