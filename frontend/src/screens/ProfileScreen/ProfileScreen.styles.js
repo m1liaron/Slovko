@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    avatarPhotoContainer: {
+        
+    },
     avatarPhoto: {
         borderRadius: 100,
         height: 200,
