@@ -45,14 +45,14 @@ const StatisticsScreen = () => {
 
     const renderGraph = () => {
         const chartConfig = {
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
+            backgroundColor: "#011d65",
+            backgroundGradientFrom: "#002efb",
+            backgroundGradientTo: "#2643ff",
             decimalPlaces: 2,
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             style: {
-                borderRadius: 16,
+                borderRadius: 16
             },
         };
 
@@ -65,12 +65,14 @@ const StatisticsScreen = () => {
             ],
         };
 
+        const chartWidth = Dimensions.get("window").width - 100;
+
         switch (selectedGraph) {
             case 'BarChart':
                 return (
                     <BarChart
                         data={data}
-                        width={Dimensions.get("window").width - 20}
+                        width={chartWidth}
                         height={220}
                         chartConfig={chartConfig}
                         style={{ marginVertical: 8, borderRadius: 16 }}
@@ -79,14 +81,16 @@ const StatisticsScreen = () => {
             case 'PieChart':
                 return (
                     <PieChart
-                        data={statistics.amountMistakesCards[selectedMode][selectedWordsMode].map((value, index) => ({
-                            name: statistics.resultsMonths[index],
-                            population: value,
-                            color: `rgba(131, 167, 234, ${1 - index * 0.1})`,
-                            legendFontColor: "#7F7F7F",
-                            legendFontSize: 15,
-                        }))}
-                        width={Dimensions.get("window").width - 20}
+                        data={
+                            statistics.amountMistakesCards[selectedMode][selectedWordsMode].map((value, index) => ({
+                                name: statistics.resultsMonths[index],
+                                population: value,
+                                color: `rgba(131, 167, 234, ${1 - index * 0.1})`,
+                                legendFontColor: "#7F7F7F",
+                                legendFontSize: 15,
+                            }))
+                        }
+                        width={chartWidth}
                         height={220}
                         chartConfig={chartConfig}
                         accessor="population"
@@ -100,7 +104,7 @@ const StatisticsScreen = () => {
                 return (
                     <LineChart
                         data={data}
-                        width={Dimensions.get("window").width - 20}
+                        width={chartWidth}
                         height={220}
                         chartConfig={chartConfig}
                         bezier
@@ -113,39 +117,37 @@ const StatisticsScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <BackButton />
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                <RNPickerSelect 
-                    onValueChange={(value) => setSelectedMode(value)}
-                    items={modesOptions}
-                    value={selectedMode}
-                    placeholder={{ label: 'Картки', value: 'flashCards'}}
-                    style={{
-                        inputWeb: {
-                            color: "#000",
-                            padding: 10,
-                            backgroundColor: "#f0f0f0",
-                            borderRadius: 5,
-                        },
-                        inputIOS: {
-                            color: "#000",
-                            padding: 10,
-                            backgroundColor: "#f0f0f0",
-                            borderRadius: 5,
-                            marginBottom: 10,
-                        },
-                        inputAndroid: {
-                            color: "#000",
-                            padding: 10,
-                            backgroundColor: "#f0f0f0",
-                            borderRadius: 5,
-                            marginBottom: 10,
-                        }
-                    }}
-                />
-            </View>
-
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                <RNPickerSelect
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                    <RNPickerSelect 
+                        onValueChange={(value) => setSelectedMode(value)}
+                        items={modesOptions}
+                        value={selectedMode}
+                        placeholder={{ label: 'Картки', value: 'flashCards'}}
+                        style={{
+                            inputWeb: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                            },
+                            inputIOS: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                                marginBottom: 10,
+                            },
+                            inputAndroid: {
+                                color: "#000",
+                                padding: 10,
+                                backgroundColor: "#f0f0f0",
+                                borderRadius: 5,
+                                marginBottom: 10,
+                            }
+                        }}
+                    />
+                    <RNPickerSelect
                         onValueChange={(value) => setSelectedWordsMode(value)}
                         items={wordsModeOptions}
                         value={selectedWordsMode}
@@ -170,38 +172,38 @@ const StatisticsScreen = () => {
                                 borderRadius: 5,
                             }
                         }}
-                />
-            </View>
+                    />
+                </View>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
                 <RNPickerSelect
-                        onValueChange={(value) => setSelectedGraph(value)}
-                        items={graphOptions}
-                        value={selectedGraph}
-                        style={{
-                            inputWeb: {
-                                color: "#000",
-                                padding: 10,
-                                backgroundColor: "#f0f0f0",
-                                borderRadius: 5,
-                            },
-                            inputIOS: {
-                                color: "#000",
-                                padding: 10,
-                                backgroundColor: "#f0f0f0",
-                                borderRadius: 5,
-                            },
-                            inputAndroid: {
-                                color: "#000",
-                                padding: 10,
-                                backgroundColor: "#f0f0f0",
-                                borderRadius: 5,
-                            }
-                        }}
+                    onValueChange={(value) => setSelectedGraph(value)}
+                    items={graphOptions}
+                    value={selectedGraph}
+                    placeholder={{ label: 'Виберіть графік', value: null}}
+                    style={{
+                        inputWeb: {
+                            color: "#000",
+                            padding: 10,
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: 5,
+                        },
+                        inputIOS: {
+                            color: "#000",
+                            padding: 10,
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: 5,
+                        },
+                        inputAndroid: {
+                            color: "#000",
+                            padding: 10,
+                            backgroundColor: "#f0f0f0",
+                            borderRadius: 5,
+                        }
+                    }}
                 />
             </View>
 
-            <View>
+            <View style={{ margin: 20}}>
                 {statistics && statistics.amountMistakesCards && renderGraph()}
             </View>
         </SafeAreaView>
