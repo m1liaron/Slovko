@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable, TextInput} from "react-native";
+import {View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
@@ -36,14 +36,13 @@ const LearnScreen = ({ route }) => {
     const [isLessonOver, setIsLessonOver] = useState(false);
 
     // results data
-    const [resultModal, setResulModal] = useState(false);
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
     const [startLearnDate, setStartLearnDate] = useState(null);
     const [elapsedTime, setElapsedTime] = useState('');
 
-    const { title: projectName } = groups?.filter(group => group.id === groupId);
+    const { title: projectName } = groups?.find(group => group.id === groupId);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
@@ -145,14 +144,13 @@ const LearnScreen = ({ route }) => {
         const endLearnDate = new Date();
         const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
         setElapsedTime(formatTime(totalLearnedTime));
-        setResulModal(true)
     };
 
     const saveLessonResults = () => {
-        setResulModal(false);
-        navigation.navigate(AppPath.Home);
+        finishLesson();
         dispatch(updateCardsAfterLearn({ groupId }));
         handleSaveResults();
+        navigation.navigate(AppPath.Home);
     }
 
     const switchSection = (changeState, sectionName) => {
@@ -223,6 +221,11 @@ const LearnScreen = ({ route }) => {
         }
     }, []);
 
+    const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
+
+    const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
+    const procentRight = Math.floor((correctAnswersAmount / resultsData.length) * 100);
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
@@ -260,22 +263,25 @@ const LearnScreen = ({ route }) => {
                         </DefaultModal>
                     </>
                 ) : (
-                    <View>
-                        <DefaultModal
-                            isVisible={resultModal}
-                            modalStyle={{ width: '60%' }}
-                            backgroundColor={theme.colors.background}
-                            handleClose={saveLessonResults}
-                        >
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ color: theme.colors.primary }}>Молодець! Гарно позаймався/лась</Text>
+                    <>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                            <Text style={{ color: theme.colors.primary, textAlign: 'center', fontSize: 30 }}>Молодець! Гарно позаймався/лась</Text>
+
+                            <View>
+                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{elapsedTime}</Text>
                                 </View>
-                                <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви займались: {elapsedTime}</Text>
+
+                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{correctAnswersAmount * 10} очок</Text>
+                                </View>
+                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{procentRight}% точність</Text>
+                                </View>
                             </View>
-                            <PressableButton text="Зберегти" onPress={saveLessonResults}/>
-                        </DefaultModal>
-                    </View>
+                        </View>
+                        <PressableButton text="Зберегти" onPress={saveLessonResults}/>
+                    </>
                 )}
             </View>
         </SafeAreaView>

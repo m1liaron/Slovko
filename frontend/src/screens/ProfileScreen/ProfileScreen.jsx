@@ -43,6 +43,7 @@ export default function ProfileScreen() {
         if (user) {
             setUserName(user.name);
             setUserEmail(user.email);
+            setImage(user.image || '');
         }
     }, [user]);
 
@@ -147,30 +148,20 @@ export default function ProfileScreen() {
                         <View>
                             {!isEditing ? (
                                 <View
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        alignSelf: 'center'
-                                    }}
+                                    style={{ alignSelf: 'center' }}
                                 >
                                     <Image
                                         style={styles.avatarPhoto}
-                                        source={image ? { uri: image } : user.image}
+                                        source={image || AvatarImage}
                                     />
                                 </View>
                             ) : (
                                 <Pressable
                                    onPress={() => pickImage(image, setImage)}
-                                   style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    alignSelf: 'center'
-                                }}>
+                                   style={{ alignSelf: 'center' }}>
                                     <Image
                                         style={styles.avatarPhoto}
-                                        source={image ? { uri: image } : user.image}
+                                        source={image || AvatarImage}
                                     />
                                 </Pressable>
                             )}

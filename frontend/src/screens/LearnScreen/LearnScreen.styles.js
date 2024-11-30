@@ -15,6 +15,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 10
     },
+    resultItemContainer: {
+        borderWidth: 3, 
+        borderRadius: 5, 
+        padding: 10
+    }
 })
 
 export default styles;
