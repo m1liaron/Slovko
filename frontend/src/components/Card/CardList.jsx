@@ -73,10 +73,19 @@ const CardList = ({ groupId }) => {
             }
         }
 
+        function validateWord (word) {
+            const cleanedWord = word.replace(/[^A-Za-z0-9]/g, '');
+            const formattedWord = cleanedWord.charAt(0).toUpperCase() + cleanedWord.slice(1).toLowerCase();
+    
+            return formattedWord
+        }
+
+        const validatedAnswer = validateWord(answerWord) || answerWord;
+
         const cardData = {
-            word: value,
-            translateWord: answerWord,
-            imageUri: finalImageUri,
+            word: validateWord(value),
+            translateWord: validatedAnswer,
+            imageUri: finalImageUri || '',
             groupId
         };
 
