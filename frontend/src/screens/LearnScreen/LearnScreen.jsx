@@ -36,14 +36,13 @@ const LearnScreen = ({ route }) => {
     const [isLessonOver, setIsLessonOver] = useState(false);
 
     // results data
-    const [resultModal, setResulModal] = useState(false);
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
     const [startLearnDate, setStartLearnDate] = useState(null);
     const [elapsedTime, setElapsedTime] = useState('');
 
-    const { title: projectName } = groups?.filter(group => group.id === groupId);
+    const { title: projectName } = groups?.find(group => group.id === groupId);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
 
@@ -145,14 +144,13 @@ const LearnScreen = ({ route }) => {
         const endLearnDate = new Date();
         const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
         setElapsedTime(formatTime(totalLearnedTime));
-        setResulModal(true)
     };
 
     const saveLessonResults = () => {
-        setResulModal(false);
-        navigation.navigate(AppPath.Home);
+        finishLesson();
         dispatch(updateCardsAfterLearn({ groupId }));
         handleSaveResults();
+        navigation.navigate(AppPath.Home);
     }
 
     const switchSection = (changeState, sectionName) => {
@@ -223,6 +221,11 @@ const LearnScreen = ({ route }) => {
         }
     }, []);
 
+    const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
+
+    const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
+    const incorrectAnswersAmount = resultsData.filter(item => item.mistakesAmount >= 1).length;
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
@@ -261,20 +264,15 @@ const LearnScreen = ({ route }) => {
                     </>
                 ) : (
                     <View>
-                        <DefaultModal
-                            isVisible={resultModal}
-                            modalStyle={{ width: '60%' }}
-                            backgroundColor={theme.colors.background}
-                            handleClose={saveLessonResults}
-                        >
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ color: theme.colors.primary }}>Молодець! Гарно позаймався/лась</Text>
-                                </View>
-                                <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви займались: {elapsedTime}</Text>
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ color: theme.colors.primary }}>Молодець! Гарно позаймався/лась</Text>
                             </View>
-                            <PressableButton text="Зберегти" onPress={saveLessonResults}/>
-                        </DefaultModal>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви займались: {elapsedTime}</Text>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви заробили: {correctAnswersAmount * 10} очків</Text>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Ви зробили: {incorrectAnswersAmount} помилок</Text>
+                        </View>
+                        <PressableButton text="Зберегти" onPress={saveLessonResults}/>
                     </View>
                 )}
             </View>
