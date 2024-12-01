@@ -8,16 +8,13 @@ const styles = StyleSheet.create({
         padding: 10
     },
     flex: {
+        display: 'flex',
         alignItems: 'center',
-        flexDirection: 'row',
-        gap: 10,
-    },
-    itemContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+    itemContainer: {
         backgroundColor: '#DCDCDC',
-        alignItems: 'center',
-        gap: 20,
         width: '90%',
         alignSelf: 'center',
         padding: 16,
