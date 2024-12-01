@@ -78,6 +78,23 @@ const getSharedGroup = async (req, res) => {
     }
 }
 
+const removeSharedGroup = async (req, res) => {
+    try {
+        const sharedGroup = await SharedGroup.findOne({
+            where: { userId: req.user.id },
+        });
+        if(!sharedGroup) {
+            return res.status(404).json({ error: true, message: 'Group not found'})
+        }
+        const { id: sharedGroupId } = sharedGroup;
+        await sharedGroup.destroy();
+
+        res.status(200).json(sharedGroupId);
+    } catch(error) {
+        res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
+    }
+}
+
 const copySharedGroup = async (req, res) => {
     const { sharedGroupId } = req.params;
     try {
@@ -113,4 +130,5 @@ module.exports = {
     getAllSharedGroup,
     getSharedGroup,
     copySharedGroup,
+    removeSharedGroup
 }
