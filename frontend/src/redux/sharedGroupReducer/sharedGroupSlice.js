@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup } from './sharedGroupThunk';
+import { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup, removeSharedGroup } from './sharedGroupThunk';
 
 const sharedGroupSlice = createSlice({
     name:'sharedGroup',
@@ -44,9 +44,27 @@ const sharedGroupSlice = createSlice({
             .addCase(getSharedGroup.rejected, state => {
                 state.status = 'error';
             })
+            // removeSharedGroup
+            .addCase(removeSharedGroup.pending, state => {
+                state.status = 'pending';
+            })
+            .addCase(removeSharedGroup.fulfilled, (state, action) => {
+                state.status = 'success';
+                state.sharedGroup = action.payload;
+
+                const updatedGroup = action.payload;
+                const index = state.sharedGroups.findIndex((card) => card.id === updatedGroup.id);
+                if (index !== -1) {
+                    state.sharedGroups[index] = updatedGroup;
+                    state.sharedGroups = [...state.sharedGroups];
+                }
+            })
+            .addCase(removeSharedGroup.rejected, state => {
+                state.status = 'error';
+            })
     }
 })
 
 export const selectSharedGroup= (state) => state.sharedGroups.sharedGroups;
-export { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup } from './sharedGroupThunk';
+export { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup, removeSharedGroup } from './sharedGroupThunk';
 export const sharedGroupReducers = sharedGroupSlice.reducer;

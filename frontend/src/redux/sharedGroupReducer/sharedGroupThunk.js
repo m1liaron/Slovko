@@ -32,3 +32,11 @@ export const copySharedGroup = createAsyncThunk(
         return response.data
     }
 )
+
+export const removeSharedGroup = createAsyncThunk(
+    'sharedGroup/remove', async (sharedGroupId) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.delete(`/sharedGroups/${sharedGroupId}`);
+        return response.data
+    }
+)
