@@ -33,7 +33,16 @@ const createSharedGroup = async (req, res) => {
             }))
         }
 
-        res.status(200).json(sharedGroup);
+        const sharedGroupWithUser = await SharedGroup.findOne({
+            where: { id: sharedGroup.id },
+            include: {
+                model: User,
+                as: 'user',
+                attributes: ['id', 'name', 'email', 'image'],
+            }
+        })
+
+        res.status(200).json(sharedGroupWithUser);
     } catch(error) {
         res.status(500).json({ error: true, message: error.message || 'Server Error. Try again later.'})
     }

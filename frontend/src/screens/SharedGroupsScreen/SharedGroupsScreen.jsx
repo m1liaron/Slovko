@@ -3,7 +3,7 @@ import {FlatList, Image, Pressable, Text, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {copySharedGroup, getAllSharedGroups, saveSharedGroup, selectSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import {copySharedGroup, getAllSharedGroups, removeSharedGroup, saveSharedGroup, selectSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
@@ -12,7 +12,7 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import AddInput from "../../common/components/AddInput/AddInput";
-import {AntDesign} from "@expo/vector-icons";
+import {AntDesign, Feather} from "@expo/vector-icons";
 import AvatarImage from '../../../assets/images/avatar.png';
 
 const SharedGroupsScreen = () => {
@@ -108,8 +108,8 @@ const SharedGroupsScreen = () => {
 
                             <Text style={{ color: colors.primary, fontSize: 30 }}>{formatTime(item.createdAt)}</Text>
                         </Link>
-                        <Pressable onPress={() => dispatch(copySharedGroup(item.id))} >
-                            <AntDesign name="download" color={colors.primary} size={30}/>
+                        <Pressable onPress={() => dispatch(removeSharedGroup(item.id))} >
+                            <Feather name="trash" color={colors.primary} size={30}/>
                         </Pressable>
                     </View>
                 )}

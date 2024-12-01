@@ -52,10 +52,10 @@ const sharedGroupSlice = createSlice({
                 state.status = 'success';
                 state.sharedGroup = action.payload;
 
-                const updatedGroup = action.payload;
-                const index = state.sharedGroups.findIndex((card) => card.id === updatedGroup.id);
+                const updatedGroupId = action.payload;
+                const index = state.sharedGroups.findIndex((card) => card.id === updatedGroupId);
                 if (index !== -1) {
-                    state.sharedGroups[index] = updatedGroup;
+                    state.sharedGroups[index] = updatedGroupId;
                     state.sharedGroups = [...state.sharedGroups];
                 }
             })
