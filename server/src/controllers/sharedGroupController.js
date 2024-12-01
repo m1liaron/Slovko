@@ -80,8 +80,9 @@ const getSharedGroup = async (req, res) => {
 
 const removeSharedGroup = async (req, res) => {
     try {
+        const sharedId = req.params.sharedGroupId;
         const sharedGroup = await SharedGroup.findOne({
-            where: { userId: req.user.id },
+            where: { id: sharedId, userId: req.user.id },
         });
         if(!sharedGroup) {
             return res.status(404).json({ error: true, message: 'Group not found'})

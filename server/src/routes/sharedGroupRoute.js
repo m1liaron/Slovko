@@ -5,9 +5,10 @@ const {
     getAllSharedGroup,
     getSharedGroup,
     copySharedGroup,
+    removeSharedGroup
 } = require('../controllers/sharedGroupController');
 
 router.route('/').get(getAllSharedGroup).post(createSharedGroup);
-router.route('/:sharedGroupId').get(getSharedGroup).post(copySharedGroup)
+router.route('/:sharedGroupId').get(getSharedGroup).post(copySharedGroup).delete(removeSharedGroup);
 
 module.exports = router;
