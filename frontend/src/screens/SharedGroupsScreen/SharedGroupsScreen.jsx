@@ -4,7 +4,7 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    copySharedGroup,
+    copySharedGroup, filterMySharedGroups,
     filterSharedGroups,
     getAllSharedGroups, resetSharedGroups,
     saveSharedGroup,
@@ -21,8 +21,10 @@ import AddInput from "../../common/components/AddInput/AddInput";
 import {AntDesign, FontAwesome, FontAwesome6} from "@expo/vector-icons";
 import AvatarImage from '../../../assets/images/avatar.png';
 import {filterResults, resetResults} from "../../redux/resultReducer/resultSlice";
+import {selectUser} from "../../redux/userReducer/userSlice";
 
 const SharedGroupsScreen = () => {
+    const { user } = useSelector(selectUser);
     const { theme: { colors } } = useAppTheme();
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -83,6 +85,7 @@ const SharedGroupsScreen = () => {
             <View style={{ justifyContent: 'center' }}>
                 <View style={styles.header}>
                         <Text style={{ fontSize: 40, fontWeight: 'bold', color: colors.primary }}>2024</Text>
+                        <PressableButton text="Мої поширені групи" onPress={() => dispatch(filterMySharedGroups({ userId: user.id }))} />
                         <Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
                             <FontAwesome name="search" color={colors.iconColor} size={40} />
                         </Pressable>
