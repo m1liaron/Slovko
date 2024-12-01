@@ -11,10 +11,10 @@ const sharedGroupSlice = createSlice({
         error: null
     },
     reducers:{
-        filterResults: (state, action) => {
+        filterSharedGroups: (state, action) => {
             state.sharedGroups = state.filteredGroups.filter(item => item.title.startsWith(action.payload));
         },
-        resetResults: (state) => {
+        resetSharedGroups: (state) => {
             state.sharedGroups = [...state.filteredGroups];
         }
     },
@@ -57,6 +57,7 @@ const sharedGroupSlice = createSlice({
     }
 })
 
+export const { filterSharedGroups, resetSharedGroups } = sharedGroupSlice.actions;
 export const selectSharedGroup= (state) => state.sharedGroups.sharedGroups;
 export { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup } from './sharedGroupThunk';
 export const sharedGroupReducers = sharedGroupSlice.reducer;
