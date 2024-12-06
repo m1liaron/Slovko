@@ -74,8 +74,12 @@ const CardList = ({ groupId }) => {
         }
 
         function validateWord (word) {
-            const cleanedWord = word.replace(/[^A-Za-z0-9]/g, '');
-            const formattedWord = cleanedWord.charAt(0).toUpperCase() + cleanedWord.slice(1).toLowerCase();
+            const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, '');
+            const formattedWord = cleanedWord
+                .split(' ')
+                .filter(Boolean) // Remove any extra spaces
+                .map(subWord => subWord.charAt(0).toUpperCase() + subWord.slice(1).toLowerCase())
+                .join(' ');
     
             return formattedWord
         }
