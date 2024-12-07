@@ -35,53 +35,42 @@ const LearnScreen = ({ route }) => {
     const [finishedSections, setFinishedSections] = useState([]);
     const [isLessonOver, setIsLessonOver] = useState(false);
 
-    // results data
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
     const [startLearnDate, setStartLearnDate] = useState(null);
     const [elapsedTime, setElapsedTime] = useState('');
 
-    const { title: projectName } = groups?.find(group => group.id === groupId);
-
-    const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
+    const projectName = groups?.find(group => group.id === groupId)?.title;
 
     useEffect(() => {
         setStartLearnDate(new Date());
         dispatch(getCards({ groupId }));
     }, [dispatch, groupId]);
 
+    const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
+
+    const formatTime = (milliseconds) => {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const millisecondsPart = Math.floor((milliseconds % 1000) / 10); // two decimal places
+
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
+    };
+
     const handleNextSection = () => {
-        switch (currentSection) {
-            case 'cards':
-                if (isQuizEnabled) {
-                    setCurrentSection('quiz');
-                } else if (isGuessWordEnabled) {
-                    setCurrentSection('word');
-                } else {
-                    finishLesson();
-                }
-                break;
-            case 'quiz':
-                if (isGuessWordEnabled) {
-                    setFinishedSections(prevState => [...prevState, 'quiz']);
-                    setCurrentSection('word');
-                } else if (isQuizEnabled) {
-                    setCurrentSection('quiz');
-                } else {
-                    finishLesson();
-                }
-                break;
-            case 'word':
-                if(isQuizEnabled && !finishedSections.includes('quiz')) {
-                    setCurrentSection('quiz');
-                } else {
-                    finishLesson();
-                }
-                break;
-            default:
-                finishLesson();
-                break;
+        const transitions = {
+            cards: isQuizEnabled ? 'quiz' : isGuessWordEnabled ? 'word' : 'finish',
+            quiz: isGuessWordEnabled ? 'word' : 'finish',
+            word: finishedSections.includes('quiz') ? 'finish' : 'quiz',
+        };
+        const nextSection = transitions[currentSection] || 'finish';
+        if(nextSection === 'finish') {
+            finishLesson();
+        } else {
+            setFinishedSections((prev) => [...prev, currentSection]);
+            setCurrentSection(nextSection);
         }
     };
 
@@ -195,15 +184,6 @@ const LearnScreen = ({ route }) => {
             </View>
         ))
     }
-
-    const formatTime = (milliseconds) => {
-        const totalSeconds = Math.floor(milliseconds / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        const millisecondsPart = Math.floor((milliseconds % 1000) / 10); // two decimal places
-
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
-    };
 
     if(Platform.OS === 'web') {
         useEffect(() => {
