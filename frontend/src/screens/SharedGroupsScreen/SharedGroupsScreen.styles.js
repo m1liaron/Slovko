@@ -11,6 +11,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         gap: 30
     },
+    header: {
+        alignItems: 'center',
+        justifyContent: "space-between",
+        flexDirection: 'row',
+        marginHorizontal: 20
+    }
 });
 
 export default styles

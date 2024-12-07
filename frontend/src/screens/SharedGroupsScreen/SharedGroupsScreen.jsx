@@ -1,9 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, Pressable, Text, View} from 'react-native'
+import {FlatList, Image, Pressable, Text, TextInput, View} from 'react-native'
 import {SafeAreaView} from "react-native-safe-area-context";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {useDispatch, useSelector} from "react-redux";
-import {copySharedGroup, getAllSharedGroups, saveSharedGroup, selectSharedGroup} from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import {
+    copySharedGroup, filterMySharedGroups,
+    filterSharedGroups,
+    getAllSharedGroups, resetSharedGroups,
+    saveSharedGroup,
+    selectSharedGroup
+} from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from './SharedGroupsScreen.styles';
 import {Link, useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
@@ -12,10 +18,13 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import AddInput from "../../common/components/AddInput/AddInput";
-import {AntDesign} from "@expo/vector-icons";
+import {AntDesign, FontAwesome, FontAwesome6} from "@expo/vector-icons";
 import AvatarImage from '../../../assets/images/avatar.png';
+import {filterResults, resetResults} from "../../redux/resultReducer/resultSlice";
+import {selectUser} from "../../redux/userReducer/userSlice";
 
 const SharedGroupsScreen = () => {
+    const { user } = useSelector(selectUser);
     const { theme: { colors } } = useAppTheme();
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -24,7 +33,8 @@ const SharedGroupsScreen = () => {
     const [showAddModal, setShowModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
     const [sharedGroupTitle, setSharedGroupTitle] = useState('' || selectedGroup?.title);
-
+    const [showFilterInput, setShowFilterInput] = useState(false);
+    const [filterValue, setFilterValue] = useState("");
 
     useEffect(() => {
         dispatch(getAllSharedGroups());
@@ -72,6 +82,59 @@ const SharedGroupsScreen = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+            <View style={{ justifyContent: 'center' }}>
+                <View style={styles.header}>
+                        <Text style={{ fontSize: 40, fontWeight: 'bold', color: colors.primary }}>2024</Text>
+                        <PressableButton text="Мої поширені групи" onPress={() => dispatch(filterMySharedGroups({ userId: user.id }))} />
+                        <Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
+                            <FontAwesome name="search" color={colors.iconColor} size={40} />
+                        </Pressable>
+                </View>
+            </View>
+            { showFilterInput &&
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <TextInput
+                        style={{
+                            borderWidth: 4,
+                            borderRadius: 20,
+                            borderColor: colors.primary,
+                            padding: 15,
+                            width: '30%',
+                            alignSelf: 'end',
+                            color: colors.primary,
+                        }}
+                        placeholder="Фільтр"
+                        placeholderTextColor={colors.primary}
+                        value={filterValue}
+                        onChangeText={setFilterValue}
+                    />
+                    <Pressable
+                        style={{
+                            borderWidth: 4,
+                            borderRadius: 20,
+                            borderColor: colors.primary,
+                            padding: 15,
+                            alignSelf: 'end'
+                        }}
+                        onPress={() => dispatch(filterSharedGroups(filterValue))}
+                    >
+                        <Text style={{ color: colors.primary }}>Фільтрувати</Text>
+                    </Pressable>
+                    <Pressable
+                        style={{
+                            borderWidth: 4,
+                            borderRadius: 20,
+                            borderColor: colors.primary,
+                            padding: 15,
+                            alignSelf: 'end'
+                        }}
+                        onPress={() => dispatch(resetSharedGroups())}
+                    >
+                        <FontAwesome6 name="arrow-rotate-left" color={colors.iconColor}/>
+                    </Pressable>
+                </View>
+            }
+
             <FlatList
                 data={sharedGroups}
                 contentContainerStyle={{

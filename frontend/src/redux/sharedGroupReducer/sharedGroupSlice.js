@@ -5,11 +5,22 @@ const sharedGroupSlice = createSlice({
     name:'sharedGroup',
     initialState: {
         sharedGroups: [],
+        filteredGroups: [],
         sharedGroup: {},
         status:'idle',
         error: null
     },
-    reducers:{},
+    reducers:{
+        filterSharedGroups: (state, action) => {
+            state.sharedGroups = state.filteredGroups.filter(item => item.title.startsWith(action.payload));
+        },
+        filterMySharedGroups: (state, action) => {
+            state.sharedGroups = state.filteredGroups.filter(item => item.userId === action.payload.userId);
+        },
+        resetSharedGroups: (state) => {
+            state.sharedGroups = [...state.filteredGroups];
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getAllSharedGroups.pending, state => {
@@ -18,6 +29,7 @@ const sharedGroupSlice = createSlice({
             .addCase(getAllSharedGroups.fulfilled, (state, action) => {
                 state.status = 'success';
                 state.sharedGroups = action.payload;
+                state.filteredGroups = action.payload;
             })
             .addCase(getAllSharedGroups.rejected, state => {
                 state.status = 'error';
@@ -29,6 +41,7 @@ const sharedGroupSlice = createSlice({
             .addCase(saveSharedGroup.fulfilled, (state, action) => {
                 state.status = 'success';
                 state.sharedGroups.push(action.payload);
+                state.filteredGroups.push(action.payload);
             })
             .addCase(saveSharedGroup.rejected, state => {
                 state.status = 'error';
@@ -47,6 +60,7 @@ const sharedGroupSlice = createSlice({
     }
 })
 
+export const { filterSharedGroups, resetSharedGroups, filterMySharedGroups } = sharedGroupSlice.actions;
 export const selectSharedGroup= (state) => state.sharedGroups.sharedGroups;
 export { getAllSharedGroups, saveSharedGroup, getSharedGroup, copySharedGroup } from './sharedGroupThunk';
 export const sharedGroupReducers = sharedGroupSlice.reducer;

@@ -42,7 +42,6 @@ const createSharedGroup = async (req, res) => {
 const getAllSharedGroup = async (req, res) => {
     try {
         const allSharedGroups = await SharedGroup.findAll({
-            where: { userId: req.user.id },
             include: {
                 model: User,
                 as: 'user',
