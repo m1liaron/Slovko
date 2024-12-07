@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable } from "react-native";
+import {View, Text, Pressable, Platform} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
@@ -205,22 +205,23 @@ const LearnScreen = ({ route }) => {
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
     };
 
+    if(Platform.OS === 'web') {
+        useEffect(() => {
+                const handleBeforeUnload = (event) => {
+                    event.preventDefault();
 
-    useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            event.preventDefault();
+                    event.returnValue = 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
+                    return 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
+                }
 
-            event.returnValue = 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
-            return 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
-        }
+                window.addEventListener("beforeunload", handleBeforeUnload);
 
-        window.addEventListener("beforeunload", handleBeforeUnload);
+                return () => {
+                    window.removeEventListener("beforeunload", handleBeforeUnload);
+                }
 
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        }
-    }, []);
-
+        }, []);
+    }
     const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
 
     const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
