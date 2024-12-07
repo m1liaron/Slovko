@@ -202,10 +202,35 @@ const LearnScreen = ({ route }) => {
 
         }, []);
     }
-    const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
 
-    const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
-    const procentRight = Math.floor((correctAnswersAmount / resultsData.length) * 100);
+    const ResultsDisplay = () => {
+        const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
+        const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
+        const accuracy  = Math.floor((correctAnswersAmount / resultsData.length) * 100);
+        const elapsedTime = startLearnDate ? formatTime(new Date() - startLearnDate) : '';
+
+        return (
+            <>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                    <Text style={{ color: theme.colors.primary, textAlign: 'center', fontSize: 30 }}>Молодець! Гарно позаймався/лась</Text>
+
+                    <View>
+                        <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{elapsedTime}</Text>
+                        </View>
+
+                        <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{correctAnswersAmount * 10} очок</Text>
+                        </View>
+                        <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{accuracy}% точність</Text>
+                        </View>
+                    </View>
+                </View>
+                <PressableButton text="Зберегти" onPress={saveLessonResults}/>
+            </>
+        )
+    }
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -243,27 +268,9 @@ const LearnScreen = ({ route }) => {
                             {generateSectionContent()}
                         </DefaultModal>
                     </>
-                ) : (
-                    <>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-                            <Text style={{ color: theme.colors.primary, textAlign: 'center', fontSize: 30 }}>Молодець! Гарно позаймався/лась</Text>
-
-                            <View>
-                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
-                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{elapsedTime}</Text>
-                                </View>
-
-                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
-                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{correctAnswersAmount * 10} очок</Text>
-                                </View>
-                                <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
-                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{procentRight}% точність</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <PressableButton text="Зберегти" onPress={saveLessonResults}/>
-                    </>
-                )}
+                ) :
+                    <ResultsDisplay/>
+                }
             </View>
         </SafeAreaView>
     )
