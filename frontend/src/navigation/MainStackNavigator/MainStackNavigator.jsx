@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 const MainStackNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name={AppPath.Home} component={NavigationTab} />
+            <Stack.Screen name={AppPath.Main} component={NavigationTab} />
             <Stack.Screen name={AppPath.Group} component={GroupScreen} />
             <Stack.Screen name={AppPath.Learn} component={LearnScreen} />
             <Stack.Screen name={AppPath.ResultDetails} component={ResultDetailsScreen} />

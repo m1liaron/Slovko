@@ -211,10 +211,10 @@ const LearnScreen = ({ route }) => {
 
         return (
             <>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
                     <Text style={{ color: theme.colors.primary, textAlign: 'center', fontSize: 30 }}>Молодець! Гарно позаймався/лась</Text>
 
-                    <View>
+                    <View style={{ marginBottom: 30 }}>
                         <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
                             <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{elapsedTime}</Text>
                         </View>

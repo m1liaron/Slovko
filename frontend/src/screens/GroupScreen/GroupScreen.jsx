@@ -42,7 +42,7 @@ const GroupScreen = ({route}) => {
             <Pressable
                 key={id}
                 style={{
-                    padding: 20,
+                    padding: 10,
                     borderRadius: 10,
                     borderWidth: 2,
                     borderColor: color,
@@ -77,7 +77,7 @@ const GroupScreen = ({route}) => {
                 {renderStatusButtons()}
                 <Pressable
                     style={{
-                        padding: 10,
+                        padding: 5,
                         borderRadius: 10,
                         borderWidth: 2,
                         borderColor: '#bcbcbc',
