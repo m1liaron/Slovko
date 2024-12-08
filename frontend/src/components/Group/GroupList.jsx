@@ -9,8 +9,10 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import AddInput from "../../common/components/AddInput/AddInput";
 import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../DefaultModal/DefaultModal";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 export const GroupList = () => {
+    const { theme: { colors }} = useAppTheme();
     const groups = useSelector(selectGroup);
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
@@ -53,7 +55,7 @@ export const GroupList = () => {
                 isVisible={showAddModal}
                 handleClose={() => setShowAddModal(false)}
             >
-                <Text>Додайте Групу!</Text>
+                <Text style={{ color: colors.primary }}>Додайте Групу!</Text>
                 <AddInput
                     placeholder="Назва Групи"
                     placeholderTextColor="#A0A0A0"

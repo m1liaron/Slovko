@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+ import React, { useEffect, useRef } from 'react';
 import {View, Modal, Pressable, Animated, useWindowDimensions} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
@@ -65,7 +65,7 @@ const DefaultModal = ({
                     style={[
                         styles.modalContent,
                         modalStyle,
-                        { width: width - 100, opacity: opacity, transform: [{ scale: scale }], backgroundColor: theme.colors.background }, // Applying animated opacity and scale
+                        { width: width - 100, maxWidth: 400, opacity: opacity, transform: [{ scale: scale }], backgroundColor: theme.colors.background, margin: 50 }, // Applying animated opacity and scale
                     ]}
                 >
                     <View style={styles.header}>
