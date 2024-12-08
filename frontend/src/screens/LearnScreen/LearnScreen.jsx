@@ -11,13 +11,13 @@ import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch, useSelector} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
-import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
+import {useNavigation} from "@react-navigation/native";
 
 
 const LearnScreen = ({ route }) => {
@@ -139,7 +139,7 @@ const LearnScreen = ({ route }) => {
     };
 
     const leaveStudy = () => {
-        navigation.navigate(AppPath.Home);
+        navigation.navigate(AppPath.Main);
         console.log('Leave page learn screen')
     }
 
@@ -263,7 +263,7 @@ const LearnScreen = ({ route }) => {
                                 </View>
                             </View>
                         </View>
-                        <PressableButton text="Продовжити" onPress={leaveStudy}/>
+                        <PressableButton text="Продовжити" onPress={leaveStudy} />
                     </>
                 )
                 }
