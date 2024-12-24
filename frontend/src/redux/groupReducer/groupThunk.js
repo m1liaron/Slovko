@@ -32,3 +32,11 @@ export const removeGroup = createAsyncThunk(
         return response.data
     }
 )
+
+export const updateGroup = createAsyncThunk(
+    'group/update', async (data) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.patch(`/groups/${data.id}`, data);
+        return response.data
+    }
+)

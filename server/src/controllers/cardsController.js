@@ -119,7 +119,6 @@ const updateCard = async (req, res) => {
     try {
         const cardId = req.params.id;
         const { groupId } = req.body;
-        console.log(req.params)
         const updatedCard = await Card.update(req.body, {
             where: { id: cardId, groupId },
             returning: true

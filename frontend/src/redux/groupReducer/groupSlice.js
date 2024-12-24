@@ -3,8 +3,10 @@ import {
     getAllGroups,
     getGroup,
     addGroup,
-    removeGroup
+    removeGroup,
+    updateGroup
 } from './groupThunk';
+import {DataStatus} from "../../common/enums/app/DataStatus";
 
 
 const groupSlice = createSlice({
@@ -59,9 +61,27 @@ const groupSlice = createSlice({
             .addCase(removeGroup.rejected, (state) => {
                 state.status = 'rejected';
             })
+            // update
+            .addCase(updateGroup.pending, (state, action) => {
+                state.status = DataStatus.PENDING;
+            })
+            .addCase(updateGroup.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS;
+                state.error = null;
+                const updatedGroup = action.payload;
+                const index = state.groups.findIndex((group) => group.id === updatedGroup.id);
+                if (index !== -1) {
+                    state.groups[index] = updatedGroup;
+                    state.group = updatedGroup;
+                    state.groups = [...state.groups];
+                }
+            })
+            .addCase(updateGroup.rejected, (state, action) => {
+                state.status = DataStatus.ERROR;
+            })
     }
 })
 
 export const selectGroup= (state) => state.groups.groups;
-export { getAllGroups, getGroup, addGroup, removeGroup } from './groupThunk';
+export { getAllGroups, getGroup, addGroup, removeGroup, updateGroup } from './groupThunk';
 export const groupReducers = groupSlice.reducer;

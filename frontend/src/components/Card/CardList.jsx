@@ -19,10 +19,12 @@ import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../DefaultModal/DefaultModal";
 import pickImage from "../../utils/pickImage";
 import Loading from "../Loading";
+import {useAppTheme} from "../../contexts/ThemeProvider";
 
 const MemoCardItem = memo(CardItem);
 
 const CardList = ({ groupId }) => {
+    const { theme: { colors }} = useAppTheme();
     const { group } = useSelector(state => state.groups);
     const { cards, isLoading } = useSelector(state => state.cards);
     const [value, setValue] = useState('');
@@ -154,7 +156,7 @@ const CardList = ({ groupId }) => {
                 handleClose={() => setShowAddModal(false)}
             >
                 <View style={styles.formContainer}>
-                    <Text style={styles.title}>Додайте Карточку!</Text>
+                    <Text style={[styles.title, { color: colors.primary }]}>Додайте Карточку!</Text>
                     <AddInput
                         value={value}
                         onChangeText={setValue}

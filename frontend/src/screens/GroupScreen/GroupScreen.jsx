@@ -5,16 +5,21 @@ import { Pressable, Text, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
 import {filterCardsByStatus, resetFilter} from "../../redux/cardReducer/cardSlice";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import {useEffect, useMemo} from "react";
-import {getGroup} from "../../redux/groupReducer/groupSlice";
+import React, {useEffect, useMemo, useState} from "react";
+import {getGroup, updateGroup} from "../../redux/groupReducer/groupSlice";
 import {DataStatus} from "../../common/enums/app/app";
 import {useNavigation} from "@react-navigation/native";
 import {Entypo} from "@expo/vector-icons";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 const GroupScreen = ({route}) => {
     const { theme: { colors } } = useAppTheme();
     const { groupId } = route.params
     const { group } = useSelector(state => state.groups);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [groupTitle, setGroupTitle] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -42,7 +47,7 @@ const GroupScreen = ({route}) => {
             <Pressable
                 key={id}
                 style={{
-                    padding: 20,
+                    padding: 10,
                     borderRadius: 10,
                     borderWidth: 2,
                     borderColor: color,
@@ -55,6 +60,13 @@ const GroupScreen = ({route}) => {
         ));
     };
 
+    const updateGroupTitle = () => {
+        if(!groupTitle) {
+            return console.error("Provide title");
+        }
+        dispatch(updateGroup({ id: groupId, title: groupTitle }));
+    }
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: colors.background }}>
             <View style={{
@@ -64,7 +76,10 @@ const GroupScreen = ({route}) => {
                 alignItems: 'center',
             }}>
                 <BackButton />
-                <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{group.title}</Text>
+                <div>
+                    <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{group.title}</Text>
+                    <Entypo name="pencil" onPress={() => setShowEditModal(true)} size={24} color={colors.iconColor} />
+                </div>
             </View>
             <View
                 style={{
@@ -77,7 +92,7 @@ const GroupScreen = ({route}) => {
                 {renderStatusButtons()}
                 <Pressable
                     style={{
-                        padding: 10,
+                        padding: 5,
                         borderRadius: 10,
                         borderWidth: 2,
                         borderColor: '#bcbcbc',
@@ -89,6 +104,19 @@ const GroupScreen = ({route}) => {
                 </Pressable>
             </View>
             <CardList groupId={groupId} />
+            <DefaultModal
+                isVisible={showEditModal}
+                handleClose={() => setShowEditModal(false)}
+            >
+                <Text style={{ color: colors.primary }}>Змініть назву</Text>
+                <AddInput
+                    value={groupTitle}
+                    onChangeText={setGroupTitle}
+                    placeholder="Назва..."
+                />
+
+                <PressableButton text="Змінити" onPress={updateGroupTitle}/>
+            </DefaultModal>
         </SafeAreaView>
     )
 }

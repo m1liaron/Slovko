@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, Pressable, useWindowDimensions, Image} from 'react-native'
+import {View, Text, FlatList, Pressable, useWindowDimensions, Image, Platform} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
@@ -100,42 +100,44 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
         setLetterColors({});
     };
 
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            const pressedLetter = event.key;
-            if(event.key === 'Shift') return;
-            const firstDashIndex = currentGuess.indexOf('_');
-            const expectedLetter = currentWord[firstDashIndex];
 
-            const isUppercase = event.shiftKey;
-            const targetLetter = isUppercase ? pressedLetter.toUpperCase() : pressedLetter.toLowerCase();
+    if(Platform.OS === 'web') {
+        useEffect(() => {
+            const handleKeyDown = (event) => {
+                const pressedLetter = event.key;
+                if(event.key === 'Shift') return;
+                const firstDashIndex = currentGuess.indexOf('_');
+                const expectedLetter = currentWord[firstDashIndex];
 
-            const letterIndex = scrambledWord.indexOf(targetLetter);
-            if (targetLetter === expectedLetter) {
-                const updatedGuess = [...currentGuess];
-                updatedGuess[firstDashIndex] = targetLetter; // Update the guess
-                setCurrentGuess(updatedGuess);
+                const isUppercase = event.shiftKey;
+                const targetLetter = isUppercase ? pressedLetter.toUpperCase() : pressedLetter.toLowerCase();
+
+                const letterIndex = scrambledWord.indexOf(targetLetter);
+                if (targetLetter === expectedLetter) {
+                    const updatedGuess = [...currentGuess];
+                    updatedGuess[firstDashIndex] = targetLetter; // Update the guess
+                    setCurrentGuess(updatedGuess);
 
 
-                if (letterIndex !== -1) {
-                    removeLetterFromScrambled(letterIndex);
+                    if (letterIndex !== -1) {
+                        removeLetterFromScrambled(letterIndex);
+                    }
+
+                    setCorrectAnswers(prevState => [...prevState, true]);
+                    handleSetDate(currentCard, true);
+                } else {
+                    highlightIncorrectLetter(letterIndex);
+                    handleSetDate(currentCard, false);
                 }
+            };
 
-                setCorrectAnswers(prevState => [...prevState, true]);
-                handleSetDate(currentCard, true);
-            } else {
-                highlightIncorrectLetter(letterIndex);
-                handleSetDate(currentCard, false);
-            }
-        };
+            window.addEventListener('keydown', handleKeyDown);
 
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [currentGuess, currentWord, scrambledWord, currentCard, handleSetDate]);
-
+            return () => {
+                window.removeEventListener('keydown', handleKeyDown);
+            };
+        }, [currentGuess, currentWord, scrambledWord, currentCard, handleSetDate]);
+    }
     return (
         <>
             <ProgressContainer index={currentIndex} length={cards.length} />
@@ -150,7 +152,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
             </View>
 
                 <FlatList
-                    horizontal
+                    numColumns={4}
                     data={scrambledWord}
                     contentContainerStyle={styles.wordContainer}
                     renderItem={({ item, index }) => (

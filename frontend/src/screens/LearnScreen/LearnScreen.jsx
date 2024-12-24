@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styles from './LearnScreen.styles';
 
 import { Switch } from "react-native-gesture-handler";
-import {View, Text, Pressable } from "react-native";
+import {View, Text, Pressable, Platform} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {AntDesign, Entypo, MaterialIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
@@ -11,13 +11,13 @@ import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch, useSelector} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
-import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
+import {useNavigation} from "@react-navigation/native";
 
 
 const LearnScreen = ({ route }) => {
@@ -35,53 +35,42 @@ const LearnScreen = ({ route }) => {
     const [finishedSections, setFinishedSections] = useState([]);
     const [isLessonOver, setIsLessonOver] = useState(false);
 
-    // results data
     const [flashCards, setFlashCards] = useState([]);
     const [quizCards, setQuizCards] = useState([]);
     const [guessWordCards, setGuessWordCards] = useState([]);
     const [startLearnDate, setStartLearnDate] = useState(null);
     const [elapsedTime, setElapsedTime] = useState('');
 
-    const { title: projectName } = groups?.find(group => group.id === groupId);
-
-    const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
+    const projectName = groups?.find(group => group.id === groupId)?.title;
 
     useEffect(() => {
         setStartLearnDate(new Date());
         dispatch(getCards({ groupId }));
     }, [dispatch, groupId]);
 
+    const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
+
+    const formatTime = (milliseconds) => {
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const millisecondsPart = Math.floor((milliseconds % 1000) / 10); // two decimal places
+
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
+    };
+
     const handleNextSection = () => {
-        switch (currentSection) {
-            case 'cards':
-                if (isQuizEnabled) {
-                    setCurrentSection('quiz');
-                } else if (isGuessWordEnabled) {
-                    setCurrentSection('word');
-                } else {
-                    finishLesson();
-                }
-                break;
-            case 'quiz':
-                if (isGuessWordEnabled) {
-                    setFinishedSections(prevState => [...prevState, 'quiz']);
-                    setCurrentSection('word');
-                } else if (isQuizEnabled) {
-                    setCurrentSection('quiz');
-                } else {
-                    finishLesson();
-                }
-                break;
-            case 'word':
-                if(isQuizEnabled && !finishedSections.includes('quiz')) {
-                    setCurrentSection('quiz');
-                } else {
-                    finishLesson();
-                }
-                break;
-            default:
-                finishLesson();
-                break;
+        const transitions = {
+            cards: isQuizEnabled ? 'quiz' : isGuessWordEnabled ? 'word' : 'finish',
+            quiz: isGuessWordEnabled ? 'word' : 'finish',
+            word: finishedSections.includes('quiz') ? 'finish' : 'quiz',
+        };
+        const nextSection = transitions[currentSection] || 'finish';
+        if(nextSection === 'finish') {
+            finishLesson();
+        } else {
+            setFinishedSections((prev) => [...prev, currentSection]);
+            setCurrentSection(nextSection);
         }
     };
 
@@ -144,13 +133,14 @@ const LearnScreen = ({ route }) => {
         const endLearnDate = new Date();
         const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
         setElapsedTime(formatTime(totalLearnedTime));
-    };
 
-    const saveLessonResults = () => {
-        finishLesson();
         dispatch(updateCardsAfterLearn({ groupId }));
         handleSaveResults();
-        navigation.navigate(AppPath.Home);
+    };
+
+    const leaveStudy = () => {
+        navigation.navigate(AppPath.Main);
+        console.log('Leave page learn screen')
     }
 
     const switchSection = (changeState, sectionName) => {
@@ -196,44 +186,37 @@ const LearnScreen = ({ route }) => {
         ))
     }
 
-    const formatTime = (milliseconds) => {
-        const totalSeconds = Math.floor(milliseconds / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        const millisecondsPart = Math.floor((milliseconds % 1000) / 10); // two decimal places
+    if(Platform.OS === 'web') {
+        useEffect(() => {
+                const handleBeforeUnload = (event) => {
+                    event.preventDefault();
 
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
-    };
+                    event.returnValue = 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
+                    return 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
+                }
 
+                window.addEventListener("beforeunload", handleBeforeUnload);
 
-    useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            event.preventDefault();
+                return () => {
+                    window.removeEventListener("beforeunload", handleBeforeUnload);
+                }
 
-            event.returnValue = 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
-            return 'Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.'
-        }
-
-        window.addEventListener("beforeunload", handleBeforeUnload);
-
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        }
-    }, []);
+        }, []);
+    }
 
     const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
-
     const correctAnswersAmount = resultsData.filter(item => item.mistakesAmount === 0).length;
-    const procentRight = Math.floor((correctAnswersAmount / resultsData.length) * 100);
+    const accuracy  = Math.floor((correctAnswersAmount / resultsData.length) * 100);
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ padding: 20 }}>
-                <Pressable onPress={() => setShowExitModal(true)}>
-                    <Entypo name="cross" size={35} color={theme.colors.iconColor}/>
-                </Pressable>
                 {!isLessonOver ? (
                     <>
+                        <Pressable onPress={() => setShowExitModal(true)}>
+                            <Entypo name="cross" size={35} color={theme.colors.iconColor}/>
+                        </Pressable>
+
                         { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
                         { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
                         { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
@@ -264,10 +247,10 @@ const LearnScreen = ({ route }) => {
                     </>
                 ) : (
                     <>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
+                        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
                             <Text style={{ color: theme.colors.primary, textAlign: 'center', fontSize: 30 }}>Молодець! Гарно позаймався/лась</Text>
 
-                            <View>
+                            <View style={{ marginBottom: 30 }}>
                                 <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
                                     <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{elapsedTime}</Text>
                                 </View>
@@ -276,13 +259,14 @@ const LearnScreen = ({ route }) => {
                                     <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{correctAnswersAmount * 10} очок</Text>
                                 </View>
                                 <View style={[styles.resultItemContainer, { borderColor: theme.colors.primary}]}>
-                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{procentRight}% точність</Text>
+                                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{accuracy}% точність</Text>
                                 </View>
                             </View>
                         </View>
-                        <PressableButton text="Зберегти" onPress={saveLessonResults}/>
+                        <PressableButton text="Продовжити" onPress={leaveStudy} />
                     </>
-                )}
+                )
+                }
             </View>
         </SafeAreaView>
     )

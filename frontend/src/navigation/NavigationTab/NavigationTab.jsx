@@ -13,6 +13,7 @@ const NavigationTab = () => {
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
+                tabBarShowLabel: false,
                 tabBarStyle: {
                     backgroundColor: theme.colors.background, // Customize the background color
                     borderTopWidth: 0, // Remove the border

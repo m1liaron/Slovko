@@ -5,6 +5,7 @@ const AppPath = {
     SharedGroup: 'shared-group',
     SharedGroupDetails: 'shared-group/sharedGroupId',
     Home: 'home',
+    Main: 'main',
     Profile: 'profile',
     Learn: 'learn',
     Quiz: 'quiz',
