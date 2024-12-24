@@ -70,6 +70,33 @@ const addGroup = async (req, res) => {
     }
 }
 
+const updateGroup = async (req, res) => {
+    try {
+        const {
+            params: { id: groupId },
+            user: { id: userId }
+        } = req;
+        const updatedGroup = await Group.update(req.body, {
+            where: { id: groupId, userId },
+            returning: true
+        });
+
+        if (updatedGroup[0] === 0) {
+            return res
+                .status(404)
+                .json({ error: true, message: 'Group not found' });
+        }
+
+        const group = await Group.findOne({
+            where: { id: groupId },
+        });
+
+        res.status(200).json(group);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error login'})
+    }
+}
+
 const removeGroup = async (req, res) => {
     try {
         const {
@@ -95,5 +122,6 @@ module.exports = {
     getAllGroups,
     getGroup,
     addGroup,
-    removeGroup
+    removeGroup,
+    updateGroup
 }
