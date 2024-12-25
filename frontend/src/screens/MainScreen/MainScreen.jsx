@@ -10,6 +10,7 @@ import styles from './MainScreen.styles';
 import {getRepeatedCards, getRepeatedCardsFromIds} from "../../redux/cardReducer/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
+import {requestNotificationPermission, scheduleNotification} from "../../utils/notifications";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,26 @@ const MainScreen = () => {
     const [daysPassed, setDaysPassed] = useState('');
     const repeatedCardsIds = useSelector(state => state.cards.repeatedCards);
     const navigate = useNavigation();
+
+    useEffect(() => {
+        const setupNotifications = async () => {
+            const hasPermission = await requestNotificationPermission();
+            if (!hasPermission) {
+                console.log('Notifications permission not granted');
+            }
+        };
+        setupNotifications();
+    }, []);
+
+    useEffect(() => {
+        if(repeatedCardsIds.length > 0) {
+            scheduleNotification(
+                'Час для повторення!',
+                `У вас є ${repeatedCardsIds.length} для повторення.`,
+                { seconds: 5 }
+            )
+        }
+    }, [repeatedCardsIds]);
 
     useEffect(() => {
         dispatch(getRepeatedCards());
