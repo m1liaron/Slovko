@@ -7,12 +7,18 @@ import {getUser, selectUser} from "../../redux/userReducer/userSlice";
 import {FontAwesome6} from "@expo/vector-icons";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import styles from './MainScreen.styles';
+import {getRepeatedCards} from "../../redux/cardReducer/cardSlice";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(selectUser);
     const { theme } = useAppTheme();
     const [daysPassed, setDaysPassed] = useState('');
+    const repeatedCardsIds = useSelector(state => state.cards.repeatedCards);
+
+    useEffect(() => {
+        dispatch(getRepeatedCards());
+    }, []);
 
     function daysSince(dateString) {
         const targetDate = new Date(dateString);
@@ -35,6 +41,7 @@ const MainScreen = () => {
         Linking.openURL('https://savelife.in.ua/en/');
     };
 
+
     const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString();
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -48,6 +55,7 @@ const MainScreen = () => {
                 <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
+            <Text style={{ color: theme.colors.primary}}>{repeatedCardsIds.length}</Text>
             <GroupList/>
             <View style={styles.anouncement}>
                 <Pressable onPress={openLink}>

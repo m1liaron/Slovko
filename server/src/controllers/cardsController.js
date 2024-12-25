@@ -3,6 +3,7 @@ const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
 const {User, Group} = require("../models/models");
 const {sequelize} = require("../db/sequelize");
+const { Op } = require("sequelize")
 
 const getRepeatedCards = async (req, res) => {
     try {
@@ -11,20 +12,20 @@ const getRepeatedCards = async (req, res) => {
                 userId: req.user.id
             }
         });
-        const repeatedCards = Promise.all(groups.map(async group => {
+        const repeatedCards = (await Promise.all(groups.map(async group => {
             return Card.findAll({
                 where: {
                     groupId: group.id,
-                    reviewDate: {
-                        [sequelize.Op.lte]: new Date()
+                    nextReviewAt: {
+                        [Op.lte]: new Date()
                     }
                 },
                 attributes: ['id']
             })
-        }));
+        }))).flat()
 
-        const ids = repeatedCards.map(card => card.id);
-        res.status(200).json({ ids })
+        const flattenedCards = repeatedCards.map(card => card.id);
+        res.status(200).json(flattenedCards)
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get repeated cards'})
     }
