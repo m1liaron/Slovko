@@ -49,7 +49,10 @@ export const updateCard = createAsyncThunk('card/update', async(data) => {
 export const updateCardsAfterLearn = createAsyncThunk('card/learnCards', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.put(`/cards/${data.groupId}`)
+        const url = data.groupId
+            ? `/cards/${data.groupId}`
+            : '/cards';
+        const response = await axiosInstance.put(url, data || {})
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);

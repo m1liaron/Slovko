@@ -4,7 +4,7 @@ const { getAllCards, addCard, removeCard, updateCard, updateCardsAfterReview, ge
 
 router.route('/repeated').post(getCardsFromIds)
 router.route('/').get(getRepeatedCards).post(addCard);
-router.route('/:groupId').put(updateCardsAfterReview).get(getAllCards)
+router.route('/:groupId?').put(updateCardsAfterReview).get(getAllCards)
 router.route('/:groupId/:status').get(getAllStatusCards);
 router.route('/:id').delete(removeCard).patch(updateCard);
 

@@ -28,6 +28,7 @@ const LearnScreen = ({ route }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { status } = useSelector(state => state.cards);
+    const repeatedCards = useSelector(state => state.cards.repeatedCards)
 
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
@@ -139,7 +140,11 @@ const LearnScreen = ({ route }) => {
         const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
         setElapsedTime(formatTime(totalLearnedTime));
 
-        dispatch(updateCardsAfterLearn({ groupId }));
+        if(groupId) {
+            dispatch(updateCardsAfterLearn({ groupId }));
+        } else {
+            dispatch(updateCardsAfterLearn(repeatedCards))
+        }
         handleSaveResults();
     };
 

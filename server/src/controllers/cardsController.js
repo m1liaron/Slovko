@@ -109,14 +109,24 @@ const getAllStatusCards = async (req, res) => {
 
 const updateCardsAfterReview = async (req, res) => {
     const { groupId } = req.params;
+    const cardsIds = req.body;
 
     try {
-        const groupCards = await Card.findAll({ where: { groupId } });
+        let cardsToUpdate;
+        if (groupId) {
+            cardsToUpdate = await Card.findAll({ where: { groupId } });
+        } else if (Array.isArray(cardsIds) && cardsIds.length > 0) {
+            // Fetch cards by specific IDs
+            cardsToUpdate = await Card.findAll({ where: { id: cardsIds } });
+        } else {
+            return res.status(400).send({ error: 'Invalid request. Provide groupId or an array of card IDs.' });
+        }
+        console.log('group cards😥🟦🟦: ', cardsToUpdate)
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        for(let card of groupCards){
+        for(let card of cardsToUpdate){
             const cardNextReview = card.nextReviewAt ? new Date(card.nextReviewAt).setHours(0, 0, 0, 0) : null;
 
             if (cardNextReview && cardNextReview >= today.getTime()) {
@@ -139,7 +149,7 @@ const updateCardsAfterReview = async (req, res) => {
             await card.save();
         }
 
-        res.status(200).json(groupCards);
+        res.status(200).json(cardsToUpdate);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error update card'})
     }
