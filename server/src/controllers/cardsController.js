@@ -1,7 +1,54 @@
 const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
-const {User} = require("../models/models");
+const {User, Group} = require("../models/models");
+const { Op } = require("sequelize")
+
+const getRepeatedCards = async (req, res) => {
+    try {
+        const groups = await Group.findAll({
+            where: {
+                userId: req.user.id
+            }
+        });
+        const repeatedCards = (await Promise.all(groups.map(async group => {
+            return Card.findAll({
+                where: {
+                    groupId: group.id,
+                    nextReviewAt: {
+                        [Op.lte]: new Date()
+                    }
+                },
+                attributes: ['id']
+            })
+        }))).flat()
+
+        const flattenedCards = repeatedCards.map(card => card.id);
+        res.status(200).json(flattenedCards)
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error get repeated cards'})
+    }
+}
+
+const getCardsFromIds = async (req, res) => {
+    try {
+        const cardsIds = req.body;
+        if (!Array.isArray(cardsIds) || cardsIds.length === 0) {
+            return res.status(400).send({ error: true, message: 'Invalid card IDs provided' });
+        }
+        const cards = await Card.findAll({
+            where: {
+                id: {
+                    [Op.in]: cardsIds, // Match any of the IDs in the array
+                },
+            },
+        });
+
+        res.status(200).json(cards);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error get cards from ids'})
+    }
+}
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
@@ -62,14 +109,24 @@ const getAllStatusCards = async (req, res) => {
 
 const updateCardsAfterReview = async (req, res) => {
     const { groupId } = req.params;
+    const cardsIds = req.body;
 
     try {
-        const groupCards = await Card.findAll({ where: { groupId } });
+        let cardsToUpdate;
+        if (groupId) {
+            cardsToUpdate = await Card.findAll({ where: { groupId } });
+        } else if (Array.isArray(cardsIds) && cardsIds.length > 0) {
+            // Fetch cards by specific IDs
+            cardsToUpdate = await Card.findAll({ where: { id: cardsIds } });
+        } else {
+            return res.status(400).send({ error: 'Invalid request. Provide groupId or an array of card IDs.' });
+        }
+        console.log('group cards😥🟦🟦: ', cardsToUpdate)
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        for(let card of groupCards){
+        for(let card of cardsToUpdate){
             const cardNextReview = card.nextReviewAt ? new Date(card.nextReviewAt).setHours(0, 0, 0, 0) : null;
 
             if (cardNextReview && cardNextReview >= today.getTime()) {
@@ -92,7 +149,7 @@ const updateCardsAfterReview = async (req, res) => {
             await card.save();
         }
 
-        res.status(200).json(groupCards);
+        res.status(200).json(cardsToUpdate);
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error update card'})
     }
@@ -162,5 +219,7 @@ module.exports = {
     removeCard,
     updateCard,
     updateCardsAfterReview,
-    getAllStatusCards
+    getAllStatusCards,
+    getRepeatedCards,
+    getCardsFromIds
 }

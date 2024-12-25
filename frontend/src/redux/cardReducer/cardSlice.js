@@ -4,7 +4,9 @@ import {
     addCard,
     removeCard,
     updateCard,
-    updateCardsAfterLearn
+    updateCardsAfterLearn,
+    getRepeatedCards,
+    getRepeatedCardsFromIds
 } from './cardThunk';
 import {DataStatus} from "../../common/enums/app/app";
 
@@ -13,6 +15,7 @@ const cardSlice = createSlice({
     initialState: {
         cards: [],
         filteredCards: [],
+        repeatedCards: [],
         status: DataStatus.IDLE,
         error: null
     },
@@ -94,6 +97,30 @@ const cardSlice = createSlice({
             .addCase(updateCard.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
             })
+            // get repeated cards
+            .addCase(getRepeatedCards.pending, (state) => {
+                state.status = DataStatus.PENDING
+            })
+            .addCase(getRepeatedCards.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS;
+                state.repeatedCards = action.payload;
+            })
+            .addCase(getRepeatedCards.rejected, (state, action) => {
+                state.status = DataStatus.ERROR;
+                state.error = action.error.message;
+            })
+            // get repeated cards
+            .addCase(getRepeatedCardsFromIds.pending, (state) => {
+                state.status = DataStatus.PENDING
+            })
+            .addCase(getRepeatedCardsFromIds.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS;
+                state.cards = action.payload;
+            })
+            .addCase(getRepeatedCardsFromIds.rejected, (state, action) => {
+                state.status = DataStatus.ERROR;
+                state.error = action.error.message;
+            })
     }
 })
 
@@ -104,6 +131,8 @@ export {
     addCard,
     removeCard,
     updateCard,
-    updateCardsAfterLearn
+    updateCardsAfterLearn,
+    getRepeatedCards,
+    getRepeatedCardsFromIds
 } from './cardThunk';
 export const cardReducers = cardSlice.reducer;
