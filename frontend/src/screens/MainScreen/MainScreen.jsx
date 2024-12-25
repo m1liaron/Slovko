@@ -7,7 +7,9 @@ import {getUser, selectUser} from "../../redux/userReducer/userSlice";
 import {FontAwesome6} from "@expo/vector-icons";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import styles from './MainScreen.styles';
-import {getRepeatedCards} from "../../redux/cardReducer/cardSlice";
+import {getRepeatedCards, getRepeatedCardsFromIds} from "../../redux/cardReducer/cardSlice";
+import {useNavigation} from "@react-navigation/native";
+import {AppPath} from "../../common/enums/app/app";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
@@ -15,6 +17,7 @@ const MainScreen = () => {
     const { theme } = useAppTheme();
     const [daysPassed, setDaysPassed] = useState('');
     const repeatedCardsIds = useSelector(state => state.cards.repeatedCards);
+    const navigate = useNavigation();
 
     useEffect(() => {
         dispatch(getRepeatedCards());
@@ -41,6 +44,11 @@ const MainScreen = () => {
         Linking.openURL('https://savelife.in.ua/en/');
     };
 
+    const learnRepeatedCards = () => {
+        dispatch(getRepeatedCardsFromIds(repeatedCardsIds));
+        navigate.navigate(AppPath.Learn);
+    }
+
 
     const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString();
     return (
@@ -56,9 +64,11 @@ const MainScreen = () => {
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
 
-            {repeatedCardsIds.length && <Pressable style={styles.repeatButton}>
-                <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsIds.length}</Text>
-            </Pressable>}
+            {repeatedCardsIds.length &&
+                <Pressable style={styles.repeatButton} onPress={learnRepeatedCards}>
+                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsIds.length}</Text>
+                </Pressable>
+            }
 
             <GroupList/>
             <View style={styles.anouncement}>

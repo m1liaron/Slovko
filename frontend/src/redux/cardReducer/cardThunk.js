@@ -68,10 +68,10 @@ export const getRepeatedCards = createAsyncThunk('card/getRepeatedCards', async(
     }
 })
 
-export const getRepeatedCardsFromIds = createAsyncThunk('card/getRepeatedCards', async(data) => {
+export const getRepeatedCardsFromIds = createAsyncThunk('card/getRepeatedCardsFromIds', async(data) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.get(`/cards/repeated`, data);
+        const response = await axiosInstance.post(`/cards/repeated`, data);
         return response.data
     } catch (error){
         console.error('Error fetching cards:', error);

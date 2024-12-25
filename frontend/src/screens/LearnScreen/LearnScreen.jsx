@@ -11,21 +11,23 @@ import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch, useSelector} from "react-redux";
 import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
-import {AppPath} from "../../common/enums/app/app";
+import {AppPath, DataStatus} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import {useNavigation} from "@react-navigation/native";
+import Loading from "../../components/Loading";
 
 
 const LearnScreen = ({ route }) => {
     const { theme } = useAppTheme();
-    const { groupId } = route.params;
+    const { groupId } = route.params || {};
     const groups = useSelector(selectGroup);
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    const { status } = useSelector(state => state.cards);
 
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
@@ -45,7 +47,10 @@ const LearnScreen = ({ route }) => {
 
     useEffect(() => {
         setStartLearnDate(new Date());
-        dispatch(getCards({ groupId }));
+
+        if(groupId) {
+            dispatch(getCards({ groupId }));
+        }
     }, [dispatch, groupId]);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
@@ -112,7 +117,7 @@ const LearnScreen = ({ route }) => {
 
     const handleSaveResults = () => {
         const resultData = {
-            title: projectName,
+            title: projectName || new Date(),
             flashCards,
             quiz: quizCards,
             guessWord: guessWordCards,
@@ -217,9 +222,16 @@ const LearnScreen = ({ route }) => {
                             <Entypo name="cross" size={35} color={theme.colors.iconColor}/>
                         </Pressable>
 
-                        { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
-                        { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
-                        { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
+                        {status === DataStatus.PENDING ? (
+                             <Loading/>
+                        ) : (
+                            <>
+                                { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
+                                { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
+                                { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
+                            </>
+                        )}
+
 
                         <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
                             <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
