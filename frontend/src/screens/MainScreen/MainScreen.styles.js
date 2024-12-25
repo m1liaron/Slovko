@@ -33,6 +33,12 @@ const styles = StyleSheet.create({
         margin: 20,
         fontWeight: 'bold',
     },
+    repeatButton: {
+        backgroundColor: '#6762FF',
+        padding: 20,
+        marginHorizontal: 40,
+        borderRadius: 20
+    }
 });
 
 export default styles

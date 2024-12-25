@@ -55,7 +55,11 @@ const MainScreen = () => {
                 <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
-            <Text style={{ color: theme.colors.primary}}>{repeatedCardsIds.length}</Text>
+
+            {repeatedCardsIds.length && <Pressable style={styles.repeatButton}>
+                <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsIds.length}</Text>
+            </Pressable>}
+
             <GroupList/>
             <View style={styles.anouncement}>
                 <Pressable onPress={openLink}>
