@@ -2,7 +2,6 @@ const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
 const {User, Group} = require("../models/models");
-const {sequelize} = require("../db/sequelize");
 const { Op } = require("sequelize")
 
 const getRepeatedCards = async (req, res) => {
@@ -28,6 +27,26 @@ const getRepeatedCards = async (req, res) => {
         res.status(200).json(flattenedCards)
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get repeated cards'})
+    }
+}
+
+const getCardsFromIds = async (req, res) => {
+    try {
+        const cardsIds = req.body;
+        if (!Array.isArray(cardsIds) || cardsIds.length === 0) {
+            return res.status(400).send({ error: true, message: 'Invalid card IDs provided' });
+        }
+        const cards = await Card.findAll({
+            where: {
+                id: {
+                    [Op.in]: cardsIds, // Match any of the IDs in the array
+                },
+            },
+        });
+
+        res.status(200).json(cards);
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error get cards from ids'})
     }
 }
 
@@ -191,5 +210,6 @@ module.exports = {
     updateCard,
     updateCardsAfterReview,
     getAllStatusCards,
-    getRepeatedCards
+    getRepeatedCards,
+    getCardsFromIds
 }
