@@ -1,7 +1,34 @@
 const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
-const {User} = require("../models/models");
+const {User, Group} = require("../models/models");
+const {sequelize} = require("../db/sequelize");
+
+const getRepeatedCards = async (req, res) => {
+    try {
+        const groups = await Group.findAll({
+            where: {
+                userId: req.user.id
+            }
+        });
+        const repeatedCards = Promise.all(groups.map(async group => {
+            return Card.findAll({
+                where: {
+                    groupId: group.id,
+                    reviewDate: {
+                        [sequelize.Op.lte]: new Date()
+                    }
+                },
+                attributes: ['id']
+            })
+        }));
+
+        const ids = repeatedCards.map(card => card.id);
+        res.status(200).json({ ids })
+    } catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error get repeated cards'})
+    }
+}
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
@@ -162,5 +189,6 @@ module.exports = {
     removeCard,
     updateCard,
     updateCardsAfterReview,
-    getAllStatusCards
+    getAllStatusCards,
+    getRepeatedCards
 }
