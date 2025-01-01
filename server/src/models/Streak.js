@@ -1,6 +1,7 @@
-import {sequelize} from "../db/sequelize";
-import {DataTypes} from "sequelize";
-import {v4 as uuidv4} from "uuid";
+const {sequelize} = require("../db/sequelize");
+const {DataTypes} = require("sequelize");
+const {v4: uuidv4} = require("uuid");
+const User = require("./User");
 
 
 const Streak = sequelize.define("Streak", {
@@ -12,6 +13,14 @@ const Streak = sequelize.define("Streak", {
     date: {
         type: DataTypes.DATE,
         allowNull: false,
+    },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'id',
+        }
     }
 })
 
