@@ -152,5 +152,6 @@ module.exports = {
     register,
     getUser,
     login,
-    updateUser
+    updateUser,
+    updateUserStreak
 }
