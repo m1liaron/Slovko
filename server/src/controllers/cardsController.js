@@ -2,6 +2,7 @@ const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
 const { Op } = require("sequelize")
+const {Group} = require("../models/models");
 
 const getRepeatedCards = async (req, res) => {
     try {

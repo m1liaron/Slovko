@@ -7,6 +7,6 @@ router.route('/register').post(register)
 router.route('/login').post(login)
 router.get('/', authMiddleware, getUser);
 router.put('/:userId', authMiddleware, updateUser);
-router.put('/streak', updateUserStreak)
+router.patch('/streak', authMiddleware, updateUserStreak)
 
 module.exports = router;

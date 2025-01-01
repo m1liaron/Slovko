@@ -11,7 +11,6 @@ import {getRepeatedCards, getRepeatedCardsFromIds} from "../../redux/cardReducer
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
 import {requestNotificationPermission, scheduleNotification} from "../../utils/notifications";
-import PressableButton from '../../common/components/PressableButton/PressableButton';
 import appLogo from '../../assets/images/favicon.png'
 
 const MainScreen = () => {

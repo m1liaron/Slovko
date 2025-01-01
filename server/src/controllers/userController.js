@@ -124,23 +124,27 @@ const updateUser = async (req, res) => {
 const updateUserStreak = async (req, res) => {
     try {
         const user = await User.findByPk(req.user.id);
+        console.log(`User id✅✅✅✅: ${req.user.id}`)
         if (user) {
             const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            // Check if the user reviewed on a consecutive day
-            if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
-                user.streak += 1
-            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
+            if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
                 user.streak = 1;
+            } else {
+                user.streak += 1
             }
 
             user.lastReviewAt = today; // Update last review date
             await user.save();
         }
 
-        res.status(200).json(user)
+        const {
+            password: uselessPassword,
+            ...mainUserData
+        } = user.dataValues;
+        res.status(200).json(mainUserData)
     } catch (error) {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)

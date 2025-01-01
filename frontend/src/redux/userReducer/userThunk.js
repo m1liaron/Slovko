@@ -2,7 +2,6 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {createAuthorizedInstance} from "../../utils/createAuthorizedInstance";
-import * as data from "@gorhom/bottom-sheet/lib/typescript/utilities/id";
 const url = 'http://192.168.31.196:3000';
 
 export const login = createAsyncThunk(
@@ -40,7 +39,7 @@ export const updateUser = createAsyncThunk(
 export const updateUserStreak = createAsyncThunk(
     'user/updateUserStreak', async () => {
         const axiosInstance = await createAuthorizedInstance();
-        const response = await axiosInstance.put(`/users/streak`, data);
+        const response = await axiosInstance.patch(`/users/streak`);
         return response.data
     }
 )
