@@ -101,18 +101,20 @@ const MainScreen = () => {
     }
 
 
-    const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString();
+    const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString() && user.streak > 0;
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <View style={{
+            <Pressable style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
                 paddingHorizontal: 20
-            }}>
+            }}
+                onPress={() => navigate.navigate(AppPath.Streak)}
+            >
                 <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : theme.colors.iconColor} />
                 <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
-            </View>
+            </Pressable>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
 
             {repeatedCardsIds.length &&

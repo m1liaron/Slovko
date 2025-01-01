@@ -9,6 +9,7 @@ import ResultsScreen from "./ResultsScreen/ResultsScreen";
 import SharedGroupsScreen from "./SharedGroupsScreen/SharedGroupsScreen";
 import SharedGroupDetailsScreen from "./SharedGroupDetailsScreen/SharedGroupDetailsScreen";
 import StatisticsScreen from "./StatisticsScreen/StatisticsScreen";
+import StreakScreen from "./StreakScreen/StreakScreen";
 
 export {
     MainScreen,
@@ -21,5 +22,6 @@ export {
     ResultsScreen,
     SharedGroupsScreen,
     SharedGroupDetailsScreen,
-    StatisticsScreen
+    StatisticsScreen,
+    StreakScreen
 }
