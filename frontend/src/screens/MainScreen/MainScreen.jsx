@@ -35,36 +35,40 @@ const MainScreen = () => {
     }, []);
 
     useEffect(() => {
+        const notification = localStorage.getItem('repeat-notification')
         const notificationText =  `У вас є ${repeatedCardsIds.length} для повторення.`
-        if(Platform.OS === 'android' || Platform.OS === 'ios') {
-            if(repeatedCardsIds.length > 0) {
-                scheduleNotification(
-                    'Час для повторення!',
-                    notificationText,
-                    { seconds: 5 }
-                )
+        if(notification === false) {
+            if(Platform.OS === 'android' || Platform.OS === 'ios') {
+                if(repeatedCardsIds.length > 0) {
+                    scheduleNotification(
+                        'Час для повторення!',
+                        notificationText,
+                        { seconds: 5 }
+                    )
+                }
+            } else {
+                sendNotification()
+                localStorage.setItem('repeat-notification', 'true');
             }
         }
     }, [repeatedCardsIds]);
 
-    const sendNotification = ()=>{
-        if(!("Notification" in window)){
+    const sendNotification = () => {
+        if (!("Notification" in window)) {
             throw new Error("Ваш браузер не підтримує повідомлення");
         }
-        Notification.requestPermission().then((Permission)=>{
-            const notificationOptions = {
-                theme: 'Час для повторення!', //
-                body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
-                icon: appLogo.uri,
-                actions: [
-                    {
-                        action: learnRepeatedCards,
-                        title: "Повторити"
-                    }
-                ]
+
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                const notificationOptions = {
+                    body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
+                    icon: appLogo.uri,
+                };
+                new Notification("Push Notification", notificationOptions);
+            } else {
+                console.log("Повідомлення заблоковані користувачем.");
             }
-            new Notification("Push Notification",notificationOptions);
-        })
+        });
     };
 
     useEffect(() => {
@@ -111,8 +115,6 @@ const MainScreen = () => {
                 <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
-
-            <PressableButton onPress={sendNotification} text="Надіслати сповіщення" />
 
             {repeatedCardsIds.length &&
                 <Pressable style={styles.repeatButton} onPress={learnRepeatedCards}>

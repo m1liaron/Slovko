@@ -18,16 +18,15 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     const [flippedCards, setFlippedCards] = useState({});
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false);
-    const [isFlippedCard, setIsFlippedCard] = useState(false);
 
     const rotation = useSharedValue(0);
 
     const handleFlipCard = (index) => {
-        // Use the current state of flippedCards
         setFlippedCards((prevFlippedCards) => {
-            if(isFlippedCard) {
+            if(prevFlippedCards[index]) {
                 return prevFlippedCards;
             }
+            console.log(prevFlippedCards)
             setFlippedIndex(index === flippedIndex ? null : index);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
@@ -35,7 +34,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
             Speech.speak(learningCards[index].word);
 
             // Update the flipped cards state
-            setIsFlippedCard(true)
             return { ...prevFlippedCards, [index]: true };
         });
     };
@@ -81,7 +79,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
     const setCurrentIndexCardsFlipped = () => {
         setCurrentCardIndex((prevIndex) => prevIndex + 1);
         setIsHorizontalSwipe(false)
-        setIsFlippedCard(false);
     }
 
     const renderCard = (card, index) => (
