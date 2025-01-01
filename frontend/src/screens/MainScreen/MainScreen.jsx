@@ -35,16 +35,22 @@ const MainScreen = () => {
     }, []);
 
     useEffect(() => {
+        const notification = localStorage.getItem('repeat-notification')
         const notificationText =  `У вас є ${repeatedCardsIds.length} для повторення.`
-        if(Platform.OS === 'android' || Platform.OS === 'ios') {
-            if(repeatedCardsIds.length > 0) {
-                scheduleNotification(
-                    'Час для повторення!',
-                    notificationText,
-                    { seconds: 5 }
-                )
+        if(notification === false) {
+            if(Platform.OS === 'android' || Platform.OS === 'ios') {
+                if(repeatedCardsIds.length > 0) {
+                    scheduleNotification(
+                        'Час для повторення!',
+                        notificationText,
+                        { seconds: 5 }
+                    )
+                }
+            } else {
+                sendNotification()
+                localStorage.setItem('repeat-notification', 'true');
             }
-        } else sendNotification()
+        }
     }, [repeatedCardsIds]);
 
     const sendNotification = () => {

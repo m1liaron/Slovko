@@ -145,6 +145,7 @@ const LearnScreen = ({ route }) => {
         } else {
             dispatch(updateCardsAfterLearn(repeatedCards))
         }
+        localStorage.removeItem('repeat-notification')
         handleSaveResults();
     };
 
