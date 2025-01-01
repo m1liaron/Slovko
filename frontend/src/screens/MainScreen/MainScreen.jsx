@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import {Linking, Pressable, Text, View} from "react-native";
+import {Linking, Platform, Pressable, Text, View} from "react-native";
 import { GroupList } from "../../components/Group/GroupList";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../../redux/userReducer/userSlice";
@@ -10,6 +10,9 @@ import styles from './MainScreen.styles';
 import {getRepeatedCards, getRepeatedCardsFromIds} from "../../redux/cardReducer/cardSlice";
 import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
+import {requestNotificationPermission, scheduleNotification} from "../../utils/notifications";
+import PressableButton from '../../common/components/PressableButton/PressableButton';
+import appLogo from '../../assets/images/favicon.png'
 
 const MainScreen = () => {
     const dispatch = useDispatch();
@@ -18,6 +21,51 @@ const MainScreen = () => {
     const [daysPassed, setDaysPassed] = useState('');
     const repeatedCardsIds = useSelector(state => state.cards.repeatedCards);
     const navigate = useNavigation();
+
+    useEffect(() => {
+        if(Platform.OS === 'android' || Platform.OS === 'ios') {
+            const setupNotifications = async () => {
+                const hasPermission = await requestNotificationPermission();
+                if (!hasPermission) {
+                    console.log('Notifications permission not granted');
+                }
+            };
+            setupNotifications();
+        }
+    }, []);
+
+    useEffect(() => {
+        const notificationText =  `У вас є ${repeatedCardsIds.length} для повторення.`
+        if(Platform.OS === 'android' || Platform.OS === 'ios') {
+            if(repeatedCardsIds.length > 0) {
+                scheduleNotification(
+                    'Час для повторення!',
+                    notificationText,
+                    { seconds: 5 }
+                )
+            }
+        }
+    }, [repeatedCardsIds]);
+
+    const sendNotification = ()=>{
+        if(!("Notification" in window)){
+            throw new Error("Ваш браузер не підтримує повідомлення");
+        }
+        Notification.requestPermission().then((Permission)=>{
+            const notificationOptions = {
+                theme: 'Час для повторення!', //
+                body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
+                icon: appLogo.uri,
+                actions: [
+                    {
+                        action: learnRepeatedCards,
+                        title: "Повторити"
+                    }
+                ]
+            }
+            new Notification("Push Notification",notificationOptions);
+        })
+    };
 
     useEffect(() => {
         dispatch(getRepeatedCards());
@@ -63,6 +111,8 @@ const MainScreen = () => {
                 <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
             </View>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
+
+            <PressableButton onPress={sendNotification} text="Надіслати сповіщення" />
 
             {repeatedCardsIds.length &&
                 <Pressable style={styles.repeatButton} onPress={learnRepeatedCards}>
