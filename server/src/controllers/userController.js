@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { Streak } = require('../models/models');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
 
@@ -123,18 +124,22 @@ const updateUser = async (req, res) => {
 
 const updateUserStreak = async (req, res) => {
     try {
-        const user = await User.findByPk(req.user.id);
-        console.log(`User id✅✅✅✅: ${req.user.id}`)
+        const { id } = req.user
+        const user = await User.findByPk(id);
         if (user) {
             const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
-                user.streak = 1;
-            } else {
+            if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
                 user.streak += 1
+            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
+                user.streak = 1;
             }
+            await Streak.create({
+                date: new Date,
+                userId: id
+            });
 
             user.lastReviewAt = today; // Update last review date
             await user.save();

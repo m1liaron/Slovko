@@ -48,6 +48,7 @@ SharedCardLikes.belongsTo(SharedCard, { foreignKey: 'sharedGroupId', as: 'shared
 module.exports = {
     Card,
     User,
+    Streak,
     Group,
     Result,
     ResultMode,
