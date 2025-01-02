@@ -73,7 +73,14 @@ const login = async (req, res) => {
 const getUser = async (req, res) => {
     try {
         const userId = req.user.id;
-        const user = await User.findByPk(userId);
+        const user = await User.findOne({
+            where: { id: userId },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }]
+        });
 
         if (!user) {
             return res
