@@ -10,16 +10,15 @@ import {View} from "react-native";
 
 const StreakScreen = () => {
     const { theme: { colors } } = useAppTheme();
-    const { user } = useSelector(selectUser)
+    const { user: { streakDates } } = useSelector(selectUser)
     const now = new Date();
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
 
-    const validatedMarkedDates = user?.streakDates.reduce((total, item) => {
-        total[item.date] = { selected: true, marked: true, selectedColor: 'orange'}
-        return total;
-    }, {})
-    const isDisableRightArrow = currentMonth.month === new Date().getMonth();
-
+    const validatedMarkedDates = streakDates?.length
+        ? streakDates.reduce((total, item) => {
+            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: '#f54100', dotColor: '#f54100', disableTouchEvent: true };
+            return total;
+        }, {})
+        : {};
 
     function getLastDayOfCurrentMonth() {
         const year = now.getFullYear();
@@ -30,21 +29,27 @@ const StreakScreen = () => {
         return `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
     }
 
+    const earliestDate = streakDates?.length
+        ? streakDates
+            .map(item => new Date(item.date))
+            .reduce((earliest, current) => (current < earliest ? current : earliest))
+            .toISOString()
+            .split('T')[0]
+        : null;
 
-    console.log(validatedMarkedDates)
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <BackButton/>
             <View style={styles.calendarContainer}>
                 <Calendar
                     markedDates={validatedMarkedDates}
-                    initialDate={now}
-                    minDate={now}
+                    initialDate={now.toISOString().split('T')[0]}
+                    minDate={earliestDate}
                     maxDate={getLastDayOfCurrentMonth()}
                     onDayPress={day => console.log('selected day', day)}
                     onDayLongPress={day => console.log('selected day', day)}
                     monthFormat={'yyyy MM'}
-                    onMonthChange={month => setCurrentMonth(month.month)}
+                    onMonthChange={month => console.log(month)}
                     hideArrows={false} // Show navigation arrows
                     hideExtraDays={true}
                     disableMonthChange={false} // Allow changing months
@@ -52,12 +57,12 @@ const StreakScreen = () => {
                     hideDayNames={false} // Show days of the week
                     showWeekNumbers={false} // Optional: Remove week numbers
                     disableArrowLeft={false} // Enable left arrow
-                    disableArrowRight={isDisableRightArrow} // Enable right arrow
+                    disableArrowRight={false} // Enable right arrow
                     enableSwipeMonths={true} // Allow swiping between months
                     style={{
                         borderWidth: 1,
                         borderColor: 'gray',
-                        height: 350
+                        height: 450
                     }}
                     theme={{
                         backgroundColor: '#000000',

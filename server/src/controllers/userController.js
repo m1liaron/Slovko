@@ -37,7 +37,14 @@ const login = async (req, res) => {
                 .json({ error: true, message: 'Please provide email and password' });
         }
 
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({
+            where: { email },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }]
+        });
         if (!user) {
             return res
                 .status(StatusCodes.UNAUTHORIZED)
@@ -109,6 +116,11 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await User.update(body, {
             where: { id: userId },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }],
             returning: true,
             plain: true,
         });
@@ -152,10 +164,18 @@ const updateUserStreak = async (req, res) => {
             await user.save();
         }
 
+        const findUser = await User.findOne({
+            where: { id },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }]
+        });
         const {
             password: uselessPassword,
             ...mainUserData
-        } = user.dataValues;
+        } = findUser.dataValues;
         res.status(200).json(mainUserData)
     } catch (error) {
         res
