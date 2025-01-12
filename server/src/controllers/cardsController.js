@@ -42,6 +42,7 @@ const getCardsFromIds = async (req, res) => {
                     [Op.in]: cardsIds, // Match any of the IDs in the array
                 },
             },
+            include: [{ model: Image, as: 'image' }]
         });
 
         res.status(200).json(cards);

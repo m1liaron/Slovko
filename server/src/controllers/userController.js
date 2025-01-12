@@ -38,12 +38,7 @@ const login = async (req, res) => {
         }
 
         const user = await User.findOne({
-            where: { email },
-            include: [{
-                model: Streak,
-                as: 'streakDates',
-                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
-            }]
+            where: { email }
         });
         if (!user) {
             return res
