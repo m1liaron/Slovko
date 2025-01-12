@@ -35,3 +35,11 @@ export const updateUser = createAsyncThunk(
         return response.data
     }
 )
+
+export const updateUserStreak = createAsyncThunk(
+    'user/updateUserStreak', async () => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.patch(`/users/streak`);
+        return response.data
+    }
+)

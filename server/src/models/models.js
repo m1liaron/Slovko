@@ -1,6 +1,7 @@
 const Card = require('./Card');
 const Group = require('./Group');
 const User = require('./User');
+const Streak = require('./Streak');
 const Result = require('./Result/Result');
 const ResultMode = require('./Result/ResultMode');
 const WordResult = require('./Result/WordResult');
@@ -15,6 +16,10 @@ Group.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 // User - SharedGroup
 User.hasMany(SharedGroup, { foreignKey: 'userId', as: 'sharedGroups' });
 SharedGroup.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+// User - Streak
+User.hasMany(Streak, { foreignKey: 'userId', as: 'streakDates'});
+Streak.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
 // Group - Card
 Group.hasMany(Card, { foreignKey: 'groupId', as: 'cards' });
@@ -43,6 +48,7 @@ SharedCardLikes.belongsTo(SharedCard, { foreignKey: 'sharedGroupId', as: 'shared
 module.exports = {
     Card,
     User,
+    Streak,
     Group,
     Result,
     ResultMode,

@@ -19,6 +19,7 @@ import {useAppTheme} from "../../contexts/ThemeProvider";
 import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import {useNavigation} from "@react-navigation/native";
 import Loading from "../../components/Loading";
+import {updateUserStreak} from "../../redux/userReducer/userSlice";
 
 
 const LearnScreen = ({ route }) => {
@@ -146,6 +147,7 @@ const LearnScreen = ({ route }) => {
             dispatch(updateCardsAfterLearn(repeatedCards))
         }
         localStorage.removeItem('repeat-notification')
+        dispatch(updateUserStreak());
         handleSaveResults();
     };
 

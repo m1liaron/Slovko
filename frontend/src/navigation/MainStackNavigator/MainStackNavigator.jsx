@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from "@react-navigation/stack";
 import {AppPath} from "../../common/enums/app/app";
-import {GroupScreen, LearnScreen, SharedGroupDetailsScreen, ResultDetailsScreen, StatisticsScreen} from "../../screens";
+import {GroupScreen, LearnScreen, SharedGroupDetailsScreen, ResultDetailsScreen, StatisticsScreen, StreakScreen} from "../../screens";
 import NavigationTab from "../NavigationTab/NavigationTab";
 
 const Stack = createStackNavigator();
@@ -15,6 +15,7 @@ const MainStackNavigator = () => {
             <Stack.Screen name={AppPath.ResultDetails} component={ResultDetailsScreen} />
             <Stack.Screen name={AppPath.SharedGroupDetails} component={SharedGroupDetailsScreen} />
             <Stack.Screen name={AppPath.Statistics} component={StatisticsScreen} />
+            <Stack.Screen name={AppPath.Streak} component={StreakScreen}/>
         </Stack.Navigator>
     );
 };

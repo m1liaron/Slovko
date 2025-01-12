@@ -5,7 +5,7 @@ import {
     StyleSheet,
     FlatList,
     Image,
-    Platform
+    Platform, TextInput
 } from 'react-native';
 import CardItem from './CardItem';
 import { addCard, getCards, removeCard } from '../../redux/cardReducer/cardSlice';
@@ -20,6 +20,7 @@ import DefaultModal from "../DefaultModal/DefaultModal";
 import pickImage from "../../utils/pickImage";
 import Loading from "../Loading";
 import {useAppTheme} from "../../contexts/ThemeProvider";
+import Fontisto from "react-native-vector-icons/Fontisto";
 
 const MemoCardItem = memo(CardItem);
 
@@ -27,12 +28,43 @@ const CardList = ({ groupId }) => {
     const { theme: { colors }} = useAppTheme();
     const { group } = useSelector(state => state.groups);
     const { cards, isLoading } = useSelector(state => state.cards);
+
+    const [addCardMode, setAddCardMode] = useState(0);
+    const [valueWords, setValueWords] = useState({});
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [imageUri, setImageUri] = useState('');
+    const [jsonOutput, setJsonOutput] = useState(null);
     const navigation = useNavigation();
     const dispatch = useDispatch();
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const fileContent = e.target.result;
+
+            const lines = fileContent.split('\n');
+            const jsonObject = {};
+
+            lines.forEach((line, index) => {
+                const [key, value] = line.split(':');
+                if (key && value) {
+                    jsonObject[key.trim()] = value.trim();
+                } else {
+                    console.warn(`Line ${index + 1} is not in the correct format: "${line}"`);
+                }
+            });
+
+            setJsonOutput(jsonObject);
+            setValueWords(jsonObject)
+        }
+
+        reader.readAsText(file);
+    }
 
     useEffect(() => {
         if(group.id !== groupId) {
@@ -88,17 +120,34 @@ const CardList = ({ groupId }) => {
 
         const validatedAnswer = validateWord(answerWord) || answerWord;
 
-        const cardData = {
-            word: validateWord(value),
-            translateWord: validatedAnswer,
-            imageUri: finalImageUri || '',
-            groupId
-        };
+        console.log(valueWords)
+        if(Object.keys(valueWords).length > 0) {
+            Object.entries(valueWords).forEach(([key, value]) => {
+                dispatch(addCard({
+                    word: validateWord(key),
+                    translateWord: value,
+                    imageUri: '',
+                    groupId
+                }))
+            });
+            setValueWords({});
+            alert('Cards added from file successfully!');
+            return;
+        }
 
-        dispatch(addCard(cardData));
-        setValue('');
-        setAnswerWord('');
-        setImageUri('');
+        if(value && answerWord) {
+            const cardData = {
+                word: validateWord(value),
+                translateWord: validatedAnswer,
+                imageUri: finalImageUri || '',
+                groupId
+            };
+
+            dispatch(addCard(cardData));
+            setValue('');
+            setAnswerWord('');
+            setImageUri('');
+        }
     };
 
     const onRemoveCard = async (courseId) => {
@@ -157,22 +206,58 @@ const CardList = ({ groupId }) => {
             >
                 <View style={styles.formContainer}>
                     <Text style={[styles.title, { color: colors.primary }]}>Додайте Карточку!</Text>
-                    <AddInput
-                        value={value}
-                        onChangeText={setValue}
-                        style={styles.input}
-                        placeholder="Слово..."
-                    />
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
+                        <PressableButton text="Одна" onPress={() => setAddCardMode(0)} buttonStyle={{ flex: 1, backgroundColor: addCardMode === 0 ? "#002044" : "#007AFF"}}/>
+                        <PressableButton text="Багато" onPress={() => setAddCardMode(1)} buttonStyle={{ flex: 1, backgroundColor: addCardMode === 1 ? "#002044" : "#007AFF"}}/>
+                    </View>
 
-                    <AddInput
-                        value={answerWord}
-                        onChangeText={setAnswerWord}
-                        style={styles.input}
-                        placeholder="Відповідь..."
-                    />
+                    {addCardMode ? (
+                        <View style={styles.bulkAddContainer}>
+                            {Platform.OS === 'web' && (
+                                <View style={styles.fileInputContainer}>
+                                    <Fontisto name="import" size={30} color={colors.background} />
+                                    <input
+                                        type="file"
+                                        accept=".txt"
+                                        onChange={handleFileChange}
+                                        style={styles.fileInput}
+                                    />
+                                </View>
+                            )}
+                            {jsonOutput && (
+                                <View style={styles.jsonTableContainer}>
+                                    <View style={styles.jsonTable}>
+                                        <Text style={styles.jsonTableTitle}>Дані:</Text>
+                                        {Object.entries(jsonOutput).map(([key, value], index) => (
+                                            <View key={index} style={styles.jsonRow}>
+                                                <Text style={styles.jsonKey}>{key}</Text>
+                                                <Text style={styles.jsonValue}>{value}</Text>
+                                            </View>
+                                        ))}
+                                    </View>
+                                </View>
+                            )}
+                        </View>
+                    ) : (
+                        <View>
+                            <PressableButton text="Виберіть зображення з галереї" onPress={() => pickImage(imageUri, setImageUri)}/>
+                            {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
 
-                    <PressableButton text="Pick an image from camera roll" onPress={() => pickImage(imageUri, setImageUri)} />
-                    {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
+                            <AddInput
+                                value={value}
+                                onChangeText={setValue}
+                                style={styles.input}
+                                placeholder="Слово..."
+                            />
+
+                            <AddInput
+                                value={answerWord}
+                                onChangeText={setAnswerWord}
+                                style={styles.input}
+                                placeholder="Відповідь..."
+                            />
+                        </View>
+                    )}
 
                     <PressableButton onPress={onSaveCard} text="Додати" />
                 </View>
@@ -202,7 +287,84 @@ const styles = StyleSheet.create({
     listContainer: {
         marginHorizontal: 30,
         gap: 10
-    }
+    },
+    modeToggle: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    modeButton: {
+        flex: 1,
+        padding: 10,
+        borderRadius: 5,
+        marginHorizontal: 5,
+    },
+    bulkAddContainer: {
+        paddingVertical: 10,
+    },
+    fileInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f1f1f1',
+        padding: 10,
+        borderRadius: 5,
+        marginBottom: 10,
+    },
+    fileInput: {
+        marginLeft: 10,
+        fontSize: 16,
+    },
+    jsonTableContainer: {
+        marginTop: 10,
+    },
+    jsonTableTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    jsonTable: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        backgroundColor: '#f9f9f9',
+    },
+    jsonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e0e0e0',
+    },
+    jsonKey: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        flex: 1,
+    },
+    jsonValue: {
+        fontSize: 16,
+        flex: 1,
+        textAlign: 'right',
+    },
+    singleAddContainer: {
+        marginTop: 10,
+    },
+    inputField: {
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+    },
+    imagePreview: {
+        width: 100,
+        height: 100,
+        borderRadius: 10,
+        marginVertical: 10,
+    },
+    saveButton: {
+        marginTop: 20,
+    },
 });
 
 export default CardList;

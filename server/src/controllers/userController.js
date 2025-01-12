@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { Streak } = require('../models/models');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
 
@@ -36,7 +37,9 @@ const login = async (req, res) => {
                 .json({ error: true, message: 'Please provide email and password' });
         }
 
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({
+            where: { email }
+        });
         if (!user) {
             return res
                 .status(StatusCodes.UNAUTHORIZED)
@@ -72,7 +75,14 @@ const login = async (req, res) => {
 const getUser = async (req, res) => {
     try {
         const userId = req.user.id;
-        const user = await User.findByPk(userId);
+        const user = await User.findOne({
+            where: { id: userId },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }]
+        });
 
         if (!user) {
             return res
@@ -101,6 +111,11 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await User.update(body, {
             where: { id: userId },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }],
             returning: true,
             plain: true,
         });
@@ -121,9 +136,53 @@ const updateUser = async (req, res) => {
     }
 };
 
+const updateUserStreak = async (req, res) => {
+    try {
+        const { id } = req.user
+        const user = await User.findByPk(id);
+        if (user) {
+            const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
+                user.streak += 1
+            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
+                user.streak = 1;
+            }
+            await Streak.create({
+                date: new Date,
+                userId: id
+            });
+
+            user.lastReviewAt = today; // Update last review date
+            await user.save();
+        }
+
+        const findUser = await User.findOne({
+            where: { id },
+            include: [{
+                model: Streak,
+                as: 'streakDates',
+                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
+            }]
+        });
+        const {
+            password: uselessPassword,
+            ...mainUserData
+        } = findUser.dataValues;
+        res.status(200).json(mainUserData)
+    } catch (error) {
+        res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: error.message || 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     register,
     getUser,
     login,
-    updateUser
+    updateUser,
+    updateUserStreak
 }

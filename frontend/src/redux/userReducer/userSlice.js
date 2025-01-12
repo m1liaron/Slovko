@@ -3,7 +3,8 @@ import {
     login,
     register,
     getUser,
-    updateUser
+    updateUser,
+    updateUserStreak
 } from './userThunk';
 import {DataStatus} from "../../common/enums/app/app";
 
@@ -76,10 +77,21 @@ const userSlice = createSlice({
                 state.status = DataStatus.ERROR
                 state.isAuthenticated = false;
             })
+            // update user streak
+            .addCase(updateUserStreak.pending, (state) => {
+                state.status = DataStatus.PENDING
+            })
+            .addCase(updateUserStreak.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS
+                state.user = action.payload;
+            })
+            .addCase(updateUserStreak.rejected, (state) => {
+                state.status = DataStatus.ERROR
+            })
     }
 });
 
 export const { logout } = userSlice.actions;
 export const selectUser = (state) => state.user;
-export { login, register, getUser } from './userThunk';
+export { login, register, getUser, updateUserStreak } from './userThunk';
 export const userReducers = userSlice.reducer;

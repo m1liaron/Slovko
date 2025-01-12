@@ -7,6 +7,7 @@ const AppPath = {
     Home: 'home',
     Main: 'main',
     Profile: 'profile',
+    Streak: 'streak',
     Learn: 'learn',
     Quiz: 'quiz',
     Word: 'word',

@@ -1,8 +1,8 @@
 const Card =  require("../models/Card");
 const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
-const {User, Group} = require("../models/models");
 const { Op } = require("sequelize")
+const {Group} = require("../models/models");
 
 const getRepeatedCards = async (req, res) => {
     try {
@@ -42,6 +42,7 @@ const getCardsFromIds = async (req, res) => {
                     [Op.in]: cardsIds, // Match any of the IDs in the array
                 },
             },
+            include: [{ model: Image, as: 'image' }]
         });
 
         res.status(200).json(cards);
@@ -70,23 +71,6 @@ const getAllCards = async (req, res) => {
                 return card;
             })
         )
-
-        const user = await User.findByPk(req.user.id);
-        if (user) {
-            const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            // Check if the user reviewed on a consecutive day
-            if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
-                user.streak += 1
-            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
-                user.streak = 1;
-            }
-
-            user.lastReviewAt = today; // Update last review date
-            await user.save();
-        }
 
         res.status(200).json(updatedCards);
     } catch (error) {
@@ -121,7 +105,6 @@ const updateCardsAfterReview = async (req, res) => {
         } else {
             return res.status(400).send({ error: 'Invalid request. Provide groupId or an array of card IDs.' });
         }
-        console.log('group cards😥🟦🟦: ', cardsToUpdate)
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
