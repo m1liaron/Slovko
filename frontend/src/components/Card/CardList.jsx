@@ -5,7 +5,7 @@ import {
     StyleSheet,
     FlatList,
     Image,
-    Platform
+    Platform, TextInput
 } from 'react-native';
 import CardItem from './CardItem';
 import { addCard, getCards, removeCard } from '../../redux/cardReducer/cardSlice';
@@ -27,12 +27,42 @@ const CardList = ({ groupId }) => {
     const { theme: { colors }} = useAppTheme();
     const { group } = useSelector(state => state.groups);
     const { cards, isLoading } = useSelector(state => state.cards);
+
+    const [valueWords, setValueWords] = useState({});
     const [value, setValue] = useState('');
     const [answerWord, setAnswerWord] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [imageUri, setImageUri] = useState('');
+    const [jsonOutput, setJsonOutput] = useState(null);
     const navigation = useNavigation();
     const dispatch = useDispatch();
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const fileContent = e.target.result;
+
+            const lines = fileContent.split('\n');
+            const jsonObject = {};
+
+            lines.forEach((line, index) => {
+                const [key, value] = line.split(':');
+                if (key && value) {
+                    jsonObject[key.trim()] = value.trim();
+                } else {
+                    console.warn(`Line ${index + 1} is not in the correct format: "${line}"`);
+                }
+            });
+
+            setJsonOutput(jsonObject);
+            setValueWords(jsonObject)
+        }
+
+        reader.readAsText(file);
+    }
 
     useEffect(() => {
         if(group.id !== groupId) {
@@ -88,17 +118,34 @@ const CardList = ({ groupId }) => {
 
         const validatedAnswer = validateWord(answerWord) || answerWord;
 
-        const cardData = {
-            word: validateWord(value),
-            translateWord: validatedAnswer,
-            imageUri: finalImageUri || '',
-            groupId
-        };
+        console.log(valueWords)
+        if(Object.keys(valueWords).length > 0) {
+            Object.entries(valueWords).forEach(([key, value]) => {
+                dispatch(addCard({
+                    word: validateWord(key),
+                    translateWord: value,
+                    imageUri: '',
+                    groupId
+                }))
+            });
+            setValueWords({});
+            alert('Cards added from file successfully!');
+            return;
+        }
 
-        dispatch(addCard(cardData));
-        setValue('');
-        setAnswerWord('');
-        setImageUri('');
+        if(value && answerWord) {
+            const cardData = {
+                word: validateWord(value),
+                translateWord: validatedAnswer,
+                imageUri: finalImageUri || '',
+                groupId
+            };
+
+            dispatch(addCard(cardData));
+            setValue('');
+            setAnswerWord('');
+            setImageUri('');
+        }
     };
 
     const onRemoveCard = async (courseId) => {
@@ -171,7 +218,24 @@ const CardList = ({ groupId }) => {
                         placeholder="Відповідь..."
                     />
 
-                    <PressableButton text="Pick an image from camera roll" onPress={() => pickImage(imageUri, setImageUri)} />
+                    {Platform.OS === 'web' && (
+                        <View>
+                            <input
+                                type="file"
+                                accept=".txt"
+                                onChange={handleFileChange}
+                                style={{marginVertical: 10}}
+                            />
+                            {jsonOutput && (
+                                <View>
+                                    <Text style={{ color: colors.primary }}>JSON:</Text>
+                                    <Text style={{ color: colors.primary }}>{JSON.stringify(jsonOutput, null, 2)}</Text>
+                                </View>
+                            )}
+                        </View>
+                    )}
+
+                    <PressableButton text="Виберіть камеру з галереї" onPress={() => pickImage(imageUri, setImageUri)}/>
                     {imageUri !== '' && <Image source={{ uri: imageUri }} style={styles.image} />}
 
                     <PressableButton onPress={onSaveCard} text="Додати" />
