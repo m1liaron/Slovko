@@ -29,7 +29,7 @@ const MemoCardItem = memo(CardItem);
 const CardList = ({ groupId }) => {
     const { theme: { colors }} = useAppTheme();
     const { group } = useSelector(state => state.groups);
-    const { cards, isLoading } = useSelector(state => state.cards);
+    const { cards, filteredCards, isLoading } = useSelector(state => state.cards);
 
     const [addCardMode, setAddCardMode] = useState(0);
     const [valueWords, setValueWords] = useState({});
@@ -38,7 +38,7 @@ const CardList = ({ groupId }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [imageUri, setImageUri] = useState('');
     const [jsonOutput, setJsonOutput] = useState(null);
-    const [wordsRangeNumber, setWordsRangeNumber] = useState(2);
+    const [wordsRangeNumber, setWordsRangeNumber] = useState(cards.length || 2);
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -201,30 +201,34 @@ const CardList = ({ groupId }) => {
             )}
 
             {cards.length > 1 && (
-                <View style={{ marginHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ marginHorizontal: 20 }}>
                     <PressableButton onPress={navigateToLearn} text="Вчитися" />
-                    <Slider
-                        style={{width: 200, height: 40}}
-                        minimumValue={2}
-                        maximumValue={cards.length}
-                        value={wordsRangeNumber}
-                        onValueChange={setWordsRangeNumber}
-                        minimumTrackTintColor="#FFFFFF"
-                        maximumTrackTintColor="#000000"
-                    />
-                    <Text style={{ color: colors.primary }}>{Math.floor(wordsRangeNumber)}</Text>
-                    <Pressable
-                        style={{
-                            padding: 5,
-                            borderRadius: 10,
-                            borderWidth: 2,
-                            borderColor: '#bcbcbc',
-                            marginHorizontal: 10,
-                        }}
-                        onPress={() => dispatch(resetFilter())}
-                    >
-                        <Entypo name="back-in-time" size={30} color="#bcbcbc" />
-                    </Pressable>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Slider
+                            style={{width: 200, height: 40}}
+                            minimumValue={2}
+                            maximumValue={cards.length}
+                            value={wordsRangeNumber}
+                            onValueChange={setWordsRangeNumber}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                        />
+                        <Text style={{ color: colors.primary }}>{Math.floor(wordsRangeNumber)}</Text>
+                        {filteredCards.length > cards.length && (
+                            <Pressable
+                                style={{
+                                    padding: 5,
+                                    borderRadius: 10,
+                                    borderWidth: 2,
+                                    borderColor: '#bcbcbc',
+                                    marginHorizontal: 10,
+                                }}
+                                onPress={() => dispatch(resetFilter())}
+                            >
+                                <Entypo name="back-in-time" size={30} color="#bcbcbc" />
+                            </Pressable>
+                        )}
+                    </View>
                 </View>
             )}
             <AddButton onPress={() => setShowAddModal(true)} />
