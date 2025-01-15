@@ -50,9 +50,9 @@ const LearnScreen = ({ route }) => {
     useEffect(() => {
         setStartLearnDate(new Date());
 
-        if(groupId) {
-            dispatch(getCards({ groupId }));
-        }
+        // if(groupId) {
+        //     dispatch(getCards({ groupId }));
+        // }
     }, [dispatch, groupId]);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);

@@ -8,12 +8,13 @@ import {updateCard} from "../../redux/cardReducer/cardSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import pickImage from "../../utils/pickImage";
 import { useAppTheme } from '../../contexts/ThemeProvider';
+import AddInput from "../../common/components/AddInput/AddInput";
 
 const CardItem = ({ item, onRemove, groupId }) => {
     const { theme: { colors }} = useAppTheme();
     const [showEditModal, setShowEditModal] = useState(false);
-    const [title, setTitle] = useState('');
-    const [translate, setTranslate] = useState('');
+    const [title, setTitle] = useState(item.word);
+    const [translate, setTranslate] = useState(item.translateWord);
     const [imageUri, setImageUri] = useState('');
 
     const dispatch = useDispatch();
@@ -45,16 +46,6 @@ const CardItem = ({ item, onRemove, groupId }) => {
     };
 
     const handleUpdateCard = () => {
-        // Check if title and translate are empty
-        if (title.trim() === '' || translate.trim() === '') {
-            return Toast.show({
-                type: 'error',
-                text1: 'Error🔴',
-                text2: 'Inputs must be filled!',
-            });
-        }
-
-        // Dispatch the update card action
         dispatch(updateCard({
             id: item.id,
             word: title,
@@ -76,6 +67,7 @@ const CardItem = ({ item, onRemove, groupId }) => {
 
     return (
         <View style={[styles.cardContainer, { backgroundColor: colors.lightBackground}]}>
+            <Toast/>
             <View style={styles.titleContainer}>
                 <View style={styles.titleContainer}>
                     <Text style={[styles.title, { color: colors.primary }]}>{item.word}</Text>
@@ -107,19 +99,17 @@ const CardItem = ({ item, onRemove, groupId }) => {
                 handleClose={() => setShowEditModal(false)}
             >
                 <View>
-                    <Text>Оновити карточку!</Text>
-                    <Text>Слово</Text>
-                    <TextInput
-                        style={styles.input}
+                    <Text style={{ color: colors.primary }}>Оновити карточку!</Text>
+                    <Text style={{ color: colors.primary }}>Слово</Text>
+                    <AddInput
                         value={title}
                         onChangeText={setTitle}
                     />
                 </View>
 
                 <View>
-                    <Text>Переклад</Text>
-                    <TextInput
-                        style={styles.input}
+                    <Text style={{ color: colors.primary }}>Переклад</Text>
+                    <AddInput
                         value={translate}
                         onChangeText={setTranslate}
                     />

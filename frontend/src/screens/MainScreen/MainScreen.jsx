@@ -58,14 +58,17 @@ const MainScreen = () => {
         }
 
         Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-                const notificationOptions = {
-                    body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
-                    icon: appLogo.uri,
-                };
-                new Notification("Push Notification", notificationOptions);
-            } else {
-                console.log("Повідомлення заблоковані користувачем.");
+            if(repeatedCardsIds.length) {
+                if (permission === "granted") {
+                    const notificationOptions = {
+                        body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
+                        icon: appLogo.uri,
+                    };
+                    new Notification("Push Notification", notificationOptions);
+                } else {
+                    alert("Дозвольте надсилати повідомлення про слова для повторення")
+                    console.log("Повідомлення заблоковані користувачем.");
+                }
             }
         });
     };
