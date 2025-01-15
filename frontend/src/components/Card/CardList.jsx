@@ -5,10 +5,10 @@ import {
     StyleSheet,
     FlatList,
     Image,
-    Platform, TextInput
+    Platform, Pressable
 } from 'react-native';
 import CardItem from './CardItem';
-import { addCard, getCards, removeCard } from '../../redux/cardReducer/cardSlice';
+import {addCard, getCards, rangeCards, removeCard, resetFilter} from '../../redux/cardReducer/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { AppPath } from "../../common/enums/app/app";
@@ -21,6 +21,8 @@ import pickImage from "../../utils/pickImage";
 import Loading from "../Loading";
 import {useAppTheme} from "../../contexts/ThemeProvider";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import Slider from '@react-native-community/slider';
+import {Entypo} from "@expo/vector-icons";
 
 const MemoCardItem = memo(CardItem);
 
@@ -36,6 +38,7 @@ const CardList = ({ groupId }) => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [imageUri, setImageUri] = useState('');
     const [jsonOutput, setJsonOutput] = useState(null);
+    const [wordsRangeNumber, setWordsRangeNumber] = useState(2);
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -120,7 +123,6 @@ const CardList = ({ groupId }) => {
 
         const validatedAnswer = validateWord(answerWord) || answerWord;
 
-        console.log(valueWords)
         if(Object.keys(valueWords).length > 0) {
             Object.entries(valueWords).forEach(([key, value]) => {
                 dispatch(addCard({
@@ -172,6 +174,11 @@ const CardList = ({ groupId }) => {
         });
     };
 
+    const navigateToLearn = () => {
+        dispatch(rangeCards(wordsRangeNumber));
+        navigateTo(AppPath.Learn)
+    }
+
     return (
         <View style={styles.container}>
             {isLoading && <Loading/>}
@@ -194,8 +201,30 @@ const CardList = ({ groupId }) => {
             )}
 
             {cards.length > 1 && (
-                <View style={{ marginHorizontal: 20 }}>
-                    <PressableButton onPress={() => navigateTo(AppPath.Learn)} text="Вчитися" />
+                <View style={{ marginHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <PressableButton onPress={navigateToLearn} text="Вчитися" />
+                    <Slider
+                        style={{width: 200, height: 40}}
+                        minimumValue={2}
+                        maximumValue={cards.length}
+                        value={wordsRangeNumber}
+                        onValueChange={setWordsRangeNumber}
+                        minimumTrackTintColor="#FFFFFF"
+                        maximumTrackTintColor="#000000"
+                    />
+                    <Text style={{ color: colors.primary }}>{Math.floor(wordsRangeNumber)}</Text>
+                    <Pressable
+                        style={{
+                            padding: 5,
+                            borderRadius: 10,
+                            borderWidth: 2,
+                            borderColor: '#bcbcbc',
+                            marginHorizontal: 10,
+                        }}
+                        onPress={() => dispatch(resetFilter())}
+                    >
+                        <Entypo name="back-in-time" size={30} color="#bcbcbc" />
+                    </Pressable>
                 </View>
             )}
             <AddButton onPress={() => setShowAddModal(true)} />
@@ -328,6 +357,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         backgroundColor: '#f9f9f9',
+        height: 400,
+        overflow: 'auto'
     },
     jsonRow: {
         flexDirection: 'row',
