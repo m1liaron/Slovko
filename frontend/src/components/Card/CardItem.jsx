@@ -8,6 +8,7 @@ import {updateCard} from "../../redux/cardReducer/cardSlice";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import pickImage from "../../utils/pickImage";
 import { useAppTheme } from '../../contexts/ThemeProvider';
+import AddInput from "../../common/components/AddInput/AddInput";
 
 const CardItem = ({ item, onRemove, groupId }) => {
     const { theme: { colors }} = useAppTheme();
@@ -107,19 +108,17 @@ const CardItem = ({ item, onRemove, groupId }) => {
                 handleClose={() => setShowEditModal(false)}
             >
                 <View>
-                    <Text>Оновити карточку!</Text>
-                    <Text>Слово</Text>
-                    <TextInput
-                        style={styles.input}
+                    <Text style={{ color: colors.primary }}>Оновити карточку!</Text>
+                    <Text style={{ color: colors.primary }}>Слово</Text>
+                    <AddInput
                         value={title}
                         onChangeText={setTitle}
                     />
                 </View>
 
                 <View>
-                    <Text>Переклад</Text>
-                    <TextInput
-                        style={styles.input}
+                    <Text style={{ color: colors.primary }}>Переклад</Text>
+                    <AddInput
                         value={translate}
                         onChangeText={setTranslate}
                     />
