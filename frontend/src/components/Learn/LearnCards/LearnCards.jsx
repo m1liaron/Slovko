@@ -26,14 +26,12 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
             if(prevFlippedCards[index]) {
                 return prevFlippedCards;
             }
-            console.log(prevFlippedCards)
             setFlippedIndex(index === flippedIndex ? null : index);
             rotation.value = withTiming(rotation.value === 0 ? 180 : 0, { duration: 500 });
 
             setIsHorizontalSwipe(true);
             Speech.speak(learningCards[index].word);
 
-            // Update the flipped cards state
             return { ...prevFlippedCards, [index]: true };
         });
     };
