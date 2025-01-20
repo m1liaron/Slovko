@@ -25,7 +25,7 @@ const getRepeatedCards = async (req, res) => {
                 });
 
                 return {
-                    groupTitle: group.title,
+                    title: group.title,
                     cards: cards.map(card => card.id), // Extract IDs into an array
                 };
             })

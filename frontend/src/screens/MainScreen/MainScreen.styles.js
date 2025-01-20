@@ -38,6 +38,14 @@ const styles = StyleSheet.create({
         padding: 20,
         marginHorizontal: 40,
         borderRadius: 20
+    },
+    item: {
+        width:'100%',
+        padding:20,
+        margin:10,
+        borderRadius:5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     }
 });
 
