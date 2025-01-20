@@ -21,7 +21,7 @@ const cardSlice = createSlice({
     },
     reducers:{
         rangeCards: (state, action) => {
-            state.cards = [...state.cards.filter(card => card.status === 'To Learn')];
+            state.cards = [...state.cards.slice(0, action.payload)];
         },
         filterCardsByStatus: (state, action) => {
             state.cards = state.filteredCards.filter(card => card.status === action.payload.status)

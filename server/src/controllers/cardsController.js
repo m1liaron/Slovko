@@ -53,7 +53,6 @@ const getCardsFromIds = async (req, res) => {
 
 const getAllCards = async (req, res) => {
     const { groupId } = req.params;
-    const today = new Date();
     try {
         const cards = await Card.findAll({
             where: { 
@@ -64,7 +63,7 @@ const getAllCards = async (req, res) => {
 
         const updatedCards = await Promise.all(
             cards.map(async card => {
-                if(card.status === 'Learned' && card.newReviewCount <= today) {
+                if(new Date(card.nextReviewAt) - new Date() < 0) {
                     card.status = 'To Learn';
                     await card.save();
                 }
