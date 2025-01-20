@@ -9,22 +9,29 @@ const getRepeatedCards = async (req, res) => {
         const groups = await Group.findAll({
             where: {
                 userId: req.user.id
-            }
+            },
+            attributes: ['id', 'title']
         });
-        const repeatedCards = (await Promise.all(groups.map(async group => {
-            return Card.findAll({
-                where: {
-                    groupId: group.id,
-                    nextReviewAt: {
-                        [Op.lte]: new Date()
-                    }
-                },
-                attributes: ['id']
-            })
-        }))).flat()
+        const repeatedCardsData = await Promise.all(
+            groups.map(async (group) => {
+                const cards = await Card.findAll({
+                    where: {
+                        groupId: group.id,
+                        nextReviewAt: {
+                            [Op.lte]: new Date(), // Cards ready for review
+                        },
+                    },
+                    attributes: ['id'], // Fetch only card IDs
+                });
 
-        const flattenedCards = repeatedCards.map(card => card.id);
-        res.status(200).json(flattenedCards)
+                return {
+                    groupTitle: group.title,
+                    cards: cards.map(card => card.id), // Extract IDs into an array
+                };
+            })
+        );
+
+        res.status(200).json(repeatedCardsData)
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get repeated cards'})
     }
