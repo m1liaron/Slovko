@@ -150,12 +150,17 @@ const MainScreen = () => {
             </View>
 
             <DefaultModal isVisible={showRepeatedModal} handleClose={() => setShowRepeatedModal(!showRepeatedModal)}>
-                <FlatList data={repeatedCardsIds} renderItem={({ item }) => (
-                    <Pressable style={[styles.item, { backgroundColor: theme.colors.lightBackground }]} onPress={() => learnGroupRepeatedCards(item.cards)}>
-                        <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.title}</Text>
-                        <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.cards.length}</Text>
-                    </Pressable>
-                )} />
+                <FlatList
+                    data={repeatedCardsIds}
+                    contentContainerStyle={{ overflow: "visible", height: 500 }}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <Pressable style={[styles.item, { backgroundColor: theme.colors.lightBackground }]} onPress={() => learnGroupRepeatedCards(item.cards)}>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.title}</Text>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.cards.length}</Text>
+                        </Pressable>
+                    )}
+                />
                 <PressableButton text="Повторити усі" onPress={learnAllRepeatedCards}/>
             </DefaultModal>
         </SafeAreaView>
