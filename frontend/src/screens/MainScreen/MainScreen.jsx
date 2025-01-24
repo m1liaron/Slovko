@@ -14,8 +14,6 @@ import {requestNotificationPermission, scheduleNotification} from "../../utils/n
 import appLogo from '../../assets/images/favicon.png'
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import {GroupItem} from "../../components/Group/GroupItem";
-import colors from "tailwindcss/colors";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
@@ -23,7 +21,8 @@ const MainScreen = () => {
     const { theme } = useAppTheme();
     const [daysPassed, setDaysPassed] = useState('');
     const [showRepeatedModal, setShowRepeatedModal] = useState(false);
-    const repeatedCardsIds = useSelector(state => state.cards.repeatedCards);
+    const repeatedGroupsIds = useSelector(state => state.cards.repeatedCards);
+    const repeatedCardsLength = repeatedGroupsIds.reduce((prev, curr) => prev += curr.cards.length, 0)
     const navigate = useNavigation();
 
     useEffect(() => {
@@ -40,10 +39,10 @@ const MainScreen = () => {
 
     useEffect(() => {
         const notification = localStorage.getItem('repeat-notification')
-        const notificationText =  `У вас є ${repeatedCardsIds.length} для повторення.`
+        const notificationText =  `У вас є ${repeatedGroupsIds.length} для повторення.`
         if(notification === false) {
             if(Platform.OS === 'android' || Platform.OS === 'ios') {
-                if(repeatedCardsIds.length > 0) {
+                if(repeatedGroupsIds.length > 0) {
                     scheduleNotification(
                         'Час для повторення!',
                         notificationText,
@@ -55,7 +54,7 @@ const MainScreen = () => {
                 localStorage.setItem('repeat-notification', 'true');
             }
         }
-    }, [repeatedCardsIds]);
+    }, [repeatedGroupsIds]);
 
     const sendNotification = () => {
         if (!("Notification" in window)) {
@@ -136,9 +135,9 @@ const MainScreen = () => {
             </Pressable>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
 
-            {repeatedCardsIds.length &&
+            {repeatedGroupsIds.length &&
                 <Pressable style={styles.repeatButton} onPress={() => setShowRepeatedModal(true)}>
-                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsIds.length}</Text>
+                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsLength}</Text>
                 </Pressable>
             }
 
@@ -151,7 +150,7 @@ const MainScreen = () => {
 
             <DefaultModal isVisible={showRepeatedModal} handleClose={() => setShowRepeatedModal(!showRepeatedModal)}>
                 <FlatList
-                    data={repeatedCardsIds}
+                    data={repeatedGroupsIds}
                     contentContainerStyle={{ overflow: "visible", height: 500 }}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
