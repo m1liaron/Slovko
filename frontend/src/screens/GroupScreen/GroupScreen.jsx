@@ -3,13 +3,13 @@ import {SafeAreaView} from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import {filterCardsByStatus, resetFilter} from "../../redux/cardReducer/cardSlice";
+import {filterCardsByStatus, resetFilter, sortCards} from "../../redux/cardReducer/cardSlice";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import React, {useEffect, useMemo, useState} from "react";
 import {getGroup, updateGroup} from "../../redux/groupReducer/groupSlice";
 import {DataStatus} from "../../common/enums/app/app";
 import {useNavigation} from "@react-navigation/native";
-import {Entypo} from "@expo/vector-icons";
+import {Entypo, MaterialCommunityIcons} from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import AddInput from "../../common/components/AddInput/AddInput";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
@@ -20,6 +20,7 @@ const GroupScreen = ({route}) => {
     const { group } = useSelector(state => state.groups);
     const [showEditModal, setShowEditModal] = useState(false);
     const [groupTitle, setGroupTitle] = useState('');
+    const [nextReviewSort, setNextReviewSort] = useState(null); // asc || desc
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
@@ -67,6 +68,11 @@ const GroupScreen = ({route}) => {
         dispatch(updateGroup({ id: groupId, title: groupTitle }));
     }
 
+    const sortByNextReview = () => {
+        dispatch(sortCards(nextReviewSort));
+        setNextReviewSort(nextReviewSort === 'asc' ? 'desc' : 'asc');
+    }
+
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: colors.background }}>
             <View style={{
@@ -89,6 +95,11 @@ const GroupScreen = ({route}) => {
                     alignItems: 'center',
                 }}
             >
+                <View>
+                    <Pressable onPress={sortByNextReview}>
+                        <MaterialCommunityIcons name={nextReviewSort === 'asc' ? "sort-clock-ascending-outline" : "sort-clock-descending-outline"} color={colors.primary} size={30}/>
+                    </Pressable>
+                </View>
                 {renderStatusButtons()}
                 <Pressable
                     style={{

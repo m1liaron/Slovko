@@ -23,6 +23,18 @@ const cardSlice = createSlice({
         rangeCards: (state, action) => {
             state.cards = [...state.cards.slice(0, action.payload)];
         },
+        sortCards: (state, action) => {
+            state.cards.sort((a,b) => {
+                const dateA = new Date(a.nextReviewAt);
+                const dateB = new Date(b.nextReviewAt);
+
+                if (action.payload === 'asc') {
+                    return dateA - dateB; // Ascending order
+                } else {
+                    return dateB - dateA; // Descending order
+                }
+            });
+        },
         filterCardsByStatus: (state, action) => {
             state.cards = state.filteredCards.filter(card => card.status === action.payload.status)
         },
@@ -127,7 +139,7 @@ const cardSlice = createSlice({
     }
 })
 
-export const { filterCardsByStatus, resetFilter, rangeCards } = cardSlice.actions;
+export const { filterCardsByStatus, resetFilter, rangeCards, sortCards } = cardSlice.actions;
 export const selectCard = (state) => state.cards.cards;
 export {
     getCards,
