@@ -9,6 +9,7 @@ import Loading from "../../components/Loading";
 import BackButton from "../../components/BackButton/BackButton";
 import formatDMTDate from "../../utils/formatDMTDate";
 import {useAppTheme} from "../../contexts/ThemeProvider";
+import {formatTime} from "../../utils/formatTime";
 
 const ResultDetailsScreen = ({ route }) => {
     const { theme: {colors} } = useAppTheme();
@@ -20,15 +21,6 @@ const ResultDetailsScreen = ({ route }) => {
     useEffect(() => {
         dispatch(getResultDetails(resultId));
     }, []);
-
-    const formatTime = (milliseconds) => {
-        const totalSeconds = Math.floor(milliseconds / 1000);
-        const hours = Math.floor(totalSeconds / 360);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
 
     const resultTime = new Date(result.completionTime) - new Date(result.startedLearn);
     const formattedTime = formatTime(resultTime);

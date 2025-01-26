@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, Pressable, useWindowDimensions, Image, Platform} from 'react-native'
+import {View, Text, FlatList, Pressable, Image, Platform} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";
@@ -169,7 +169,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
             <Pressable onPress={() => setShowTranslate(!showTranslate)}>
                 <AntDesign name="questioncircleo" size={24} color={colors.iconColor} />
             </Pressable>
-            {showTranslate && <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{currentCard.translateWord}</Text>}
+            {showTranslate && <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{currentCard.word}</Text>}
         </>
     );
 };

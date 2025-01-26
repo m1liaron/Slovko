@@ -20,6 +20,7 @@ import {selectGroup} from "../../redux/groupReducer/groupSlice";
 import {useNavigation} from "@react-navigation/native";
 import Loading from "../../components/Loading";
 import {updateUserStreak} from "../../redux/userReducer/userSlice";
+import {formatTime} from "../../utils/formatTime";
 
 
 const LearnScreen = ({ route }) => {
@@ -49,22 +50,9 @@ const LearnScreen = ({ route }) => {
 
     useEffect(() => {
         setStartLearnDate(new Date());
-
-        // if(groupId) {
-        //     dispatch(getCards({ groupId }));
-        // }
     }, [dispatch, groupId]);
 
     const toggleSwitch = (changeFunction) => changeFunction(previousState => !previousState);
-
-    const formatTime = (milliseconds) => {
-        const totalSeconds = Math.floor(milliseconds / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = totalSeconds % 60;
-        const millisecondsPart = Math.floor((milliseconds % 1000) / 10); // two decimal places
-
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}:${String(millisecondsPart).padStart(2, '0')}`;
-    };
 
     const handleNextSection = () => {
         const transitions = {
@@ -153,7 +141,6 @@ const LearnScreen = ({ route }) => {
 
     const leaveStudy = () => {
         navigation.navigate(AppPath.Main);
-        console.log('Leave page learn screen')
     }
 
     const switchSection = (changeState, sectionName) => {
@@ -223,9 +210,9 @@ const LearnScreen = ({ route }) => {
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <View style={{ padding: 20 }}>
+            <View style={{ padding: 20}}>
                 {!isLessonOver ? (
-                    <>
+                    <View style={{ justifyContent:'center', paddingHorizontal: 20 }}>
                         <Pressable onPress={() => setShowExitModal(true)}>
                             <Entypo name="cross" size={35} color={theme.colors.iconColor}/>
                         </Pressable>
@@ -233,17 +220,16 @@ const LearnScreen = ({ route }) => {
                         {status === DataStatus.PENDING ? (
                              <Loading/>
                         ) : (
-                            <>
-                                { currentSection === 'cards' && <View style={styles.centeredContainer}><LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/></View>}
-                                { currentSection === 'quiz' && isQuizEnabled  && <View style={styles.centeredContainer}><LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/></View>}
-                                { currentSection === 'word' && isGuessWordEnabled  && <View style={styles.centeredContainer}><LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/></View>}
-                            </>
+                            <View style={styles.centeredContainer}>
+                                { currentSection === 'cards' && <LearnCards onComplete={handleNextSection} setFlashCards={handleSetData}/>}
+                                { currentSection === 'quiz' && isQuizEnabled  && <LearnQuiz onComplete={handleNextSection} handleSetData={handleSetData}/>}
+                                { currentSection === 'word' && isGuessWordEnabled  && <LearnGuessWord onComplete={handleNextSection} handleSetDate={handleSetData}/>}
+
+                                <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
+                                    <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
+                                </Pressable>
+                            </View>
                         )}
-
-
-                        <Pressable onPress={() => toggleSwitch(setShowSettingsModal)} style={{ alignSelf: 'flex-start' }}>
-                            <AntDesign name="setting" size={30} color={theme.colors.iconColor} />
-                        </Pressable>
 
                         <ExitModal
                             modalVisible={showExitModal}
@@ -264,7 +250,7 @@ const LearnScreen = ({ route }) => {
                         >
                             {generateSectionContent()}
                         </DefaultModal>
-                    </>
+                    </View>
                 ) : (
                     <>
                         <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 10 }}>

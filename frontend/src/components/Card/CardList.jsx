@@ -175,7 +175,9 @@ const CardList = ({ groupId }) => {
     };
 
     const navigateToLearn = () => {
-        dispatch(rangeCards(wordsRangeNumber));
+        if(wordsRangeNumber !== cards.length) {
+            dispatch(rangeCards(wordsRangeNumber));
+        }
         navigateTo(AppPath.Learn)
     }
 

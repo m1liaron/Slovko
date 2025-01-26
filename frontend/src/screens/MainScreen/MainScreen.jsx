@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
-import {Linking, Platform, Pressable, Text, View} from "react-native";
+import {FlatList, Linking, Platform, Pressable, Text, View} from "react-native";
 import { GroupList } from "../../components/Group/GroupList";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser, selectUser} from "../../redux/userReducer/userSlice";
@@ -12,13 +12,17 @@ import {useNavigation} from "@react-navigation/native";
 import {AppPath} from "../../common/enums/app/app";
 import {requestNotificationPermission, scheduleNotification} from "../../utils/notifications";
 import appLogo from '../../assets/images/favicon.png'
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
 
 const MainScreen = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(selectUser);
     const { theme } = useAppTheme();
     const [daysPassed, setDaysPassed] = useState('');
-    const repeatedCardsIds = useSelector(state => state.cards.repeatedCards);
+    const [showRepeatedModal, setShowRepeatedModal] = useState(false);
+    const repeatedGroupsIds = useSelector(state => state.cards.repeatedCards);
+    const repeatedCardsLength = repeatedGroupsIds.reduce((prev, curr) => prev += curr.cards.length, 0)
     const navigate = useNavigation();
 
     useEffect(() => {
@@ -35,10 +39,10 @@ const MainScreen = () => {
 
     useEffect(() => {
         const notification = localStorage.getItem('repeat-notification')
-        const notificationText =  `У вас є ${repeatedCardsIds.length} для повторення.`
+        const notificationText =  `У вас є ${repeatedGroupsIds.length} для повторення.`
         if(notification === false) {
             if(Platform.OS === 'android' || Platform.OS === 'ios') {
-                if(repeatedCardsIds.length > 0) {
+                if(repeatedGroupsIds.length > 0) {
                     scheduleNotification(
                         'Час для повторення!',
                         notificationText,
@@ -50,7 +54,7 @@ const MainScreen = () => {
                 localStorage.setItem('repeat-notification', 'true');
             }
         }
-    }, [repeatedCardsIds]);
+    }, [repeatedGroupsIds]);
 
     const sendNotification = () => {
         if (!("Notification" in window)) {
@@ -98,9 +102,20 @@ const MainScreen = () => {
         Linking.openURL('https://savelife.in.ua/en/');
     };
 
-    const learnRepeatedCards = () => {
-        dispatch(getRepeatedCardsFromIds(repeatedCardsIds));
+    const navigateToLearn = () => {
         navigate.navigate(AppPath.Learn);
+        setShowRepeatedModal(false);
+    }
+
+    const learnAllRepeatedCards = () => {
+        const allIds = repeatedCardsIds.map(group => group.cards.map(card => card.id));
+        dispatch(getRepeatedCardsFromIds(allIds));
+        navigateToLearn();
+    }
+
+    const learnGroupRepeatedCards = (cardsIds) => {
+        dispatch(getRepeatedCardsFromIds(cardsIds));
+        navigateToLearn();
     }
 
 
@@ -120,9 +135,9 @@ const MainScreen = () => {
             </Pressable>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
 
-            {repeatedCardsIds.length &&
-                <Pressable style={styles.repeatButton} onPress={learnRepeatedCards}>
-                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsIds.length}</Text>
+            {repeatedGroupsIds.length &&
+                <Pressable style={styles.repeatButton} onPress={() => setShowRepeatedModal(true)}>
+                    <Text style={{ color: theme.colors.primary, fontSize: 30 }}>Повторити слова - {repeatedCardsLength}</Text>
                 </Pressable>
             }
 
@@ -132,6 +147,21 @@ const MainScreen = () => {
                     <Text style={styles.title}>Save Ukraine!</Text>
                 </Pressable>
             </View>
+
+            <DefaultModal isVisible={showRepeatedModal} handleClose={() => setShowRepeatedModal(!showRepeatedModal)}>
+                <FlatList
+                    data={repeatedGroupsIds}
+                    contentContainerStyle={{ overflow: "visible", height: 500 }}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <Pressable style={[styles.item, { backgroundColor: theme.colors.lightBackground }]} onPress={() => learnGroupRepeatedCards(item.cards)}>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.title}</Text>
+                            <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.cards.length}</Text>
+                        </Pressable>
+                    )}
+                />
+                <PressableButton text="Повторити усі" onPress={learnAllRepeatedCards}/>
+            </DefaultModal>
         </SafeAreaView>
     );
 };
