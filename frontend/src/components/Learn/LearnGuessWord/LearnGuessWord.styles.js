@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     wordContainer: {
         width: '100%',
-        height: 400,
+        height: 300,
         overflow: 'auto',
         flexDirection: 'row',
         flexWrap: 'wrap',

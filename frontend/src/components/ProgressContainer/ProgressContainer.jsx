@@ -8,7 +8,6 @@ const ProgressContainer = ({index, length}) => {
 
     const procentLeft  = (index) / length * 100;
 
-
     return (
         <View style={[styles.progressContainer, { backgroundColor: colors.lightBackground, borderColor: colors.primary }]}>
             <View
@@ -17,7 +16,7 @@ const ProgressContainer = ({index, length}) => {
                     { width: `${procentLeft}%` },
                 ]}
             >
-                <Text style={{ fontSize: 25, margin: 5, color: colors.primary }}>
+                <Text style={{ fontSize: 25, margin: 5, color: "#686868" }}>
                     {index + 1}/{length}
                 </Text>
             </View>

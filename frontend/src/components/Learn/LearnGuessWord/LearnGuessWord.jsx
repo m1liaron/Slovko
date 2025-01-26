@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, Pressable, useWindowDimensions, Image, Platform} from 'react-native'
+import {View, Text, FlatList, Pressable, Image, Platform} from 'react-native'
 import {AntDesign} from "@expo/vector-icons";
 import styles from './LearnGuessWord.styles'
 import {useSelector} from "react-redux";

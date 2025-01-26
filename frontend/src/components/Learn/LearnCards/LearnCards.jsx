@@ -131,6 +131,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
                 backgroundColor={'transparent'}
                 verticalSwipe={false}
                 horizontalSwipe={isHorizontalSwipe}
+                containerStyle={{ width: '50%'}}
                 overlayLabels={{
                     left: {
                         title: "Не знаю",
