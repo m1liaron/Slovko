@@ -139,8 +139,9 @@ const saveResults = async (req, res) => {
             .filter((key) => Array.isArray(key))
             .reduce((total, key) => {
                 return total + key.filter(item => item.mistakesAmount === 0).length
-        }, 0)
-        await User.update({points: correctAnswersAmount * 10 }, {
+        }, 0);
+        const user = await User.findByPk(id);
+        await User.update({points: user.points + (correctAnswersAmount * 10) }, {
             where: { id },
         });
 

@@ -169,7 +169,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
             <Pressable onPress={() => setShowTranslate(!showTranslate)}>
                 <AntDesign name="questioncircleo" size={24} color={colors.iconColor} />
             </Pressable>
-            {showTranslate && <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{currentCard.word}</Text>}
+            {showTranslate && <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.primary }}>{currentCard.translateWord}</Text>}
         </>
     );
 };

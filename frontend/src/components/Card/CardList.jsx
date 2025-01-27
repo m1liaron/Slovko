@@ -42,6 +42,10 @@ const CardList = ({ groupId }) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        setWordsRangeNumber(cards.length)
+    }, [groupId]);
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if(!file) return;

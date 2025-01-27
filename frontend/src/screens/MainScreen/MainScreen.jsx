@@ -154,7 +154,7 @@ const MainScreen = () => {
                     contentContainerStyle={{ overflow: "visible", height: 500 }}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <Pressable style={[styles.item, { backgroundColor: theme.colors.lightBackground }]} onPress={() => learnGroupRepeatedCards(item.cards)}>
+                        <Pressable key={item.id} style={[styles.item, { backgroundColor: theme.colors.lightBackground }]} onPress={() => learnGroupRepeatedCards(item.cards)}>
                             <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.title}</Text>
                             <Text style={{ color: theme.colors.primary, fontSize: 30 }}>{item.cards.length}</Text>
                         </Pressable>

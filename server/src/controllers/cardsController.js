@@ -10,7 +10,7 @@ const getRepeatedCards = async (req, res) => {
             where: {
                 userId: req.user.id
             },
-            attributes: ['id', 'title']
+            attributes: ['id', 'title'  ]
         });
         const repeatedCardsData = await Promise.all(
             groups.map(async (group) => {
@@ -31,7 +31,9 @@ const getRepeatedCards = async (req, res) => {
             })
         );
 
-        res.status(200).json(repeatedCardsData)
+        const filteredData = repeatedCardsData.filter(group => group.cards.length > 0);
+
+        res.status(200).json(filteredData)
     } catch (error) {
         res.status(400).send({ error: true, message: error.message || 'Error get repeated cards'})
     }
