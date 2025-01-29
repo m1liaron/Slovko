@@ -192,6 +192,8 @@ const buyFreeze = async (req, res) => { // body scheme { froze: 100 }, 100 is po
         }
         if(user.points < froze) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: `You don't have points to buy freeze, you need more: ${froze - user.points} points`})
+        } else if(user.frozen) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: `You already have freeze`});
         }
         await user.update({
             points: user.points - froze,
