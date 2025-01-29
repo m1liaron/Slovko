@@ -147,7 +147,7 @@ const updateUserStreak = async (req, res) => {
 
             if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
                 user.streak += 1
-            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime()) {
+            } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime() && !user.frozen) {
                 user.streak = 1;
             }
             await Streak.create({
@@ -176,6 +176,23 @@ const updateUserStreak = async (req, res) => {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
             .json({ error: true, message: error.message || 'Internal Server Error' });
+    }
+}
+
+const buyFroze = async (req, res) => { // body scheme { froze: 100 }, 100 is points cost
+    const {
+        user: { id },
+        body: { froze }
+    } = req;
+    try {
+        const user = await User.findByPk(id);
+        if(!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: true, message: "User not found"});
+        }
+        const updatedUser = await User.update({ points: user.points - froze })
+
+    }   catch (error) {
+        res.status(400).send({ error: true, message: error.message || 'Error buying froze' });
     }
 }
 

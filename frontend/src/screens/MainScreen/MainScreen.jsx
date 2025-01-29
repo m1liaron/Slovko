@@ -38,9 +38,7 @@ const MainScreen = () => {
     }, []);
 
     useEffect(() => {
-        const notification = localStorage.getItem('repeat-notification')
         const notificationText =  `У вас є ${repeatedGroupsIds.length} для повторення.`
-        if(notification === false) {
             if(Platform.OS === 'android' || Platform.OS === 'ios') {
                 if(repeatedGroupsIds.length > 0) {
                     scheduleNotification(
@@ -49,10 +47,8 @@ const MainScreen = () => {
                         { seconds: 5 }
                     )
                 }
-            } else {
-                sendNotification()
-                localStorage.setItem('repeat-notification', 'true');
-            }
+        } else {
+            sendNotification()
         }
     }, [repeatedGroupsIds]);
 
@@ -62,10 +58,10 @@ const MainScreen = () => {
         }
 
         Notification.requestPermission().then((permission) => {
-            if(repeatedCardsIds.length) {
+            if(repeatedCardsLength) {
                 if (permission === "granted") {
                     const notificationOptions = {
-                        body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
+                        body: `У вас є ${repeatedCardsLength} слова для повторення.`,
                         icon: appLogo.uri,
                     };
                     new Notification("Push Notification", notificationOptions);
