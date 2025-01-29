@@ -181,11 +181,13 @@ const updateUserStreak = async (req, res) => {
 }
 
 const buyFreeze = async (req, res) => { // body scheme { froze: 100 }, 100 is points cost
-    const {
-        user: { id },
-        body: { froze }
-    } = req;
     try {
+        const {
+            user: { id },
+            body: { froze }
+        } = req;
+
+
         const user = await User.findByPk(id);
         if(!user) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: true, message: "User not found"});

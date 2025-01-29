@@ -44,7 +44,7 @@ const CardList = ({ groupId }) => {
 
     useEffect(() => {
         setWordsRangeNumber(cards.length)
-    }, [groupId]);
+    }, [cards, groupId]);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];

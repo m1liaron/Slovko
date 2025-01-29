@@ -1,21 +1,25 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Calendar} from 'react-native-calendars';
 import BackButton from "../../components/BackButton/BackButton";
 import {SafeAreaView} from "react-native-safe-area-context";
 import styles from './StreakScreen.styles'
 import {useAppTheme} from "../../contexts/ThemeProvider";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {selectUser} from "../../redux/userReducer/userSlice";
-import {View} from "react-native";
+import { View } from "react-native";
+import {FontAwesome6} from "@expo/vector-icons";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import {buyFreeze} from "../../redux/userReducer/userThunk";
 
 const StreakScreen = () => {
     const { theme: { colors } } = useAppTheme();
-    const { user: { streakDates } } = useSelector(selectUser)
+    const { user: { streakDates, frozen } } = useSelector(selectUser)
+    const dispatch = useDispatch();
     const now = new Date();
 
     const validatedMarkedDates = streakDates?.length
         ? streakDates.reduce((total, item) => {
-            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: '#f54100', dotColor: '#f54100', disableTouchEvent: true };
+            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: frozen ? '#2aaef5' : '#f54100', dotColor: frozen ? '#2aaef5' : '#f54100', disableTouchEvent: true };
             return total;
         }, {})
         : {};
@@ -91,6 +95,11 @@ const StreakScreen = () => {
                         textDayHeaderFontSize: 16
                     }}
                 />
+
+                <View style={{ width: 100, justifyContent: 'center', alignItems: 'center' }}>
+                    <FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
+                    <PressableButton text="Купити Заморозку" onPress={() => dispatch(buyFreeze({ froze: 100 }))}/>
+                </View>
             </View>
         </SafeAreaView>
     );
