@@ -43,3 +43,11 @@ export const updateUserStreak = createAsyncThunk(
         return response.data
     }
 )
+
+export const buyFreeze = createAsyncThunk(
+    'user/buyFreeze', async ({ froze }) => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.put(`/users/streak/froze`, { froze });
+        return response.data
+    }
+)

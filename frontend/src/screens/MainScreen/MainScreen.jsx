@@ -38,9 +38,7 @@ const MainScreen = () => {
     }, []);
 
     useEffect(() => {
-        const notification = localStorage.getItem('repeat-notification')
         const notificationText =  `У вас є ${repeatedGroupsIds.length} для повторення.`
-        if(notification === false) {
             if(Platform.OS === 'android' || Platform.OS === 'ios') {
                 if(repeatedGroupsIds.length > 0) {
                     scheduleNotification(
@@ -49,10 +47,8 @@ const MainScreen = () => {
                         { seconds: 5 }
                     )
                 }
-            } else {
-                sendNotification()
-                localStorage.setItem('repeat-notification', 'true');
-            }
+        } else {
+            sendNotification()
         }
     }, [repeatedGroupsIds]);
 
@@ -62,10 +58,10 @@ const MainScreen = () => {
         }
 
         Notification.requestPermission().then((permission) => {
-            if(repeatedCardsIds.length) {
+            if(repeatedCardsLength) {
                 if (permission === "granted") {
                     const notificationOptions = {
-                        body: `У вас є ${repeatedCardsIds.length} слова для повторення.`,
+                        body: `У вас є ${repeatedCardsLength} слова для повторення.`,
                         icon: appLogo.uri,
                     };
                     new Notification("Push Notification", notificationOptions);
@@ -120,6 +116,8 @@ const MainScreen = () => {
 
 
     const isStreakFire = new Date(user.lastReviewAt).toDateString() === new Date().toDateString() && user.streak > 0;
+    const streakColor = isStreakFire ? "#F5712A" : user.frozen ? "#2aaef5" : theme.colors.iconColor
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <Pressable style={{
@@ -130,8 +128,8 @@ const MainScreen = () => {
             }}
                 onPress={() => navigate.navigate(AppPath.Streak)}
             >
-                <FontAwesome6 name="fire-flame-simple" size={30} color={isStreakFire ? "#F5712A" : theme.colors.iconColor} />
-                <Text style={{ color: isStreakFire ? "#F5712A" : theme.colors.primary, fontSize: 35 }}>{user.streak}</Text>
+                <FontAwesome6 name="fire-flame-simple" size={30} color={streakColor} />
+                <Text style={{ color: streakColor, fontSize: 35 }}>{user.streak}</Text>
             </Pressable>
             <Text style={styles.timePassedText}>Вже минуло {daysPassed} з початку війни.</Text>
 

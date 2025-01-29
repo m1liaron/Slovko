@@ -21,7 +21,9 @@ const cardSlice = createSlice({
     },
     reducers:{
         rangeCards: (state, action) => {
-            state.cards = [...state.cards.slice(0, action.payload)];
+            if(action.payload) {
+                state.cards = [...state.cards.slice(0, action.payload)];
+            }
         },
         sortCards: (state, action) => {
             state.cards.sort((a,b) => {

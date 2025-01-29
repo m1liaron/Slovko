@@ -157,7 +157,6 @@ const saveResults = async (req, res) => {
 
         await Promise.all(
             Object.entries(data).map(([mode, words]) => {
-                // Find the associated ResultMode entry
                 const resultMode = resultModes.find(rm => rm.mode === mode);
                 return Promise.all(
                     words.map(word =>
@@ -172,7 +171,6 @@ const saveResults = async (req, res) => {
             })
         );
 
-        // Step 4: Fetch and include related entries for the response
         const result = await Result.findOne({
             where: { userId: id, id: newResult.id },
         });
