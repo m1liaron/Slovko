@@ -147,6 +147,7 @@ const updateUserStreak = async (req, res) => {
 
             if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
                 user.streak += 1
+                user.frozen = false;
             } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime() && !user.frozen) {
                 user.streak = 1;
             }
@@ -179,7 +180,7 @@ const updateUserStreak = async (req, res) => {
     }
 }
 
-const buyFroze = async (req, res) => { // body scheme { froze: 100 }, 100 is points cost
+const buyFreeze = async (req, res) => { // body scheme { froze: 100 }, 100 is points cost
     const {
         user: { id },
         body: { froze }
@@ -189,10 +190,17 @@ const buyFroze = async (req, res) => { // body scheme { froze: 100 }, 100 is poi
         if(!user) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: true, message: "User not found"});
         }
-        const updatedUser = await User.update({ points: user.points - froze })
+        if(user.points < froze) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: `You don't have points to buy freeze, you need more: ${froze - user.points} points`})
+        }
+        await user.update({
+            points: user.points - froze,
+            frozen: true
+        });
 
+        res.status(StatusCodes.OK).json(user);
     }   catch (error) {
-        res.status(400).send({ error: true, message: error.message || 'Error buying froze' });
+        res.status(StatusCodes.BAD_REQUEST).send({ error: true, message: error.message || 'Error buying froze' });
     }
 }
 
@@ -201,5 +209,6 @@ module.exports = {
     getUser,
     login,
     updateUser,
-    updateUserStreak
+    updateUserStreak,
+    buyFreeze
 }
