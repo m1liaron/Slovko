@@ -104,7 +104,7 @@ const MainScreen = () => {
     }
 
     const learnAllRepeatedCards = () => {
-        const allIds = repeatedCardsIds.map(group => group.cards.map(card => card.id));
+        const allIds = repeatedGroupsIds.map(group => group.cards.map(id => id));
         dispatch(getRepeatedCardsFromIds(allIds));
         navigateToLearn();
     }

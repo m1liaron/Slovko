@@ -30,7 +30,7 @@ const LearnScreen = ({ route }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const { status } = useSelector(state => state.cards);
-    const repeatedCards = useSelector(state => state.cards.repeatedCards)
+    const repeatedGroups = useSelector(state => state.cards.repeatedCards)
 
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
@@ -132,7 +132,8 @@ const LearnScreen = ({ route }) => {
         if(groupId) {
             dispatch(updateCardsAfterLearn({ groupId }));
         } else {
-            dispatch(updateCardsAfterLearn(repeatedCards))
+            const repeatedCardsIds = repeatedGroups.map(repeatedGroup => repeatedGroup.cards.map(id => id));
+            dispatch(updateCardsAfterLearn(repeatedCardsIds))
         }
         localStorage.removeItem('repeat-notification')
         dispatch(updateUserStreak());

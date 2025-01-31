@@ -48,7 +48,7 @@ const getCardsFromIds = async (req, res) => {
         const cards = await Card.findAll({
             where: {
                 id: {
-                    [Op.in]: cardsIds, // Match any of the IDs in the array
+                    [Op.in]: cardsIds[0], // Match any of the IDs in the array
                 },
             },
             include: [{ model: Image, as: 'image' }]
@@ -100,16 +100,15 @@ const getAllStatusCards = async (req, res) => {
 }
 
 const updateCardsAfterReview = async (req, res) => {
-    const { groupId } = req.params;
-    const cardsIds = req.body;
-
     try {
+        const { groupId } = req.params;
+        const cardsIds = req.body[0];
         let cardsToUpdate;
         if (groupId) {
             cardsToUpdate = await Card.findAll({ where: { groupId } });
         } else if (Array.isArray(cardsIds) && cardsIds.length > 0) {
             // Fetch cards by specific IDs
-            cardsToUpdate = await Card.findAll({ where: { id: cardsIds } });
+            cardsToUpdate = await Card.findAll({ where: { id: { [ Op.in]: cardsIds } } });
         } else {
             return res.status(400).send({ error: 'Invalid request. Provide groupId or an array of card IDs.' });
         }
@@ -124,10 +123,10 @@ const updateCardsAfterReview = async (req, res) => {
                 continue;
             }
 
-            const newReviewCount = card.reviewCount + 1;
+            const newReviewCount = card.reviewCount;
             const nextReviewDate = calculateNextReviewDate(newReviewCount);
 
-            if (card.reviewCount >= 20) {
+            if (card.reviewCount >= 12) {
                 card.status = 'Know';
             } else {
                 card.status = 'Learned';

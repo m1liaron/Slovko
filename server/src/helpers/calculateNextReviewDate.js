@@ -16,7 +16,7 @@ const calculateNextReviewDate = (reviewCount) => {
     ];
 
     // Choose the interval based on the review count
-    const interval = intervals[reviewCount - 1] || intervals[intervals.length - 1];
+    const interval = intervals[reviewCount] || intervals[intervals.length - 1];
     const nextReviewDate = new Date();
     nextReviewDate.setTime(nextReviewDate.getTime() + interval);
 
