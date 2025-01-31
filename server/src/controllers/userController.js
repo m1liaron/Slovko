@@ -183,6 +183,17 @@ const updateUserStreak = async (req, res) => {
     }
 }
 
+const getUserStreakDates = async  (req, res) => {
+    try {
+        const streakDates = await Streak.findAll({ where: { userId: req.user.id } });
+        res.status(StatusCodes.OK).json(streakDates);
+    } catch (error) {
+        res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: error.message || 'Internal Server Error' });
+    }
+}
+
 const buyFreeze = async (req, res) => { // body scheme { froze: 100 }, 100 is points cost
     try {
         const {
@@ -216,6 +227,7 @@ module.exports = {
     getUser,
     login,
     updateUser,
+    getUserStreakDates,
     updateUserStreak,
     buyFreeze
 }
