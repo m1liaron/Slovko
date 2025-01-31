@@ -2,6 +2,7 @@ const User = require('../models/User');
 const { Streak } = require('../models/models');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
+const {Op} = require("sequelize");
 
 const register = async (req, res) => {
     try {
@@ -174,8 +175,30 @@ const updateUserStreak = async (req, res) => {
 }
 
 const getUserStreakDates = async  (req, res) => {
+    const { month, year } = req.query;
+    console.log('🟦🟦🟦🟦🟦')
+    console.log(req.query)
     try {
-        const streakDates = await Streak.findAll({ where: { userId: req.user.id } });
+
+        if (!month || !year) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Month and year are required." });
+        }
+
+        const intMonth = parseInt(month, 10);
+        const intYear = parseInt(year, 10);
+        if (isNaN(intMonth) || isNaN(intYear) || intMonth < 1 || intMonth > 12) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid month or year" });
+        }
+
+        const startDate = new Date(intYear, intMonth - 1, 1); // Month is 0-indexed in JavaScript Date
+        const endDate = new Date(intYear, intMonth, 0, 23, 59, 59, 999); // Last day of the month
+
+        const streakDates = await Streak.findAll({
+            where: {
+                userId: req.user.id,
+                date: { [Op.between ]: [startDate, endDate] }
+            }
+        });
         res.status(StatusCodes.OK).json(streakDates);
     } catch (error) {
         res

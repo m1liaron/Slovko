@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Calendar} from 'react-native-calendars';
 import BackButton from "../../components/BackButton/BackButton";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -13,13 +13,17 @@ import {buyFreeze, getUserStreakDates} from "../../redux/userReducer/userThunk";
 
 const StreakScreen = () => {
     const { theme: { colors } } = useAppTheme();
-    const { streakDates } = useSelector(selectUser)
+    const { streakDates } = useSelector(selectUser);
+    const [date, setDate] = useState({});
     const dispatch = useDispatch();
     const now = new Date();
 
     useEffect(() => {
-        dispatch(getUserStreakDates());
-    }, [])
+        if(Object.keys(date).length) {
+            const { month, year } = date;
+            dispatch(getUserStreakDates({ month, year }));
+        }
+    }, [date])
 
     const validatedMarkedDates = streakDates?.length
         ? streakDates.reduce((total, item) => {
@@ -57,7 +61,7 @@ const StreakScreen = () => {
                     onDayPress={day => console.log('selected day', day)}
                     onDayLongPress={day => console.log('selected day', day)}
                     monthFormat={'yyyy MM'}
-                    onMonthChange={month => console.log(month)}
+                    onMonthChange={month => setDate(month)}
                     hideArrows={false} // Show navigation arrows
                     hideExtraDays={true}
                     disableMonthChange={false} // Allow changing months
