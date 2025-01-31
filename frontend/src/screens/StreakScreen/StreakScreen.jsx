@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Calendar} from 'react-native-calendars';
 import BackButton from "../../components/BackButton/BackButton";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -9,13 +9,17 @@ import {selectUser} from "../../redux/userReducer/userSlice";
 import { View } from "react-native";
 import {FontAwesome6} from "@expo/vector-icons";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import {buyFreeze} from "../../redux/userReducer/userThunk";
+import {buyFreeze, getUserStreakDates} from "../../redux/userReducer/userThunk";
 
 const StreakScreen = () => {
     const { theme: { colors } } = useAppTheme();
-    const { user: { streakDates } } = useSelector(selectUser)
+    const { streakDates } = useSelector(selectUser)
     const dispatch = useDispatch();
     const now = new Date();
+
+    useEffect(() => {
+        dispatch(getUserStreakDates());
+    }, [])
 
     const validatedMarkedDates = streakDates?.length
         ? streakDates.reduce((total, item) => {

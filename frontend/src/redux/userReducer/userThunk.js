@@ -51,3 +51,11 @@ export const buyFreeze = createAsyncThunk(
         return response.data
     }
 )
+
+export const getUserStreakDates = createAsyncThunk(
+    'user/getStreakDates', async () => {
+        const axiosInstance = await createAuthorizedInstance();
+        const response = await axiosInstance.get('/users/streak');
+        return response.data
+    }
+)
