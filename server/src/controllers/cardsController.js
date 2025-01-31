@@ -150,10 +150,14 @@ const addCard = async (req, res) => {
     const { imageUri, ...data} = req.body;
     try {
         const findCard = await Card.findOne({
-            where: { word: data.word }
+            where: {
+                word: {
+                    [Op.iLike]: data.word
+                }
+            }
         });
         if(findCard) {
-            return res.status(StatusCodes.BAD_REQUEST).send({ error: true, message: 'Card with this word already exist' });
+            return res.status(StatusCodes.BAD_REQUEST).send({ error: true, message: 'Картка з цим словом вже існує' });
         }
         const image = await Image.create({ url: imageUri });
         const newCard = await Card.create({ imageId: image.id, ...data});
