@@ -76,12 +76,7 @@ const getUser = async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findOne({
-            where: { id: userId },
-            include: [{
-                model: Streak,
-                as: 'streakDates',
-                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
-            }]
+            where: { id: userId }
         });
 
         if (!user) {
@@ -111,11 +106,6 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await User.update(body, {
             where: { id: userId },
-            include: [{
-                model: Streak,
-                as: 'streakDates',
-                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
-            }],
             returning: true,
             plain: true,
         });
