@@ -141,18 +141,21 @@ const updateUserStreak = async (req, res) => {
         const { id } = req.user
         const user = await User.findByPk(id);
         if (user) {
+            let isUserFrozen = user.frozen;
             const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
                 user.streak += 1
+            } else if(!lastReviewDate || lastReviewDate.getTime() !== today.getTime() && user.frozen) {
                 user.frozen = false;
             } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime() && !user.frozen) {
                 user.streak = 1;
             }
             await Streak.create({
                 date: new Date,
+                frozen: isUserFrozen,
                 userId: id
             });
 

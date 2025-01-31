@@ -13,13 +13,13 @@ import {buyFreeze} from "../../redux/userReducer/userThunk";
 
 const StreakScreen = () => {
     const { theme: { colors } } = useAppTheme();
-    const { user: { streakDates, frozen } } = useSelector(selectUser)
+    const { user: { streakDates } } = useSelector(selectUser)
     const dispatch = useDispatch();
     const now = new Date();
 
     const validatedMarkedDates = streakDates?.length
         ? streakDates.reduce((total, item) => {
-            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: frozen ? '#2aaef5' : '#f54100', dotColor: frozen ? '#2aaef5' : '#f54100', disableTouchEvent: true };
+            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: item?.frozen ? '#2aaef5' : '#f54100', dotColor: item?.frozen ? '#2aaef5' : '#f54100', disableTouchEvent: true };
             return total;
         }, {})
         : {};
