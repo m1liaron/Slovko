@@ -14,6 +14,11 @@ const Streak = sequelize.define("Streak", {
         type: DataTypes.DATE,
         allowNull: false,
     },
+    frozen: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     userId: {
         type: DataTypes.UUID,
         allowNull: false,

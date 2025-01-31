@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Calendar} from 'react-native-calendars';
 import BackButton from "../../components/BackButton/BackButton";
 import {SafeAreaView} from "react-native-safe-area-context";
@@ -9,17 +9,25 @@ import {selectUser} from "../../redux/userReducer/userSlice";
 import { View } from "react-native";
 import {FontAwesome6} from "@expo/vector-icons";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import {buyFreeze} from "../../redux/userReducer/userThunk";
+import {buyFreeze, getUserStreakDates} from "../../redux/userReducer/userThunk";
 
 const StreakScreen = () => {
     const { theme: { colors } } = useAppTheme();
-    const { user: { streakDates, frozen } } = useSelector(selectUser)
+    const { streakDates } = useSelector(selectUser);
+    const [date, setDate] = useState({});
     const dispatch = useDispatch();
     const now = new Date();
 
+    useEffect(() => {
+        if(Object.keys(date).length) {
+            const { month, year } = date;
+            dispatch(getUserStreakDates({ month, year }));
+        }
+    }, [date])
+
     const validatedMarkedDates = streakDates?.length
         ? streakDates.reduce((total, item) => {
-            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: frozen ? '#2aaef5' : '#f54100', dotColor: frozen ? '#2aaef5' : '#f54100', disableTouchEvent: true };
+            total[item.date.slice(0,10)] = { selected: true, marked: true, selectedColor: item?.frozen ? '#2aaef5' : '#f54100', dotColor: item?.frozen ? '#2aaef5' : '#f54100', disableTouchEvent: true };
             return total;
         }, {})
         : {};
@@ -53,7 +61,7 @@ const StreakScreen = () => {
                     onDayPress={day => console.log('selected day', day)}
                     onDayLongPress={day => console.log('selected day', day)}
                     monthFormat={'yyyy MM'}
-                    onMonthChange={month => console.log(month)}
+                    onMonthChange={month => setDate(month)}
                     hideArrows={false} // Show navigation arrows
                     hideExtraDays={true}
                     disableMonthChange={false} // Allow changing months

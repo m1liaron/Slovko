@@ -2,6 +2,7 @@ const User = require('../models/User');
 const { Streak } = require('../models/models');
 const { StatusCodes } = require('http-status-codes');
 const bcrypt = require('bcrypt');
+const {Op} = require("sequelize");
 
 const register = async (req, res) => {
     try {
@@ -76,12 +77,7 @@ const getUser = async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findOne({
-            where: { id: userId },
-            include: [{
-                model: Streak,
-                as: 'streakDates',
-                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
-            }]
+            where: { id: userId }
         });
 
         if (!user) {
@@ -111,11 +107,6 @@ const updateUser = async (req, res) => {
 
         const updatedUser = await User.update(body, {
             where: { id: userId },
-            include: [{
-                model: Streak,
-                as: 'streakDates',
-                attributes: ['id', 'date', 'createdAt', 'updatedAt'],
-            }],
             returning: true,
             plain: true,
         });
@@ -141,18 +132,21 @@ const updateUserStreak = async (req, res) => {
         const { id } = req.user
         const user = await User.findByPk(id);
         if (user) {
+            let isUserFrozen = user.frozen;
             const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             if (lastReviewDate && lastReviewDate.getTime() === today.getTime() - 86400000) { // 86400000 ms in a day
                 user.streak += 1
+            } else if(!lastReviewDate || lastReviewDate.getTime() !== today.getTime() && user.frozen) {
                 user.frozen = false;
             } else if (!lastReviewDate || lastReviewDate.getTime() !== today.getTime() && !user.frozen) {
                 user.streak = 1;
             }
             await Streak.create({
                 date: new Date,
+                frozen: isUserFrozen,
                 userId: id
             });
 
@@ -173,6 +167,39 @@ const updateUserStreak = async (req, res) => {
             ...mainUserData
         } = findUser.dataValues;
         res.status(200).json(mainUserData)
+    } catch (error) {
+        res
+            .status(StatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: true, message: error.message || 'Internal Server Error' });
+    }
+}
+
+const getUserStreakDates = async  (req, res) => {
+    const { month, year } = req.query;
+    console.log('🟦🟦🟦🟦🟦')
+    console.log(req.query)
+    try {
+
+        if (!month || !year) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Month and year are required." });
+        }
+
+        const intMonth = parseInt(month, 10);
+        const intYear = parseInt(year, 10);
+        if (isNaN(intMonth) || isNaN(intYear) || intMonth < 1 || intMonth > 12) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid month or year" });
+        }
+
+        const startDate = new Date(intYear, intMonth - 1, 1); // Month is 0-indexed in JavaScript Date
+        const endDate = new Date(intYear, intMonth, 0, 23, 59, 59, 999); // Last day of the month
+
+        const streakDates = await Streak.findAll({
+            where: {
+                userId: req.user.id,
+                date: { [Op.between ]: [startDate, endDate] }
+            }
+        });
+        res.status(StatusCodes.OK).json(streakDates);
     } catch (error) {
         res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -213,6 +240,7 @@ module.exports = {
     getUser,
     login,
     updateUser,
+    getUserStreakDates,
     updateUserStreak,
     buyFreeze
 }

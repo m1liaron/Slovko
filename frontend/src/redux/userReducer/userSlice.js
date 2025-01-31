@@ -5,12 +5,14 @@ import {
     getUser,
     updateUser,
     updateUserStreak,
-    buyFreeze
+    buyFreeze,
+    getUserStreakDates
 } from './userThunk';
 import {DataStatus} from "../../common/enums/app/app";
 
 const initialState = {
     user: {},
+    streakDates: {},
     isAuthenticated: false,
     status: DataStatus.IDLE
 }
@@ -98,6 +100,17 @@ const userSlice = createSlice({
                 state.user = action.payload;
             })
             .addCase(buyFreeze.rejected, (state) => {
+                state.status = DataStatus.ERROR
+            })
+            // get Streak Dates
+            .addCase(getUserStreakDates.pending, (state) => {
+                state.status = DataStatus.PENDING
+            })
+            .addCase(getUserStreakDates.fulfilled, (state, action) => {
+                state.status = DataStatus.SUCCESS
+                state.streakDates = action.payload;
+            })
+            .addCase(getUserStreakDates.rejected, (state) => {
                 state.status = DataStatus.ERROR
             })
     }
