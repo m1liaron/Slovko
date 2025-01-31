@@ -10,7 +10,7 @@ import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch, useSelector} from "react-redux";
-import {getCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
+import {getCards, getRepeatedCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
 import {AppPath, DataStatus} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
@@ -29,7 +29,7 @@ const LearnScreen = ({ route }) => {
     const groups = useSelector(selectGroup);
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { status } = useSelector(state => state.cards);
+    const { repeatedCards, status } = useSelector(state => state.cards);
     const repeatedGroups = useSelector(state => state.cards.repeatedCards)
 
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
@@ -135,9 +135,11 @@ const LearnScreen = ({ route }) => {
             const repeatedCardsIds = repeatedGroups.map(repeatedGroup => repeatedGroup.cards.map(id => id));
             dispatch(updateCardsAfterLearn(repeatedCardsIds))
         }
-        localStorage.removeItem('repeat-notification')
         dispatch(updateUserStreak());
         handleSaveResults();
+        if(repeatedCards.length) {
+           dispatch(getRepeatedCards());
+        }
     };
 
     const leaveStudy = () => {
