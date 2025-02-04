@@ -49,7 +49,7 @@ const getCardsFromIds = async (req, res) => {
         const cards = await Card.findAll({
             where: {
                 id: {
-                    [Op.in]: cardsIds[0], // Match any of the IDs in the array
+                    [Op.in]: cardsIds, // Match any of the IDs in the array
                 },
             },
             include: [{ model: Image, as: 'image' }]

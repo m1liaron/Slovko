@@ -10,7 +10,7 @@ import LearnCards from "../../components/Learn/LearnCards/LearnCards";
 import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
 import {useDispatch, useSelector} from "react-redux";
-import {getCards, getRepeatedCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
+import {getRepeatedCards, updateCardsAfterLearn} from "../../redux/cardReducer/cardSlice";
 import {AppPath, DataStatus} from "../../common/enums/app/app";
 import ExitModal from "../../components/Modals/ExitModal/ExitModal";
 import {saveResults} from "../../redux/resultReducer/resultSlice";
@@ -29,8 +29,7 @@ const LearnScreen = ({ route }) => {
     const groups = useSelector(selectGroup);
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { repeatedCards, status } = useSelector(state => state.cards);
-    const repeatedGroups = useSelector(state => state.cards.repeatedCards)
+    const { repeatedCards, cards, status } = useSelector(state => state.cards);
 
     const [isQuizEnabled, setIsQuizEnabled] = useState(true);
     const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
@@ -132,7 +131,7 @@ const LearnScreen = ({ route }) => {
         if(groupId) {
             dispatch(updateCardsAfterLearn({ groupId }));
         } else {
-            const repeatedCardsIds = repeatedGroups.map(repeatedGroup => repeatedGroup.cards.map(id => id));
+            const repeatedCardsIds = cards.map(card => card.map(id => id));
             dispatch(updateCardsAfterLearn(repeatedCardsIds))
         }
         dispatch(updateUserStreak());
