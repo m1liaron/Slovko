@@ -131,7 +131,7 @@ const LearnScreen = ({ route }) => {
         if(groupId) {
             dispatch(updateCardsAfterLearn({ groupId }));
         } else {
-            const repeatedCardsIds = cards.map(card => card.map(id => id));
+            const repeatedCardsIds = cards?.map(card => card.id);
             dispatch(updateCardsAfterLearn(repeatedCardsIds))
         }
         dispatch(updateUserStreak());

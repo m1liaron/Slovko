@@ -103,7 +103,7 @@ const getAllStatusCards = async (req, res) => {
 const updateCardsAfterReview = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const cardsIds = req.body[0];
+        const cardsIds = req.body;
         let cardsToUpdate;
         if (groupId) {
             cardsToUpdate = await Card.findAll({ where: { groupId } });
