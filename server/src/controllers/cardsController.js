@@ -3,6 +3,7 @@ const Image =  require("../models/Image");
 const calculateNextReviewDate = require('../helpers/calculateNextReviewDate');
 const { Op } = require("sequelize")
 const {Group} = require("../models/models");
+const {StatusCodes} = require("http-status-codes");
 
 const getRepeatedCards = async (req, res) => {
     try {
@@ -48,7 +49,7 @@ const getCardsFromIds = async (req, res) => {
         const cards = await Card.findAll({
             where: {
                 id: {
-                    [Op.in]: cardsIds[0], // Match any of the IDs in the array
+                    [Op.in]: cardsIds, // Match any of the IDs in the array
                 },
             },
             include: [{ model: Image, as: 'image' }]
@@ -102,7 +103,7 @@ const getAllStatusCards = async (req, res) => {
 const updateCardsAfterReview = async (req, res) => {
     try {
         const { groupId } = req.params;
-        const cardsIds = req.body[0];
+        const cardsIds = req.body;
         let cardsToUpdate;
         if (groupId) {
             cardsToUpdate = await Card.findAll({ where: { groupId } });
@@ -148,6 +149,16 @@ const updateCardsAfterReview = async (req, res) => {
 const addCard = async (req, res) => {
     const { imageUri, ...data} = req.body;
     try {
+        const findCard = await Card.findOne({
+            where: {
+                word: {
+                    [Op.iLike]: data.word
+                }
+            }
+        });
+        if(findCard) {
+            return res.status(StatusCodes.BAD_REQUEST).send({ error: true, message: 'Картка з цим словом вже існує' });
+        }
         const image = await Image.create({ url: imageUri });
         const newCard = await Card.create({ imageId: image.id, ...data});
 

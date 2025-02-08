@@ -12,14 +12,14 @@ export const getCards = createAsyncThunk('card/fetchCards', async(data) => {
     }
 })
 
-export const addCard = createAsyncThunk('card/addCard', async(data) => {
+export const addCard = createAsyncThunk('card/addCard', async(data, thunkAPI) => {
     try{
         const axiosInstance = await createAuthorizedInstance();
         const response = await axiosInstance.post('/cards', data)
         return response.data
     } catch (error){
-        console.error('Error fetching cards:', error);
-        throw error;
+        const errorMessage = error.response.data.message;
+        return thunkAPI.rejectWithValue(errorMessage);
     }
 })
 

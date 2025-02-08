@@ -82,6 +82,7 @@ const cardSlice = createSlice({
             })
             .addCase(addCard.rejected, (state, action) => {
                 state.status = DataStatus.ERROR;
+                state.error = action.payload;
             })
             // remove card
             .addCase(removeCard.pending, (state, action) => {

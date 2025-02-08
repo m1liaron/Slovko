@@ -11,7 +11,7 @@ import CardItem from './CardItem';
 import {addCard, getCards, rangeCards, removeCard, resetFilter} from '../../redux/cardReducer/cardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import { AppPath } from "../../common/enums/app/app";
+import {AppPath, DataStatus} from "../../common/enums/app/app";
 import noCardsImage from '../../assets/images/no-cards.png';
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import AddInput from "../../common/components/AddInput/AddInput";
@@ -29,7 +29,7 @@ const MemoCardItem = memo(CardItem);
 const CardList = ({ groupId }) => {
     const { theme: { colors }} = useAppTheme();
     const { group } = useSelector(state => state.groups);
-    const { cards, filteredCards, isLoading } = useSelector(state => state.cards);
+    const { cards, filteredCards, isLoading, error, status } = useSelector(state => state.cards);
 
     const [addCardMode, setAddCardMode] = useState(0);
     const [valueWords, setValueWords] = useState({});
@@ -299,6 +299,7 @@ const CardList = ({ groupId }) => {
                     )}
 
                     <PressableButton onPress={onSaveCard} text="Додати" />
+                    {(error && status === DataStatus.ERROR) && <Text style={{ fontSize: 30, color: '#ff0000'}}>{error}</Text> }
                 </View>
             </DefaultModal>
         </View>
