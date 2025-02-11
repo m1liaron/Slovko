@@ -86,6 +86,29 @@ const getUser = async (req, res) => {
                 .json({ error: true, message: 'User does not exist' });
         }
 
+        if(user.lastReviewAt && user.nextReviewAt) { // If user is existed, check his streak
+            const isUserFrozen = user.frozen;
+            const lastReviewDate = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const timeGone = !lastReviewDate || lastReviewDate.getTime() !== today.getTime()
+
+            if(timeGone && user.frozen) {
+                user.frozen = false;
+            } else if (timeGone && !user.frozen) {
+                user.streak = 1;
+            }
+            await Streak.create({
+                date: new Date,
+                frozen: isUserFrozen,
+                userId: userId
+            });
+
+            user.lastReviewAt = today;
+            await user.save();
+        }
+
         const { password, ...mainUserData} = user.dataValues;
         res.status(200).json({ user: mainUserData });
     } catch (error) {
@@ -176,8 +199,6 @@ const updateUserStreak = async (req, res) => {
 
 const getUserStreakDates = async  (req, res) => {
     const { month, year } = req.query;
-    console.log('🟦🟦🟦🟦🟦')
-    console.log(req.query)
     try {
 
         if (!month || !year) {
