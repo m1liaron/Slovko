@@ -15,7 +15,7 @@ import { useAppTheme } from '../../contexts/ThemeProvider';
  * @param handleClose {function}
  * @param modalStyle {object}
  * @param backgroundColor {string}
- * @param animationType {string}
+ * @param animationType {"none" || "slide" || "fade"}
  * @param children {object}
  * @returns {JSX.Element}
  * @constructor

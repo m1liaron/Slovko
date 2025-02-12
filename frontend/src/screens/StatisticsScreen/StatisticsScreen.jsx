@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import {
   LineChart,
   BarChart,
   PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
 } from 'react-native-chart-kit';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectResult } from '../../redux/resultReducer/resultSlice';
@@ -71,6 +68,7 @@ const StatisticsScreen = () => {
       case 'BarChart':
         return (
           <BarChart
+            yAxisSuffix=""
             data={data}
             width={chartWidth}
             height={220}

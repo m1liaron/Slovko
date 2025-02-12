@@ -24,6 +24,7 @@ export default [
       "object-shorthand": "off",
       "consistent-return": "off",
       "prefer-template": "off",
+      "react/prop-types": "off",
       "comma-dangle": [
         "error",
         {

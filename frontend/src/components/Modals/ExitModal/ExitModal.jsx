@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import styles from './ExitModal.styles';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';

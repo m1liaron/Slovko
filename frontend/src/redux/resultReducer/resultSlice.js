@@ -39,7 +39,7 @@ const resultSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(saveResults.pending, (state, action) => {
+      .addCase(saveResults.pending, (state) => {
         state.status = 'loading';
         state.isLoading = true;
       })
@@ -49,11 +49,11 @@ const resultSlice = createSlice({
         state.filteredResults.push(action.payload);
         state.isLoading = false;
       })
-      .addCase(saveResults.rejected, (state, action) => {
+      .addCase(saveResults.rejected, (state) => {
         state.status = 'error';
         state.isLoading = false;
       })
-      .addCase(getResults.pending, (state, action) => {
+      .addCase(getResults.pending, (state) => {
         state.status = 'loading';
         state.isLoading = true;
       })
@@ -63,11 +63,11 @@ const resultSlice = createSlice({
         state.filteredResults = action.payload;
         state.isLoading = false;
       })
-      .addCase(getResults.rejected, (state, action) => {
+      .addCase(getResults.rejected, (state) => {
         state.status = 'error';
         state.isLoading = false;
       })
-      .addCase(getResultDetails.pending, (state, action) => {
+      .addCase(getResultDetails.pending, (state) => {
         state.status = 'loading';
         state.isLoading = true;
       })
@@ -76,12 +76,12 @@ const resultSlice = createSlice({
         state.result = action.payload;
         state.isLoading = false;
       })
-      .addCase(getResultDetails.rejected, (state, action) => {
+      .addCase(getResultDetails.rejected, (state) => {
         state.status = 'error';
         state.isLoading = false;
       })
 
-      .addCase(getResultsStatistics.pending, (state, action) => {
+      .addCase(getResultsStatistics.pending, (state) => {
         state.status = 'loading';
         state.isLoading = true;
       })
@@ -90,7 +90,7 @@ const resultSlice = createSlice({
         state.statistics = action.payload;
         state.isLoading = false;
       })
-      .addCase(getResultsStatistics.rejected, (state, action) => {
+      .addCase(getResultsStatistics.rejected, (state) => {
         state.status = 'error';
         state.isLoading = false;
       });

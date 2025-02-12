@@ -6,8 +6,13 @@ import { getSharedGroup } from '../../redux/sharedGroupReducer/sharedGroupSlice'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '../../components/BackButton/BackButton';
 import { useAppTheme } from '../../contexts/ThemeProvider';
-import { Entypo } from '@expo/vector-icons';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
+
+/**
+ * @param route { object: { params }}
+ * @returns {JSX.Element}
+ * @constructor
+ */
 
 const SharedGroupDetailsScreen = ({ route }) => {
   const {

@@ -3,6 +3,13 @@ import { View, Text } from 'react-native';
 import styles from './ProgressContainer.styles';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 
+/**
+ * @param index {number}
+ * @param length {number}
+ * @returns {JSX.Element}
+ * @constructor
+ */
+
 const ProgressContainer = ({ index, length }) => {
   const {
     theme: { colors },

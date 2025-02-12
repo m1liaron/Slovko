@@ -11,7 +11,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from '@react-navigation/native';
 import { AppPath } from '../../common/enums/app/app';
-import formatDMTDate from '../../utils/formatDMTDate';
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 

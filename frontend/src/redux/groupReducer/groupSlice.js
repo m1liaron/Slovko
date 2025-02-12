@@ -63,7 +63,7 @@ const groupSlice = createSlice({
         state.status = 'rejected';
       })
       // update
-      .addCase(updateGroup.pending, (state, action) => {
+      .addCase(updateGroup.pending, (state) => {
         state.status = DataStatus.PENDING;
       })
       .addCase(updateGroup.fulfilled, (state, action) => {
@@ -79,7 +79,7 @@ const groupSlice = createSlice({
           state.groups = [...state.groups];
         }
       })
-      .addCase(updateGroup.rejected, (state, action) => {
+      .addCase(updateGroup.rejected, (state) => {
         state.status = DataStatus.ERROR;
       });
   },

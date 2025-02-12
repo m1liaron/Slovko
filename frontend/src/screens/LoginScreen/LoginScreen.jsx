@@ -5,8 +5,6 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
-  Dimensions,
-  Button,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
@@ -43,14 +41,6 @@ const LoginScreen = () => {
         text2: error,
       });
     }
-  };
-
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Hello',
-      text2: 'This is some something 👋',
-    });
   };
 
   return (

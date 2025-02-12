@@ -42,7 +42,7 @@ const cardSlice = createSlice({
         (card) => card.status === action.payload.status
       );
     },
-    resetFilter: (state, action) => {
+    resetFilter: (state) => {
       state.cards = [...state.filteredCards];
     },
   },
@@ -97,11 +97,11 @@ const cardSlice = createSlice({
           (card) => card.id !== action.payload
         );
       })
-      .addCase(removeCard.rejected, (state, action) => {
+      .addCase(removeCard.rejected, (state) => {
         state.status = DataStatus.ERROR;
       })
       // update card
-      .addCase(updateCard.pending, (state, action) => {
+      .addCase(updateCard.pending, (state) => {
         state.status = DataStatus.PENDING;
       })
       .addCase(updateCard.fulfilled, (state, action) => {
@@ -118,7 +118,7 @@ const cardSlice = createSlice({
           state.filteredCards = [...state.filteredCards];
         }
       })
-      .addCase(updateCard.rejected, (state, action) => {
+      .addCase(updateCard.rejected, (state) => {
         state.status = DataStatus.ERROR;
       })
       // get repeated cards

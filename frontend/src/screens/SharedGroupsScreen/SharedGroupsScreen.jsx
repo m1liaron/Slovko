@@ -43,9 +43,7 @@ const SharedGroupsScreen = () => {
 
   const [showAddModal, setShowModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [sharedGroupTitle, setSharedGroupTitle] = useState(
-    '' || selectedGroup?.title
-  );
+  const [sharedGroupTitle, setSharedGroupTitle] = useState(selectedGroup?.title);
   const [showFilterInput, setShowFilterInput] = useState(false);
   const [filterValue, setFilterValue] = useState('');
 

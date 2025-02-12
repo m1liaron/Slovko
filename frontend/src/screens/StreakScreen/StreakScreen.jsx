@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar } from 'react-native-calendars';
 import BackButton from '../../components/BackButton/BackButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
