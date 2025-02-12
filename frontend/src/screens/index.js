@@ -12,16 +12,16 @@ import StatisticsScreen from "./StatisticsScreen/StatisticsScreen";
 import StreakScreen from "./StreakScreen/StreakScreen";
 
 export {
-    MainScreen,
-    RegisterScreen,
-    LoginScreen,
-    GroupScreen,
-    LearnScreen,
-    ProfileScreen,
-    ResultDetailsScreen,
-    ResultsScreen,
-    SharedGroupsScreen,
-    SharedGroupDetailsScreen,
-    StatisticsScreen,
-    StreakScreen
-}
+	MainScreen,
+	RegisterScreen,
+	LoginScreen,
+	GroupScreen,
+	LearnScreen,
+	ProfileScreen,
+	ResultDetailsScreen,
+	ResultsScreen,
+	SharedGroupsScreen,
+	SharedGroupDetailsScreen,
+	StatisticsScreen,
+	StreakScreen,
+};

@@ -1,25 +1,25 @@
-import { StyleSheet} from "react-native";
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    centeredContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-    },
-    sectionContainer: {
-        flexDirection: 'row',
-        justifyContent:'center',
-        alignItems: 'center',
-        gap: 10
-    },
-    resultItemContainer: {
-        borderWidth: 3, 
-        borderRadius: 5, 
-        padding: 10
-    }
-})
+	container: {
+		flex: 1,
+	},
+	centeredContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 16,
+	},
+	sectionContainer: {
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: 10,
+	},
+	resultItemContainer: {
+		borderWidth: 3,
+		borderRadius: 5,
+		padding: 10,
+	},
+});
 
 export default styles;
