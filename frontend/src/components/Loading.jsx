@@ -1,8 +1,6 @@
-import {
-    ActivityIndicator,
-} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 const Loading = () => {
-    return <ActivityIndicator size="large" color="blue"/>
+  return <ActivityIndicator size="large" color="blue" />;
 };
 
 export default Loading;

@@ -1,17 +1,17 @@
 import React from 'react';
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {AppPath} from "../../common/enums/app/app";
-import { LoginScreen, RegisterScreen } from "../../screens/index";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AppPath } from '../../common/enums/app/app';
+import { LoginScreen, RegisterScreen } from '../../screens/index';
 
 const Stack = createNativeStackNavigator();
 
 const AuthNavigator = () => {
-    return (
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name={AppPath.Login} component={LoginScreen} />
-            <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-        </Stack.Navigator>
-    );
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name={AppPath.Login} component={LoginScreen} />
+      <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+    </Stack.Navigator>
+  );
 };
 
 export default AuthNavigator;
