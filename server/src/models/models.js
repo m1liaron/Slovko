@@ -1,59 +1,74 @@
-const Card = require('./Card');
-const Group = require('./Group');
-const User = require('./User');
-const Streak = require('./Streak');
-const Result = require('./Result/Result');
-const ResultMode = require('./Result/ResultMode');
-const WordResult = require('./Result/WordResult');
-const SharedGroup = require('./SharedGroup/SharedGroup');
-const SharedCard = require('./SharedGroup/SharedCard');
-const SharedCardLikes = require('./SharedGroup/SharedCardLikes');
+const Card = require("./Card");
+const Group = require("./Group");
+const User = require("./User");
+const Streak = require("./Streak");
+const Result = require("./Result/Result");
+const ResultMode = require("./Result/ResultMode");
+const WordResult = require("./Result/WordResult");
+const SharedGroup = require("./SharedGroup/SharedGroup");
+const SharedCard = require("./SharedGroup/SharedCard");
+const SharedCardLikes = require("./SharedGroup/SharedCardLikes");
 
 // User - Group
-User.hasMany(Group, { foreignKey: 'userId', as: 'groups' });
-Group.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(Group, { foreignKey: "userId", as: "groups" });
+Group.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // User - SharedGroup
-User.hasMany(SharedGroup, { foreignKey: 'userId', as: 'sharedGroups' });
-SharedGroup.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(SharedGroup, { foreignKey: "userId", as: "sharedGroups" });
+SharedGroup.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // User - Streak
-User.hasMany(Streak, { foreignKey: 'userId', as: 'streakDates'});
-Streak.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(Streak, { foreignKey: "userId", as: "streakDates" });
+Streak.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // Group - Card
-Group.hasMany(Card, { foreignKey: 'groupId', as: 'cards' });
-Card.belongsTo(Group, { foreignKey: 'groupId', as: 'group' });
+Group.hasMany(Card, { foreignKey: "groupId", as: "cards" });
+Card.belongsTo(Group, { foreignKey: "groupId", as: "group" });
 
 // User - Result
-User.hasMany(Result, { foreignKey: 'userId', as: 'results' });
-Result.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+User.hasMany(Result, { foreignKey: "userId", as: "results" });
+Result.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 // Result - ResultMode
-Result.hasMany(ResultMode, { foreignKey: 'resultId', as: 'mode' });
-ResultMode.belongsTo(Result, { foreignKey: 'resultId', as: 'result' });
+Result.hasMany(ResultMode, { foreignKey: "resultId", as: "mode" });
+ResultMode.belongsTo(Result, { foreignKey: "resultId", as: "result" });
 
 // ResultMode - WordResult
-ResultMode.hasMany(WordResult, { foreignKey: 'resultModeId', as: 'words' });
-WordResult.belongsTo(ResultMode, { foreignKey: 'resultModeId', as: 'resultMode' })
+ResultMode.hasMany(WordResult, { foreignKey: "resultModeId", as: "words" });
+WordResult.belongsTo(ResultMode, {
+	foreignKey: "resultModeId",
+	as: "resultMode",
+});
 
 // // SharedGroup - SharedCard
-SharedGroup.hasMany(SharedCard, { foreignKey: 'sharedGroupId', as: 'sharedCards' });
-SharedCard.belongsTo(SharedGroup, { foreignKey: 'sharedGroupId', as: 'sharedGroup' });
+SharedGroup.hasMany(SharedCard, {
+	foreignKey: "sharedGroupId",
+	as: "sharedCards",
+});
+SharedCard.belongsTo(SharedGroup, {
+	foreignKey: "sharedGroupId",
+	as: "sharedGroup",
+});
 
 // SharedCard - SharedCardLikes
-SharedCard.hasMany(SharedCardLikes, { foreignKey: 'sharedGroupId', as: 'likes' });
-SharedCardLikes.belongsTo(SharedCard, { foreignKey: 'sharedGroupId', as: 'sharedCard' });
+SharedCard.hasMany(SharedCardLikes, {
+	foreignKey: "sharedGroupId",
+	as: "likes",
+});
+SharedCardLikes.belongsTo(SharedCard, {
+	foreignKey: "sharedGroupId",
+	as: "sharedCard",
+});
 
 module.exports = {
-    Card,
-    User,
-    Streak,
-    Group,
-    Result,
-    ResultMode,
-    WordResult,
-    SharedGroup,
-    SharedCard,
-    SharedCardLikes
-}
+	Card,
+	User,
+	Streak,
+	Group,
+	Result,
+	ResultMode,
+	WordResult,
+	SharedGroup,
+	SharedCard,
+	SharedCardLikes,
+};
