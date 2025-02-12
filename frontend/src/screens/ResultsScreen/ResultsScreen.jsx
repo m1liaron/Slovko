@@ -45,7 +45,7 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		dispatch(getResults());
-	}, []);
+	}, [dispatch]);
 
 	const handleSort = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));

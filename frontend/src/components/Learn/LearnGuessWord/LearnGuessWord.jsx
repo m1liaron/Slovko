@@ -79,13 +79,13 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 		const updatedWord = [...scrambledWord];
 		updatedWord.splice(index, 1);
 		setScrambledWord(updatedWord);
-	}, []);
+	}, [scrambledWord]);
 
 	const highlightIncorrectLetter = useCallback((index) => {
 		setLetterColors({ [index]: "red" });
 		setInCorrectLetter(currentWord[index]);
 		setTimeout(() => setLetterColors({}), 1000);
-	}, []);
+	}, [currentWord[currentIndex]]);
 
 	useEffect(() => {
 		if (currentGuess.join("") === currentWord) {

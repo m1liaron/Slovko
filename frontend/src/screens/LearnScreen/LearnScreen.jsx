@@ -51,7 +51,7 @@ const LearnScreen = ({ route }) => {
 
 	useEffect(() => {
 		setStartLearnDate(new Date());
-	}, [dispatch, groupId]);
+	}, []);
 
 	const toggleSwitch = (changeFunction) =>
 		changeFunction((previousState) => !previousState);
@@ -72,7 +72,7 @@ const LearnScreen = ({ route }) => {
 	};
 
 	const handleSetData = (card, isCorrect) => {
-		let newCard = {
+		const newCard = {
 			wordId: card.id,
 			word: card.word,
 			translateWord: card.translateWord,
@@ -99,9 +99,8 @@ const LearnScreen = ({ route }) => {
 						mistakesAmount: updatedCards[existingCardIndex].mistakesAmount + 1,
 					};
 					return updatedCards;
-				} else {
-					return [...prev, newCard];
 				}
+					return [...prev, newCard];
 			});
 		};
 
@@ -182,8 +181,8 @@ const LearnScreen = ({ route }) => {
 		];
 
 		return sections.map(
-			({ iconName, text, state, changeState, sectionName }, idx) => (
-				<View style={styles.sectionContainer} key={idx}>
+			({ iconName, text, state, changeState, sectionName }) => (
+				<View style={styles.sectionContainer} key={text}>
 					<View style={styles.sectionContainer}>
 						<MaterialIcons
 							name={iconName}

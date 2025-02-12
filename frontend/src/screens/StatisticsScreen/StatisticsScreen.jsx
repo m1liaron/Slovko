@@ -21,7 +21,7 @@ const StatisticsScreen = () => {
 
 	useEffect(() => {
 		dispatch(getResultsStatistics());
-	}, []);
+	}, [dispatch]);
 
 	const modesOptions = [
 		{ label: "Вікторина", value: "quiz" },
@@ -213,7 +213,7 @@ const StatisticsScreen = () => {
 			</View>
 
 			<View style={{ margin: 20 }}>
-				{statistics && statistics.amountMistakesCards && renderGraph()}
+				{statistics?.amountMistakesCards && renderGraph()}
 			</View>
 		</SafeAreaView>
 	);

@@ -44,7 +44,8 @@ const CardItem = ({ item, onRemove, groupId }) => {
 		if (timeDifference < oneHour) {
 			const minutes = Math.ceil(timeDifference / oneMinute); // Use ceil to round up for future times
 			return `Через ${minutes} хвилин${minutes === 1 ? "у" : minutes >= 3 && minutes <= 4 ? "и" : ""}`;
-		} else if (timeDifference < oneDay) {
+		}
+		if (timeDifference < oneDay) {
 			const hours = Math.floor(timeDifference / oneHour);
 			const minutes = Math.ceil((timeDifference % oneHour) / oneMinute);
 			return `Через ${hours} годин${hours === 1 ? "у" : hours >= 3 ? "и" : ""} та ${minutes} хвилин${minutes === 1 ? "у" : minutes >= 3 && minutes <= 4 ? "и" : ""}`;

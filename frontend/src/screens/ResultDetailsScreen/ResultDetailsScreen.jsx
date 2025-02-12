@@ -22,7 +22,7 @@ const ResultDetailsScreen = ({ route }) => {
 
 	useEffect(() => {
 		dispatch(getResultDetails(resultId));
-	}, []);
+	}, [dispatch, resultId]);
 
 	const resultTime =
 		new Date(result.completionTime) - new Date(result.startedLearn);

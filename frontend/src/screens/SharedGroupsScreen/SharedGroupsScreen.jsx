@@ -51,7 +51,7 @@ const SharedGroupsScreen = () => {
 
 	useEffect(() => {
 		dispatch(getAllSharedGroups());
-	}, []);
+	}, [dispatch]);
 
 	const formatTime = (createdAt) => {
 		const now = new Date();
@@ -65,15 +65,16 @@ const SharedGroupsScreen = () => {
 		if (timeDifference < oneHour) {
 			const minutes = Math.floor(timeDifference / oneMinute);
 			return `${minutes} хвилин${minutes === 1 ? "a" : minutes >= 3 && minutes <= 4 ? "и" : ""} тому`;
-		} else if (timeDifference < oneDay) {
+		}
+		if (timeDifference < oneDay) {
 			const hours = Math.floor(timeDifference / (60 * 60 * 1000));
 			return `${hours} годин${hours === 1 ? "a" : hours >= 3 ? "и" : ""} тому`;
-		} else if (timeDifference < sevenDays) {
+		}
+		if (timeDifference < sevenDays) {
 			const days = Math.floor(timeDifference / oneDay);
 			return `${days} днів тому`;
-		} else {
-			return new Date(createdAt).toLocaleTimeString();
 		}
+		return new Date(createdAt).toLocaleTimeString();
 	};
 
 	const addRemoveSelectedGroup = (newGroup) => {

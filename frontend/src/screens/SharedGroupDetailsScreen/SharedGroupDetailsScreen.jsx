@@ -24,7 +24,7 @@ const SharedGroupDetailsScreen = ({ route }) => {
 
 	useEffect(() => {
 		dispatch(getSharedGroup(sharedGroupId));
-	}, []);
+	}, [dispatch, sharedGroupId]);
 
 	return (
 		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -47,8 +47,7 @@ const SharedGroupDetailsScreen = ({ route }) => {
 				)}
 			</View>
 
-			{sharedGroup &&
-			sharedGroup.sharedCards &&
+			{sharedGroup?.sharedCards &&
 			sharedGroup.sharedCards.length > 0 ? (
 				<FlatList
 					data={sharedGroup.sharedCards}

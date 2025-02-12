@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	FlatList,
@@ -89,24 +89,24 @@ const MainScreen = () => {
 
 	useEffect(() => {
 		dispatch(getRepeatedCards());
-	}, []);
+	}, [dispatch]);
 
-	function daysSince(dateString) {
+	const daysSince = useCallback((dateString) => {
 		const targetDate = new Date(dateString);
 		const now = new Date();
 
 		const totalDays = Math.floor((now - targetDate) / (1000 * 3600 * 24));
 		return `${totalDays} днів`;
-	}
+	}, []);
 
 	useEffect(() => {
 		const days = daysSince("2022-02-24");
 		setDaysPassed(days);
-	}, []);
+	}, [daysSince]);
 
 	useEffect(() => {
 		dispatch(getUser());
-	}, []);
+	}, [dispatch]);
 
 	const openLink = () => {
 		Linking.openURL("https://savelife.in.ua/en/");

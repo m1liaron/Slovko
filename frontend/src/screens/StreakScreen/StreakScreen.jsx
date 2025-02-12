@@ -28,7 +28,7 @@ const StreakScreen = () => {
 			const { month, year } = date;
 			dispatch(getUserStreakDates({ month, year }));
 		}
-	}, [date]);
+	}, [date, dispatch]);
 
 	const validatedMarkedDates = streakDates?.length
 		? streakDates.reduce((total, item) => {
