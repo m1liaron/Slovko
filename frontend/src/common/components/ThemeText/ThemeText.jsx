@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text } from 'react-native'
+import React from "react";
+import { Text } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 
 /**
@@ -9,8 +9,12 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
  */
 
 const ThemeText = ({ children }) => {
-    const { theme: { colors: { primary } } } = useAppTheme();
-    return <Text style={{ color: primary }}>{children}</Text>
+	const {
+		theme: {
+			colors: { primary },
+		},
+	} = useAppTheme();
+	return <Text style={{ color: primary }}>{children}</Text>;
 };
 
 export default ThemeText;

@@ -1,49 +1,49 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
 export const getAllSharedGroups = createAsyncThunk(
-  'sharedGroup/getAll',
-  async () => {
-    const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.get('/sharedGroups');
-    return response.data;
-  }
+	"sharedGroup/getAll",
+	async () => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.get("/sharedGroups");
+		return response.data;
+	},
 );
 
 export const saveSharedGroup = createAsyncThunk(
-  'sharedGroup/save',
-  async (data) => {
-    const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.post(`/sharedGroups`, data);
-    return response.data;
-  }
+	"sharedGroup/save",
+	async (data) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post("/sharedGroups", data);
+		return response.data;
+	},
 );
 
 export const getSharedGroup = createAsyncThunk(
-  'sharedGroup/get',
-  async (id) => {
-    const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.get(`/sharedGroups/${id}`);
-    return response.data;
-  }
+	"sharedGroup/get",
+	async (id) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.get(`/sharedGroups/${id}`);
+		return response.data;
+	},
 );
 
 export const copySharedGroup = createAsyncThunk(
-  'sharedGroup/copy',
-  async (sharedGroupId) => {
-    const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.post(`/sharedGroups/${sharedGroupId}`);
-    return response.data;
-  }
+	"sharedGroup/copy",
+	async (sharedGroupId) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post(`/sharedGroups/${sharedGroupId}`);
+		return response.data;
+	},
 );
 
 export const removeSharedGroup = createAsyncThunk(
-  'sharedGroup/remove',
-  async (sharedGroupId) => {
-    const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.delete(
-      `/sharedGroups/${sharedGroupId}`
-    );
-    return response.data;
-  }
+	"sharedGroup/remove",
+	async (sharedGroupId) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.delete(
+			`/sharedGroups/${sharedGroupId}`,
+		);
+		return response.data;
+	},
 );
