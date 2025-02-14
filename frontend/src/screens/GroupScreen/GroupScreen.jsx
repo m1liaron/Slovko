@@ -17,6 +17,7 @@ import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import AddInput from "../../common/components/AddInput/AddInput";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const GroupScreen = ({ route }) => {
 	const {
@@ -97,7 +98,7 @@ const GroupScreen = ({ route }) => {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+		<ThemeBackground>
 			<View
 				style={{
 					display: "flex",
@@ -170,7 +171,7 @@ const GroupScreen = ({ route }) => {
 
 				<PressableButton text="Змінити" onPress={updateGroupTitle} />
 			</DefaultModal>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

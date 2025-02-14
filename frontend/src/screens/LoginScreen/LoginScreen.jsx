@@ -7,6 +7,8 @@ import Toast from "react-native-toast-message";
 import { Entypo } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppPath } from "../../common/enums/app/app";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import ThemeText from '../../common/components/ThemeText/ThemeText';
 
 const LoginScreen = () => {
 	const navigation = useNavigation();
@@ -20,8 +22,8 @@ const LoginScreen = () => {
 		if (!email.length || !password.length) {
 			return Toast.show({
 				type: "error",
-				text1: "Fail",
-				text2: "Inputs must be filled!",
+				text1: "Помилка",
+				text2: "Поля мають бути заповнені!",
 			});
 		}
 
@@ -31,19 +33,19 @@ const LoginScreen = () => {
 
 			Toast.show({
 				type: "error",
-				text1: "Fail",
+				text1: "Невдача",
 				text2: error,
 			});
 		}
 	};
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<ThemeBackground style={styles.container}>
 			<Toast />
-			<Text style={styles.title}>Login</Text>
+			<ThemeText style={styles.title} >Вхід</ThemeText>
 			<TextInput
 				style={styles.input}
-				placeholder="Email"
+				placeholder="Пошта"
 				placeholderTextColor="#ccc"
 				keyboardType="email-address"
 				autoCapitalize="none"
@@ -54,7 +56,7 @@ const LoginScreen = () => {
 			<View style={styles.passwordContainer}>
 				<TextInput
 					style={[styles.input, { flex: 1 }]}
-					placeholder="Password"
+					placeholder="Пароль"
 					placeholderTextColor="#ccc"
 					secureTextEntry={notShowPassword}
 					value={password}
@@ -73,30 +75,27 @@ const LoginScreen = () => {
 			</View>
 
 			<Pressable style={styles.button} onPress={handleSubmit}>
-				<Text style={styles.buttonText}>Sign In</Text>
+				<Text style={styles.buttonText}>Увійти</Text>
 			</Pressable>
 
 			<Pressable onPress={() => navigation.navigate(AppPath.Register)}>
-				<Text style={styles.switchText}>Don't have an account? Register</Text>
+				<Text style={styles.switchText}>Не маєте акаунта? Зареєструйтеся</Text>
 			</Pressable>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
 		paddingHorizontal: 20,
-		backgroundColor: "#f7f7f7",
 		width: "100%",
 	},
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
 		marginBottom: 30,
-		color: "#333",
 	},
 	input: {
 		width: "100%",

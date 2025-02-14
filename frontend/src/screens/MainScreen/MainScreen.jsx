@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	FlatList,
 	Linking,
@@ -27,6 +26,7 @@ import {
 import appLogo from "../../assets/images/favicon.png";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const MainScreen = () => {
 	const dispatch = useDispatch();
@@ -143,9 +143,7 @@ const MainScreen = () => {
 			: theme.colors.iconColor;
 
 	return (
-		<SafeAreaView
-			style={[styles.container, { backgroundColor: theme.colors.background }]}
-		>
+		<ThemeBackground>
 			<Pressable
 				style={{
 					flexDirection: "row",
@@ -207,7 +205,7 @@ const MainScreen = () => {
 				/>
 				<PressableButton text="Повторити усі" onPress={learnAllRepeatedCards} />
 			</DefaultModal>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

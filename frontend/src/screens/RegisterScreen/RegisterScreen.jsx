@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import Toast from "react-native-toast-message";
 import { register } from "../../redux/userReducer/userSlice";
 import { Entypo } from "@expo/vector-icons";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import ThemeText from '../../common/components/ThemeText/ThemeText';
+import { AppPath } from '../../common/enums/app/app';
 
 const RegisterScreen = () => {
 	const navigation = useNavigation();
@@ -20,15 +23,15 @@ const RegisterScreen = () => {
 		if (!email.length || !password.length) {
 			return Toast.show({
 				type: "error",
-				text1: "Fail",
-				text2: "Inputs must be filled!",
+				text1: "Помилка",
+				text2: "Поля мають бути заповнені!",
 			});
 		}
 		if (password !== confirmPassword) {
 			return Toast.show({
 				type: "error",
-				text1: "Fail",
-				text2: "Passwords do not match!",
+				text1: "Помилка",
+				text2: "Паролі не збігаються!",
 			});
 		}
 
@@ -43,19 +46,20 @@ const RegisterScreen = () => {
 			const error = response.payload || "Registration failed";
 			return Toast.show({
 				type: "error",
-				text1: "Fail",
+				text1: "Помилка",
 				text2: error,
 			});
 		}
-		navigation.navigate("home");
+		navigation.navigate(AppPath.Home);
 	};
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>Register</Text>
+		<ThemeBackground style={styles.container}>
+			<Toast/>
+			<ThemeText style={styles.title}>Реєстрація</ThemeText>
 
 			<TextInput
 				style={styles.input}
-				placeholder="Name"
+				placeholder="Ім'я"
 				placeholderTextColor="#ccc"
 				keyboardType="default"
 				autoCapitalize="none"
@@ -65,7 +69,7 @@ const RegisterScreen = () => {
 
 			<TextInput
 				style={styles.input}
-				placeholder="Email"
+				placeholder="Пошта"
 				placeholderTextColor="#ccc"
 				keyboardType="email-address"
 				autoCapitalize="none"
@@ -76,7 +80,7 @@ const RegisterScreen = () => {
 			<View style={styles.passwordContainer}>
 				<TextInput
 					style={[styles.input, { flex: 1 }]}
-					placeholder="Password"
+					placeholder="Пароль"
 					placeholderTextColor="#ccc"
 					secureTextEntry={notShowPassword}
 					value={password}
@@ -96,7 +100,7 @@ const RegisterScreen = () => {
 
 			<TextInput
 				style={styles.input}
-				placeholder="Confirm Password"
+				placeholder="Пітвердіть Пароль"
 				placeholderTextColor="#ccc"
 				secureTextEntry={notShowPassword}
 				value={confirmPassword}
@@ -107,26 +111,23 @@ const RegisterScreen = () => {
 				<Text style={styles.buttonText}>Sign Up</Text>
 			</Pressable>
 
-			<Pressable onPress={() => navigation.navigate("login")}>
+			<Pressable onPress={() => navigation.navigate(AppPath.Login)}>
 				<Text style={styles.switchText}>Already have an account? Login</Text>
 			</Pressable>
-		</View>
+		</ThemeBackground>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
 		paddingHorizontal: 20,
-		backgroundColor: "#f7f7f7",
 	},
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
 		marginBottom: 30,
-		color: "#333",
 	},
 	input: {
 		width: "100%",

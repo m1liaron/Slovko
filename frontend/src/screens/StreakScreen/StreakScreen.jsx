@@ -13,6 +13,7 @@ import {
 	buyFreeze,
 	getUserStreakDates,
 } from "../../redux/userReducer/userThunk";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const StreakScreen = () => {
 	const {
@@ -63,9 +64,7 @@ const StreakScreen = () => {
 		: null;
 
 	return (
-		<SafeAreaView
-			style={[styles.container, { backgroundColor: colors.background }]}
-		>
+		<ThemeBackground>
 			<BackButton />
 			<View style={styles.calendarContainer}>
 				<Calendar
@@ -132,7 +131,7 @@ const StreakScreen = () => {
 					{frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}
 				</View>
 			</View>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

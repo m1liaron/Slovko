@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import RNPickerSelect from "react-native-picker-select";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const StatisticsScreen = () => {
 	const {
@@ -109,9 +110,7 @@ const StatisticsScreen = () => {
 	};
 
 	return (
-		<SafeAreaView
-			style={{ flex: 1, backgroundColor: colors.background, padding: 40 }}
-		>
+		<ThemeBackground>
 			<BackButton />
 			<View
 				style={{
@@ -215,7 +214,7 @@ const StatisticsScreen = () => {
 			<View style={{ margin: 20 }}>
 				{statistics?.amountMistakesCards && renderGraph()}
 			</View>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

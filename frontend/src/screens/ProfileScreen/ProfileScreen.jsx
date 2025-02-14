@@ -10,12 +10,10 @@ import {
 	Image,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import * as ImagePicker from "expo-image-picker";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { Switch } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
@@ -24,6 +22,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import AvatarImage from "../../../assets/images/avatar.png";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import pickImage from "../../utils/pickImage";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 export default function ProfileScreen() {
 	const { user } = useSelector(selectUser);
@@ -142,9 +141,7 @@ export default function ProfileScreen() {
 	};
 
 	return (
-		<SafeAreaView
-			style={[styles.container, { backgroundColor: colors.background }]}
-		>
+		<ThemeBackground style={{ paddingHorizontal: 40}}>
 			<Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
 
 			<View style={styles.container}>
@@ -381,6 +378,6 @@ export default function ProfileScreen() {
 					</View>
 				)}
 			</View>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 }
