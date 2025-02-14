@@ -6,7 +6,7 @@ import styles from "./StreakScreen.styles";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/userReducer/userSlice";
-import { View } from "react-native";
+import { Text, View } from 'react-native';
 import { FontAwesome6 } from "@expo/vector-icons";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import {
@@ -18,7 +18,7 @@ const StreakScreen = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { streakDates } = useSelector(selectUser);
+	const { streakDates, user: { frozen } } = useSelector(selectUser);
 	const [date, setDate] = useState({});
 	const dispatch = useDispatch();
 	const now = new Date();
@@ -92,21 +92,21 @@ const StreakScreen = () => {
 						height: 450,
 					}}
 					theme={{
-						backgroundColor: "#000000",
+						backgroundColor: colors.background,
 						calendarBackground: colors.lightBackground,
 						textSectionTitleColor: "#b6c1cd",
 						textSectionTitleDisabledColor: "#d9e1e8",
 						selectedDayBackgroundColor: "#f54100",
-						selectedDayTextColor: "#ffffff",
+						selectedDayTextColor: colors.primary,
 						todayTextColor: "#00adf5",
-						dayTextColor: "#ffffff",
+						dayTextColor: colors.primary,
 						textDisabledColor: "#d9e1e8",
 						dotColor: "#f53500",
-						selectedDotColor: "#ffffff",
-						arrowColor: "#fff",
-						disabledArrowColor: "#d9e1e8",
-						monthTextColor: "#fff",
-						indicatorColor: "#fff",
+						selectedDotColor: colors.primary,
+						arrowColor: colors.primary,
+						disabledArrowColor: colors.primary,
+						monthTextColor: colors.primary,
+						indicatorColor: colors.primary,
 						textDayFontFamily: "monospace",
 						textMonthFontFamily: "monospace",
 						textDayHeaderFontFamily: "monospace",
@@ -126,7 +126,10 @@ const StreakScreen = () => {
 					<PressableButton
 						text="Купити Заморозку"
 						onPress={() => dispatch(buyFreeze({ froze: 100 }))}
+						buttonStyle={{ backgroundColor: frozen && "#002d5d", padding: 20}}
+						disabled={!frozen}
 					/>
+					{frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}
 				</View>
 			</View>
 		</SafeAreaView>
