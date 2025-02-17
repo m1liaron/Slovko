@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const ThemeContext = createContext({});
 
 export const ThemeProvider = ({ children }) => {
-	const [theme, setTheme] = useState(lightTheme); // Default theme
+	const [theme, setTheme] = useState(null); // Default theme
 
 	useEffect(() => {
 		const loadTheme = async () => {

@@ -30,6 +30,7 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Slider from "@react-native-community/slider";
 import { Entypo } from "@expo/vector-icons";
+import CheckBox from '@react-native-community/checkbox';
 
 const MemoCardItem = memo(CardItem);
 
@@ -52,6 +53,7 @@ const CardList = ({ groupId }) => {
 	const [valueWords, setValueWords] = useState({});
 	const [value, setValue] = useState("");
 	const [answerWord, setAnswerWord] = useState("");
+	const [isValidateWord, setIsValidateWord] = useState(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [imageUri, setImageUri] = useState("");
 	const [jsonOutput, setJsonOutput] = useState(null);
@@ -148,7 +150,7 @@ const CardList = ({ groupId }) => {
 			return formattedWord;
 		}
 
-		const validatedAnswer = validateWord(answerWord) || answerWord;
+		const validatedAnswer = isValidateWord ? validateWord(answerWord) : answerWord;
 
 		if (Object.keys(valueWords).length > 0) {
 			for(const [key, value] of Object.entries(valueWords)) {
@@ -355,6 +357,7 @@ const CardList = ({ groupId }) => {
 								style={styles.input}
 								placeholder="Відповідь..."
 							/>
+							<CheckBox value={isValidateWord} onValueChange={setIsValidateWord} />
 						</View>
 					)}
 
