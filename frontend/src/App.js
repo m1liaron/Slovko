@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import 'react-native-reanimated';
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";

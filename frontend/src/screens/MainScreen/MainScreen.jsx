@@ -19,10 +19,6 @@ import {
 } from "../../redux/cardReducer/cardSlice";
 import { useNavigation } from "@react-navigation/native";
 import { AppPath } from "../../common/enums/app/app";
-import {
-	requestNotificationPermission,
-	scheduleNotification,
-} from "../../utils/notifications";
 import appLogo from "../../assets/images/favicon.png";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
@@ -42,26 +38,7 @@ const MainScreen = () => {
 	const navigate = useNavigation();
 
 	useEffect(() => {
-		if (Platform.OS === "android" || Platform.OS === "ios") {
-			const setupNotifications = async () => {
-				const hasPermission = await requestNotificationPermission();
-				if (!hasPermission) {
-					console.log("Notifications permission not granted");
-				}
-			};
-			setupNotifications();
-		}
-	}, []);
-
-	useEffect(() => {
-		const notificationText = `У вас є ${repeatedGroupsIds.length} для повторення.`;
-		if (Platform.OS === "android" || Platform.OS === "ios") {
-			if (repeatedGroupsIds.length > 0) {
-				scheduleNotification("Час для повторення!", notificationText, {
-					seconds: 5,
-				});
-			}
-		} else {
+		if (Platform.OS === "web" || Platform.OS === "ios") {
 			sendNotification();
 		}
 	}, [repeatedGroupsIds]);

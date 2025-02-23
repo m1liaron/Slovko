@@ -30,7 +30,7 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Slider from "@react-native-community/slider";
 import { Entypo } from "@expo/vector-icons";
-import CheckBox from '@react-native-community/checkbox';
+import CheckBox from 'expo-checkbox';
 
 const MemoCardItem = memo(CardItem);
 
@@ -137,7 +137,7 @@ const CardList = ({ groupId }) => {
 		}
 
 		function validateWord(word) {
-			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
+			const cleanedWord = isValidateWord ? word.replace(/[^A-Za-z0-9\s]/g, "") : word;
 			const formattedWord = cleanedWord
 				.split(" ")
 				.filter(Boolean) // Remove any extra spaces
@@ -150,7 +150,7 @@ const CardList = ({ groupId }) => {
 			return formattedWord;
 		}
 
-		const validatedAnswer = isValidateWord ? validateWord(answerWord) : answerWord;
+		const validatedValue = validateWord(value)
 
 		if (Object.keys(valueWords).length > 0) {
 			for(const [key, value] of Object.entries(valueWords)) {
@@ -170,8 +170,8 @@ const CardList = ({ groupId }) => {
 
 		if (value && answerWord) {
 			const cardData = {
-				word: validateWord(value),
-				translateWord: validatedAnswer,
+				word: validatedValue,
+				translateWord: answerWord,
 				imageUri: finalImageUri || "",
 				groupId,
 			};

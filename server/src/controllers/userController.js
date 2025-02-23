@@ -90,16 +90,32 @@ const getUser = async (req, res) => {
 			const timeGone =
 				!lastReviewDate || lastReviewDate.getTime() !== today.getTime();
 
+			const findStreakDate = await Streak.findOne({
+				where: { id: userId }
+			});
+			if(findStreakDate) {
+				const { password, ...mainUserData } = user.dataValues;
+				return res.status(200).json({ user: mainUserData });
+			}
+
 			if (timeGone && user.frozen) {
+				const yesterday = new Date();
+				yesterday.setDate(yesterday.getDate() - 1);
+
+				await Streak.create({
+					date: yesterday,
+					frozen: true,
+					userId: userId,
+				});
 				user.frozen = false;
 			} else if (timeGone && !user.frozen) {
 				user.streak = 1;
+				await Streak.create({
+					date: new Date(),
+					frozen: false,
+					userId: userId,
+				});
 			}
-			await Streak.create({
-				date: new Date(),
-				frozen: isUserFrozen,
-				userId: userId,
-			});
 
 			user.lastReviewAt = today;
 			await user.save();
