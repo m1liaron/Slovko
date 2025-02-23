@@ -10,6 +10,7 @@ import BackButton from "../../components/BackButton/BackButton";
 import formatDMTDate from "../../utils/formatDMTDate";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { formatTime } from "../../utils/formatTime";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const ResultDetailsScreen = ({ route }) => {
 	const {
@@ -46,7 +47,7 @@ const ResultDetailsScreen = ({ route }) => {
 	];
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+		<ThemeBackground>
 			<View
 				style={[styles.header, { backgroundColor: colors.lightBackground }]}
 			>
@@ -142,7 +143,7 @@ const ResultDetailsScreen = ({ route }) => {
 					/>
 				)}
 			</View>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

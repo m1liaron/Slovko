@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	FlatList,
 	Linking,
@@ -27,6 +26,7 @@ import {
 import appLogo from "../../assets/images/favicon.png";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const MainScreen = () => {
 	const dispatch = useDispatch();
@@ -71,20 +71,22 @@ const MainScreen = () => {
 			throw new Error("Ваш браузер не підтримує повідомлення");
 		}
 
-		Notification.requestPermission().then((permission) => {
-			if (repeatedCardsLength) {
-				if (permission === "granted") {
-					const notificationOptions = {
-						body: `У вас є ${repeatedCardsLength} слова для повторення.`,
-						icon: appLogo.uri,
-					};
-					new Notification("Push Notification", notificationOptions);
-				} else {
-					alert("Дозвольте надсилати повідомлення про слова для повторення");
-					console.log("Повідомлення заблоковані користувачем.");
+		if(Notification.permission !== 'granted') {
+			Notification.requestPermission().then((permission) => {
+				if (repeatedCardsLength) {
+					if (permission === "granted") {
+						const notificationOptions = {
+							body: `У вас є ${repeatedCardsLength} слова для повторення.`,
+							icon: appLogo.uri,
+						};
+						new Notification("Push Notification", notificationOptions);
+					} else {
+						alert("Дозвольте надсилати повідомлення про слова для повторення");
+						console.log("Повідомлення заблоковані користувачем.");
+					}
 				}
-			}
-		});
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -118,9 +120,10 @@ const MainScreen = () => {
 	};
 
 	const learnAllRepeatedCards = () => {
-		const allIds = repeatedGroupsIds.map((group) =>
+		const allIds = repeatedGroupsIds.length > 1 ? repeatedGroupsIds.map((group) =>
 			group.cards.map((id) => id),
-		);
+		) : repeatedGroupsIds[0].cards;
+		console.log(allIds)
 		dispatch(getRepeatedCardsFromIds(allIds));
 		navigateToLearn();
 	};
@@ -140,9 +143,7 @@ const MainScreen = () => {
 			: theme.colors.iconColor;
 
 	return (
-		<SafeAreaView
-			style={[styles.container, { backgroundColor: theme.colors.background }]}
-		>
+		<ThemeBackground>
 			<Pressable
 				style={{
 					flexDirection: "row",
@@ -204,7 +205,7 @@ const MainScreen = () => {
 				/>
 				<PressableButton text="Повторити усі" onPress={learnAllRepeatedCards} />
 			</DefaultModal>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

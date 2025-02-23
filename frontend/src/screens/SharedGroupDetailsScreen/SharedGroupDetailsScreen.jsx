@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 /**
  * @param route { object: { params }}
@@ -27,7 +28,7 @@ const SharedGroupDetailsScreen = ({ route }) => {
 	}, [dispatch, sharedGroupId]);
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+		<ThemeBackground>
 			<View style={styles.header}>
 				<BackButton />
 				{sharedGroup && (
@@ -79,7 +80,7 @@ const SharedGroupDetailsScreen = ({ route }) => {
 				</View>
 			)}
 			<PressableButton text="Скопіювати групу" />
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

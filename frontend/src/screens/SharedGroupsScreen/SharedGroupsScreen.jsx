@@ -30,6 +30,7 @@ import AddInput from "../../common/components/AddInput/AddInput";
 import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import AvatarImage from "../../../assets/images/avatar.png";
 import { selectUser } from "../../redux/userReducer/userSlice";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const SharedGroupsScreen = () => {
 	const { user } = useSelector(selectUser);
@@ -153,7 +154,7 @@ const SharedGroupsScreen = () => {
 	);
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
 					<Text
@@ -286,7 +287,7 @@ const SharedGroupsScreen = () => {
 				)}
 				<PressableButton text="Поширити" onPress={shareGroup} />
 			</DefaultModal>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

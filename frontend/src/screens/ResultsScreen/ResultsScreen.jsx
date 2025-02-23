@@ -13,6 +13,7 @@ import { Link } from "@react-navigation/native";
 import { AppPath } from "../../common/enums/app/app";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const ResultsScreen = () => {
 	const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const ResultsScreen = () => {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
 					<Text
@@ -186,7 +187,7 @@ const ResultsScreen = () => {
 				)}
 				contentContainerStyle={{ paddingBottom: 20 }}
 			/>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

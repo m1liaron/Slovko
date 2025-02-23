@@ -24,6 +24,7 @@ import { useNavigation } from "@react-navigation/native";
 import Loading from "../../components/Loading";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
+import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const LearnScreen = ({ route }) => {
 	const { theme } = useAppTheme();
@@ -230,9 +231,7 @@ const LearnScreen = ({ route }) => {
 	);
 
 	return (
-		<SafeAreaView
-			style={[styles.container, { backgroundColor: theme.colors.background }]}
-		>
+		<ThemeBackground>
 			<View style={{ padding: 20 }}>
 				{!isLessonOver ? (
 					<View style={{ justifyContent: "center", paddingHorizontal: 20 }}>
@@ -354,7 +353,7 @@ const LearnScreen = ({ route }) => {
 					</>
 				)}
 			</View>
-		</SafeAreaView>
+		</ThemeBackground>
 	);
 };
 

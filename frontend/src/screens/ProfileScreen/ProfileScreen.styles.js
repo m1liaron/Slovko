@@ -8,11 +8,6 @@ const styles = StyleSheet.create({
 		marginRight: 8,
 		width: 200,
 	},
-	container: {
-		flex: 1,
-		justifyContent: "center",
-		padding: 10,
-	},
 	editInputContainer: {
 		alignItems: "center",
 		backgroundColor: "#ebebeb",
