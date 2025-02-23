@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	repeatButton: {
-		backgroundColor: "#6762FF",
 		padding: 20,
 		marginHorizontal: 40,
 		borderRadius: 20,

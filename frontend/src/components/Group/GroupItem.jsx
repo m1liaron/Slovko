@@ -4,6 +4,7 @@ import { Entypo } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { removeGroup } from "../../redux/groupReducer/groupSlice";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import { AppPath } from '../../common/enums/app/app';
 
 export const GroupItem = ({ item: { id, title } }) => {
 	const {
@@ -20,15 +21,15 @@ export const GroupItem = ({ item: { id, title } }) => {
 			style={{
 				flexDirection: "row",
 				justifyContent: "space-between",
-				alignItems: "center",
+				alignItems: "center"
 			}}
 		>
 			<Link
 				key={id}
-				style={[styles.item, { backgroundColor: colors.lightBackground }]}
-				to={{ screen: "group", params: { groupId: id } }}
+				style={[styles.item, { borderColor: colors.text}]}
+				to={{ screen: AppPath.Group, params: { groupId: id } }}
 			>
-				<Text style={{ fontSize: 30, color: colors.primary }}>{title}</Text>
+				<Text style={{ fontSize: 30, color: colors.text }}>{title}</Text>
 			</Link>
 			<Pressable onPress={handleRemoveGroup}>
 				<Entypo name="trash" size={30} color={colors.iconColor} />
@@ -42,6 +43,8 @@ const styles = StyleSheet.create({
 		width: "100%",
 		padding: 10,
 		margin: 10,
-		borderRadius: 5,
+		borderRadius: 20,
+		borderWidth: 4,
+		backgroundColor: "#fff"
 	},
 });
