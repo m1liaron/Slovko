@@ -137,18 +137,16 @@ const MainScreen = () => {
 				Вже минуло {daysPassed} з початку війни.
 			</Text>
 
-				{repeatedGroupsIds.length && (
-					<Pressable
-						style={[styles.repeatButton, { backgroundColor: theme.colors.text }]}
-						onPress={() => setShowRepeatedModal(true)}
-					>
-						<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-							Повторити слова - {repeatedCardsLength}
-						</Text>
-					</Pressable>
-				)}
-
-
+			{repeatedGroupsIds.length && (
+				<Pressable
+					style={styles.repeatButton}
+					onPress={() => setShowRepeatedModal(true)}
+				>
+					<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
+						Повторити слова - {repeatedCardsLength}
+					</Text>
+				</Pressable>
+			)}
 
 			<GroupList />
 			<View style={styles.anouncement}>

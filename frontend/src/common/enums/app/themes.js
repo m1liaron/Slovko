@@ -1,12 +1,11 @@
 const lightTheme = {
 	dark: false,
 	colors: {
-		primary: "#fff",
-		background: "#F3DDFF",
-		lightBackground: "#E4CCF0",
-		iconColor: "#5D3D6E",
-		buttonColor: "#9C6AA6",
-		text: "#5D3D6E",
+		primary: "#12171D",
+		background: "#fff",
+		lightBackground: "#d5d5d5",
+		iconColor: "#12171D",
+		text: "#12171D",
 	},
 };
 
@@ -17,7 +16,6 @@ const darkTheme = {
 		background: "#12171D",
 		lightBackground: "#2f3336",
 		iconColor: "#fff",
-		buttonColor: "#5D3D6E",
 		text: "#fff",
 	},
 };
