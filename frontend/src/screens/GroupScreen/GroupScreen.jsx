@@ -75,11 +75,15 @@ const GroupScreen = ({ route }) => {
 					borderWidth: 2,
 					borderColor: color,
 					marginHorizontal: 10,
+					alignItems: 'center'
 				}}
 				onPress={() => dispatch(filterCardsByStatus({ status }))}
 			>
 				<Text style={{ color, fontWeight: "bold" }}>
-					{amount} {title}
+					{amount}
+				</Text>
+				<Text style={{ color, fontWeight: "bold" }}>
+					{title}
 				</Text>
 			</Pressable>
 		));

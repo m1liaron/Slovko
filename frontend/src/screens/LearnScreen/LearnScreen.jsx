@@ -232,7 +232,7 @@ const LearnScreen = ({ route }) => {
 
 	return (
 		<ThemeBackground>
-			<View style={{ padding: 20 }}>
+			<View>
 				{!isLessonOver ? (
 					<View style={{ justifyContent: "center", paddingHorizontal: 20 }}>
 						<Pressable onPress={() => setShowExitModal(true)}>

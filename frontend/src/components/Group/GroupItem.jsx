@@ -19,8 +19,8 @@ export const GroupItem = ({ item: { id, title } }) => {
 		<View
 			style={{
 				flexDirection: "row",
-				justifyContent: "space-between",
 				alignItems: "center",
+				justifyContent:'center'
 			}}
 		>
 			<Link
@@ -39,7 +39,7 @@ export const GroupItem = ({ item: { id, title } }) => {
 
 const styles = StyleSheet.create({
 	item: {
-		width: "100%",
+		width: "50%",
 		padding: 10,
 		margin: 10,
 		borderRadius: 5,

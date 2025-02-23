@@ -232,6 +232,7 @@ const CardList = ({ groupId }) => {
 							/>
 						)}
 						horizontal={true}
+						indicatorStyle="white"
 						keyExtractor={(item) => item.id}
 						style={styles.listContainer}
 					/>
@@ -240,7 +241,6 @@ const CardList = ({ groupId }) => {
 
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
-					<PressableButton onPress={navigateToLearn} text="Вчитися" />
 					<View style={{ flexDirection: "row", justifyContent: "center" }}>
 						<Slider
 							style={{ width: 200, height: 40 }}
@@ -250,6 +250,7 @@ const CardList = ({ groupId }) => {
 							onValueChange={setWordsRangeNumber}
 							minimumTrackTintColor="#FFFFFF"
 							maximumTrackTintColor="#000000"
+							thumbTintColor="#0033A0"
 						/>
 						<Text style={{ color: colors.primary }}>
 							{Math.floor(wordsRangeNumber)}
@@ -269,6 +270,7 @@ const CardList = ({ groupId }) => {
 							</Pressable>
 						)}
 					</View>
+					<PressableButton onPress={navigateToLearn} text="Вчитися" />
 				</View>
 			)}
 			<AddButton onPress={() => setShowAddModal(true)} />
@@ -391,7 +393,7 @@ const styles = StyleSheet.create({
 	},
 	listContainer: {
 		marginHorizontal: 30,
-		gap: 10,
+		gap: 10
 	},
 	modeToggle: {
 		flexDirection: "row",
