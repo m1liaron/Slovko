@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./ResultDetailsScreen.styles";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,13 +88,12 @@ const ResultDetailsScreen = ({ route }) => {
 					padding: 10,
 				}}
 			>
-				<Text style={{ fontSize: 30, color: "#fff" }}>
+				<Text style={{ fontSize: 25, color: "#fff" }}>
 					{correctPercentage}% Вірно
 				</Text>
 			</View>
 
-			<View style={{ marginHorizontal: 100 }}>
-				<View style={styles.buttonsContainer}>
+			<View style={{ marginHorizontal: 50 }}>
 					<FlatList
 						data={modesOptionsButtons.filter(
 							(_, index) =>
@@ -114,11 +112,11 @@ const ResultDetailsScreen = ({ route }) => {
 						)}
 						contentContainerStyle={styles.buttonsContainer}
 					/>
-				</View>
 
 				{isLoading && <Loading />}
 				{result.mode && (
 					<FlatList
+						style={{ height: 600 }}
 						data={result.mode[selectedMode].words}
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) => (

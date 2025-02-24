@@ -8,12 +8,13 @@ import {
 	resetResults,
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "@react-navigation/native";
 import { AppPath } from "../../common/enums/app/app";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { formatTime } from '../../utils/formatTime';
+import formatDMTDate from '../../utils/formatDMTDate';
 
 const ResultsScreen = () => {
 	const dispatch = useDispatch();
@@ -52,6 +53,8 @@ const ResultsScreen = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));
 		setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
 	};
+
+	const isTitleDate = (title) => !isNaN(Date.parse(title))
 
 	return (
 		<ThemeBackground>
@@ -174,12 +177,13 @@ const ResultsScreen = () => {
 											fontSize: 30,
 										}}
 									>
-										{result.title}
+										{isTitleDate(result.title) ? new Date(result.createdAt).toLocaleTimeString() : result.title}
 									</Text>
-									<Text style={{ color: colors.primary }}>
-										{new Date(result.createdAt).toLocaleTimeString()}{" "}
-										{/* Show time */}
-									</Text>
+									{!isTitleDate(result.title) &&
+										<Text style={{ color: colors.primary }}>
+											{new Date(result.createdAt).toLocaleTimeString()}{" "}
+										</Text>
+									}
 								</View>
 							</Link>
 						))}
