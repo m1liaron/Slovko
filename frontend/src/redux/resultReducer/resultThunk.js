@@ -7,9 +7,9 @@ export const saveResults = createAsyncThunk("results/save", async (data) => {
 	return response.data;
 });
 
-export const getResults = createAsyncThunk("results/get", async () => {
+export const getResults = createAsyncThunk("results/get", async ({resultsYear}) => {
 	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.get("/results");
+	const response = await axiosInstance.get(`/results?year=${resultsYear}`);
 	return response.data;
 });
 

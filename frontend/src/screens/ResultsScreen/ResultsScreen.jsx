@@ -13,6 +13,7 @@ import { AppPath } from "../../common/enums/app/app";
 import { AntDesign, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import ThemeText from '../../common/components/ThemeText/ThemeText';
 
 const ResultsScreen = () => {
 	const dispatch = useDispatch();
@@ -45,8 +46,8 @@ const ResultsScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getResults());
-	}, [dispatch]);
+		dispatch(getResults({ resultsYear }));
+	}, [dispatch, resultsYear]);
 
 	const handleSort = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));
@@ -85,6 +86,7 @@ const ResultsScreen = () => {
 							<Pressable onPress={increaseYear}>
 								<AntDesign name="caretright" size={30} color={colors.iconColor} disabled={resultsYear < new Date().getFullYear()}/>
 							</Pressable>
+						<ThemeText>{results.length} занять</ThemeText>
 					</View>
 					<View
 						style={{
@@ -168,16 +170,19 @@ const ResultsScreen = () => {
 				keyExtractor={(item) => item[0]}
 				renderItem={({ item }) => (
 					<View style={{ marginBottom: 20 }}>
-						<Text
-							style={{
-								fontSize: 25,
-								color: colors.lightBackground,
-								fontWeight: "bold",
-								textAlign: "center",
-							}}
-						>
-							{item[0]} {/* Date */}
-						</Text>
+						<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+							<Text
+								style={{
+									fontSize: 25,
+									color: colors.lightBackground,
+									fontWeight: "bold",
+									textAlign: "center",
+								}}
+							>
+								{item[0]}
+							</Text>
+							<ThemeText style={{ fontSize: 20 }}> - {item[1].length} занять</ThemeText>
+						</View>
 						{item[1].map((result) => (
 							<Link
 								key={result.id}
