@@ -7,7 +7,6 @@ import {
 	TextInput,
 	View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -141,7 +140,7 @@ const SharedGroupsScreen = () => {
 					</View>
 				</View>
 
-				<Text style={{ color: colors.primary, fontSize: 30 }}>
+				<Text style={{ color: colors.primary, fontSize: 15 }}>
 					{formatTime(item.createdAt)}
 				</Text>
 			</Link>
@@ -164,6 +163,7 @@ const SharedGroupsScreen = () => {
 					</Text>
 					<PressableButton
 						text="Мої поширені групи"
+						buttonStyle={{ padding: 10 }}
 						onPress={() => dispatch(filterMySharedGroups({ userId: user.id }))}
 					/>
 					<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
