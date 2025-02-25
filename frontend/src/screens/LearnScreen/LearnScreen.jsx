@@ -138,12 +138,9 @@ const LearnScreen = ({ route }) => {
 		const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
 		setElapsedTime(formatTime(totalLearnedTime));
 
-		if (groupId) {
-			dispatch(updateCardsAfterLearn({ groupId }));
-		} else {
-			const repeatedCardsIds = cards?.map((card) => card.id);
-			dispatch(updateCardsAfterLearn(repeatedCardsIds));
-		}
+		const repeatedCardsIds = cards?.map((card) => card.id);
+		dispatch(updateCardsAfterLearn(repeatedCardsIds));
+
 		dispatch(updateUserStreak());
 		handleSaveResults();
 		if (repeatedCards.length) {
