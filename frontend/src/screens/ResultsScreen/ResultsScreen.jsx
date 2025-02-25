@@ -10,11 +10,9 @@ import {
 } from "../../redux/resultReducer/resultSlice";
 import { Link } from "@react-navigation/native";
 import { AppPath } from "../../common/enums/app/app";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { formatTime } from '../../utils/formatTime';
-import formatDMTDate from '../../utils/formatDMTDate';
 
 const ResultsScreen = () => {
 	const dispatch = useDispatch();
@@ -26,6 +24,7 @@ const ResultsScreen = () => {
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [groupedResults, setGroupedResults] = useState({});
+	const [resultsYear, setResultsYear] = useState(new Date().getFullYear());
 
 	useEffect(() => {
 		if (results.length > 0) {
@@ -55,16 +54,38 @@ const ResultsScreen = () => {
 	};
 
 	const isTitleDate = (title) => !isNaN(Date.parse(title))
+	const decreaseYear = () => {
+		if(resultsYear > 2024) {
+			setResultsYear(resultsYear - 1)
+		}
+	}
+
+	const increaseYear = () => {
+		if(resultsYear < new Date().getFullYear()) {
+			setResultsYear(resultsYear + 1)
+		}
+	}
 
 	return (
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
-					<Text
-						style={{ fontSize: 40, fontWeight: "bold", color: colors.primary }}
-					>
-						2024
-					</Text>
+					<View style={{
+						flexDirection: 'row',
+						alignItems: 'center'
+					}}>
+							<Pressable onPress={decreaseYear}>
+								<AntDesign name="caretleft" size={30} color={colors.iconColor} disabled={resultsYear > 2024}/>
+							</Pressable>
+						<Text
+							style={{ fontSize: 40, fontWeight: "bold", color: colors.primary }}
+						>
+							{resultsYear}
+						</Text>
+							<Pressable onPress={increaseYear}>
+								<AntDesign name="caretright" size={30} color={colors.iconColor} disabled={resultsYear < new Date().getFullYear()}/>
+							</Pressable>
+					</View>
 					<View
 						style={{
 							justifyContent: "center",
