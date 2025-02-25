@@ -75,7 +75,7 @@ const getResultsStatistics = async (req, res) => {
 				const index = resultsMonths.indexOf(month); // Find the month index in resultsMonthes
 
 				if (index !== -1) {
-					for(const modeItem of result) {
+					for(const modeItem of result.mode) {
 							if (!modeMonthSum[modeItem.mode]) {
 								const array = new Array(resultsMonths.length).fill(0);
 								modeMonthSum[modeItem.mode] = {

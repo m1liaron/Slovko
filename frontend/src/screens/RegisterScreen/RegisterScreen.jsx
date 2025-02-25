@@ -8,11 +8,13 @@ import { Entypo } from "@expo/vector-icons";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
+import { useAppTheme } from '../../contexts/ThemeProvider';
 
 const RegisterScreen = () => {
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
 
+	const { theme: { colors }} = useAppTheme()
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -60,7 +62,6 @@ const RegisterScreen = () => {
 			<TextInput
 				style={styles.input}
 				placeholder="Ім'я"
-				placeholderTextColor="#ccc"
 				keyboardType="default"
 				autoCapitalize="none"
 				value={name}
@@ -70,30 +71,27 @@ const RegisterScreen = () => {
 			<TextInput
 				style={styles.input}
 				placeholder="Пошта"
-				placeholderTextColor="#ccc"
 				keyboardType="email-address"
 				autoCapitalize="none"
 				value={email}
 				onChangeText={setEmail}
 			/>
 
-			<View style={styles.passwordContainer}>
+			<View style={styles.input}>
 				<TextInput
-					style={[styles.input, { flex: 1 }]}
 					placeholder="Пароль"
-					placeholderTextColor="#ccc"
+					style={{ paddingVertical: 10, paddingRight: 10 }}
 					secureTextEntry={notShowPassword}
 					value={password}
 					onChangeText={setPassword}
 				/>
 				<Pressable
 					onPress={() => setNotShowPassword(!notShowPassword)}
-					style={styles.iconContainer}
 				>
 					<Entypo
 						name={notShowPassword ? "eye" : "eye-with-line"}
-						size={20}
-						color="#333"
+						size={30}
+						color={colors.background}
 					/>
 				</Pressable>
 			</View>
@@ -101,18 +99,17 @@ const RegisterScreen = () => {
 			<TextInput
 				style={styles.input}
 				placeholder="Пітвердіть Пароль"
-				placeholderTextColor="#ccc"
 				secureTextEntry={notShowPassword}
 				value={confirmPassword}
 				onChangeText={setConfirmPassword}
 			/>
 
 			<Pressable style={styles.button} onPress={handleSubmit}>
-				<Text style={styles.buttonText}>Sign Up</Text>
+				<Text style={styles.buttonText}>Зареєструватися</Text>
 			</Pressable>
 
 			<Pressable onPress={() => navigation.navigate(AppPath.Login)}>
-				<Text style={styles.switchText}>Already have an account? Login</Text>
+				<Text style={styles.switchText}>Вже маєте акаунт? Увійти</Text>
 			</Pressable>
 		</ThemeBackground>
 	);
@@ -130,6 +127,9 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
 	},
 	input: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 		width: "100%",
 		maxWidth: 400,
 		height: 50,

@@ -5,14 +5,15 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/userReducer/userSlice";
 import Toast from "react-native-toast-message";
 import { Entypo } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AppPath } from "../../common/enums/app/app";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
+import { useAppTheme } from '../../contexts/ThemeProvider';
 
 const LoginScreen = () => {
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
+	const { theme: { colors }} = useAppTheme()
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -46,30 +47,27 @@ const LoginScreen = () => {
 			<TextInput
 				style={styles.input}
 				placeholder="Пошта"
-				placeholderTextColor="#ccc"
 				keyboardType="email-address"
 				autoCapitalize="none"
 				value={email}
 				onChangeText={setEmail}
 			/>
 
-			<View style={styles.passwordContainer}>
+			<View style={styles.input}>
 				<TextInput
-					style={[styles.input, { flex: 1 }]}
+					style={{ paddingVertical: 10, paddingRight: 10 }}
 					placeholder="Пароль"
-					placeholderTextColor="#ccc"
-					secureTextEntry={notShowPassword}
+						secureTextEntry={notShowPassword}
 					value={password}
 					onChangeText={setPassword}
 				/>
 				<Pressable
 					onPress={() => setNotShowPassword(!notShowPassword)}
-					style={styles.iconContainer}
 				>
 					<Entypo
 						name={notShowPassword ? "eye" : "eye-with-line"}
-						size={20}
-						color="#333"
+						size={30}
+						color={colors.background}
 					/>
 				</Pressable>
 			</View>
@@ -98,6 +96,9 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
 	},
 	input: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 		width: "100%",
 		maxWidth: 400,
 		height: 50,
@@ -115,11 +116,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		maxWidth: 400,
 		marginBottom: 20,
-	},
-	iconContainer: {
-		paddingHorizontal: 10,
-		justifyContent: "center",
-		alignItems: "center",
 	},
 	button: {
 		width: "100%",
