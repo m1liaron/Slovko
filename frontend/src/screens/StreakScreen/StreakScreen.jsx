@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import BackButton from "../../components/BackButton/BackButton";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./StreakScreen.styles";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { useDispatch, useSelector } from "react-redux";
@@ -63,6 +62,8 @@ const StreakScreen = () => {
 				.split("T")[0]
 		: null;
 
+
+	console.log(frozen)
 	return (
 		<ThemeBackground>
 			<BackButton />
@@ -126,7 +127,7 @@ const StreakScreen = () => {
 						text="Купити Заморозку"
 						onPress={() => dispatch(buyFreeze({ froze: 100 }))}
 						buttonStyle={{ backgroundColor: frozen && "#002d5d", padding: 20}}
-						disabled={!frozen}
+						disabled={frozen}
 					/>
 					{frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}
 				</View>
