@@ -8,13 +8,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   listContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    gap: 10,
+    margin: 10
   },
   optionItem: {
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 20,
   }
 });
 
