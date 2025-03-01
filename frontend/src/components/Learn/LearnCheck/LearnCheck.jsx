@@ -16,6 +16,7 @@ const LearnCheck = ({ onComplete }) => {
   const initialAnswers = useMemo(() => cards.map(card => card.translateWord).slice(0,4).sort(() => Math.random() - 0.5), [cards]);
 
   const [selectedWord, setSelectedWord] = useState(null);
+  const [wrongAnswer, setWrongAnswer] = useState(null);
   const [words, setWords] = useState(initialWords);
   const [answers, setAnswers] = useState(initialAnswers);
   const [answeredWords, setAnsweredWords] = useState([...initialWords]); // it's current words + words that left to learn
@@ -60,6 +61,11 @@ const LearnCheck = ({ onComplete }) => {
         setAnsweredWords([...answeredWords, newCard.word]);
         setWords(newWords);
         setAnswers(newAnswers);
+      } else {
+        setWrongAnswer(translation);
+        setTimeout(() => {
+          setWrongAnswer(null);
+        }, 1000)
       }
   }
 
@@ -96,7 +102,7 @@ const LearnCheck = ({ onComplete }) => {
         renderItem={({ item }) => (
           <Pressable
             key={item}
-            style={[styles.optionItem, { width: maxWordWidth * 20, backgroundColor: colors.lightBackground , opacity: (isAllCardsLearned && isTranslateDisappear(item)) ? 0 : 1}]}
+            style={[styles.optionItem, { width: maxWordWidth * 20, backgroundColor: wrongAnswer === item ? "red" : colors.lightBackground, opacity: (isAllCardsLearned && isTranslateDisappear(item)) ? 0 : 1}]}
             onPress={() => checkSelectedWordCorrect(item)}
           >
             <ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
