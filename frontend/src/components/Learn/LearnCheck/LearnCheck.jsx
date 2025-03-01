@@ -14,8 +14,8 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
   const [selectedWord, setSelectedWord] = useState(null);
   const [words, setWords] = useState(cards.map(card => card.word).slice(0,4).sort(() => Math.random() - 0.5));
   const [answers, setAnswers] = useState(cards.map(card => card.translateWord).slice(0,4).sort(() => Math.random() - 0.5));
-  const [currentIndex, setCurrentIndex] = useState(5);
   const [answeredWords, setAnsweredWords] = useState([...words]);
+  const [learnedWords, setLearnedWords] = useState([]);
 
   const getNewWord = () => {
     let newCard;
@@ -26,7 +26,7 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
   }
 
   const checkSelectedWordCorrect = (translation) => {
-    if(currentIndex <= cards.length) {
+    if(answeredWords.length < cards.length) {
       const wordIndex = words.indexOf(selectedWord);
       const translationIndex = answers.indexOf(translation);
 
@@ -40,14 +40,21 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
         newAnswers[translationIndex] = newCard.translateWord;
 
         setAnsweredWords([...answeredWords, newCard.word]);
+        setLearnedWords([...learnedWords, newCard.word]);
         setWords(newWords);
         setAnswers(newAnswers);
         setSelectedWord(null);
-        setCurrentIndex(currentIndex + 1)
       }
     } else {
-      console.log('No more words to show!')
+      setLearnedWords([...learnedWords, selectedWord]);
+      setSelectedWord(null);
     }
+  }
+
+  const isAllCardsLearned = answeredWords.length === cards.length;
+  const isTranslateDisappear = (item) => {
+    const word = cards.find(card => card.word === item)?.word;
+    return learnedWords.includes(word);
   }
 
   return (
@@ -55,16 +62,16 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
       <FlatList
         data={words}
         renderItem={({ item }) => (
-          <Pressable onPress={() => setSelectedWord(item)} style={[ styles.optionItem, { backgroundColor: selectedWord === item ? "#38809b" : colors.lightBackground }]}>
-            <ThemeText>{item}</ThemeText>
+          <Pressable onPress={() => setSelectedWord(item)} style={[ styles.optionItem, { backgroundColor: selectedWord === item ? "#38809b" : colors.lightBackground, opacity: (isAllCardsLearned && learnedWords.includes(item)) ? 0 : 1 }]}>
+            <ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
           </Pressable>
         )}
       />
       <FlatList
         data={answers}
         renderItem={({ item }) => (
-          <Pressable style={styles.optionItem} onPress={() => checkSelectedWordCorrect(item)}>
-            <ThemeText>{item}</ThemeText>
+          <Pressable style={[styles.optionItem, { opacity: isTranslateDisappear(item) ? 0 : 1}]} onPress={() => checkSelectedWordCorrect(item)}>
+            <ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
           </Pressable>
         )}
       />
