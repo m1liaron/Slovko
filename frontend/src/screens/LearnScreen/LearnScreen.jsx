@@ -26,6 +26,7 @@ import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
 import { AppPath, DataStatus } from "../../common/enums/app/app";
+import LearnCheck from '../../components/Learn/LearnCheck/LearnCheck';
 
 /* Custom hook to warn before unload on web */
 const useBeforeUnload = (message) => {
@@ -78,6 +79,7 @@ const LearnScreen = ({ route }) => {
 	// Lesson configuration and progress state
 	const [isQuizEnabled, setIsQuizEnabled] = useState(true);
 	const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
+	const [isCheckModeEnabled, setIsCheckModeEnabled] = useState(true);
 	const [showExitModal, setShowExitModal] = useState(false);
 	const [showSettingsModal, setShowSettingsModal] = useState(false);
 	const [currentSection, setCurrentSection] = useState("cards");
@@ -88,6 +90,7 @@ const LearnScreen = ({ route }) => {
 	const [flashCards, setFlashCards] = useState([]);
 	const [quizCards, setQuizCards] = useState([]);
 	const [guessWordCards, setGuessWordCards] = useState([]);
+	const [checkCards, setCheckCards] = useState([]);
 	const [startLearnDate, setStartLearnDate] = useState(null);
 	const [elapsedTime, setElapsedTime] = useState("");
 
@@ -120,9 +123,18 @@ const LearnScreen = ({ route }) => {
 		const transitions = {
 			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
-			word: finishedSections.includes("quiz") ? "finish" : "quiz",
+			word: isCheckModeEnabled ? "check" : "finish",
+			check: finishedSections.includes("word") ? "finish" : "word",
 		};
+
+		// const transitions = {
+		// 	cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
+		// 	quiz: isGuessWordEnabled ? "word" : "finish",
+		// 	word: finishedSections.includes("quiz") ? "finish" : "quiz",
+		// };
+
 		const nextSection = transitions[currentSection] || "finish";
+		console.log(nextSection)
 		if (nextSection === "finish") {
 			finishLesson();
 		} else {
@@ -140,6 +152,8 @@ const LearnScreen = ({ route }) => {
 				setQuizCards((prev) => updateOrAddCard(prev, card, isCorrect));
 			} else if (currentSection === "word") {
 				setGuessWordCards((prev) => updateOrAddCard(prev, card, isCorrect));
+			} else if (currentSection === "check") {
+				setCheckCards((prev) => updateOrAddCard(prev, card, isCorrect));
 			}
 		},
 		[currentSection]
@@ -200,18 +214,25 @@ const LearnScreen = ({ route }) => {
 	const generateSectionContent = useCallback(() => {
 		const sections = [
 			{
-				text: "Quiz mode",
+				text: "Вікторина режим",
 				iconName: "quiz",
 				state: isQuizEnabled,
 				changeState: setIsQuizEnabled,
 				sectionName: "quiz",
 			},
 			{
-				text: "Guess Word mode",
+				text: "Вгадай слова режим",
 				iconName: "wordpress",
 				state: isGuessWordEnabled,
 				changeState: setIsGuessWordEnabled,
 				sectionName: "word",
+			},
+			{
+				text: "Обери вірний режим",
+				iconName: "checklist",
+				state: isCheckModeEnabled,
+				changeState: setIsCheckModeEnabled,
+				sectionName: "check",
 			},
 		];
 
@@ -285,6 +306,14 @@ const LearnScreen = ({ route }) => {
 										handleSetDate={handleSetData}
 									/>
 								)}
+
+								{currentSection === "check" && isCheckModeEnabled && (
+									<LearnCheck
+										onComplete={handleNextSection}
+										handleSetDate={handleSetData}
+									/>
+								)}
+
 								<Pressable
 									onPress={() => toggleSwitch(setShowSettingsModal)}
 									style={{ alignSelf: "flex-start" }}

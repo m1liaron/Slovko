@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, FlatList, Pressable } from 'react-native';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { useSelector } from 'react-redux';
@@ -31,6 +31,12 @@ const LearnCheck = ({ onComplete }) => {
     return remainingWords[Math.floor(Math.random() * remainingWords.length)];
   }
 
+  useEffect(() => {
+    if(learnedWords.length === cards.length) {
+      onComplete();
+    }
+  }, [learnedWords]);
+
   const checkSelectedWordCorrect = (translation) => {
       if(!selectedWord) return;
 
@@ -44,9 +50,7 @@ const LearnCheck = ({ onComplete }) => {
         setSelectedWord(null);
 
         let newCard = getNewWord();
-        if(!newCard) {
-          return onComplete();
-        }
+        if(!newCard) return;
         const newWords = [...words];
         const newAnswers = [...answers];
 
