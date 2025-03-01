@@ -25,6 +25,7 @@ import Loading from "../../components/Loading";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import LearnCheck from '../../components/Learn/LearnCheck/LearnCheck';
 
 const LearnScreen = ({ route }) => {
 	const { theme } = useAppTheme();
@@ -240,24 +241,25 @@ const LearnScreen = ({ route }) => {
 							<Loading />
 						) : (
 							<View style={styles.centeredContainer}>
-								{currentSection === "cards" && (
-									<LearnCards
-										onComplete={handleNextSection}
-										setFlashCards={handleSetData}
-									/>
-								)}
-								{currentSection === "quiz" && isQuizEnabled && (
-									<LearnQuiz
-										onComplete={handleNextSection}
-										handleSetData={handleSetData}
-									/>
-								)}
-								{currentSection === "word" && isGuessWordEnabled && (
-									<LearnGuessWord
-										onComplete={handleNextSection}
-										handleSetDate={handleSetData}
-									/>
-								)}
+								<LearnCheck/>
+								{/*{currentSection === "cards" && (*/}
+								{/*	<LearnCards*/}
+								{/*		onComplete={handleNextSection}*/}
+								{/*		setFlashCards={handleSetData}*/}
+								{/*	/>*/}
+								{/*)}*/}
+								{/*{currentSection === "quiz" && isQuizEnabled && (*/}
+								{/*	<LearnQuiz*/}
+								{/*		onComplete={handleNextSection}*/}
+								{/*		handleSetData={handleSetData}*/}
+								{/*	/>*/}
+								{/*)}*/}
+								{/*{currentSection === "word" && isGuessWordEnabled && (*/}
+								{/*	<LearnGuessWord*/}
+								{/*		onComplete={handleNextSection}*/}
+								{/*		handleSetDate={handleSetData}*/}
+								{/*	/>*/}
+								{/*)}*/}
 
 								<Pressable
 									onPress={() => toggleSwitch(setShowSettingsModal)}
