@@ -6,7 +6,7 @@ import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import styles from './LearnCheck.styles';
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
 
-const LearnCheck = ({ onComplete }) => {
+const LearnCheck = ({ onComplete, handleSetDate }) => {
   const {
     theme: { colors },
   } = useAppTheme();
@@ -41,6 +41,7 @@ const LearnCheck = ({ onComplete }) => {
   const checkSelectedWordCorrect = (translation) => {
       if(!selectedWord) return;
 
+      const currentCard = cards.find(card => card.word === selectedWord);
       const correctTranslation = cards.find(card => card.word === selectedWord)?.translateWord;
 
       if (translation === correctTranslation) {
@@ -49,6 +50,7 @@ const LearnCheck = ({ onComplete }) => {
 
         setLearnedWords([...learnedWords, selectedWord]);
         setSelectedWord(null);
+        handleSetDate(currentCard, true);
 
         let newCard = getNewWord();
         if(!newCard) return;
@@ -63,6 +65,7 @@ const LearnCheck = ({ onComplete }) => {
         setAnswers(newAnswers);
       } else {
         setWrongAnswer(translation);
+        handleSetDate(currentCard, false);
         setTimeout(() => {
           setWrongAnswer(null);
         }, 1000)
