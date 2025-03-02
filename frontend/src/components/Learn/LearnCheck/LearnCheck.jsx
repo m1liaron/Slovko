@@ -6,7 +6,7 @@ import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import styles from './LearnCheck.styles';
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
 
-const LearnCheck = ({ onComplete }) => {
+const LearnCheck = ({ onComplete, handleSetDate }) => {
   const {
     theme: { colors },
   } = useAppTheme();
@@ -32,16 +32,11 @@ const LearnCheck = ({ onComplete }) => {
     return remainingWords[Math.floor(Math.random() * remainingWords.length)];
   }
 
-  useEffect(() => {
-    if(learnedWords.length === cards.length) {
-      onComplete();
-    }
-  }, [learnedWords]);
-
   const checkSelectedWordCorrect = (translation) => {
       if(!selectedWord) return;
 
-      const correctTranslation = cards.find(card => card.word === selectedWord)?.translateWord;
+      const currentCard = cards.find(card => card.word === selectedWord);
+      const correctTranslation = currentCard.translateWord;
 
       if (translation === correctTranslation) {
         const wordIndex = words.indexOf(selectedWord);
@@ -49,6 +44,7 @@ const LearnCheck = ({ onComplete }) => {
 
         setLearnedWords([...learnedWords, selectedWord]);
         setSelectedWord(null);
+        handleSetDate(currentCard, true);
 
         let newCard = getNewWord();
         if(!newCard) return;
@@ -62,12 +58,19 @@ const LearnCheck = ({ onComplete }) => {
         setWords(newWords);
         setAnswers(newAnswers);
       } else {
+        handleSetDate(currentCard, false);
         setWrongAnswer(translation);
         setTimeout(() => {
           setWrongAnswer(null);
         }, 1000)
       }
   }
+
+  useEffect(() => {
+    if(learnedWords.length === cards.length) {
+      onComplete();
+    }
+  }, [learnedWords.length])
 
   const isAllCardsLearned = answeredWords.length === cards.length;
   const isTranslateDisappear = (item) => {

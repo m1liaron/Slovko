@@ -30,10 +30,10 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 
 	const handleFlipCard = (index) => {
 		setFlippedCards((prevFlippedCards) => {
-			if (prevFlippedCards[index]) {
-				return prevFlippedCards;
-			}
-			setFlippedIndex(index === flippedIndex ? null : index);
+			// if (prevFlippedCards[index]) {
+			// 	return prevFlippedCards;
+			// }
+			// setFlippedIndex(index === flippedIndex ? null : index);
 			rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
 				duration: 500,
 			});

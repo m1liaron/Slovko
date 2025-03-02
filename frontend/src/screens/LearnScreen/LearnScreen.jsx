@@ -127,14 +127,7 @@ const LearnScreen = ({ route }) => {
 			check: finishedSections.includes("word") ? "finish" : "word",
 		};
 
-		// const transitions = {
-		// 	cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
-		// 	quiz: isGuessWordEnabled ? "word" : "finish",
-		// 	word: finishedSections.includes("quiz") ? "finish" : "quiz",
-		// };
-
 		const nextSection = transitions[currentSection] || "finish";
-		console.log(nextSection)
 		if (nextSection === "finish") {
 			finishLesson();
 		} else {
@@ -144,20 +137,18 @@ const LearnScreen = ({ route }) => {
 	}, [currentSection, isQuizEnabled, isGuessWordEnabled, finishedSections]);
 
 	/* Update results based on current section */
-	const handleSetData = useCallback(
-		(card, isCorrect) => {
-			if (currentSection === "cards") {
-				setFlashCards((prev) => updateOrAddCard(prev, card, isCorrect));
-			} else if (currentSection === "quiz") {
-				setQuizCards((prev) => updateOrAddCard(prev, card, isCorrect));
-			} else if (currentSection === "word") {
-				setGuessWordCards((prev) => updateOrAddCard(prev, card, isCorrect));
-			} else if (currentSection === "check") {
-				setCheckCards((prev) => updateOrAddCard(prev, card, isCorrect));
-			}
-		},
-		[currentSection]
-	);
+	const handleSetData = (card, isCorrect) => {
+		console.log(checkCards);
+		if (currentSection === "cards") {
+			setFlashCards((prev) => updateOrAddCard(prev, card, isCorrect));
+		} else if (currentSection === "quiz") {
+			setQuizCards((prev) => updateOrAddCard(prev, card, isCorrect));
+		} else if (currentSection === "word") {
+			setGuessWordCards((prev) => updateOrAddCard(prev, card, isCorrect));
+		} else if (currentSection === "check") {
+			setCheckCards((prev) => updateOrAddCard(prev, card, isCorrect));
+		}
+	}
 
 	/* Save results and update user data */
 	const handleSaveResults = useCallback(() => {
@@ -166,11 +157,13 @@ const LearnScreen = ({ route }) => {
 			flashCards,
 			quiz: quizCards,
 			guessWord: guessWordCards,
+			check: checkCards,
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
 		dispatch(saveResults(resultData));
-	}, [dispatch, projectName, flashCards, quizCards, guessWordCards, startLearnDate]);
+	}, [checkCards, projectName, flashCards, quizCards, guessWordCards, startLearnDate, dispatch]);
+	
 
 	/* Finish lesson: update state, dispatch actions and save results */
 	const finishLesson = useCallback(() => {
