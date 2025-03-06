@@ -119,7 +119,7 @@ const LearnScreen = ({ route }) => {
 			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : isCheckModeEnabled ? "check" : "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
 			word: isCheckModeEnabled ? "check" : "finish",
-			check: finishedSections.includes("word") ? "finish" : "word",
+			check: "finish"
 		};
 
 		const nextSection = transitions[currentSection] || "finish";
@@ -304,7 +304,7 @@ const LearnScreen = ({ route }) => {
 
 								{currentSection === "check" && isCheckModeEnabled && (
 									<LearnCheck
-										onComplete={handleNextSection}
+										onComplete={finishLesson}
 										handleSetDate={(card, isCorrect) => setCheckCards((prev) => updateOrAddCard(prev, card, isCorrect))}
 									/>
 								)}

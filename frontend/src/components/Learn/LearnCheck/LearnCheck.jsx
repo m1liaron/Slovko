@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import styles from './LearnCheck.styles';
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
+import PressableButton from '../../../common/components/PressableButton/PressableButton';
 
 const LearnCheck = ({ onComplete, handleSetDate }) => {
   const {
@@ -44,14 +45,7 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
       const translationIndex = answers.indexOf(translation);
 
       handleSetDate(currentCard, true);
-      setLearnedWords((prev) => {
-        const newLearned = [...prev, selectedWord];
-        // If all cards are learned, complete the lesson.
-        if (newLearned.length === cards.length) {
-          setTimeout(() => onComplete(), 100);
-        }
-        return newLearned;
-      });
+      setLearnedWords((prev) => [...prev, selectedWord]);
       setSelectedWord(null);
 
       let newCard = getNewWord();
@@ -81,6 +75,7 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
   }
   return (
     <View style={styles.optionsContainer}>
+      <PressableButton text="Завершити" onPress={onComplete}/>
       <FlatList
         data={words}
         keyExtractor={(item) => item}
