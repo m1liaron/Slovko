@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, Pressable, Platform, Switch } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -99,10 +98,6 @@ const LearnScreen = ({ route }) => {
 		() => groups?.find((group) => group.id === groupId)?.title,
 		[groups, groupId]
 	);
-	const maxWordWidth = useMemo(
-		() => Math.max(...cards.map((card) => card.word.length)) * 20,
-		[cards]
-	);
 
 	// Set lesson start time
 	useEffect(() => {
@@ -121,7 +116,7 @@ const LearnScreen = ({ route }) => {
 	/* Determine next section */
 	const handleNextSection = useCallback(() => {
 		const transitions = {
-			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
+			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : isCheckModeEnabled ? "check" : "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
 			word: isCheckModeEnabled ? "check" : "finish",
 			check: finishedSections.includes("word") ? "finish" : "word",
@@ -134,10 +129,10 @@ const LearnScreen = ({ route }) => {
 			setFinishedSections((prev) => [...prev, currentSection]);
 			setCurrentSection(nextSection);
 		}
-	}, [currentSection, isQuizEnabled, isGuessWordEnabled, finishedSections]);
+	}, [currentSection, isQuizEnabled, isGuessWordEnabled, isCheckModeEnabled, finishedSections]);
 
 	/* Update results based on current section */
-	const handleSetData = useCallback(
+	const handleSetData =
 		(card, isCorrect) => {
 			switch (currentSection) {
 				case "cards":
@@ -155,11 +150,10 @@ const LearnScreen = ({ route }) => {
 				default:
 					break;
 			}
-		},
-		[]
-	);
+		}
+
 	/* Save results and update user data */
-	const handleSaveResults = useCallback(() => {
+	const handleSaveResults = () => {
 		const resultData = {
 			title: projectName || new Date().toString(),
 			flashCards,
@@ -169,17 +163,17 @@ const LearnScreen = ({ route }) => {
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
-		console.log(checkCards)
 		dispatch(saveResults(resultData));
-	}, [dispatch, projectName, flashCards, quizCards, guessWordCards, startLearnDate, checkCards]);
+	};
 
 	/* Finish lesson: update state, dispatch actions and save results */
-	const finishLesson = useCallback(() => {
+	const finishLesson = () => {
 		setIsQuizEnabled(true);
 		setIsGuessWordEnabled(true);
+		setIsCheckModeEnabled(true);
 		setShowSettingsModal(false);
 		setFinishedSections([]);
-		setCurrentSection("cards");
+		setCurrentSection("finish");
 		setIsLessonOver(true);
 
 		const endLearnDate = new Date();
@@ -194,7 +188,7 @@ const LearnScreen = ({ route }) => {
 		if (repeatedCards.length) {
 			dispatch(getRepeatedCards());
 		}
-	}, [cards, dispatch, getRepeatedCards, handleSaveResults, repeatedCards, startLearnDate]);
+	}
 
 	const leaveStudy = useCallback(() => {
 		navigation.navigate(AppPath.Main);
@@ -311,7 +305,7 @@ const LearnScreen = ({ route }) => {
 								{currentSection === "check" && isCheckModeEnabled && (
 									<LearnCheck
 										onComplete={handleNextSection}
-										handleSetDate={handleSetData}
+										handleSetDate={(card, isCorrect) => setCheckCards((prev) => updateOrAddCard(prev, card, isCorrect))}
 									/>
 								)}
 

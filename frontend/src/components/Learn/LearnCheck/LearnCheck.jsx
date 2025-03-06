@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, FlatList, Pressable } from 'react-native';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { useSelector } from 'react-redux';
@@ -32,52 +32,53 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
     return remainingWords[Math.floor(Math.random() * remainingWords.length)];
   }
 
-  useEffect(() => {
-    if(learnedWords.length === cards.length) {
-      onComplete();
-    }
-  }, [learnedWords]);
 
   const checkSelectedWordCorrect = (translation) => {
-      if(!selectedWord) return;
+    if(!selectedWord) return;
 
-      const currentCard = cards.find(card => card.word === selectedWord);
-      const correctTranslation = cards.find(card => card.word === selectedWord)?.translateWord;
+    const currentCard = cards.find(card => card.word === selectedWord);
+    const correctTranslation = cards.find(card => card.word === selectedWord)?.translateWord;
 
-      if (translation === correctTranslation) {
-        const wordIndex = words.indexOf(selectedWord);
-        const translationIndex = answers.indexOf(translation);
+    if (translation === correctTranslation) {
+      const wordIndex = words.indexOf(selectedWord);
+      const translationIndex = answers.indexOf(translation);
 
-        setLearnedWords([...learnedWords, selectedWord]);
-        setSelectedWord(null);
-        handleSetDate(currentCard, true);
+      handleSetDate(currentCard, true);
+      setLearnedWords((prev) => {
+        const newLearned = [...prev, selectedWord];
+        // If all cards are learned, complete the lesson.
+        if (newLearned.length === cards.length) {
+          setTimeout(() => onComplete(), 100);
+        }
+        return newLearned;
+      });
+      setSelectedWord(null);
 
-        let newCard = getNewWord();
-        if(!newCard) return;
-        const newWords = [...words];
-        const newAnswers = [...answers];
+      let newCard = getNewWord();
+      if(!newCard) return;
+      const newWords = [...words];
+      const newAnswers = [...answers];
 
-        newWords[wordIndex] = newCard.word;
-        newAnswers[translationIndex] = newCard.translateWord;
+      newWords[wordIndex] = newCard.word;
+      newAnswers[translationIndex] = newCard.translateWord;
 
-        setAnsweredWords([...answeredWords, newCard.word]);
-        setWords(newWords);
-        setAnswers(newAnswers);
-      } else {
-        setWrongAnswer(translation);
-        handleSetDate(currentCard, false);
-        setTimeout(() => {
-          setWrongAnswer(null);
-        }, 1000)
-      }
-  }
+      setAnsweredWords(prev => [...prev, newCard.word]);
+      setWords(newWords);
+      setAnswers(newAnswers);
+    } else {
+      setWrongAnswer(translation);
+      handleSetDate(currentCard, false);
+      setTimeout(() => {
+        setWrongAnswer(null);
+      }, 1000);
+    }
+  };
 
   const isAllCardsLearned = answeredWords.length === cards.length;
   const isTranslateDisappear = (item) => {
     const word = cards.find(card => card.translateWord === item)?.word;
     return learnedWords.includes(word);
   }
-
   return (
     <View style={styles.optionsContainer}>
       <FlatList
