@@ -4,6 +4,7 @@ const calculateNextReviewDate = require("../helpers/calculateNextReviewDate");
 const { Op } = require("sequelize");
 const { Group } = require("../models/models");
 const { StatusCodes } = require("http-status-codes");
+const getUnsplashApi = require("../api/unsplash");
 
 const getRepeatedCards = async (req, res) => {
 	try {
@@ -172,6 +173,7 @@ const updateCardsAfterReview = async (req, res) => {
 };
 
 const addCard = async (req, res) => {
+	const unsplash = await getUnsplashApi();
 	const { imageUri, ...data } = req.body;
 	try {
 		const findCard = await Card.findOne({
@@ -186,7 +188,20 @@ const addCard = async (req, res) => {
 				.status(StatusCodes.BAD_REQUEST)
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
-		const image = await Image.create({ url: imageUri });
+		let imageUrl = imageUri;
+		if(!imageUri)  {
+			const unsplashResponse = await unsplash.search.getPhotos({
+				query: data.word,
+				perPage: 1
+			});
+
+			if(unsplashResponse.response && unsplashResponse.response.results.length > 0) {}
+			imageUrl = unsplashResponse.response.results[0].urls.regular;
+		} else {
+			imageUrl = "https://via.placeholder.com/400";
+		}
+
+		const image = await Image.create({ url: imageUrl })
 		const newCard = await Card.create({ imageId: image.id, ...data });
 
 		const card = await Card.findOne({

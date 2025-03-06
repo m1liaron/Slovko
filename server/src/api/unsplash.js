@@ -1,8 +1,16 @@
-const { createApi } = require('unsplash-js');
+const { createApi } = require("unsplash-js");
+const dotenv = require("dotenv");
 
-const unsplash = createApi({
-  accessKey: 'MY_ACCESS_KEY',
-});
+dotenv.config();
 
+async function getUnsplashApi() {
+  const fetch = (await import("node-fetch")).default; // Dynamically import node-fetch
+  return createApi({
+    accessKey: process.env.UNSPLASH_KEY,
+    fetch,
+  });
+}
 
-module.exports = unsplash;
+console.log(process.env.UNSPLASH_KEY, "✅✅✅✅✅✅✅✅✅✅✅")
+
+module.exports = getUnsplashApi;
