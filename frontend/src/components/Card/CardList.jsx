@@ -31,6 +31,7 @@ import Fontisto from "react-native-vector-icons/Fontisto";
 import Slider from "@react-native-community/slider";
 import { Entypo } from "@expo/vector-icons";
 import CheckBox from 'expo-checkbox';
+import unsplash from '../../api/unsplash';
 
 const MemoCardItem = memo(CardItem);
 
@@ -53,6 +54,7 @@ const CardList = ({ groupId }) => {
 	const [valueWords, setValueWords] = useState({});
 	const [value, setValue] = useState("");
 	const [answerWord, setAnswerWord] = useState("");
+	const [unsplashImages, setUnsplashImages] = useState([]);
 	const [isValidateWord, setIsValidateWord] = useState(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [imageUri, setImageUri] = useState("");
@@ -213,6 +215,22 @@ const CardList = ({ groupId }) => {
 		navigateTo(AppPath.Learn);
 	};
 
+	useEffect(() => {
+		async function fetchPhotos() {
+			const result = await unsplash.search.getPhotos({
+				query: 'nature',
+				perPage: 5,
+			});
+
+			if (result.response && result.response.results) {
+				// Extract a suitable image URL from each photo object
+				const photoUrls = result.response.results.map(photo => photo.urls.small);
+				setPhotos(photoUrls);
+			}
+		}
+		fetchPhotos();
+	}, []);
+
 	return (
 		<View style={styles.container}>
 			{isLoading && <Loading />}
@@ -344,6 +362,12 @@ const CardList = ({ groupId }) => {
 							/>
 							{imageUri !== "" && (
 								<Image source={{ uri: imageUri }} style={styles.image} />
+							)}
+
+							{unsplashImages.length && (
+								unsplashImages.map(image => (
+									<Image source={{ uri: image }} style={styles.image} />
+								))
 							)}
 
 							<AddInput
