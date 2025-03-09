@@ -55,6 +55,7 @@ const CardList = ({ groupId }) => {
 	const [value, setValue] = useState("");
 	const [answerWord, setAnswerWord] = useState("");
 	const [unsplashImages, setUnsplashImages] = useState([]);
+	const [chosenImage, setChosenImage] = useState(0);
 	const [isValidateWord, setIsValidateWord] = useState(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [imageUri, setImageUri] = useState("");
@@ -215,21 +216,18 @@ const CardList = ({ groupId }) => {
 		navigateTo(AppPath.Learn);
 	};
 
-	useEffect(() => {
-		async function fetchPhotos() {
-			const result = await unsplash.search.getPhotos({
-				query: 'nature',
-				perPage: 5,
-			});
+	async function fetchPhotos() {
+		const result = await unsplash.search.getPhotos({
+			query: value,
+			perPage: 6,
+		});
 
-			if (result.response && result.response.results) {
-				// Extract a suitable image URL from each photo object
-				const photoUrls = result.response.results.map(photo => photo.urls.small);
-				setPhotos(photoUrls);
-			}
+		if (result.response && result.response.results) {
+			// Extract a suitable image URL from each photo object
+			const photoUrls = result.response.results.map(photo => photo.urls.small);
+			setUnsplashImages(photoUrls);
 		}
-		fetchPhotos();
-	}, []);
+	}
 
 	return (
 		<View style={styles.container}>
@@ -364,17 +362,28 @@ const CardList = ({ groupId }) => {
 								<Image source={{ uri: imageUri }} style={styles.image} />
 							)}
 
-							{unsplashImages.length && (
-								unsplashImages.map(image => (
-									<Image source={{ uri: image }} style={styles.image} />
-								))
-							)}
+							<View style={{ flexDirection: "row", justifyContent: "center", flexWrap: "wrap", gap: 5 }}>
+								{unsplashImages.length && (
+									unsplashImages.map((image, index) => (
+										<Pressable
+											style={{ borderWidth: 4, borderColor: chosenImage === index ? '#679bd7' : colors.primary }}
+											onPress={() => {
+												setChosenImage(index);
+												setImageUri(image);
+											}}
+										>
+											<Image key={index} source={{ uri: image }} style={styles.image} />
+										</Pressable>
+									))
+								)}
+							</View>
 
 							<AddInput
 								value={value}
 								onChangeText={setValue}
 								style={styles.input}
 								placeholder="Слово..."
+								onFocus={fetchPhotos}
 							/>
 
 							<AddInput

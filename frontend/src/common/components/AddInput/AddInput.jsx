@@ -17,6 +17,7 @@ const AddInput = ({
 	placeholderTextColor,
 	value = "",
 	onChangeText,
+	onFocus
 }) => {
 	const {
 		theme: {
@@ -29,6 +30,7 @@ const AddInput = ({
 				styles.input,
 				{ backgroundColor: lightBackground, color: primary },
 			]}
+			onFocus={onFocus}
 			placeholder={placeholder}
 			placeholderTextColor={placeholderTextColor || primary}
 			value={value}
