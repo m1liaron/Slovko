@@ -11,6 +11,4 @@ async function getUnsplashApi() {
   });
 }
 
-console.log(process.env.UNSPLASH_KEY, "✅✅✅✅✅✅✅✅✅✅✅")
-
 module.exports = getUnsplashApi;

@@ -23,6 +23,7 @@ import AvatarImage from "../../../assets/images/avatar.png";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import pickImage from "../../utils/pickImage";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import convertImageToBase64 from '../../utils/convertImageToBase64';
 
 export default function ProfileScreen() {
 	const { user } = useSelector(selectUser);
@@ -83,22 +84,6 @@ export default function ProfileScreen() {
 					reader.readAsDataURL(blob);
 				})
 				.catch((error) => reject(error));
-		});
-	};
-
-	const convertImageToBase64 = async (uri) => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const reader = new FileReader();
-
-		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				const base64data = reader.result.split(",")[1]; // Get the Base64 part
-				resolve(base64data);
-			};
-			reader.onerror = () =>
-				reject(new Error("Failed to convert image to base64"));
-			reader.readAsDataURL(blob);
 		});
 	};
 

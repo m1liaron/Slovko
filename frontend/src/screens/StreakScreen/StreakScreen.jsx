@@ -126,7 +126,7 @@ const StreakScreen = () => {
 					<PressableButton
 						text="Купити Заморозку"
 						onPress={() => dispatch(buyFreeze({ froze: 100 }))}
-						buttonStyle={{ backgroundColor: frozen && "#002d5d", padding: 20}}
+						buttonStyle={{ backgroundColor: !frozen && "#002d5d", padding: 20}}
 						disabled={frozen}
 					/>
 					{frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}

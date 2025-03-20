@@ -1,37 +1,25 @@
-import React, { memo, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	FlatList,
-	Image,
-	Platform,
-	Pressable,
-} from "react-native";
-import CardItem from "./CardItem";
-import {
-	addCard,
-	getCards,
-	rangeCards,
-	removeCard,
-	resetFilter,
-} from "../../redux/cardReducer/cardSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import { AppPath, DataStatus } from "../../common/enums/app/app";
-import noCardsImage from "../../assets/images/no-cards.png";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import AddInput from "../../common/components/AddInput/AddInput";
-import AddButton from "../../common/components/AddButton/AddButton";
-import DefaultModal from "../DefaultModal/DefaultModal";
-import pickImage from "../../utils/pickImage";
-import Loading from "../Loading";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import Fontisto from "react-native-vector-icons/Fontisto";
-import Slider from "@react-native-community/slider";
-import { Entypo } from "@expo/vector-icons";
+import React, { memo, useEffect, useState } from 'react';
+import { FlatList, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import CardItem from './CardItem';
+import { addCard, getCards, rangeCards, removeCard, resetFilter } from '../../redux/cardReducer/cardSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { AppPath, DataStatus } from '../../common/enums/app/app';
+import noCardsImage from '../../assets/images/no-cards.png';
+import PressableButton from '../../common/components/PressableButton/PressableButton';
+import AddInput from '../../common/components/AddInput/AddInput';
+import AddButton from '../../common/components/AddButton/AddButton';
+import DefaultModal from '../DefaultModal/DefaultModal';
+import pickImage from '../../utils/pickImage';
+import Loading from '../Loading';
+import { useAppTheme } from '../../contexts/ThemeProvider';
+import Fontisto from 'react-native-vector-icons/Fontisto';
+import Slider from '@react-native-community/slider';
+import { Entypo } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 import unsplash from '../../api/unsplash';
+import ThemeText from '../../common/components/ThemeText/ThemeText';
+import convertImageToBase64 from '../../utils/convertImageToBase64';
 
 const MemoCardItem = memo(CardItem);
 
@@ -103,22 +91,6 @@ const CardList = ({ groupId }) => {
 		}
 	}, [dispatch, groupId, group?.id]);
 
-	const convertImageToBase64 = async (uri) => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const reader = new FileReader();
-
-		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				const base64data = reader.result.split(",")[1]; // Get the Base64 part
-				resolve(base64data);
-			};
-			reader.onerror = () =>
-				reject(new Error("Failed to convert image to base64"));
-			reader.readAsDataURL(blob);
-		});
-	};
-
 	const onSaveCard = async () => {
 		let finalImageUri = imageUri;
 
@@ -131,8 +103,7 @@ const CardList = ({ groupId }) => {
 			}
 		} else if (finalImageUri) {
 			try {
-				const base64Image = await convertImageToBase64(finalImageUri);
-				finalImageUri = base64Image;
+				finalImageUri = await convertImageToBase64(finalImageUri);
 			} catch (error) {
 				console.error("Error converting image to base64:", error);
 				return;
@@ -141,7 +112,7 @@ const CardList = ({ groupId }) => {
 
 		function validateWord(word) {
 			const cleanedWord = isValidateWord ? word.replace(/[^A-Za-z0-9\s]/g, "") : word;
-			const formattedWord = cleanedWord
+			return cleanedWord
 				.split(" ")
 				.filter(Boolean) // Remove any extra spaces
 				.map(
@@ -149,8 +120,6 @@ const CardList = ({ groupId }) => {
 						subWord.charAt(0).toUpperCase() + subWord.slice(1).toLowerCase(),
 				)
 				.join(" ");
-
-			return formattedWord;
 		}
 
 		const validatedValue = validateWord(value)
@@ -175,7 +144,7 @@ const CardList = ({ groupId }) => {
 			const cardData = {
 				word: validatedValue,
 				translateWord: answerWord,
-				imageUri: finalImageUri || "",
+				imageUri: imageUri.includes("http") ? imageUri : finalImageUri || "",
 				groupId,
 			};
 
@@ -183,6 +152,7 @@ const CardList = ({ groupId }) => {
 			setValue("");
 			setAnswerWord("");
 			setImageUri("");
+			setChosenImage(0);
 		}
 	};
 
@@ -227,6 +197,11 @@ const CardList = ({ groupId }) => {
 			const photoUrls = result.response.results.map(photo => photo.urls.small);
 			setUnsplashImages(photoUrls);
 		}
+	}
+
+	const setChosenPhoto = (image, index) => {
+		setImageUri(image);
+		setChosenImage(index);
 	}
 
 	return (
@@ -363,14 +338,11 @@ const CardList = ({ groupId }) => {
 							)}
 
 							<View style={{ flexDirection: "row", justifyContent: "center", flexWrap: "wrap", gap: 5 }}>
-								{unsplashImages.length && (
+								{unsplashImages.length > 0 && (
 									unsplashImages.map((image, index) => (
 										<Pressable
 											style={{ borderWidth: 4, borderColor: chosenImage === index ? '#679bd7' : colors.primary }}
-											onPress={() => {
-												setChosenImage(index);
-												setImageUri(image);
-											}}
+											onPress={() => setChosenPhoto(image, index)}
 										>
 											<Image key={index} source={{ uri: image }} style={styles.image} />
 										</Pressable>
@@ -392,7 +364,10 @@ const CardList = ({ groupId }) => {
 								style={styles.input}
 								placeholder="Відповідь..."
 							/>
-							<CheckBox value={isValidateWord} onValueChange={setIsValidateWord} />
+							<View style={{ flexDirection: "row" }}>
+								<ThemeText>Валідація</ThemeText>
+								<CheckBox value={isValidateWord} onValueChange={setIsValidateWord} />
+							</View>
 						</View>
 					)}
 

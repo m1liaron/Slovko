@@ -88,17 +88,10 @@ const getUser = async (req, res) => {
 
 			const timeGone =
 				!lastReviewDate || lastReviewDate.getTime() !== today.getTime();
-			const goneTwoDays = new Date(lastReviewDate).getDate() === (new Date().getDate() - 2)
+			const goneTwoOrMoreDays = new Date(lastReviewDate).getDate() <= (new Date().getDate() - 2)
 
-			const findStreakDate = await Streak.findOne({
-				where: { id: userId }
-			});
-			if(findStreakDate) {
-				const { password, ...mainUserData } = user.dataValues;
-				return res.status(200).json({ user: mainUserData });
-			}
 
-			if (timeGone && !user.frozen || goneTwoDays) {
+			if (timeGone && !user.frozen || goneTwoOrMoreDays) {
 					user.streak = 1;
 					await Streak.create({
 						date: new Date(),
@@ -109,12 +102,12 @@ const getUser = async (req, res) => {
 				const yesterday = new Date();
 				yesterday.setDate(yesterday.getDate() - 1);
 
+				user.frozen = false;
 				await Streak.create({
 					date: yesterday,
 					frozen: true,
 					userId: userId,
 				});
-				user.frozen = false;
 			}
 
 			user.lastReviewAt = today;

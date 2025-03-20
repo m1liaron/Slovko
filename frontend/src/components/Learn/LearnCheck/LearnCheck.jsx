@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, FlatList, Pressable } from 'react-native';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { useSelector } from 'react-redux';
@@ -68,6 +68,12 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
     }
   };
 
+  useEffect(() => {
+    if(learnedWords.length === cards.length) {
+      onComplete();
+    }
+  }, [learnedWords]);
+
   const isAllCardsLearned = answeredWords.length === cards.length;
   const isTranslateDisappear = (item) => {
     const word = cards.find(card => card.translateWord === item)?.word;
@@ -75,7 +81,6 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
   }
   return (
     <View style={styles.optionsContainer}>
-      <PressableButton text="Завершити" onPress={onComplete}/>
       <FlatList
         data={words}
         keyExtractor={(item) => item}

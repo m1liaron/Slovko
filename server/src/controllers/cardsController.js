@@ -195,14 +195,17 @@ const addCard = async (req, res) => {
 				perPage: 1
 			});
 
-			if(unsplashResponse.response && unsplashResponse.response.results.length > 0) {}
-			imageUrl = unsplashResponse.response.results[0].urls.regular;
-		} else {
-			imageUrl = "https://via.placeholder.com/400";
+			if(unsplashResponse.response && unsplashResponse.response.results.length > 0) {
+					imageUrl = unsplashResponse.response.results[0].urls.regular;
+			}
 		}
 
-		const image = await Image.create({ url: imageUrl })
-		const newCard = await Card.create({ imageId: image.id, ...data });
+		let image = ""
+		if(imageUrl) {
+			image = await Image.create({ url: imageUrl })
+		}
+
+		const newCard = await Card.create({ imageId: image.id || "", ...data });
 
 		const card = await Card.findOne({
 			where: { id: newCard.id },
