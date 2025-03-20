@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { FlatList, Pressable, View } from "react-native";
+import React, { useEffect, useMemo, useState, useRef } from "react";
+import { FlatList, Pressable, View, Animated } from "react-native";
 import { useSelector } from "react-redux";
-import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import ThemeText from "../../../common/components/ThemeText/ThemeText";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
@@ -36,6 +35,11 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
 	const [answers, setAnswers] = useState(initialAnswers);
 	const [answeredWords, setAnsweredWords] = useState([...initialWords]); // it's current words + words that left to learn
 	const [learnedWords, setLearnedWords] = useState([]); // it's only learned words
+
+	const [animateNewWord, setAnimateNewWord] = useState(null);
+	const [animateNewAnswer, setAnimateNewAnswer] = useState(null);
+
+	const newFadeAnim = useRef(new Animated.Value(1)).current;
 
 	const maxWordLen = cards.map((card) => card.word.length);
 	const maxWordWidth = Math.max(...maxWordLen);
@@ -76,6 +80,20 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
 			setAnsweredWords((prev) => [...prev, newCard.word]);
 			setWords(newWords);
 			setAnswers(newAnswers);
+
+			setAnimateNewAnswer(newCard.word);
+			setAnimateNewAnswer(newCard.translateWord);
+
+			newFadeAnim.setValue(0);
+			Animated.timing(newFadeAnim, {
+			toValue: 1,
+			duration: 4000,
+			useNativeDriver: true,
+			}).start(() => {
+			// Clear animate markers after the animation completes.
+			setAnimateNewWord(null);
+			setAnimateNewAnswer(null);
+			});
 		} else {
 			setWrongAnswer(translation);
 			handleSetDate(currentCard, false);
@@ -96,13 +114,15 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
 		const word = cards.find((card) => card.translateWord === item)?.word;
 		return learnedWords.includes(word);
 	};
-	return (
-		<View style={styles.optionsContainer}>
-			<FlatList
-				data={words}
-				keyExtractor={(item) => item}
-				renderItem={({ item }) => (
-					<Pressable
+
+	const renderWordItem = ({ item }) => {
+		const animatedStyle =
+      animateNewWord && animateNewWord === item
+        ? { opacity: newFadeAnim }
+        : {};
+		return (
+			<Animated.View style={animatedStyle}>
+				<Pressable
 						key={item}
 						onPress={() => setSelectedWord(item)}
 						style={[
@@ -118,14 +138,18 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
 					>
 						<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
 					</Pressable>
-				)}
-				contentContainerStyle={styles.listContainer}
-			/>
-			<FlatList
-				data={answers}
-				keyExtractor={(item) => item}
-				renderItem={({ item }) => (
-					<Pressable
+			</Animated.View>
+		)
+	}
+
+	const renderAnswerItem = ({ item }) => {
+		const animatedStyle =
+      animateNewAnswer && animateNewAnswer === item
+        ? { opacity: newFadeAnim }
+        : {};
+		return (
+			<Animated.View style={animatedStyle}>
+				<Pressable
 						key={item}
 						style={[
 							styles.optionItem,
@@ -141,7 +165,22 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
 					>
 						<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
 					</Pressable>
-				)}
+			</Animated.View>
+		)
+	}
+
+	return (
+		<View style={styles.optionsContainer}>
+			<FlatList
+				data={words}
+				keyExtractor={(item) => item}
+				renderItem={renderWordItem}
+				contentContainerStyle={styles.listContainer}
+			/>
+			<FlatList
+				data={answers}
+				keyExtractor={(item) => item}
+				renderItem={renderAnswerItem}
 				contentContainerStyle={styles.listContainer}
 			/>
 		</View>
