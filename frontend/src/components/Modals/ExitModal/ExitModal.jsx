@@ -1,10 +1,10 @@
-import React from "react";
-import { View, Text } from "react-native";
-import styles from "./ExitModal.styles";
-import DefaultModal from "../../DefaultModal/DefaultModal";
-import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { Text, View } from "react-native";
+import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
+import DefaultModal from "../../DefaultModal/DefaultModal";
+import styles from "./ExitModal.styles";
 
 const ExitModal = ({ modalVisible, handleClose, text }) => {
 	const navigation = useNavigation();

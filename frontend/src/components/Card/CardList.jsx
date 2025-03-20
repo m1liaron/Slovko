@@ -1,25 +1,39 @@
-import React, { memo, useEffect, useState } from 'react';
-import { FlatList, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import CardItem from './CardItem';
-import { addCard, getCards, rangeCards, removeCard, resetFilter } from '../../redux/cardReducer/cardSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
-import { AppPath, DataStatus } from '../../common/enums/app/app';
-import noCardsImage from '../../assets/images/no-cards.png';
-import PressableButton from '../../common/components/PressableButton/PressableButton';
-import AddInput from '../../common/components/AddInput/AddInput';
-import AddButton from '../../common/components/AddButton/AddButton';
-import DefaultModal from '../DefaultModal/DefaultModal';
-import pickImage from '../../utils/pickImage';
-import Loading from '../Loading';
-import { useAppTheme } from '../../contexts/ThemeProvider';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import Slider from '@react-native-community/slider';
-import { Entypo } from '@expo/vector-icons';
-import CheckBox from 'expo-checkbox';
-import unsplash from '../../api/unsplash';
-import ThemeText from '../../common/components/ThemeText/ThemeText';
-import convertImageToBase64 from '../../utils/convertImageToBase64';
+import { Entypo } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
+import { useNavigation } from "@react-navigation/native";
+import CheckBox from "expo-checkbox";
+import React, { memo, useEffect, useState } from "react";
+import {
+	FlatList,
+	Image,
+	Platform,
+	Pressable,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
+import Fontisto from "react-native-vector-icons/Fontisto";
+import { useDispatch, useSelector } from "react-redux";
+import unsplash from "../../api/unsplash";
+import noCardsImage from "../../assets/images/no-cards.png";
+import AddButton from "../../common/components/AddButton/AddButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath, DataStatus } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import {
+	addCard,
+	getCards,
+	rangeCards,
+	removeCard,
+	resetFilter,
+} from "../../redux/cardReducer/cardSlice";
+import convertImageToBase64 from "../../utils/convertImageToBase64";
+import pickImage from "../../utils/pickImage";
+import DefaultModal from "../DefaultModal/DefaultModal";
+import Loading from "../Loading";
+import CardItem from "./CardItem";
 
 const MemoCardItem = memo(CardItem);
 
@@ -43,7 +57,7 @@ const CardList = ({ groupId }) => {
 	const [value, setValue] = useState("");
 	const [answerWord, setAnswerWord] = useState("");
 	const [unsplashImages, setUnsplashImages] = useState([]);
-	const [chosenImage, setChosenImage] = useState(0);
+	const [chosenImage, setChosenImage] = useState(null);
 	const [isValidateWord, setIsValidateWord] = useState(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [imageUri, setImageUri] = useState("");
@@ -111,7 +125,9 @@ const CardList = ({ groupId }) => {
 		}
 
 		function validateWord(word) {
-			const cleanedWord = isValidateWord ? word.replace(/[^A-Za-z0-9\s]/g, "") : word;
+			const cleanedWord = isValidateWord
+				? word.replace(/[^A-Za-z0-9\s]/g, "")
+				: word;
 			return cleanedWord
 				.split(" ")
 				.filter(Boolean) // Remove any extra spaces
@@ -122,10 +138,10 @@ const CardList = ({ groupId }) => {
 				.join(" ");
 		}
 
-		const validatedValue = validateWord(value)
+		const validatedValue = validateWord(value);
 
 		if (Object.keys(valueWords).length > 0) {
-			for(const [key, value] of Object.entries(valueWords)) {
+			for (const [key, value] of Object.entries(valueWords)) {
 				dispatch(
 					addCard({
 						word: validateWord(key),
@@ -152,7 +168,7 @@ const CardList = ({ groupId }) => {
 			setValue("");
 			setAnswerWord("");
 			setImageUri("");
-			setChosenImage(0);
+			setChosenImage(null);
 		}
 	};
 
@@ -189,12 +205,14 @@ const CardList = ({ groupId }) => {
 	async function fetchPhotos() {
 		const result = await unsplash.search.getPhotos({
 			query: value,
-			perPage: 6,
+			perPage: 4,
 		});
 
 		if (result.response && result.response.results) {
 			// Extract a suitable image URL from each photo object
-			const photoUrls = result.response.results.map(photo => photo.urls.small);
+			const photoUrls = result.response.results.map(
+				(photo) => photo.urls.small,
+			);
 			setUnsplashImages(photoUrls);
 		}
 	}
@@ -202,7 +220,7 @@ const CardList = ({ groupId }) => {
 	const setChosenPhoto = (image, index) => {
 		setImageUri(image);
 		setChosenImage(index);
-	}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -334,20 +352,40 @@ const CardList = ({ groupId }) => {
 								onPress={() => pickImage(imageUri, setImageUri)}
 							/>
 							{imageUri !== "" && (
-								<Image source={{ uri: imageUri }} style={styles.image} />
+								<View>
+									<Image source={{ uri: imageUri }} style={styles.image} />
+									<PressableButton
+										onPress={() => setImageUri("")}
+										text="Remove image"
+									/>
+								</View>
 							)}
 
-							<View style={{ flexDirection: "row", justifyContent: "center", flexWrap: "wrap", gap: 5 }}>
-								{unsplashImages.length > 0 && (
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									flexWrap: "wrap",
+									gap: 5,
+								}}
+							>
+								{unsplashImages.length > 0 &&
 									unsplashImages.map((image, index) => (
 										<Pressable
-											style={{ borderWidth: 4, borderColor: chosenImage === index ? '#679bd7' : colors.primary }}
+											style={{
+												borderWidth: 4,
+												borderColor:
+													chosenImage === index ? "#679bd7" : colors.primary,
+											}}
 											onPress={() => setChosenPhoto(image, index)}
 										>
-											<Image key={index} source={{ uri: image }} style={styles.image} />
+											<Image
+												key={index}
+												source={{ uri: image }}
+												style={styles.image}
+											/>
 										</Pressable>
-									))
-								)}
+									))}
 							</View>
 
 							<AddInput
@@ -366,7 +404,10 @@ const CardList = ({ groupId }) => {
 							/>
 							<View style={{ flexDirection: "row" }}>
 								<ThemeText>Валідація</ThemeText>
-								<CheckBox value={isValidateWord} onValueChange={setIsValidateWord} />
+								<CheckBox
+									value={isValidateWord}
+									onValueChange={setIsValidateWord}
+								/>
 							</View>
 						</View>
 					)}
@@ -401,7 +442,7 @@ const styles = StyleSheet.create({
 	},
 	listContainer: {
 		marginHorizontal: 30,
-		gap: 10
+		gap: 10,
 	},
 	modeToggle: {
 		flexDirection: "row",

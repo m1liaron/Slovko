@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
-import styles from "./ResultDetailsScreen.styles";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
+import { FlatList, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { getResultDetails } from "../../redux/resultReducer/resultSlice";
-import Loading from "../../components/Loading";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
-import formatDMTDate from "../../utils/formatDMTDate";
+import Loading from "../../components/Loading";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import { getResultDetails } from "../../redux/resultReducer/resultSlice";
+import formatDMTDate from "../../utils/formatDMTDate";
 import { formatTime } from "../../utils/formatTime";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import styles from "./ResultDetailsScreen.styles";
 
 const ResultDetailsScreen = ({ route }) => {
 	const {
@@ -94,24 +94,22 @@ const ResultDetailsScreen = ({ route }) => {
 			</View>
 
 			<View style={{ marginHorizontal: 50 }}>
-					<FlatList
-						data={modesOptionsButtons.filter(
-							(_, index) =>
-								result.mode && result.mode[index]?.words?.length > 0,
-						)} // Do not show buttons that mode's words length equal 0
-						keyExtractor={(item) => item.label}
-						renderItem={({ item: { label }, index }) => (
-							<PressableButton
-								text={label}
-								buttonStyle={{
-									backgroundColor:
-										selectedMode === index ? "#004da4" : "#007AFF",
-								}}
-								onPress={() => setSelectedMode(index)}
-							/>
-						)}
-						contentContainerStyle={styles.buttonsContainer}
-					/>
+				<FlatList
+					data={modesOptionsButtons.filter(
+						(_, index) => result.mode && result.mode[index]?.words?.length > 0,
+					)} // Do not show buttons that mode's words length equal 0
+					keyExtractor={(item) => item.label}
+					renderItem={({ item: { label }, index }) => (
+						<PressableButton
+							text={label}
+							buttonStyle={{
+								backgroundColor: selectedMode === index ? "#004da4" : "#007AFF",
+							}}
+							onPress={() => setSelectedMode(index)}
+						/>
+					)}
+					contentContainerStyle={styles.buttonsContainer}
+				/>
 
 				{isLoading && <Loading />}
 				{result.mode && (

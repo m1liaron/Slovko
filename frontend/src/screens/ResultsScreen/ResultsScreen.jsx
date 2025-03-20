@@ -1,19 +1,19 @@
+import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Link } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TextInput, Pressable } from "react-native";
-import styles from "./ResultsScreen.styles";
+import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	filterResults,
 	getResults,
 	resetResults,
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
-import { Link } from "@react-navigation/native";
-import { AppPath } from "../../common/enums/app/app";
-import { AntDesign, FontAwesome, FontAwesome6 } from '@expo/vector-icons';
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import ThemeText from '../../common/components/ThemeText/ThemeText';
+import styles from "./ResultsScreen.styles";
 
 const ResultsScreen = () => {
 	const dispatch = useDispatch();
@@ -54,38 +54,54 @@ const ResultsScreen = () => {
 		setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
 	};
 
-	const isTitleDate = (title) => !isNaN(Date.parse(title))
+	const isTitleDate = (title) => !isNaN(Date.parse(title));
 	const decreaseYear = () => {
-		if(resultsYear > 2024) {
-			setResultsYear(resultsYear - 1)
+		if (resultsYear > 2024) {
+			setResultsYear(resultsYear - 1);
 		}
-	}
+	};
 
 	const increaseYear = () => {
-		if(resultsYear < new Date().getFullYear()) {
-			setResultsYear(resultsYear + 1)
+		if (resultsYear < new Date().getFullYear()) {
+			setResultsYear(resultsYear + 1);
 		}
-	}
+	};
 
 	return (
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
-					<View style={{
-						flexDirection: 'row',
-						alignItems: 'center'
-					}}>
-							<Pressable onPress={decreaseYear}>
-								<AntDesign name="caretleft" size={30} color={colors.iconColor} disabled={resultsYear > 2024}/>
-							</Pressable>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+						}}
+					>
+						<Pressable onPress={decreaseYear}>
+							<AntDesign
+								name="caretleft"
+								size={30}
+								color={colors.iconColor}
+								disabled={resultsYear > 2024}
+							/>
+						</Pressable>
 						<Text
-							style={{ fontSize: 40, fontWeight: "bold", color: colors.primary }}
+							style={{
+								fontSize: 40,
+								fontWeight: "bold",
+								color: colors.primary,
+							}}
 						>
 							{resultsYear}
 						</Text>
-							<Pressable onPress={increaseYear}>
-								<AntDesign name="caretright" size={30} color={colors.iconColor} disabled={resultsYear < new Date().getFullYear()}/>
-							</Pressable>
+						<Pressable onPress={increaseYear}>
+							<AntDesign
+								name="caretright"
+								size={30}
+								color={colors.iconColor}
+								disabled={resultsYear < new Date().getFullYear()}
+							/>
+						</Pressable>
 						<ThemeText>{results.length} занять</ThemeText>
 					</View>
 					<View
@@ -170,7 +186,13 @@ const ResultsScreen = () => {
 				keyExtractor={(item) => item[0]}
 				renderItem={({ item }) => (
 					<View style={{ marginBottom: 20 }}>
-						<View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "center",
+							}}
+						>
 							<Text
 								style={{
 									fontSize: 25,
@@ -181,7 +203,10 @@ const ResultsScreen = () => {
 							>
 								{item[0]}
 							</Text>
-							<ThemeText style={{ fontSize: 20 }}> - {item[1].length} занять</ThemeText>
+							<ThemeText style={{ fontSize: 20 }}>
+								{" "}
+								- {item[1].length} занять
+							</ThemeText>
 						</View>
 						{item[1].map((result) => (
 							<Link
@@ -203,13 +228,15 @@ const ResultsScreen = () => {
 											fontSize: 30,
 										}}
 									>
-										{isTitleDate(result.title) ? new Date(result.createdAt).toLocaleTimeString() : result.title}
+										{isTitleDate(result.title)
+											? new Date(result.createdAt).toLocaleTimeString()
+											: result.title}
 									</Text>
-									{!isTitleDate(result.title) &&
+									{!isTitleDate(result.title) && (
 										<Text style={{ color: colors.primary }}>
 											{new Date(result.createdAt).toLocaleTimeString()}{" "}
 										</Text>
-									}
+									)}
 								</View>
 							</Link>
 						))}

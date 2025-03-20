@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-	getAllSharedGroups,
-	saveSharedGroup,
-	getSharedGroup,
-	copySharedGroup,
-	removeSharedGroup,
-} from "./sharedGroupThunk";
 import { DataStatus } from "../../common/enums/app/DataStatus";
+import {
+	copySharedGroup,
+	getAllSharedGroups,
+	getSharedGroup,
+	removeSharedGroup,
+	saveSharedGroup,
+} from "./sharedGroupThunk";
 
 const sharedGroupSlice = createSlice({
 	name: "sharedGroup",

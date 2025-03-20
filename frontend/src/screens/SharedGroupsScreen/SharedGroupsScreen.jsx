@@ -1,3 +1,5 @@
+import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
 	FlatList,
@@ -7,8 +9,16 @@ import {
 	TextInput,
 	View,
 } from "react-native";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import { useDispatch, useSelector } from "react-redux";
+import AvatarImage from "../../../assets/images/avatar.png";
+import AddButton from "../../common/components/AddButton/AddButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { AppPath } from "../../common/enums/app/app";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import {
 	filterMySharedGroups,
 	filterSharedGroups,
@@ -18,18 +28,8 @@ import {
 	saveSharedGroup,
 	selectSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
-import styles from "./SharedGroupsScreen.styles";
-import { Link, useNavigation } from "@react-navigation/native";
-import { AppPath } from "../../common/enums/app/app";
-import AddButton from "../../common/components/AddButton/AddButton";
-import DefaultModal from "../../components/DefaultModal/DefaultModal";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { selectGroup } from "../../redux/groupReducer/groupSlice";
-import AddInput from "../../common/components/AddInput/AddInput";
-import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import AvatarImage from "../../../assets/images/avatar.png";
 import { selectUser } from "../../redux/userReducer/userSlice";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import styles from "./SharedGroupsScreen.styles";
 
 const SharedGroupsScreen = () => {
 	const { user } = useSelector(selectUser);

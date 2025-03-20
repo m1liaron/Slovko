@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import AuthNavigator from "../AuthNavigator/AuthNavigator";
-import { AppPath } from "../../common/enums/app/app";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, selectUser } from "../../redux/userReducer/userSlice";
+import { AppPath } from "../../common/enums/app/app";
 import Loading from "../../components/Loading";
+import { getUser, selectUser } from "../../redux/userReducer/userSlice";
+import AuthNavigator from "../AuthNavigator/AuthNavigator";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 
 const Stack = createNativeStackNavigator();

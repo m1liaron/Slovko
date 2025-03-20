@@ -1,20 +1,22 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
-import Toast from "react-native-toast-message";
-import { register } from "../../redux/userReducer/userSlice";
 import { Entypo } from "@expo/vector-icons";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import ThemeText from '../../common/components/ThemeText/ThemeText';
-import { AppPath } from '../../common/enums/app/app';
-import { useAppTheme } from '../../contexts/ThemeProvider';
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useDispatch } from "react-redux";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { register } from "../../redux/userReducer/userSlice";
 
 const RegisterScreen = () => {
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
 
-	const { theme: { colors }} = useAppTheme()
+	const {
+		theme: { colors },
+	} = useAppTheme();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -56,7 +58,7 @@ const RegisterScreen = () => {
 	};
 	return (
 		<ThemeBackground style={styles.container}>
-			<Toast/>
+			<Toast />
 			<ThemeText style={styles.title}>Реєстрація</ThemeText>
 
 			<TextInput
@@ -85,9 +87,7 @@ const RegisterScreen = () => {
 					value={password}
 					onChangeText={setPassword}
 				/>
-				<Pressable
-					onPress={() => setNotShowPassword(!notShowPassword)}
-				>
+				<Pressable onPress={() => setNotShowPassword(!notShowPassword)}>
 					<Entypo
 						name={notShowPassword ? "eye" : "eye-with-line"}
 						size={30}
@@ -127,9 +127,9 @@ const styles = StyleSheet.create({
 		marginBottom: 30,
 	},
 	input: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
 		width: "100%",
 		maxWidth: 400,
 		height: 50,

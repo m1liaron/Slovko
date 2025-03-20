@@ -1,14 +1,14 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React from "react";
 import { AppPath } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	MainScreen,
-	ResultsScreen,
 	ProfileScreen,
+	ResultsScreen,
 	SharedGroupsScreen,
 } from "../../screens";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 
 const Tab = createBottomTabNavigator();
 

@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { FontAwesome6 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect, useCallback } from "react";
 import {
 	FlatList,
 	Linking,
@@ -7,22 +9,20 @@ import {
 	Text,
 	View,
 } from "react-native";
-import { GroupList } from "../../components/Group/GroupList";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, selectUser } from "../../redux/userReducer/userSlice";
-import { FontAwesome6 } from "@expo/vector-icons";
+import appLogo from "../../assets/images/favicon.png";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { AppPath } from "../../common/enums/app/app";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import { GroupList } from "../../components/Group/GroupList";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import styles from "./MainScreen.styles";
 import {
 	getRepeatedCards,
 	getRepeatedCardsFromIds,
 } from "../../redux/cardReducer/cardSlice";
-import { useNavigation } from "@react-navigation/native";
-import { AppPath } from "../../common/enums/app/app";
-import appLogo from "../../assets/images/favicon.png";
-import DefaultModal from "../../components/DefaultModal/DefaultModal";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { getUser, selectUser } from "../../redux/userReducer/userSlice";
+import styles from "./MainScreen.styles";
 
 const MainScreen = () => {
 	const dispatch = useDispatch();
@@ -32,7 +32,7 @@ const MainScreen = () => {
 	const [showRepeatedModal, setShowRepeatedModal] = useState(false);
 	const repeatedGroupsIds = useSelector((state) => state.cards.repeatedCards);
 	const repeatedCardsLength = repeatedGroupsIds.reduce(
-		(prev, curr) => (prev + curr.cards.length),
+		(prev, curr) => prev + curr.cards.length,
 		0,
 	);
 	const navigate = useNavigation();
@@ -48,7 +48,7 @@ const MainScreen = () => {
 			throw new Error("Ваш браузер не підтримує повідомлення");
 		}
 
-		if(Notification.permission !== 'granted') {
+		if (Notification.permission !== "granted") {
 			Notification.requestPermission().then((permission) => {
 				if (repeatedCardsLength) {
 					if (permission === "granted") {
@@ -97,10 +97,11 @@ const MainScreen = () => {
 	};
 
 	const learnAllRepeatedCards = () => {
-		const allIds = repeatedGroupsIds.length > 1 ? repeatedGroupsIds.map((group) =>
-			group.cards.map((id) => id),
-		) : repeatedGroupsIds[0].cards;
-		console.log(allIds)
+		const allIds =
+			repeatedGroupsIds.length > 1
+				? repeatedGroupsIds.map((group) => group.cards.map((id) => id))
+				: repeatedGroupsIds[0].cards;
+		console.log(allIds);
 		dispatch(getRepeatedCardsFromIds(allIds));
 		navigateToLearn();
 	};

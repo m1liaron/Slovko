@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { DataStatus } from "../../common/enums/app/DataStatus";
 import {
+	addGroup,
 	getAllGroups,
 	getGroup,
-	addGroup,
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
-import { DataStatus } from "../../common/enums/app/DataStatus";
 
 const groupSlice = createSlice({
 	name: "groups",

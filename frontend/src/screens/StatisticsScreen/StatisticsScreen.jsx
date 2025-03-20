@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Dimensions } from "react-native";
-import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
-import { useDispatch, useSelector } from "react-redux";
-import { selectResult } from "../../redux/resultReducer/resultSlice";
-import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
+import { Dimensions, View } from "react-native";
+import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
+import RNPickerSelect from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import RNPickerSelect from "react-native-picker-select";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { selectResult } from "../../redux/resultReducer/resultSlice";
+import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
 
 const StatisticsScreen = () => {
 	const {

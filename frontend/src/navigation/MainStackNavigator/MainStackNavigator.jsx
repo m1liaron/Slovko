@@ -1,11 +1,11 @@
-import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import React from "react";
 import { AppPath } from "../../common/enums/app/app";
 import {
 	GroupScreen,
 	LearnScreen,
-	SharedGroupDetailsScreen,
 	ResultDetailsScreen,
+	SharedGroupDetailsScreen,
 	StatisticsScreen,
 	StreakScreen,
 } from "../../screens";

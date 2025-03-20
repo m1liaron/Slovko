@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import DefaultModal from "../DefaultModal/DefaultModal";
+import React, { useState } from "react";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
 import { useDispatch } from "react-redux";
-import { updateCard } from "../../redux/cardReducer/cardSlice";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import pickImage from "../../utils/pickImage";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { updateCard } from "../../redux/cardReducer/cardSlice";
+import pickImage from "../../utils/pickImage";
+import DefaultModal from "../DefaultModal/DefaultModal";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -50,12 +50,12 @@ const CardItem = ({ item, onRemove, groupId }) => {
 			const minutes = Math.ceil((timeDifference % oneHour) / oneMinute);
 			return `Через ${hours} годин${hours === 1 ? "у" : hours >= 3 ? "и" : ""} та ${minutes} хвилин${minutes === 1 ? "у" : minutes >= 3 && minutes <= 4 ? "и" : ""}`;
 		}
-			const days = Math.floor(timeDifference / oneDay);
-			const time = new Date(reviewTime).toLocaleTimeString([], {
-				hour: "2-digit",
-				minute: "2-digit",
-			});
-			return `Через ${days} днів о ${time}`;
+		const days = Math.floor(timeDifference / oneDay);
+		const time = new Date(reviewTime).toLocaleTimeString([], {
+			hour: "2-digit",
+			minute: "2-digit",
+		});
+		return `Через ${days} днів о ${time}`;
 	};
 
 	const handleUpdateCard = () => {
