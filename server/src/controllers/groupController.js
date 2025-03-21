@@ -1,6 +1,7 @@
 const Group = require("../models/Group");
 const { Card } = require("../models/models");
 const { sequelize } = require("../db/sequelize");
+const { StatusCodes } = require('http-status-codes');
 
 const getAllGroups = async (req, res) => {
 	const userId = req.user.id;
@@ -80,6 +81,10 @@ const getGroup = async (req, res) => {
 const addGroup = async (req, res) => {
 	const data = req.body;
 	try {
+		const existGroup = await Group.findOne({ where: data.title });
+		if(existGroup) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Group already exists" });
+		}
 		const newGroup = await Group.create({ ...data, userId: req.user.id });
 		return res.status(200).json(newGroup);
 	} catch (error) {

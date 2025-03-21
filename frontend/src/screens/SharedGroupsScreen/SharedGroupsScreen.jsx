@@ -30,6 +30,8 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
+import CheckBox from 'expo-checkbox';
+import ThemeText from '../../common/components/ThemeText/ThemeText';
 
 const SharedGroupsScreen = () => {
 	const { user } = useSelector(selectUser);
@@ -48,6 +50,7 @@ const SharedGroupsScreen = () => {
 	);
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [filterValue, setFilterValue] = useState("");
+	const [isAnonymous, setIsAnonymous] = useState(false);
 
 	useEffect(() => {
 		dispatch(getAllSharedGroups());
@@ -90,6 +93,7 @@ const SharedGroupsScreen = () => {
 		const sharedGroupData = {
 			groupId: selectedGroup.id,
 			title: sharedGroupTitle,
+			isAnonymous
 		};
 		dispatch(saveSharedGroup(sharedGroupData));
 	};
@@ -113,7 +117,7 @@ const SharedGroupsScreen = () => {
 				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
 					<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
 						<Image
-							source={item.user.image || AvatarImage}
+							source={item.user?.image || AvatarImage}
 							style={{
 								width: 40,
 								height: 40,
@@ -123,7 +127,7 @@ const SharedGroupsScreen = () => {
 							}}
 						/>
 						<Text style={{ color: colors.primary, fontSize: 30 }}>
-							{item.user.name}
+							{item.user?.name || "Anonymous"}
 						</Text>
 					</View>
 					<View
@@ -144,7 +148,7 @@ const SharedGroupsScreen = () => {
 					{formatTime(item.createdAt)}
 				</Text>
 			</Link>
-			{item.user.id === user.id && (
+			{(item.user?.id === user?.id || item.userId === user?.id) && (
 				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
@@ -245,8 +249,19 @@ const SharedGroupsScreen = () => {
 					onChangeText={setSharedGroupTitle}
 					placeholder="Назва групи"
 				/>
+				<View style={{flexDirection: "row", alignItems: "center"}}>
+					<ThemeText style={{ fontSize: 25 }}>Анонімне</ThemeText>
+					<CheckBox
+						value={isAnonymous}
+						onChange={() => setIsAnonymous(!isAnonymous)}
+					/>
+				</View>
 				{groups.length ? (
 					<FlatList
+						contentContainerStyle={{
+							overflowY: "auto",
+							height: 400
+						}}
 						data={groups}
 						renderItem={({ item }) => (
 							<Pressable onPress={() => addRemoveSelectedGroup(item)}>

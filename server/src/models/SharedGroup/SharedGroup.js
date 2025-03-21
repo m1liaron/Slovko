@@ -33,11 +33,25 @@ const SharedGroup = sequelize.define(
 				key: "id",
 			},
 		},
+		isAnonymous: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
+		}
 	},
 	{
 		tableName: "SharedGroups",
 		timestamps: true,
 	},
 );
+
+SharedGroup.prototype.toJSON = function () {
+	const values = { ...this.get() };
+	// If the group is marked as anonymous, remove the user data if it exists
+	if (values.isAnonymous) {
+		delete values.user;
+	}
+	return values;
+};
 
 module.exports = SharedGroup;

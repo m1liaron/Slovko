@@ -5,13 +5,15 @@ const {
 	Card,
 	User,
 } = require("../models/models");
+const { StatusCodes } = require('http-status-codes');
 
 const createSharedGroup = async (req, res) => {
 	const {
-		body: { groupId, title },
+		body: { groupId, title, isAnonymous },
 		user: { id },
 	} = req;
 	try {
+
 		const group = await Group.findOne({
 			where: { id: groupId },
 			include: [
@@ -32,6 +34,7 @@ const createSharedGroup = async (req, res) => {
 		const sharedGroup = await SharedGroup.create({
 			title: title ? title : group.title,
 			userId: id,
+			isAnonymous
 		});
 		if (group.cards.length) {
 			await Promise.all(
@@ -43,6 +46,8 @@ const createSharedGroup = async (req, res) => {
 					});
 				}),
 			);
+		} else {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "There are no cards to share!" });
 		}
 
 		const sharedGroupWithUser = await SharedGroup.findOne({
