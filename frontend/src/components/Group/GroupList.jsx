@@ -19,7 +19,7 @@ export const GroupList = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const groups = useSelector(selectGroup);
+	const { groups, error } = useSelector(state => state.groups);
 	const dispatch = useDispatch();
 	const [title, setTitle] = useState("");
 	const [showAddModal, setShowAddModal] = useState(false);
@@ -36,9 +36,18 @@ export const GroupList = () => {
 			});
 		}
 		dispatch(addGroup({ title }));
-		setTitle("");
-		setShowAddModal(false);
+
 	};
+
+	useEffect(() => {
+		if(error) {
+			Toast.show({
+				type: "error",
+				text1: "Failed🔴",
+				text2: error,
+			})
+		}
+	}, [dispatch, error]);
 
 	return (
 		<View style={styles.container}>
@@ -61,6 +70,7 @@ export const GroupList = () => {
 				isVisible={showAddModal}
 				handleClose={() => setShowAddModal(false)}
 			>
+				<Toast />
 				<Text style={{ color: colors.primary }}>Додайте Групу!</Text>
 				<AddInput
 					placeholder="Назва Групи"
