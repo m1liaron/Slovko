@@ -84,6 +84,9 @@ const ResultDetailsScreen = ({ route }) => {
       ));
   };
 
+  const title = new Date(result.title);
+  const isTitleNotDate = isNaN(title.getTime())
+
   return (
     <ThemeBackground>
       <View
@@ -98,9 +101,11 @@ const ResultDetailsScreen = ({ route }) => {
           }}
         >
           <BackButton />
-          <Text style={[styles.title, { color: colors.primary }]}>
-            {result.title}
-          </Text>
+          {isTitleNotDate && (
+            <Text style={[styles.title, { color: colors.primary }]}>
+              {result.title}
+            </Text>
+          )}
           <View
             style={[
               styles.wastedTimeContainer,
