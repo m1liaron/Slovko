@@ -54,8 +54,10 @@ const sharedGroupSlice = createSlice({
 				state.sharedGroups.push(action.payload);
 				state.filteredGroups.push(action.payload);
 			})
-			.addCase(saveSharedGroup.rejected, (state) => {
+			.addCase(saveSharedGroup.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
+				state.error = action.payload;
+				console.log(action)
 			})
 			// getSharedGroup
 			.addCase(getSharedGroup.pending, (state) => {

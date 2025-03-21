@@ -12,10 +12,14 @@ export const getAllSharedGroups = createAsyncThunk(
 
 export const saveSharedGroup = createAsyncThunk(
 	"sharedGroup/save",
-	async (data) => {
-		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.post("/sharedGroups", data);
-		return response.data;
+	async (data, thunkAPI) => {
+		try {
+			const axiosInstance = await createAuthorizedInstance();
+			const response = await axiosInstance.post("/sharedGroups", data);
+			return response.data;
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error.response.data.message);
+		}
 	},
 );
 

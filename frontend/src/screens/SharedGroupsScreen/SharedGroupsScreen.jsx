@@ -32,6 +32,7 @@ import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
 import CheckBox from 'expo-checkbox';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
+import Toast from 'react-native-toast-message';
 
 const SharedGroupsScreen = () => {
 	const { user } = useSelector(selectUser);
@@ -40,7 +41,7 @@ const SharedGroupsScreen = () => {
 	} = useAppTheme();
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const sharedGroups = useSelector(selectSharedGroup);
+	const { sharedGroups, error } = useSelector(state => state.sharedGroups);
 	const groups = useSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
@@ -95,7 +96,14 @@ const SharedGroupsScreen = () => {
 			title: sharedGroupTitle,
 			isAnonymous
 		};
-		dispatch(saveSharedGroup(sharedGroupData));
+			dispatch(saveSharedGroup(sharedGroupData));
+			if(error) {
+				Toast.show({
+					type: "error",
+					text1: "Failed🔴",
+					text2: error,
+				})
+			}
 	};
 
 	const renderItem = ({ item }) => (
@@ -244,6 +252,7 @@ const SharedGroupsScreen = () => {
 				isVisible={showAddModal}
 				handleClose={() => setShowModal(false)}
 			>
+				<Toast />
 				<AddInput
 					value={sharedGroupTitle}
 					onChangeText={setSharedGroupTitle}

@@ -14,7 +14,9 @@ const SharedGroup = sequelize.define(
 		title: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			unique: true,
+			unique: {
+				msg: "Shared group with this title already exists!",
+			},
 			validate: {
 				len: [1, 30],
 				notNull: {

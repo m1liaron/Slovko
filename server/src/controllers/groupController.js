@@ -80,12 +80,13 @@ const getGroup = async (req, res) => {
 
 const addGroup = async (req, res) => {
 	const data = req.body;
+	const userId = req.user;
 	try {
-		const existGroup = await Group.findOne({ where: data.title });
+		const existGroup = await Group.findOne({ where: data.title, userId });
 		if(existGroup) {
 			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Group already exists" });
 		}
-		const newGroup = await Group.create({ ...data, userId: req.user.id });
+		const newGroup = await Group.create({ ...data, userId });
 		return res.status(200).json(newGroup);
 	} catch (error) {
 		res
