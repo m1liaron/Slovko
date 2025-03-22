@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
+import ThemeText from '../../../common/components/ThemeText/ThemeText';
 
 const LearnCards = ({ onComplete, setFlashCards }) => {
 	const {
@@ -119,12 +120,19 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 						/>
 					) : null}
 				</View>
-				<Text
-					style={[styles.cardText, { color: colors.primary }]}
+				<ThemeText
+					style={styles.cardText}
 					selectable={false}
 				>
 					{card.word}
-				</Text>
+				</ThemeText>
+				{card.definition && (
+					<ThemeText
+						selectable={false}
+					>
+						{card.definition}
+					</ThemeText>
+				)}
 			</Animated.View>
 			<Animated.View
 				style={[

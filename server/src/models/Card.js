@@ -37,7 +37,6 @@ const Card = sequelize.define(
 				},
 			},
 		},
-
 		groupId: {
 			type: DataTypes.UUID,
 			allowNull: false,
@@ -58,6 +57,16 @@ const Card = sequelize.define(
 			type: DataTypes.ENUM("Learned", "To Learn", "Know"),
 			allowNull: false,
 			defaultValue: "To Learn",
+		},
+		definition: {
+			type: DataTypes.TEXT,
+			allowNull: false,
+			defaultValue: ""
+		},
+		example: {
+			type: DataTypes.TEXT,
+			allowNull: false,
+			defaultValue: ""
 		},
 		learnedAt: {
 			type: DataTypes.DATE, // Date when the card was learned

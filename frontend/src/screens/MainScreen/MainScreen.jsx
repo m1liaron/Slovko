@@ -23,6 +23,7 @@ import {
 } from "../../redux/cardReducer/cardSlice";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./MainScreen.styles";
+import axios from 'axios';
 
 const MainScreen = () => {
 	const dispatch = useDispatch();

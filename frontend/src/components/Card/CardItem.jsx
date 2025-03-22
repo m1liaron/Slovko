@@ -9,6 +9,7 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { updateCard } from "../../redux/cardReducer/cardSlice";
 import pickImage from "../../utils/pickImage";
 import DefaultModal from "../DefaultModal/DefaultModal";
+import ThemeText from '../../common/components/ThemeText/ThemeText';
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -123,11 +124,25 @@ const CardItem = ({ item, onRemove, groupId }) => {
 				</Text>
 			)}
 
+			{item.definition && (
+				<ThemeText style={{ flexDirection: "row", alignItems: "baseline", gap: 1 }}>
+					Визначення: {""}
+					<ThemeText style={{ fontWeight: "bold" }}>{item.definition}</ThemeText>
+				</ThemeText>
+			)}
+
+			{item.example && (
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<ThemeText>Приклад: </ThemeText>
+					<ThemeText style={{ fontWeight: "bold" }}>{item.example}</ThemeText>
+				</View>
+			)}
+
 			<View style={{ marginTop: 10 }}>
 				{item.image?.url ? (
 					<Image
 						source={{ uri: item.image.url.toString() }}
-						style={{ width: 200, height: 200, borderRadius: 10 }}
+						style={{ width: item.definition ? 100 : 200, height: item.definition ? 100 : 200, borderRadius: 10 }}
 					/>
 				) : null}
 			</View>
@@ -163,6 +178,7 @@ const CardItem = ({ item, onRemove, groupId }) => {
 
 const styles = StyleSheet.create({
 	cardContainer: {
+		maxWidth: 400,
 		backgroundColor: "#ffffff",
 		padding: 16,
 		borderRadius: 8,
