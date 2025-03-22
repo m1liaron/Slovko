@@ -5,6 +5,8 @@ const { Op } = require("sequelize");
 const { Group } = require("../models/models");
 const { StatusCodes } = require("http-status-codes");
 const getUnsplashApi = require("../api/unsplash");
+const dictionaryAPi = require("../api/dictionaryAPI");
+const axios = require('axios');
 
 const getRepeatedCards = async (req, res) => {
 	try {
@@ -189,6 +191,16 @@ const addCard = async (req, res) => {
 				.status(StatusCodes.BAD_REQUEST)
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
+
+		// dictionary api use
+		const dictionaryApiResponse = await axios.get(`${dictionaryAPi}${data.word}`);
+		let definition = "";
+		let example = "";
+		if(dictionaryApiResponse) {
+			definition = dictionaryApiResponse.data[0].meanings[2].definitions[0].definition
+			example = dictionaryApiResponse.data[0].meanings[2].definitions[0].example;
+		}
+
 		let imageUrl = imageUri;
 		if(!imageUri)  {
 			const unsplashResponse = await unsplash.search.getPhotos({
@@ -206,7 +218,7 @@ const addCard = async (req, res) => {
 			image = await Image.create({ url: imageUrl })
 		}
 
-		const newCard = await Card.create({ imageId: image?.id || null, ...data });
+		const newCard = await Card.create({ imageId: image?.id || null, ...data, definition, example });
 
 		const card = await Card.findOne({
 			where: { id: newCard.id },
