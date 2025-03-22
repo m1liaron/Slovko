@@ -56,7 +56,7 @@ const SharedGroupsScreen = () => {
 
 	useEffect(() => {
 		if(haveMoreGroups) {
-			dispatch(getAllSharedGroups());
+			dispatch(getAllSharedGroups(page));
 			setHaveMoreGroups(haveMoreSharedGroups);
 		}
 	}, [dispatch]);

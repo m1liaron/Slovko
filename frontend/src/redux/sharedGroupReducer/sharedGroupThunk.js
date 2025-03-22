@@ -3,9 +3,9 @@ import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
 export const getAllSharedGroups = createAsyncThunk(
 	"sharedGroup/getAll",
-	async () => {
+	async (page) => {
 		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.get("/sharedGroups");
+		const response = await axiosInstance.get(`/sharedGroups?page=${page}`);
 		return response.data;
 	},
 );
