@@ -26,7 +26,6 @@ import {
 	removeSharedGroup,
 	resetSharedGroups,
 	saveSharedGroup,
-	selectSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
@@ -41,7 +40,7 @@ const SharedGroupsScreen = () => {
 	} = useAppTheme();
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const { sharedGroups, error } = useSelector(state => state.sharedGroups);
+	const { sharedGroups, haveMoreSharedGroups, error } = useSelector(state => state.sharedGroups);
 	const groups = useSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
@@ -52,9 +51,14 @@ const SharedGroupsScreen = () => {
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [filterValue, setFilterValue] = useState("");
 	const [isAnonymous, setIsAnonymous] = useState(false);
+	const [page, setPage] = useState(1);
+	const [haveMoreGroups, setHaveMoreGroups] = useState(true);
 
 	useEffect(() => {
-		dispatch(getAllSharedGroups());
+		if(haveMoreGroups) {
+			dispatch(getAllSharedGroups());
+			setHaveMoreGroups(haveMoreSharedGroups);
+		}
 	}, [dispatch]);
 
 	const formatTime = (createdAt) => {
@@ -105,6 +109,28 @@ const SharedGroupsScreen = () => {
 				})
 			}
 	};
+
+	// Pagination
+
+	const isBottomOfPage = () => {
+		const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+		const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+		const clientHeight = (document.documentElement && document.documentElement.clientHeight) || document.body.clientHeight;
+		return scrollTop + clientHeight >= scrollHeight - 50;
+	}
+
+	const ifBottomPageAndMorePage = () => {
+		if(isBottomOfPage() && haveMoreSharedGroups) {
+			setPage(prevPage => prevPage + 1);
+		}
+	}
+
+	useEffect(() => {
+		window.addEventListener("scroll", ifBottomPageAndMorePage);
+		return () => {
+			window.removeEventListener("scroll", ifBottomPageAndMorePage);
+		}
+	}, [haveMoreGroups])
 
 	const renderItem = ({ item }) => (
 		<View

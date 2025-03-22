@@ -29,7 +29,7 @@ const createSharedGroup = async (req, res) => {
 			],
 		});
 		if (!group) {
-			res.status(404).json({ error: true, message: "Group is not defined" });
+			return res.status(404).json({ error: true, message: "Group is not defined" });
 		}
 		const sharedGroup = await SharedGroup.create({
 			title: title ? title : group.title,
@@ -69,6 +69,11 @@ const createSharedGroup = async (req, res) => {
 };
 
 const getAllSharedGroup = async (req, res) => {
+	const { page = 1, limit = 7 } = req.query;
+
+	const pageNumber = Number.parseInt(page, 10);
+	const itemsPerPage = Number.parseInt(limit, 10);
+
 	try {
 		const allSharedGroups = await SharedGroup.findAll({
 			include: {
@@ -78,12 +83,16 @@ const getAllSharedGroup = async (req, res) => {
 			},
 		});
 
-		res.status(200).json(allSharedGroups);
+		const offset = (pageNumber - 1) * itemsPerPage;
+		const paginationGroups = allSharedGroups.slice(offset, offset + itemsPerPage);
+		const haveMoreSharedGroups = offset + itemsPerPage < allSharedGroups.length;
+
+		res.status(200).json({ sharedGroups: paginationGroups, haveMoreSharedGroups });
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 

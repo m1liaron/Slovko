@@ -178,6 +178,7 @@ const addCard = async (req, res) => {
 	try {
 		const findCard = await Card.findOne({
 			where: {
+				groupId: req.body.groupId,
 				word: {
 					[Op.iLike]: data.word,
 				},
@@ -205,7 +206,7 @@ const addCard = async (req, res) => {
 			image = await Image.create({ url: imageUrl })
 		}
 
-		const newCard = await Card.create({ imageId: image.id || "", ...data });
+		const newCard = await Card.create({ imageId: image?.id || null, ...data });
 
 		const card = await Card.findOne({
 			where: { id: newCard.id },
@@ -216,7 +217,7 @@ const addCard = async (req, res) => {
 	} catch (error) {
 		res
 			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+			.send({ error: true, message: error.message || "Error creating card" });
 	}
 };
 

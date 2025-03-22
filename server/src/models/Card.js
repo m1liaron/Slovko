@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../db/sequelize");
-const { v4: uuidv4 } = require("uuid");
 const Group = require("./Group");
 const Image = require("./Image");
 
@@ -9,7 +8,7 @@ const Card = sequelize.define(
 	{
 		id: {
 			type: DataTypes.UUID,
-			defaultValue: uuidv4,
+			defaultValue: DataTypes.UUIDV4,
 			primaryKey: true,
 		},
 		word: {
