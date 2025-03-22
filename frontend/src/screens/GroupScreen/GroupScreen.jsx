@@ -51,7 +51,7 @@ const GroupScreen = ({ route }) => {
 				color: "#32C74D",
 			},
 			{
-				title: "Вивченні",
+				title: "Повторенні",
 				status: "Learned",
 				amount: group.learnedCardsAmount || 0,
 				color: "#62CBE9",

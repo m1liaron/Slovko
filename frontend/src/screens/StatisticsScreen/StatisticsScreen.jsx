@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, View } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 import RNPickerSelect from "react-native-picker-select";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
