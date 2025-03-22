@@ -80,7 +80,6 @@ const getUser = async (req, res) => {
 
 		if (user.lastReviewAt && user.nextReviewAt) {
 			// If user is existed, check his streak
-			const isUserFrozen = user.frozen;
 			const lastReviewDate = user.lastReviewAt
 				? new Date(user.lastReviewAt)
 				: null;
@@ -89,17 +88,27 @@ const getUser = async (req, res) => {
 
 			const timeGone =
 				!lastReviewDate || lastReviewDate.getTime() !== today.getTime();
+			const goneTwoOrMoreDays = new Date(lastReviewDate).getDate() <= (new Date().getDate() - 2)
 
-			if (timeGone && user.frozen) {
+
+			if (timeGone && !user.frozen || goneTwoOrMoreDays) {
+					user.streak = 1;
+					await Streak.create({
+						date: new Date(),
+						frozen: false,
+						userId: userId,
+					});
+			} else if (timeGone && user.frozen) {
+				const yesterday = new Date();
+				yesterday.setDate(yesterday.getDate() - 1);
+
 				user.frozen = false;
-			} else if (timeGone && !user.frozen) {
-				user.streak = 1;
+				await Streak.create({
+					date: yesterday,
+					frozen: true,
+					userId: userId,
+				});
 			}
-			await Streak.create({
-				date: new Date(),
-				frozen: isUserFrozen,
-				userId: userId,
-			});
 
 			user.lastReviewAt = today;
 			await user.save();

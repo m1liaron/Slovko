@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { DataStatus } from "../../common/enums/app/app";
 import {
-	getCards,
 	addCard,
+	getCards,
+	getRepeatedCards,
+	getRepeatedCardsFromIds,
 	removeCard,
 	updateCard,
 	updateCardsAfterLearn,
-	getRepeatedCards,
-	getRepeatedCardsFromIds,
 } from "./cardThunk";
-import { DataStatus } from "../../common/enums/app/app";
 
 const cardSlice = createSlice({
 	name: "cards",
@@ -33,7 +33,7 @@ const cardSlice = createSlice({
 				if (action.payload === "asc") {
 					return dateA - dateB; // Ascending order
 				}
-					return dateB - dateA;
+				return dateB - dateA;
 			});
 		},
 		filterCardsByStatus: (state, action) => {

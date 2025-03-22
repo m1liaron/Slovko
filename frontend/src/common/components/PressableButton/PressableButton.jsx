@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
 import styles from "./PressableButton.styles";
 
 /**
@@ -13,7 +13,11 @@ import styles from "./PressableButton.styles";
 
 const PressableButton = ({ text, onPress, buttonStyle, disabled }) => {
 	return (
-		<Pressable onPress={onPress} style={[styles.button, { ...buttonStyle }]} disabled={disabled}>
+		<Pressable
+			onPress={onPress}
+			style={[styles.button, { ...buttonStyle }]}
+			disabled={disabled}
+		>
 			<Text style={styles.buttonText}>{text}</Text>
 		</Pressable>
 	);

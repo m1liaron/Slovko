@@ -1,68 +1,135 @@
-import React, { useEffect, useState } from "react";
-import styles from "./LearnScreen.styles";
-
-import { Switch } from "react-native-gesture-handler";
-import { View, Text, Pressable, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Platform, Pressable, Switch, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import LearnCards from "../../components/Learn/LearnCards/LearnCards";
-import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
-import { useDispatch, useSelector } from "react-redux";
+import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
+import Loading from "../../components/Loading";
+import ExitModal from "../../components/Modals/ExitModal/ExitModal";
+import styles from "./LearnScreen.styles";
+
+import { AppPath, DataStatus } from "../../common/enums/app/app";
+import LearnCheck from "../../components/Learn/LearnCheck/LearnCheck";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	getRepeatedCards,
+	selectCard,
 	updateCardsAfterLearn,
 } from "../../redux/cardReducer/cardSlice";
-import { AppPath, DataStatus } from "../../common/enums/app/app";
-import ExitModal from "../../components/Modals/ExitModal/ExitModal";
-import { saveResults } from "../../redux/resultReducer/resultSlice";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
-import { useNavigation } from "@react-navigation/native";
-import Loading from "../../components/Loading";
+import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+
+/* Custom hook to warn before unload on web */
+const useBeforeUnload = (message) => {
+	useEffect(() => {
+		if (Platform.OS !== "web") return;
+		const handleBeforeUnload = (event) => {
+			event.preventDefault();
+			event.returnValue = message;
+			return message;
+		};
+		window.addEventListener("beforeunload", handleBeforeUnload);
+		return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+	}, [message]);
+};
+
+/* Helper function to update or add a card to the results state */
+const updateOrAddCard = (cardsArray, card, isCorrect) => {
+	const existingCardIndex = cardsArray.findIndex(
+		(item) => item.wordId === card.id,
+	);
+	if (existingCardIndex !== -1) {
+		if (isCorrect) return cardsArray;
+		// Update mistakesAmount if the card already exists
+		return cardsArray.map((item, index) =>
+			index === existingCardIndex
+				? { ...item, mistakesAmount: item.mistakesAmount + 1 }
+				: item,
+		);
+	}
+	// Add new card result
+	return [
+		...cardsArray,
+		{
+			wordId: card.id,
+			word: card.word,
+			translateWord: card.translateWord,
+			mistakesAmount: isCorrect ? 0 : 1,
+		},
+	];
+};
 
 const LearnScreen = ({ route }) => {
 	const { theme } = useAppTheme();
 	const { groupId } = route.params || {};
 	const groups = useSelector(selectGroup);
+	const { repeatedCards, cards, status } = useSelector((state) => state.cards);
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const { repeatedCards, cards, status } = useSelector((state) => state.cards);
 
+	// Lesson configuration and progress state
 	const [isQuizEnabled, setIsQuizEnabled] = useState(true);
 	const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
+	const [isCheckModeEnabled, setIsCheckModeEnabled] = useState(true);
 	const [showExitModal, setShowExitModal] = useState(false);
 	const [showSettingsModal, setShowSettingsModal] = useState(false);
 	const [currentSection, setCurrentSection] = useState("cards");
 	const [finishedSections, setFinishedSections] = useState([]);
 	const [isLessonOver, setIsLessonOver] = useState(false);
 
+	// Card result states for each mode
 	const [flashCards, setFlashCards] = useState([]);
 	const [quizCards, setQuizCards] = useState([]);
 	const [guessWordCards, setGuessWordCards] = useState([]);
+	const [checkCards, setCheckCards] = useState([]);
 	const [startLearnDate, setStartLearnDate] = useState(null);
 	const [elapsedTime, setElapsedTime] = useState("");
 
-	const projectName = groups?.find((group) => group.id === groupId)?.title;
+	// Memoize computed values
+	const projectName = useMemo(
+		() => groups?.find((group) => group.id === groupId)?.title,
+		[groups, groupId],
+	);
 
+	// Set lesson start time
 	useEffect(() => {
 		setStartLearnDate(new Date());
 	}, []);
 
-	const toggleSwitch = (changeFunction) =>
-		changeFunction((previousState) => !previousState);
+	// Warn before leaving on web
+	useBeforeUnload(
+		"Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.",
+	);
 
-	const handleNextSection = () => {
+	/* Toggle helper */
+	const toggleSwitch = useCallback(
+		(changeFunction) => changeFunction((prev) => !prev),
+		[],
+	);
+
+	/* Determine next section */
+	const handleNextSection = useCallback(() => {
 		const transitions = {
-			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
+			cards: isQuizEnabled
+				? "quiz"
+				: isGuessWordEnabled
+					? "word"
+					: isCheckModeEnabled
+						? "check"
+						: "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
-			word: finishedSections.includes("quiz") ? "finish" : "quiz",
+			word: isCheckModeEnabled ? "check" : "finish",
+			check: "finish",
 		};
+
 		const nextSection = transitions[currentSection] || "finish";
 		if (nextSection === "finish") {
 			finishLesson();
@@ -70,114 +137,110 @@ const LearnScreen = ({ route }) => {
 			setFinishedSections((prev) => [...prev, currentSection]);
 			setCurrentSection(nextSection);
 		}
-	};
+	}, [
+		currentSection,
+		isQuizEnabled,
+		isGuessWordEnabled,
+		isCheckModeEnabled,
+		finishedSections,
+	]);
 
+	/* Update results based on current section */
 	const handleSetData = (card, isCorrect) => {
-		const newCard = {
-			wordId: card.id,
-			word: card.word,
-			translateWord: card.translateWord,
-			mistakesAmount: 0,
-		};
-		if (!isCorrect) {
-			newCard.mistakesAmount = 1;
-		}
-
-		const updateOrAddCard = (cards, setCards) => {
-			setCards((prev) => {
-				const existingCardIndex = prev.findIndex(
-					(item) => item.wordId === card.id,
-				);
-
-				if (existingCardIndex !== -1 && isCorrect) {
-					return prev;
-				}
-				if (existingCardIndex !== -1) {
-					// If card exists, increment mistakesAmount
-					const updatedCards = [...prev];
-					updatedCards[existingCardIndex] = {
-						...updatedCards[existingCardIndex],
-						mistakesAmount: updatedCards[existingCardIndex].mistakesAmount + 1,
-					};
-					return updatedCards;
-				}
-					return [...prev, newCard];
-			});
-		};
-
-		if (currentSection === "cards") {
-			updateOrAddCard(flashCards, setFlashCards);
-		} else if (currentSection === "quiz") {
-			updateOrAddCard(quizCards, setQuizCards);
-		} else if (currentSection === "word") {
-			updateOrAddCard(guessWordCards, setGuessWordCards);
+		switch (currentSection) {
+			case "cards":
+				setFlashCards((prev) => updateOrAddCard(prev, card, isCorrect));
+				break;
+			case "quiz":
+				setQuizCards((prev) => updateOrAddCard(prev, card, isCorrect));
+				break;
+			case "word":
+				setGuessWordCards((prev) => updateOrAddCard(prev, card, isCorrect));
+				break;
+			case "check":
+				setCheckCards((prev) => updateOrAddCard(prev, card, isCorrect));
+				break;
+			default:
+				break;
 		}
 	};
 
+	/* Save results and update user data */
 	const handleSaveResults = () => {
 		const resultData = {
-			title: projectName || new Date(),
+			title: projectName || new Date().toString(),
 			flashCards,
 			quiz: quizCards,
 			guessWord: guessWordCards,
+			check: checkCards,
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
 		dispatch(saveResults(resultData));
 	};
 
+	/* Finish lesson: update state, dispatch actions and save results */
 	const finishLesson = () => {
 		setIsQuizEnabled(true);
 		setIsGuessWordEnabled(true);
+		setIsCheckModeEnabled(true);
 		setShowSettingsModal(false);
 		setFinishedSections([]);
-		setCurrentSection("cards");
+		setCurrentSection("finish");
 		setIsLessonOver(true);
 
 		const endLearnDate = new Date();
-		const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
+		const totalLearnedTime = endLearnDate - startLearnDate;
 		setElapsedTime(formatTime(totalLearnedTime));
 
-		if (groupId) {
-			dispatch(updateCardsAfterLearn({ groupId }));
-		} else {
-			const repeatedCardsIds = cards?.map((card) => card.id);
-			dispatch(updateCardsAfterLearn(repeatedCardsIds));
-		}
+		const repeatedCardsIds = cards?.map((card) => card.id);
+		dispatch(updateCardsAfterLearn(repeatedCardsIds));
 		dispatch(updateUserStreak());
 		handleSaveResults();
+
 		if (repeatedCards.length) {
 			dispatch(getRepeatedCards());
 		}
 	};
 
-	const leaveStudy = () => {
+	const leaveStudy = useCallback(() => {
 		navigation.navigate(AppPath.Main);
-	};
+	}, [navigation]);
 
-	const switchSection = (changeState, sectionName) => {
-		toggleSwitch(changeState);
+	/* Switch section helper: toggles the mode and if the current section matches, proceed */
+	const switchSection = useCallback(
+		(changeState, sectionName) => {
+			toggleSwitch(changeState);
+			if (currentSection === sectionName) {
+				handleNextSection();
+			}
+		},
+		[currentSection, handleNextSection, toggleSwitch],
+	);
 
-		if (currentSection === sectionName) {
-			handleNextSection();
-		}
-	};
-
-	const generateSectionContent = () => {
+	/* Generate settings modal content */
+	const generateSectionContent = useCallback(() => {
 		const sections = [
 			{
-				text: "Quiz mode",
+				text: "Вікторина режим",
 				iconName: "quiz",
 				state: isQuizEnabled,
 				changeState: setIsQuizEnabled,
 				sectionName: "quiz",
 			},
 			{
-				text: "Guess Word mode",
+				text: "Вгадай слова режим",
 				iconName: "wordpress",
 				state: isGuessWordEnabled,
 				changeState: setIsGuessWordEnabled,
 				sectionName: "word",
+			},
+			{
+				text: "Обери вірний режим",
+				iconName: "checklist",
+				state: isCheckModeEnabled,
+				changeState: setIsCheckModeEnabled,
+				sectionName: "check",
 			},
 		];
 
@@ -202,43 +265,30 @@ const LearnScreen = ({ route }) => {
 				</View>
 			),
 		);
-	};
+	}, [isQuizEnabled, isGuessWordEnabled, switchSection, theme.colors]);
 
-	if (Platform.OS === "web") {
-		useEffect(() => {
-			const handleBeforeUnload = (event) => {
-				event.preventDefault();
-
-				event.returnValue =
-					"Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.";
-				return "Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.";
-			};
-
-			window.addEventListener("beforeunload", handleBeforeUnload);
-
-			return () => {
-				window.removeEventListener("beforeunload", handleBeforeUnload);
-			};
-		}, []);
-	}
-
-	const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
-	const correctAnswersAmount = resultsData.filter(
-		(item) => item.mistakesAmount === 0,
-	).length;
-	const accuracy = Math.floor(
-		(correctAnswersAmount / resultsData.length) * 100,
+	/* Compute results */
+	const resultsData = useMemo(
+		() => [...flashCards, ...quizCards, ...guessWordCards],
+		[flashCards, quizCards, guessWordCards],
+	);
+	const correctAnswersAmount = useMemo(
+		() => resultsData.filter((item) => item.mistakesAmount === 0).length,
+		[resultsData],
+	);
+	const accuracy = useMemo(
+		() => Math.floor((correctAnswersAmount / (resultsData.length || 1)) * 100),
+		[correctAnswersAmount, resultsData],
 	);
 
 	return (
 		<ThemeBackground>
-			<View style={{ padding: 20 }}>
+			<View>
 				{!isLessonOver ? (
 					<View style={{ justifyContent: "center", paddingHorizontal: 20 }}>
 						<Pressable onPress={() => setShowExitModal(true)}>
 							<Entypo name="cross" size={35} color={theme.colors.iconColor} />
 						</Pressable>
-
 						{status === DataStatus.PENDING ? (
 							<Loading />
 						) : (
@@ -262,6 +312,17 @@ const LearnScreen = ({ route }) => {
 									/>
 								)}
 
+								{currentSection === "check" && isCheckModeEnabled && (
+									<LearnCheck
+										onComplete={finishLesson}
+										handleSetDate={(card, isCorrect) =>
+											setCheckCards((prev) =>
+												updateOrAddCard(prev, card, isCorrect),
+											)
+										}
+									/>
+								)}
+
 								<Pressable
 									onPress={() => toggleSwitch(setShowSettingsModal)}
 									style={{ alignSelf: "flex-start" }}
@@ -274,13 +335,11 @@ const LearnScreen = ({ route }) => {
 								</Pressable>
 							</View>
 						)}
-
 						<ExitModal
 							modalVisible={showExitModal}
 							handleClose={() => setShowExitModal(false)}
 							text="Вийти з навчання та втратити прогрес?"
 						/>
-
 						<DefaultModal
 							isVisible={showSettingsModal}
 							handleClose={() => toggleSwitch(setShowSettingsModal)}
@@ -314,7 +373,6 @@ const LearnScreen = ({ route }) => {
 							>
 								Молодець! Гарно позаймався/лась
 							</Text>
-
 							<View style={{ marginBottom: 30 }}>
 								<View
 									style={[
@@ -326,7 +384,6 @@ const LearnScreen = ({ route }) => {
 										{elapsedTime}
 									</Text>
 								</View>
-
 								<View
 									style={[
 										styles.resultItemContainer,

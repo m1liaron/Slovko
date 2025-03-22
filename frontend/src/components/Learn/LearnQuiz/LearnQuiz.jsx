@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, Pressable } from "react-native";
-import styles from "./LearnQuiz.styles";
 import { Audio } from "expo-av";
+import React, { useEffect, useState } from "react";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
+import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
+import styles from "./LearnQuiz.styles";
 
 const LearnQuiz = ({ onComplete, handleSetData }) => {
 	const cards = useSelector(selectCard);

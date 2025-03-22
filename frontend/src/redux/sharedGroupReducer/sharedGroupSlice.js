@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-	getAllSharedGroups,
-	saveSharedGroup,
-	getSharedGroup,
-	copySharedGroup,
-	removeSharedGroup,
-} from "./sharedGroupThunk";
 import { DataStatus } from "../../common/enums/app/DataStatus";
+import {
+	copySharedGroup,
+	getAllSharedGroups,
+	getSharedGroup,
+	removeSharedGroup,
+	saveSharedGroup,
+} from "./sharedGroupThunk";
 
 const sharedGroupSlice = createSlice({
 	name: "sharedGroup",
 	initialState: {
 		sharedGroups: [],
+		haveMoreGroups: [],
 		filteredGroups: [],
 		sharedGroup: {},
 		status: DataStatus.IDLE,
@@ -39,8 +40,9 @@ const sharedGroupSlice = createSlice({
 			})
 			.addCase(getAllSharedGroups.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.sharedGroups = action.payload;
-				state.filteredGroups = action.payload;
+				state.sharedGroups = action.payload.sharedGroups;
+				state.filteredGroups = action.payload.sharedGroups;
+				state.haveMoreGroups = action.payload.haveMoreSharedGroups;
 			})
 			.addCase(getAllSharedGroups.rejected, (state) => {
 				state.status = DataStatus.ERROR;
@@ -54,8 +56,10 @@ const sharedGroupSlice = createSlice({
 				state.sharedGroups.push(action.payload);
 				state.filteredGroups.push(action.payload);
 			})
-			.addCase(saveSharedGroup.rejected, (state) => {
+			.addCase(saveSharedGroup.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
+				state.error = action.payload;
+				console.log(action)
 			})
 			// getSharedGroup
 			.addCase(getSharedGroup.pending, (state) => {

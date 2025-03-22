@@ -7,10 +7,14 @@ export const getAllGroups = createAsyncThunk("group/getAll", async (data) => {
 	return response.data;
 });
 
-export const addGroup = createAsyncThunk("group/add", async (data) => {
-	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.post("/groups", data);
-	return response.data;
+export const addGroup = createAsyncThunk("group/add", async (data, thunkAPI) => {
+	try {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post("/groups", data);
+		return response.data;
+	} catch (error) {
+		return thunkAPI.rejectWithValue(error.response.data.message);
+	}
 });
 
 export const getGroup = createAsyncThunk("group/get", async (id) => {

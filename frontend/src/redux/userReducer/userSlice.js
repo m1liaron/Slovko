@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { DataStatus } from "../../common/enums/app/app";
 import {
+	buyFreeze,
+	getUser,
+	getUserStreakDates,
 	login,
 	register,
-	getUser,
 	updateUser,
 	updateUserStreak,
-	buyFreeze,
-	getUserStreakDates,
 } from "./userThunk";
-import { DataStatus } from "../../common/enums/app/app";
 
 const initialState = {
 	user: {},

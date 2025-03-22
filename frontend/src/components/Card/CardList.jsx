@@ -1,14 +1,27 @@
+import { Entypo } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
+import { useNavigation } from "@react-navigation/native";
+import CheckBox from "expo-checkbox";
 import React, { memo, useEffect, useState } from "react";
 import {
-	View,
-	Text,
-	StyleSheet,
 	FlatList,
 	Image,
 	Platform,
 	Pressable,
+	StyleSheet,
+	Text,
+	View,
 } from "react-native";
-import CardItem from "./CardItem";
+import Fontisto from "react-native-vector-icons/Fontisto";
+import { useDispatch, useSelector } from "react-redux";
+import unsplash from "../../api/unsplash";
+import noCardsImage from "../../assets/images/no-cards.png";
+import AddButton from "../../common/components/AddButton/AddButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath, DataStatus } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	addCard,
 	getCards,
@@ -16,21 +29,11 @@ import {
 	removeCard,
 	resetFilter,
 } from "../../redux/cardReducer/cardSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import { AppPath, DataStatus } from "../../common/enums/app/app";
-import noCardsImage from "../../assets/images/no-cards.png";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import AddInput from "../../common/components/AddInput/AddInput";
-import AddButton from "../../common/components/AddButton/AddButton";
-import DefaultModal from "../DefaultModal/DefaultModal";
+import convertImageToBase64 from "../../utils/convertImageToBase64";
 import pickImage from "../../utils/pickImage";
+import DefaultModal from "../DefaultModal/DefaultModal";
 import Loading from "../Loading";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import Fontisto from "react-native-vector-icons/Fontisto";
-import Slider from "@react-native-community/slider";
-import { Entypo } from "@expo/vector-icons";
-import CheckBox from '@react-native-community/checkbox';
+import CardItem from "./CardItem";
 
 const MemoCardItem = memo(CardItem);
 
@@ -53,6 +56,8 @@ const CardList = ({ groupId }) => {
 	const [valueWords, setValueWords] = useState({});
 	const [value, setValue] = useState("");
 	const [answerWord, setAnswerWord] = useState("");
+	const [unsplashImages, setUnsplashImages] = useState([]);
+	const [chosenImage, setChosenImage] = useState(null);
 	const [isValidateWord, setIsValidateWord] = useState(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [imageUri, setImageUri] = useState("");
@@ -100,22 +105,6 @@ const CardList = ({ groupId }) => {
 		}
 	}, [dispatch, groupId, group?.id]);
 
-	const convertImageToBase64 = async (uri) => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const reader = new FileReader();
-
-		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				const base64data = reader.result.split(",")[1]; // Get the Base64 part
-				resolve(base64data);
-			};
-			reader.onerror = () =>
-				reject(new Error("Failed to convert image to base64"));
-			reader.readAsDataURL(blob);
-		});
-	};
-
 	const onSaveCard = async () => {
 		let finalImageUri = imageUri;
 
@@ -128,8 +117,7 @@ const CardList = ({ groupId }) => {
 			}
 		} else if (finalImageUri) {
 			try {
-				const base64Image = await convertImageToBase64(finalImageUri);
-				finalImageUri = base64Image;
+				finalImageUri = await convertImageToBase64(finalImageUri);
 			} catch (error) {
 				console.error("Error converting image to base64:", error);
 				return;
@@ -137,8 +125,10 @@ const CardList = ({ groupId }) => {
 		}
 
 		function validateWord(word) {
-			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
-			const formattedWord = cleanedWord
+			const cleanedWord = isValidateWord
+				? word.replace(/[^A-Za-z0-9\s]/g, "")
+				: word;
+			return cleanedWord
 				.split(" ")
 				.filter(Boolean) // Remove any extra spaces
 				.map(
@@ -146,14 +136,12 @@ const CardList = ({ groupId }) => {
 						subWord.charAt(0).toUpperCase() + subWord.slice(1).toLowerCase(),
 				)
 				.join(" ");
-
-			return formattedWord;
 		}
 
-		const validatedAnswer = isValidateWord ? validateWord(answerWord) : answerWord;
+		const validatedValue = validateWord(value);
 
 		if (Object.keys(valueWords).length > 0) {
-			for(const [key, value] of Object.entries(valueWords)) {
+			for (const [key, value] of Object.entries(valueWords)) {
 				dispatch(
 					addCard({
 						word: validateWord(key),
@@ -170,9 +158,9 @@ const CardList = ({ groupId }) => {
 
 		if (value && answerWord) {
 			const cardData = {
-				word: validateWord(value),
-				translateWord: validatedAnswer,
-				imageUri: finalImageUri || "",
+				word: validatedValue,
+				translateWord: answerWord,
+				imageUri: imageUri.includes("http") ? imageUri : finalImageUri || "",
 				groupId,
 			};
 
@@ -180,6 +168,7 @@ const CardList = ({ groupId }) => {
 			setValue("");
 			setAnswerWord("");
 			setImageUri("");
+			setChosenImage(null);
 		}
 	};
 
@@ -213,6 +202,26 @@ const CardList = ({ groupId }) => {
 		navigateTo(AppPath.Learn);
 	};
 
+	async function fetchPhotos() {
+		const result = await unsplash.search.getPhotos({
+			query: value,
+			perPage: 4,
+		});
+
+		if (result.response && result.response.results) {
+			// Extract a suitable image URL from each photo object
+			const photoUrls = result.response.results.map(
+				(photo) => photo.urls.small,
+			);
+			setUnsplashImages(photoUrls);
+		}
+	}
+
+	const setChosenPhoto = (image, index) => {
+		setImageUri(image);
+		setChosenImage(index);
+	};
+
 	return (
 		<View style={styles.container}>
 			{isLoading && <Loading />}
@@ -232,6 +241,7 @@ const CardList = ({ groupId }) => {
 							/>
 						)}
 						horizontal={true}
+						indicatorStyle="white"
 						keyExtractor={(item) => item.id}
 						style={styles.listContainer}
 					/>
@@ -240,7 +250,6 @@ const CardList = ({ groupId }) => {
 
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
-					<PressableButton onPress={navigateToLearn} text="Вчитися" />
 					<View style={{ flexDirection: "row", justifyContent: "center" }}>
 						<Slider
 							style={{ width: 200, height: 40 }}
@@ -250,6 +259,7 @@ const CardList = ({ groupId }) => {
 							onValueChange={setWordsRangeNumber}
 							minimumTrackTintColor="#FFFFFF"
 							maximumTrackTintColor="#000000"
+							thumbTintColor="#0033A0"
 						/>
 						<Text style={{ color: colors.primary }}>
 							{Math.floor(wordsRangeNumber)}
@@ -269,6 +279,7 @@ const CardList = ({ groupId }) => {
 							</Pressable>
 						)}
 					</View>
+					<PressableButton onPress={navigateToLearn} text="Вчитися" />
 				</View>
 			)}
 			<AddButton onPress={() => setShowAddModal(true)} />
@@ -341,14 +352,48 @@ const CardList = ({ groupId }) => {
 								onPress={() => pickImage(imageUri, setImageUri)}
 							/>
 							{imageUri !== "" && (
-								<Image source={{ uri: imageUri }} style={styles.image} />
+								<View>
+									<Image source={{ uri: imageUri }} style={styles.image} />
+									<PressableButton
+										onPress={() => setImageUri("")}
+										text="Remove image"
+									/>
+								</View>
 							)}
+
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									flexWrap: "wrap",
+									gap: 5,
+								}}
+							>
+								{unsplashImages.length > 0 &&
+									unsplashImages.map((image, index) => (
+										<Pressable
+											style={{
+												borderWidth: 4,
+												borderColor:
+													chosenImage === index ? "#679bd7" : colors.primary,
+											}}
+											onPress={() => setChosenPhoto(image, index)}
+										>
+											<Image
+												key={index}
+												source={{ uri: image }}
+												style={styles.image}
+											/>
+										</Pressable>
+									))}
+							</View>
 
 							<AddInput
 								value={value}
 								onChangeText={setValue}
 								style={styles.input}
 								placeholder="Слово..."
+								onFocus={fetchPhotos}
 							/>
 
 							<AddInput
@@ -357,7 +402,13 @@ const CardList = ({ groupId }) => {
 								style={styles.input}
 								placeholder="Відповідь..."
 							/>
-							<CheckBox value={isValidateWord} onValueChange={setIsValidateWord} />
+							<View style={{ flexDirection: "row" }}>
+								<ThemeText>Валідація</ThemeText>
+								<CheckBox
+									value={isValidateWord}
+									onValueChange={setIsValidateWord}
+								/>
+							</View>
 						</View>
 					)}
 

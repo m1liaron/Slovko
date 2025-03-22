@@ -1,8 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
-const url = "http://192.168.31.196:3000";
+const url = process.env.API_URL || "http://localhost:3000";
 
 export const login = createAsyncThunk("user/login", async (data) => {
 	const response = await axios.post(`${url}/users/login`, data);

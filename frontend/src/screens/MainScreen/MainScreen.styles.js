@@ -31,10 +31,10 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	repeatButton: {
-		backgroundColor: "#6762FF",
+		backgroundColor: "#0854a7",
 		padding: 20,
-		marginHorizontal: 40,
 		borderRadius: 20,
+		alignSelf: "center",
 	},
 	item: {
 		width: "100%",

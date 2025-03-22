@@ -1,23 +1,23 @@
-import CardList from "../../components/Card/CardList";
-import { SafeAreaView } from "react-native-safe-area-context";
-import BackButton from "../../components/BackButton/BackButton";
+import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { DataStatus } from "../../common/enums/app/app";
+import BackButton from "../../components/BackButton/BackButton";
+import CardList from "../../components/Card/CardList";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	filterCardsByStatus,
 	resetFilter,
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import React, { useEffect, useMemo, useState } from "react";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
-import { DataStatus } from "../../common/enums/app/app";
-import { useNavigation } from "@react-navigation/native";
-import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
-import DefaultModal from "../../components/DefaultModal/DefaultModal";
-import AddInput from "../../common/components/AddInput/AddInput";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const GroupScreen = ({ route }) => {
 	const {
@@ -51,7 +51,7 @@ const GroupScreen = ({ route }) => {
 				color: "#32C74D",
 			},
 			{
-				title: "Вивченні",
+				title: "Повторенні",
 				status: "Learned",
 				amount: group.learnedCardsAmount || 0,
 				color: "#62CBE9",
@@ -75,12 +75,12 @@ const GroupScreen = ({ route }) => {
 					borderWidth: 2,
 					borderColor: color,
 					marginHorizontal: 10,
+					alignItems: "center",
 				}}
 				onPress={() => dispatch(filterCardsByStatus({ status }))}
 			>
-				<Text style={{ color, fontWeight: "bold" }}>
-					{amount} {title}
-				</Text>
+				<Text style={{ color, fontWeight: "bold" }}>{amount}</Text>
+				<Text style={{ color, fontWeight: "bold" }}>{title}</Text>
 			</Pressable>
 		));
 	};

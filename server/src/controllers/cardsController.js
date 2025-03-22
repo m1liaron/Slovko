@@ -4,6 +4,7 @@ const calculateNextReviewDate = require("../helpers/calculateNextReviewDate");
 const { Op } = require("sequelize");
 const { Group } = require("../models/models");
 const { StatusCodes } = require("http-status-codes");
+const getUnsplashApi = require("../api/unsplash");
 
 const getRepeatedCards = async (req, res) => {
 	try {
@@ -120,12 +121,9 @@ const getAllStatusCards = async (req, res) => {
 
 const updateCardsAfterReview = async (req, res) => {
 	try {
-		const { groupId } = req.params;
 		const cardsIds = req.body;
 		let cardsToUpdate;
-		if (groupId) {
-			cardsToUpdate = await Card.findAll({ where: { groupId } });
-		} else if (Array.isArray(cardsIds) && cardsIds.length > 0) {
+		if (Array.isArray(cardsIds) && cardsIds.length > 0) {
 			// Fetch cards by specific IDs
 			cardsToUpdate = await Card.findAll({
 				where: { id: { [Op.in]: cardsIds } },
@@ -134,7 +132,7 @@ const updateCardsAfterReview = async (req, res) => {
 			return res
 				.status(400)
 				.send({
-					error: "Invalid request. Provide groupId or an array of card IDs.",
+					error: "Invalid request. Provide an array of card IDs.",
 				});
 		}
 
@@ -175,10 +173,12 @@ const updateCardsAfterReview = async (req, res) => {
 };
 
 const addCard = async (req, res) => {
+	const unsplash = await getUnsplashApi();
 	const { imageUri, ...data } = req.body;
 	try {
 		const findCard = await Card.findOne({
 			where: {
+				groupId: req.body.groupId,
 				word: {
 					[Op.iLike]: data.word,
 				},
@@ -189,8 +189,24 @@ const addCard = async (req, res) => {
 				.status(StatusCodes.BAD_REQUEST)
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
-		const image = await Image.create({ url: imageUri });
-		const newCard = await Card.create({ imageId: image.id, ...data });
+		let imageUrl = imageUri;
+		if(!imageUri)  {
+			const unsplashResponse = await unsplash.search.getPhotos({
+				query: data.word,
+				perPage: 1
+			});
+
+			if(unsplashResponse.response && unsplashResponse.response.results.length > 0) {
+					imageUrl = unsplashResponse.response.results[0].urls.regular;
+			}
+		}
+
+		let image = ""
+		if(imageUrl) {
+			image = await Image.create({ url: imageUrl })
+		}
+
+		const newCard = await Card.create({ imageId: image?.id || null, ...data });
 
 		const card = await Card.findOne({
 			where: { id: newCard.id },
@@ -201,7 +217,7 @@ const addCard = async (req, res) => {
 	} catch (error) {
 		res
 			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+			.send({ error: true, message: error.message || "Error creating card" });
 	}
 };
 

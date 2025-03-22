@@ -1,19 +1,19 @@
+import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Link } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TextInput, Pressable } from "react-native";
-import styles from "./ResultsScreen.styles";
+import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	filterResults,
 	getResults,
 	resetResults,
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "@react-navigation/native";
-import { AppPath } from "../../common/enums/app/app";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import styles from "./ResultsScreen.styles";
 
 const ResultsScreen = () => {
 	const dispatch = useDispatch();
@@ -25,6 +25,7 @@ const ResultsScreen = () => {
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [groupedResults, setGroupedResults] = useState({});
+	const [resultsYear, setResultsYear] = useState(new Date().getFullYear());
 
 	useEffect(() => {
 		if (results.length > 0) {
@@ -45,23 +46,64 @@ const ResultsScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getResults());
-	}, [dispatch]);
+		dispatch(getResults({ resultsYear }));
+	}, [dispatch, resultsYear]);
 
 	const handleSort = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));
 		setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
 	};
 
+	const isTitleDate = (title) => !isNaN(Date.parse(title));
+	const decreaseYear = () => {
+		if (resultsYear > 2024) {
+			setResultsYear(resultsYear - 1);
+		}
+	};
+
+	const increaseYear = () => {
+		if (resultsYear < new Date().getFullYear()) {
+			setResultsYear(resultsYear + 1);
+		}
+	};
+
 	return (
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
-					<Text
-						style={{ fontSize: 40, fontWeight: "bold", color: colors.primary }}
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+						}}
 					>
-						2024
-					</Text>
+						<Pressable onPress={decreaseYear}>
+							<AntDesign
+								name="caretleft"
+								size={30}
+								color={colors.iconColor}
+								disabled={resultsYear > 2024}
+							/>
+						</Pressable>
+						<Text
+							style={{
+								fontSize: 40,
+								fontWeight: "bold",
+								color: colors.primary,
+							}}
+						>
+							{resultsYear}
+						</Text>
+						<Pressable onPress={increaseYear}>
+							<AntDesign
+								name="caretright"
+								size={30}
+								color={colors.iconColor}
+								disabled={resultsYear < new Date().getFullYear()}
+							/>
+						</Pressable>
+						<ThemeText>{results.length} занять</ThemeText>
+					</View>
 					<View
 						style={{
 							justifyContent: "center",
@@ -144,16 +186,28 @@ const ResultsScreen = () => {
 				keyExtractor={(item) => item[0]}
 				renderItem={({ item }) => (
 					<View style={{ marginBottom: 20 }}>
-						<Text
+						<View
 							style={{
-								fontSize: 25,
-								color: colors.lightBackground,
-								fontWeight: "bold",
-								textAlign: "center",
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "center",
 							}}
 						>
-							{item[0]} {/* Date */}
-						</Text>
+							<Text
+								style={{
+									fontSize: 25,
+									color: colors.lightBackground,
+									fontWeight: "bold",
+									textAlign: "center",
+								}}
+							>
+								{item[0]}
+							</Text>
+							<ThemeText style={{ fontSize: 20 }}>
+								{" "}
+								- {item[1].length} занять
+							</ThemeText>
+						</View>
 						{item[1].map((result) => (
 							<Link
 								key={result.id}
@@ -174,12 +228,15 @@ const ResultsScreen = () => {
 											fontSize: 30,
 										}}
 									>
-										{result.title}
+										{isTitleDate(result.title)
+											? new Date(result.createdAt).toLocaleTimeString()
+											: result.title}
 									</Text>
-									<Text style={{ color: colors.primary }}>
-										{new Date(result.createdAt).toLocaleTimeString()}{" "}
-										{/* Show time */}
-									</Text>
+									{!isTitleDate(result.title) && (
+										<Text style={{ color: colors.primary }}>
+											{new Date(result.createdAt).toLocaleTimeString()}{" "}
+										</Text>
+									)}
 								</View>
 							</Link>
 						))}
