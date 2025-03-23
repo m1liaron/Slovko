@@ -38,7 +38,6 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 			}
 			setFlippedIndex(index === flippedIndex ? null : index);
 			runOnUI(() => {
-				'worklet';
 				rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
 					duration: 500,
 				});
