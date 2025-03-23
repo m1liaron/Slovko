@@ -139,13 +139,13 @@ const MainScreen = () => {
 				Вже минуло {daysPassed} з початку війни.
 			</Text>
 
-			{repeatedGroupsIds.length && (
+			{repeatedGroupsIds.length > 0 && (
 				<Pressable
 					style={styles.repeatButton}
 					onPress={() => setShowRepeatedModal(true)}
 				>
 					<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-						Повторити слова - {repeatedCardsLength}
+						{'Повторити слова - ' + {repeatedCardsLength}}
 					</Text>
 				</Pressable>
 			)}
