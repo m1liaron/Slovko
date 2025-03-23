@@ -7,12 +7,14 @@ import Animated, {
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
+	runOnUI
 } from "react-native-reanimated";
 import { useSelector } from "react-redux";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
+
 
 const LearnCards = ({ onComplete, setFlashCards }) => {
 	const {
@@ -35,9 +37,12 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 				return prevFlippedCards;
 			}
 			setFlippedIndex(index === flippedIndex ? null : index);
-			rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
-				duration: 500,
-			});
+			runOnUI(() => {
+				'worklet';
+				rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
+					duration: 500,
+				});
+			})();
 
 			setIsHorizontalSwipe(true);
 			Speech.speak(learningCards[index].word);

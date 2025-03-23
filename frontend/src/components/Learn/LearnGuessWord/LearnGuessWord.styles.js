@@ -2,11 +2,9 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
 	wordContainer: {
-		width: "100%",
-		height: 300,
-		overflow: "auto",
-		flexDirection: "row",
+		flexGrow: 1,
 		flexWrap: "wrap",
+		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
 		paddingHorizontal: 20,

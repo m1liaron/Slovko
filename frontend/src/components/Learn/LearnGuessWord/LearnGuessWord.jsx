@@ -181,6 +181,8 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 				numColumns={4}
 				data={scrambledWord}
 				contentContainerStyle={styles.wordContainer}
+				keyExtractor={(item, index) => index.toString()}
+				scrollEnabled={true}
 				renderItem={({ item, index }) => (
 					<Pressable
 						style={[
@@ -205,8 +207,6 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 						</Text>
 					</Pressable>
 				)}
-				keyExtractor={(item, index) => index.toString()}
-				scrollEnabled={true}
 			/>
 			<Pressable onPress={() => setShowTranslate(!showTranslate)}>
 				<AntDesign name="questioncircleo" size={24} color={colors.iconColor} />
