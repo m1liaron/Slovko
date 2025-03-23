@@ -5,7 +5,7 @@ import { darkTheme, lightTheme } from "../common/enums/app/app";
 const ThemeContext = createContext({});
 
 export const ThemeProvider = ({ children }) => {
-	const [theme, setTheme] = useState(null); // Default theme
+	const [theme, setTheme] = useState(lightTheme); // Default theme
 
 	useEffect(() => {
 		const loadTheme = async () => {
@@ -13,9 +13,7 @@ export const ThemeProvider = ({ children }) => {
 			if (savedTheme === "dark") {
 				setTheme(darkTheme);
 			} else if (!savedTheme) {
-				AsyncStorage.setItem("theme", "light");
-			} else {
-				setTheme(lightTheme);
+				await AsyncStorage.setItem("theme", "light");
 			}
 		};
 		loadTheme();
