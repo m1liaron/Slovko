@@ -65,7 +65,7 @@ const GroupScreen = ({ route }) => {
 		];
 	}, [group]);
 
-	const renderStatusButtons = () => {
+	const RenderStatusButtons = () => {
 		return statusCardsButtons.map(({ status, title, amount, color }) => (
 			<Pressable
 				key={title}
@@ -108,7 +108,7 @@ const GroupScreen = ({ route }) => {
 				}}
 			>
 				<BackButton />
-				<div>
+				<View>
 					<Text
 						style={{ fontSize: 30, fontWeight: "bold", color: colors.primary }}
 					>
@@ -120,7 +120,7 @@ const GroupScreen = ({ route }) => {
 						size={24}
 						color={colors.iconColor}
 					/>
-				</div>
+				</View>
 			</View>
 			<View
 				style={{
@@ -143,7 +143,7 @@ const GroupScreen = ({ route }) => {
 						/>
 					</Pressable>
 				</View>
-				{renderStatusButtons()}
+				<RenderStatusButtons/>
 				<Pressable
 					style={{
 						padding: 5,

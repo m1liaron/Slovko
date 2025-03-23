@@ -10,7 +10,6 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	addGroup,
 	getAllGroups,
-	selectGroup,
 } from "../../redux/groupReducer/groupSlice";
 import DefaultModal from "../DefaultModal/DefaultModal";
 import { GroupItem } from "./GroupItem";

@@ -3,12 +3,12 @@ import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
 	FlatList,
-	Image,
+	Image, Platform,
 	Pressable,
 	Text,
 	TextInput,
 	View,
-} from "react-native";
+} from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
 import AvatarImage from "../../../assets/images/avatar.png";
 import AddButton from "../../common/components/AddButton/AddButton";
@@ -126,9 +126,11 @@ const SharedGroupsScreen = () => {
 	}
 
 	useEffect(() => {
-		window.addEventListener("scroll", ifBottomPageAndMorePage);
-		return () => {
-			window.removeEventListener("scroll", ifBottomPageAndMorePage);
+		if(Platform.OS === "web") {
+			window.addEventListener("scroll", ifBottomPageAndMorePage);
+			return () => {
+				window.removeEventListener("scroll", ifBottomPageAndMorePage);
+			}
 		}
 	}, [haveMoreGroups])
 

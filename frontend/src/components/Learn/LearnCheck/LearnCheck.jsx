@@ -12,6 +12,12 @@ const LearnCheck = ({ onComplete, handleSetDate }) => {
 	} = useAppTheme();
 	const cards = useSelector(selectCard);
 
+	useEffect(() => {
+		if(cards.length <= 4) {
+			onComplete();
+		}
+	}, []);
+
 	const initialWords = useMemo(
 		() =>
 			cards
