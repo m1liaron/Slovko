@@ -197,8 +197,8 @@ const addCard = async (req, res) => {
 		let definition = "";
 		let example = "";
 		if(dictionaryApiResponse) {
-			definition = dictionaryApiResponse.data[0].meanings[2].definitions[0].definition
-			example = dictionaryApiResponse.data[0].meanings[2].definitions[0].example;
+			definition = dictionaryApiResponse?.data[0]?.meanings[2]?.definitions[0]?.definition
+			example = dictionaryApiResponse?.data[0]?.meanings[2]?.definitions[0]?.example;
 		}
 
 		let imageUrl = imageUri;

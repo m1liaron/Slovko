@@ -22,6 +22,7 @@ import {
 	getRepeatedCardsFromIds,
 } from "../../redux/cardReducer/cardSlice";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
 import styles from "./MainScreen.styles";
 
 const MainScreen = () => {
@@ -143,9 +144,10 @@ const MainScreen = () => {
 					style={styles.repeatButton}
 					onPress={() => setShowRepeatedModal(true)}
 				>
-					<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-						{'Повторити слова - ' + {repeatedCardsLength}}
-					</Text>
+					<ThemeText style={{ fontSize: 30 }}>
+						Повторити слова -  
+					</ThemeText>
+					<ThemeText style={{ fontSize: 30 }}> {repeatedCardsLength}</ThemeText>
 				</Pressable>
 			)}
 

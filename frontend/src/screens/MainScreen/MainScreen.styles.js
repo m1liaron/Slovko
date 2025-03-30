@@ -31,6 +31,8 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	repeatButton: {
+		flexDirection: "row",
+		justifyContent: "space-between",
 		backgroundColor: "#0854a7",
 		padding: 20,
 		borderRadius: 20,
