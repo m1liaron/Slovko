@@ -3,7 +3,6 @@ import styles from "./LearnScreen.styles";
 
 import { Switch } from "react-native-gesture-handler";
 import { View, Text, Pressable, Platform } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import LearnCards from "../../components/Learn/LearnCards/LearnCards";

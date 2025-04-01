@@ -5,6 +5,7 @@ import DefaultModal from "../../DefaultModal/DefaultModal";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import { useNavigation } from "@react-navigation/native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
+import ThemeText from "../../../common/components/ThemeText/ThemeText";
 
 const ExitModal = ({ modalVisible, handleClose, text }) => {
 	const navigation = useNavigation();
@@ -20,11 +21,11 @@ const ExitModal = ({ modalVisible, handleClose, text }) => {
 	return (
 		<DefaultModal isVisible={modalVisible} handleClose={handleClose}>
 			<View>
-				<Text
+				<ThemeText
 					style={{ color: colors.primary, fontWeight: "bold", fontSize: 40 }}
 				>
 					{text}
-				</Text>
+				</ThemeText>
 			</View>
 			<View style={styles.buttonsContainer}>
 				<PressableButton

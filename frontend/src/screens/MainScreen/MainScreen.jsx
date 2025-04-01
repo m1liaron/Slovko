@@ -160,7 +160,7 @@ const MainScreen = () => {
 				Вже минуло {daysPassed} з початку війни.
 			</Text>
 
-			{repeatedGroupsIds.length && (
+			{repeatedGroupsIds.length ? (
 				<Pressable
 					style={styles.repeatButton}
 					onPress={() => setShowRepeatedModal(true)}
@@ -169,7 +169,7 @@ const MainScreen = () => {
 						Повторити слова - {repeatedCardsLength}
 					</Text>
 				</Pressable>
-			)}
+			) : null}
 
 			<GroupList />
 			<View style={styles.anouncement}>
@@ -188,6 +188,7 @@ const MainScreen = () => {
 					keyExtractor={(item) => item.id}
 					renderItem={({ item }) => (
 						<Pressable
+							key={item.id}
 							style={[
 								styles.item,
 								{ backgroundColor: theme.colors.lightBackground },

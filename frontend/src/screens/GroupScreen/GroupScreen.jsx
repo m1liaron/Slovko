@@ -1,5 +1,4 @@
 import CardList from "../../components/Card/CardList";
-import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -108,7 +107,7 @@ const GroupScreen = ({ route }) => {
 				}}
 			>
 				<BackButton />
-				<div>
+				<View>
 					<Text
 						style={{ fontSize: 30, fontWeight: "bold", color: colors.primary }}
 					>
@@ -120,7 +119,7 @@ const GroupScreen = ({ route }) => {
 						size={24}
 						color={colors.iconColor}
 					/>
-				</div>
+				</View>
 			</View>
 			<View
 				style={{

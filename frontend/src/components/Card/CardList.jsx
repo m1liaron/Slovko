@@ -30,7 +30,8 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Slider from "@react-native-community/slider";
 import { Entypo } from "@expo/vector-icons";
-import CheckBox from '@react-native-community/checkbox';
+import Checkbox from 'expo-checkbox';
+import ThemeText from "../../common/components/ThemeText/ThemeText";
 
 const MemoCardItem = memo(CardItem);
 
@@ -357,7 +358,10 @@ const CardList = ({ groupId }) => {
 								style={styles.input}
 								placeholder="Відповідь..."
 							/>
-							<CheckBox value={isValidateWord} onValueChange={setIsValidateWord} />
+							<View style={{ flexDirection: "row" }}>
+								<ThemeText>Валідація: </ThemeText>
+								<Checkbox value={isValidateWord} onValueChange={setIsValidateWord} />
+							</View>
 						</View>
 					)}
 
