@@ -1,28 +1,29 @@
-import { useState, useEffect } from "react";
+import { Feather } from "@expo/vector-icons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
-	View,
-	Text,
-	TextInput,
-	Pressable,
-	Platform,
 	Alert,
 	Image,
+	Platform,
+	Pressable,
+	Text,
+	TextInput,
+	View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, selectUser } from "../../redux/userReducer/userSlice";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import { Switch } from "react-native-gesture-handler";
-import { Feather } from "@expo/vector-icons";
-import styles from "./ProfileScreen.styles";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useDispatch, useSelector } from "react-redux";
 import AvatarImage from "../../../assets/images/avatar.png";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
+import convertImageToBase64 from "../../utils/convertImageToBase64";
 import pickImage from "../../utils/pickImage";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import styles from "./ProfileScreen.styles";
 
 export default function ProfileScreen() {
 	const { user } = useSelector(selectUser);
@@ -86,22 +87,6 @@ export default function ProfileScreen() {
 		});
 	};
 
-	const convertImageToBase64 = async (uri) => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const reader = new FileReader();
-
-		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				const base64data = reader.result.split(",")[1]; // Get the Base64 part
-				resolve(base64data);
-			};
-			reader.onerror = () =>
-				reject(new Error("Failed to convert image to base64"));
-			reader.readAsDataURL(blob);
-		});
-	};
-
 	const handleUpdateUser = async () => {
 		let finalImageUri = image;
 
@@ -141,7 +126,7 @@ export default function ProfileScreen() {
 	};
 
 	return (
-		<ThemeBackground style={{ paddingHorizontal: 40}}>
+		<ThemeBackground style={{ paddingHorizontal: 40 }}>
 			<Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
 
 			<View style={styles.container}>

@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Calendar } from "react-native-calendars";
-import BackButton from "../../components/BackButton/BackButton";
-import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "./StreakScreen.styles";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../../redux/userReducer/userSlice";
-import { Text, View } from 'react-native';
 import { FontAwesome6 } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { Calendar } from "react-native-calendars";
+import { useDispatch, useSelector } from "react-redux";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import BackButton from "../../components/BackButton/BackButton";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { selectUser } from "../../redux/userReducer/userSlice";
 import {
 	buyFreeze,
 	getUserStreakDates,
 } from "../../redux/userReducer/userThunk";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import styles from "./StreakScreen.styles";
 
 const StreakScreen = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { streakDates, user: { frozen } } = useSelector(selectUser);
+	const {
+		streakDates,
+		user: { frozen },
+	} = useSelector(selectUser);
 	const [date, setDate] = useState({});
 	const dispatch = useDispatch();
 	const now = new Date();
@@ -63,6 +65,7 @@ const StreakScreen = () => {
 				.split("T")[0]
 		: null;
 
+	console.log(frozen);
 	return (
 		<ThemeBackground>
 			<BackButton />
@@ -125,10 +128,14 @@ const StreakScreen = () => {
 					<PressableButton
 						text="Купити Заморозку"
 						onPress={() => dispatch(buyFreeze({ froze: 100 }))}
-						buttonStyle={{ backgroundColor: frozen && "#002d5d", padding: 20}}
-						disabled={!frozen}
+						buttonStyle={{ backgroundColor: !frozen && "#002d5d", padding: 20 }}
+						disabled={frozen}
 					/>
-					{frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}
+					{frozen && (
+						<Text style={{ color: colors.primary }}>
+							Заморозку вже купленно
+						</Text>
+					)}
 				</View>
 			</View>
 		</ThemeBackground>

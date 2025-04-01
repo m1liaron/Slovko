@@ -1,6 +1,5 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../db/sequelize");
-const { v4: uuidv4 } = require("uuid");
 const Group = require("./Group");
 const Image = require("./Image");
 
@@ -9,7 +8,7 @@ const Card = sequelize.define(
 	{
 		id: {
 			type: DataTypes.UUID,
-			defaultValue: uuidv4,
+			defaultValue: DataTypes.UUIDV4,
 			primaryKey: true,
 		},
 		word: {
@@ -38,7 +37,6 @@ const Card = sequelize.define(
 				},
 			},
 		},
-
 		groupId: {
 			type: DataTypes.UUID,
 			allowNull: false,
@@ -59,6 +57,16 @@ const Card = sequelize.define(
 			type: DataTypes.ENUM("Learned", "To Learn", "Know"),
 			allowNull: false,
 			defaultValue: "To Learn",
+		},
+		definition: {
+			type: DataTypes.TEXT,
+			allowNull: false,
+			defaultValue: ""
+		},
+		example: {
+			type: DataTypes.TEXT,
+			allowNull: false,
+			defaultValue: ""
 		},
 		learnedAt: {
 			type: DataTypes.DATE, // Date when the card was learned

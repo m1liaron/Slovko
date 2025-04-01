@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import {
-	View,
+	Animated,
 	Modal,
 	Pressable,
-	Animated,
+	View,
 	useWindowDimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import styles from "./styles";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import styles from "./styles";
 
 /**
  * @param isVisible { boolean}

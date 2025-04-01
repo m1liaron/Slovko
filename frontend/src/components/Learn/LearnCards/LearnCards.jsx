@@ -1,17 +1,20 @@
+import * as Speech from "expo-speech";
 import React, { useState } from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import Animated, {
 	interpolate,
 	useAnimatedStyle,
 	useSharedValue,
 	withTiming,
+	runOnUI
 } from "react-native-reanimated";
+import { useSelector } from "react-redux";
+import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
-import { useSelector } from "react-redux";
-import * as Speech from "expo-speech";
-import { useAppTheme } from "../../../contexts/ThemeProvider";
+import ThemeText from '../../../common/components/ThemeText/ThemeText';
+
 
 const LearnCards = ({ onComplete, setFlashCards }) => {
 	const {
@@ -34,9 +37,11 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 				return prevFlippedCards;
 			}
 			setFlippedIndex(index === flippedIndex ? null : index);
-			rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
-				duration: 500,
-			});
+			runOnUI(() => {
+				rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
+					duration: 500,
+				});
+			})();
 
 			setIsHorizontalSwipe(true);
 			Speech.speak(learningCards[index].word);
@@ -119,12 +124,19 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 						/>
 					) : null}
 				</View>
-				<Text
-					style={[styles.cardText, { color: colors.primary }]}
+				<ThemeText
+					style={styles.cardText}
 					selectable={false}
 				>
 					{card.word}
-				</Text>
+				</ThemeText>
+				{card.definition && (
+					<ThemeText
+						selectable={false}
+					>
+						{card.definition}
+					</ThemeText>
+				)}
 			</Animated.View>
 			<Animated.View
 				style={[

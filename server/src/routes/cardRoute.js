@@ -16,8 +16,8 @@ router
 	.route("/")
 	.get(getRepeatedCards)
 	.post(addCard)
-	.put(updateCardsAfterReview);
-router.route("/:groupId?").put(updateCardsAfterReview).get(getAllCards);
+router.route("/learn").put(updateCardsAfterReview);
+router.route("/:groupId?").get(getAllCards);
 router.route("/:groupId/:status").get(getAllStatusCards);
 router.route("/:id").delete(removeCard).patch(updateCard);
 

@@ -1,15 +1,24 @@
+import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import {
 	FlatList,
-	Image,
+	Image, Platform,
 	Pressable,
 	Text,
 	TextInput,
 	View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAppTheme } from "../../contexts/ThemeProvider";
+} from 'react-native';
 import { useDispatch, useSelector } from "react-redux";
+import AvatarImage from "../../../assets/images/avatar.png";
+import AddButton from "../../common/components/AddButton/AddButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { AppPath } from "../../common/enums/app/app";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import {
 	filterMySharedGroups,
 	filterSharedGroups,
@@ -17,20 +26,12 @@ import {
 	removeSharedGroup,
 	resetSharedGroups,
 	saveSharedGroup,
-	selectSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
-import styles from "./SharedGroupsScreen.styles";
-import { Link, useNavigation } from "@react-navigation/native";
-import { AppPath } from "../../common/enums/app/app";
-import AddButton from "../../common/components/AddButton/AddButton";
-import DefaultModal from "../../components/DefaultModal/DefaultModal";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { selectGroup } from "../../redux/groupReducer/groupSlice";
-import AddInput from "../../common/components/AddInput/AddInput";
-import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import AvatarImage from "../../../assets/images/avatar.png";
 import { selectUser } from "../../redux/userReducer/userSlice";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import styles from "./SharedGroupsScreen.styles";
+import CheckBox from 'expo-checkbox';
+import ThemeText from '../../common/components/ThemeText/ThemeText';
+import Toast from 'react-native-toast-message';
 
 const SharedGroupsScreen = () => {
 	const { user } = useSelector(selectUser);
@@ -39,7 +40,7 @@ const SharedGroupsScreen = () => {
 	} = useAppTheme();
 	const dispatch = useDispatch();
 	const navigation = useNavigation();
-	const sharedGroups = useSelector(selectSharedGroup);
+	const { sharedGroups, haveMoreSharedGroups, error } = useSelector(state => state.sharedGroups);
 	const groups = useSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
@@ -49,9 +50,15 @@ const SharedGroupsScreen = () => {
 	);
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [filterValue, setFilterValue] = useState("");
+	const [isAnonymous, setIsAnonymous] = useState(false);
+	const [page, setPage] = useState(1);
+	const [haveMoreGroups, setHaveMoreGroups] = useState(true);
 
 	useEffect(() => {
-		dispatch(getAllSharedGroups());
+		if(haveMoreGroups) {
+			dispatch(getAllSharedGroups(page));
+			setHaveMoreGroups(haveMoreSharedGroups);
+		}
 	}, [dispatch]);
 
 	const formatTime = (createdAt) => {
@@ -91,9 +98,41 @@ const SharedGroupsScreen = () => {
 		const sharedGroupData = {
 			groupId: selectedGroup.id,
 			title: sharedGroupTitle,
+			isAnonymous
 		};
-		dispatch(saveSharedGroup(sharedGroupData));
+			dispatch(saveSharedGroup(sharedGroupData));
+			if(error) {
+				Toast.show({
+					type: "error",
+					text1: "Failed🔴",
+					text2: error,
+				})
+			}
 	};
+
+	// Pagination
+
+	const isBottomOfPage = () => {
+		const scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+		const scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+		const clientHeight = (document.documentElement && document.documentElement.clientHeight) || document.body.clientHeight;
+		return scrollTop + clientHeight >= scrollHeight - 50;
+	}
+
+	const ifBottomPageAndMorePage = () => {
+		if(isBottomOfPage() && haveMoreSharedGroups) {
+			setPage(prevPage => prevPage + 1);
+		}
+	}
+
+	useEffect(() => {
+		if(Platform.OS === "web") {
+			window.addEventListener("scroll", ifBottomPageAndMorePage);
+			return () => {
+				window.removeEventListener("scroll", ifBottomPageAndMorePage);
+			}
+		}
+	}, [haveMoreGroups])
 
 	const renderItem = ({ item }) => (
 		<View
@@ -114,7 +153,7 @@ const SharedGroupsScreen = () => {
 				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
 					<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
 						<Image
-							source={item.user.image || AvatarImage}
+							source={item.user?.image || AvatarImage}
 							style={{
 								width: 40,
 								height: 40,
@@ -124,7 +163,7 @@ const SharedGroupsScreen = () => {
 							}}
 						/>
 						<Text style={{ color: colors.primary, fontSize: 30 }}>
-							{item.user.name}
+							{item.user?.name || "Anonymous"}
 						</Text>
 					</View>
 					<View
@@ -141,11 +180,11 @@ const SharedGroupsScreen = () => {
 					</View>
 				</View>
 
-				<Text style={{ color: colors.primary, fontSize: 30 }}>
+				<Text style={{ color: colors.primary, fontSize: 15 }}>
 					{formatTime(item.createdAt)}
 				</Text>
 			</Link>
-			{item.user.id === user.id && (
+			{(item.user?.id === user?.id || item.userId === user?.id) && (
 				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
@@ -164,6 +203,7 @@ const SharedGroupsScreen = () => {
 					</Text>
 					<PressableButton
 						text="Мої поширені групи"
+						buttonStyle={{ padding: 10 }}
 						onPress={() => dispatch(filterMySharedGroups({ userId: user.id }))}
 					/>
 					<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
@@ -240,13 +280,25 @@ const SharedGroupsScreen = () => {
 				isVisible={showAddModal}
 				handleClose={() => setShowModal(false)}
 			>
+				<Toast />
 				<AddInput
 					value={sharedGroupTitle}
 					onChangeText={setSharedGroupTitle}
 					placeholder="Назва групи"
 				/>
+				<View style={{flexDirection: "row", alignItems: "center"}}>
+					<ThemeText style={{ fontSize: 25 }}>Анонімне</ThemeText>
+					<CheckBox
+						value={isAnonymous}
+						onChange={() => setIsAnonymous(!isAnonymous)}
+					/>
+				</View>
 				{groups.length ? (
 					<FlatList
+						contentContainerStyle={{
+							overflowY: "auto",
+							height: 400
+						}}
 						data={groups}
 						renderItem={({ item }) => (
 							<Pressable onPress={() => addRemoveSelectedGroup(item)}>

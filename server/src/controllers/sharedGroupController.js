@@ -5,13 +5,15 @@ const {
 	Card,
 	User,
 } = require("../models/models");
+const { StatusCodes } = require('http-status-codes');
 
 const createSharedGroup = async (req, res) => {
 	const {
-		body: { groupId, title },
+		body: { groupId, title, isAnonymous },
 		user: { id },
 	} = req;
 	try {
+
 		const group = await Group.findOne({
 			where: { id: groupId },
 			include: [
@@ -27,11 +29,12 @@ const createSharedGroup = async (req, res) => {
 			],
 		});
 		if (!group) {
-			res.status(404).json({ error: true, message: "Group is not defined" });
+			return res.status(404).json({ error: true, message: "Group is not defined" });
 		}
 		const sharedGroup = await SharedGroup.create({
 			title: title ? title : group.title,
 			userId: id,
+			isAnonymous
 		});
 		if (group.cards.length) {
 			await Promise.all(
@@ -43,6 +46,8 @@ const createSharedGroup = async (req, res) => {
 					});
 				}),
 			);
+		} else {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "There are no cards to share!" });
 		}
 
 		const sharedGroupWithUser = await SharedGroup.findOne({
@@ -64,6 +69,11 @@ const createSharedGroup = async (req, res) => {
 };
 
 const getAllSharedGroup = async (req, res) => {
+	const { page = 1, limit = 7 } = req.query;
+
+	const pageNumber = Number.parseInt(page, 10);
+	const itemsPerPage = Number.parseInt(limit, 10);
+
 	try {
 		const allSharedGroups = await SharedGroup.findAll({
 			include: {
@@ -73,12 +83,16 @@ const getAllSharedGroup = async (req, res) => {
 			},
 		});
 
-		res.status(200).json(allSharedGroups);
+		const offset = (pageNumber - 1) * itemsPerPage;
+		const paginationGroups = allSharedGroups.slice(offset, offset + itemsPerPage);
+		const haveMoreSharedGroups = offset + itemsPerPage < allSharedGroups.length;
+
+		res.status(200).json({ sharedGroups: paginationGroups, haveMoreSharedGroups });
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 

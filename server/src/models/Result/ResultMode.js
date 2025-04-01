@@ -12,7 +12,7 @@ const ResultMode = sequelize.define(
 			primaryKey: true,
 		},
 		mode: {
-			type: DataTypes.ENUM("flashCards", "quiz", "guessWord"),
+			type: DataTypes.ENUM("flashCards", "quiz", "guessWord", "check"),
 			allowNull: false,
 		},
 		resultId: {

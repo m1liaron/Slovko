@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput } from "react-native";
-import styles from "./AddInput.styles";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
+import styles from "./AddInput.styles";
 
 /**
  * @param placeholder { string }
@@ -17,6 +17,7 @@ const AddInput = ({
 	placeholderTextColor,
 	value = "",
 	onChangeText,
+	onFocus,
 }) => {
 	const {
 		theme: {
@@ -29,6 +30,7 @@ const AddInput = ({
 				styles.input,
 				{ backgroundColor: lightBackground, color: primary },
 			]}
+			onFocus={onFocus}
 			placeholder={placeholder}
 			placeholderTextColor={placeholderTextColor || primary}
 			value={value}

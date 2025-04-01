@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, FlatList, Pressable, Image, Platform } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import styles from "./LearnGuessWord.styles";
+import React, { useCallback, useEffect, useState } from "react";
+import { FlatList, Image, Platform, Pressable, Text, View } from "react-native";
 import { useSelector } from "react-redux";
-import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
+import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
+import styles from "./LearnGuessWord.styles";
 
 const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 	const {
@@ -75,17 +75,23 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 		}
 	};
 
-	const removeLetterFromScrambled = useCallback((index) => {
-		const updatedWord = [...scrambledWord];
-		updatedWord.splice(index, 1);
-		setScrambledWord(updatedWord);
-	}, [scrambledWord]);
+	const removeLetterFromScrambled = useCallback(
+		(index) => {
+			const updatedWord = [...scrambledWord];
+			updatedWord.splice(index, 1);
+			setScrambledWord(updatedWord);
+		},
+		[scrambledWord],
+	);
 
-	const highlightIncorrectLetter = useCallback((index) => {
-		setLetterColors({ [index]: "red" });
-		setInCorrectLetter(currentWord[index]);
-		setTimeout(() => setLetterColors({}), 1000);
-	}, [currentWord[currentIndex]]);
+	const highlightIncorrectLetter = useCallback(
+		(index) => {
+			setLetterColors({ [index]: "red" });
+			setInCorrectLetter(currentWord[index]);
+			setTimeout(() => setLetterColors({}), 1000);
+		},
+		[currentWord[currentIndex]],
+	);
 
 	useEffect(() => {
 		if (currentGuess.join("") === currentWord) {
@@ -139,7 +145,15 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 			return () => {
 				window.removeEventListener("keydown", handleKeyDown);
 			};
-		}, [currentGuess, currentWord, scrambledWord, currentCard, handleSetDate, highlightIncorrectLetter, removeLetterFromScrambled]);
+		}, [
+			currentGuess,
+			currentWord,
+			scrambledWord,
+			currentCard,
+			handleSetDate,
+			highlightIncorrectLetter,
+			removeLetterFromScrambled,
+		]);
 	}
 	return (
 		<>
@@ -167,6 +181,8 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 				numColumns={4}
 				data={scrambledWord}
 				contentContainerStyle={styles.wordContainer}
+				keyExtractor={(item, index) => index.toString()}
+				scrollEnabled={true}
 				renderItem={({ item, index }) => (
 					<Pressable
 						style={[
@@ -191,8 +207,6 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 						</Text>
 					</Pressable>
 				)}
-				keyExtractor={(item, index) => index.toString()}
-				scrollEnabled={true}
 			/>
 			<Pressable onPress={() => setShowTranslate(!showTranslate)}>
 				<AntDesign name="questioncircleo" size={24} color={colors.iconColor} />

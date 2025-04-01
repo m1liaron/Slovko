@@ -1,9 +1,9 @@
-import { Text, View, StyleSheet, Pressable } from "react-native";
-import { Link } from "@react-navigation/native";
 import { Entypo } from "@expo/vector-icons";
+import { Link } from "@react-navigation/native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
-import { removeGroup } from "../../redux/groupReducer/groupSlice";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import { removeGroup } from "../../redux/groupReducer/groupSlice";
 
 export const GroupItem = ({ item: { id, title } }) => {
 	const {
@@ -19,8 +19,8 @@ export const GroupItem = ({ item: { id, title } }) => {
 		<View
 			style={{
 				flexDirection: "row",
-				justifyContent: "space-between",
 				alignItems: "center",
+				justifyContent: "center",
 			}}
 		>
 			<Link
@@ -39,7 +39,7 @@ export const GroupItem = ({ item: { id, title } }) => {
 
 const styles = StyleSheet.create({
 	item: {
-		width: "100%",
+		width: "50%",
 		padding: 10,
 		margin: 10,
 		borderRadius: 5,

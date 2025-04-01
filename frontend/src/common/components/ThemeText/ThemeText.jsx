@@ -15,7 +15,7 @@ const ThemeText = ({ children, style }) => {
 			colors: { primary },
 		},
 	} = useAppTheme();
-	return <Text style={[ style ,{ color: primary }]}>{children}</Text>;
+	return <Text style={[style, { color: primary }]}>{children}</Text>;
 };
 
 export default ThemeText;

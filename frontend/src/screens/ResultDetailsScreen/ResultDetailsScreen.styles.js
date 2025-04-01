@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		flexDirection: "row",
 		justifyContent: "space-between",
+		alignItems: "center",
 		padding: 20,
 	},
 	buttonsContainer: {
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
 		marginTop: 10,
 	},
 	title: {
-		fontSize: 35,
+		fontSize: 25,
 		fontWeight: "bold",
 	},
 	wastedTimeContainer: {

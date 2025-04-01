@@ -1,25 +1,24 @@
-import { FlatList, Text, View, StyleSheet, Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
+import noGroupsImage from "../../assets/images/no_groups.png";
+import AddButton from "../../common/components/AddButton/AddButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	addGroup,
 	getAllGroups,
-	selectGroup,
 } from "../../redux/groupReducer/groupSlice";
-import { GroupItem } from "./GroupItem";
-import React, { useEffect, useState } from "react";
-import Toast from "react-native-toast-message";
-import noGroupsImage from "../../assets/images/no_groups.png";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import AddInput from "../../common/components/AddInput/AddInput";
-import AddButton from "../../common/components/AddButton/AddButton";
 import DefaultModal from "../DefaultModal/DefaultModal";
-import { useAppTheme } from "../../contexts/ThemeProvider";
+import { GroupItem } from "./GroupItem";
 
 export const GroupList = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const groups = useSelector(selectGroup);
+	const { groups, error } = useSelector(state => state.groups);
 	const dispatch = useDispatch();
 	const [title, setTitle] = useState("");
 	const [showAddModal, setShowAddModal] = useState(false);
@@ -36,9 +35,18 @@ export const GroupList = () => {
 			});
 		}
 		dispatch(addGroup({ title }));
-		setTitle("");
-		setShowAddModal(false);
+
 	};
+
+	useEffect(() => {
+		if(error) {
+			Toast.show({
+				type: "error",
+				text1: "Failed🔴",
+				text2: error,
+			})
+		}
+	}, [dispatch, error]);
 
 	return (
 		<View style={styles.container}>
@@ -61,6 +69,7 @@ export const GroupList = () => {
 				isVisible={showAddModal}
 				handleClose={() => setShowAddModal(false)}
 			>
+				<Toast />
 				<Text style={{ color: colors.primary }}>Додайте Групу!</Text>
 				<AddInput
 					placeholder="Назва Групи"

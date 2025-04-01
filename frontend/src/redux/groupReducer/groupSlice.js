@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { DataStatus } from "../../common/enums/app/DataStatus";
 import {
+	addGroup,
 	getAllGroups,
 	getGroup,
-	addGroup,
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
-import { DataStatus } from "../../common/enums/app/DataStatus";
 
 const groupSlice = createSlice({
 	name: "groups",
@@ -20,47 +20,48 @@ const groupSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(getAllGroups.pending, (state) => {
-				state.status = "pending";
+				state.status = DataStatus.PENDING;
 			})
 			.addCase(getAllGroups.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.groups = action.payload;
 			})
 			.addCase(getAllGroups.rejected, (state) => {
-				state.status = "rejected";
+				state.status = DataStatus.ERROR;
 			})
 
 			.addCase(addGroup.pending, (state) => {
-				state.status = "pending";
+				state.status = DataStatus.PENDING;
 			})
 			.addCase(addGroup.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.groups.push(action.payload);
 			})
-			.addCase(addGroup.rejected, (state) => {
-				state.status = "rejected";
+			.addCase(addGroup.rejected, (state, action) => {
+				state.status = DataStatus.ERROR;
+				state.error = action.payload;
 			})
 			.addCase(getGroup.pending, (state) => {
-				state.status = "pending";
+				state.status = DataStatus.PENDING;
 			})
 			.addCase(getGroup.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.group = action.payload;
 			})
 			.addCase(getGroup.rejected, (state) => {
-				state.status = "rejected";
+				state.status = DataStatus.ERROR;
 			})
 			.addCase(removeGroup.pending, (state) => {
-				state.status = "pending";
+				state.status = DataStatus.PENDING;
 			})
 			.addCase(removeGroup.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.groups = state.groups.filter(
 					(group) => group.id !== action.payload.id,
 				);
 			})
 			.addCase(removeGroup.rejected, (state) => {
-				state.status = "rejected";
+				state.status = DataStatus.ERROR;
 			})
 			// update
 			.addCase(updateGroup.pending, (state) => {

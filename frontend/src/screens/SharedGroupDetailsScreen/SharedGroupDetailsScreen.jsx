@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList } from "react-native";
-import styles from "./SharedGroupDetailsScreen.styles";
-import { useDispatch, useSelector } from "react-redux";
-import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import styles from "./SharedGroupDetailsScreen.styles";
 
 /**
  * @param route { object: { params }}
@@ -48,8 +48,7 @@ const SharedGroupDetailsScreen = ({ route }) => {
 				)}
 			</View>
 
-			{sharedGroup?.sharedCards &&
-			sharedGroup.sharedCards.length > 0 ? (
+			{sharedGroup?.sharedCards && sharedGroup.sharedCards.length > 0 ? (
 				<FlatList
 					data={sharedGroup.sharedCards}
 					showsHorizontalScrollIndicator={false}

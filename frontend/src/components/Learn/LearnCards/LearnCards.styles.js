@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
 		left: "50%",
 		transform: [{ translateX: -50 }, { translateY: -50 }],
 		backgroundColor: "rgba(0, 0, 0, 0.6)",
-		paddingVertical: 12,
-		paddingHorizontal: 24,
+		paddingVertical: 6,
+		paddingHorizontal: 12,
 		borderRadius: 12,
 	},
 	swipeText: {

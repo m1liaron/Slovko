@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-	saveResults,
-	getResults,
 	getResultDetails,
+	getResults,
 	getResultsStatistics,
+	saveResults,
 } from "./resultThunk";
 
 const initialState = {

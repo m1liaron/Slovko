@@ -3,19 +3,23 @@ import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
 export const getAllSharedGroups = createAsyncThunk(
 	"sharedGroup/getAll",
-	async () => {
+	async (page) => {
 		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.get("/sharedGroups");
+		const response = await axiosInstance.get(`/sharedGroups?page=${page}`);
 		return response.data;
 	},
 );
 
 export const saveSharedGroup = createAsyncThunk(
 	"sharedGroup/save",
-	async (data) => {
-		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.post("/sharedGroups", data);
-		return response.data;
+	async (data, thunkAPI) => {
+		try {
+			const axiosInstance = await createAuthorizedInstance();
+			const response = await axiosInstance.post("/sharedGroups", data);
+			return response.data;
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error.response.data.message);
+		}
 	},
 );
 
