@@ -39,3 +39,5 @@ yarn-error.*
 
 #python
 .venv
+
+.vscode
