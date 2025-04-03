@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -29,7 +29,7 @@ import Loading from "../Loading";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Slider from "@react-native-community/slider";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Checkbox from 'expo-checkbox';
 import ThemeText from "../../common/components/ThemeText/ThemeText";
 
@@ -62,9 +62,21 @@ const CardList = ({ groupId }) => {
 	const navigation = useNavigation();
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		setWordsRangeNumber(cards.length);
-	}, [cards]);
+	const onChangeCardsRange = useCallback((value) => {
+		setWordsRangeNumber(value)
+	}, []);
+
+	const decWordsRange = () => {
+		if(wordsRangeNumber > 2) {
+			setWordsRangeNumber(wordsRangeNumber - 1);
+		}
+	}
+
+	const incWordsRange = () => {
+		if(wordsRangeNumber < cards.length) {
+			setWordsRangeNumber(wordsRangeNumber + 1);
+		}
+	}
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
@@ -242,19 +254,28 @@ const CardList = ({ groupId }) => {
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
 					<PressableButton onPress={navigateToLearn} text="Вчитися" />
-					<View style={{ flexDirection: "row", justifyContent: "center" }}>
-						<Slider
-							style={{ width: 200, height: 40 }}
-							minimumValue={2}
-							maximumValue={cards.length}
-							value={wordsRangeNumber}
-							onValueChange={setWordsRangeNumber}
-							minimumTrackTintColor="#FFFFFF"
-							maximumTrackTintColor="#000000"
-						/>
-						<Text style={{ color: colors.primary }}>
-							{Math.floor(wordsRangeNumber)}
-						</Text>
+					<View  style={{ flexDirection: "row", justifyContent:"center", alignItems:"center"}}> 
+						<Pressable onPress={decWordsRange}>
+							<FontAwesome name="minus" color={colors.primary} size={40}/>
+						</Pressable>
+						<View style={{ flexDirection: "column", justifyContent:"center", alignItems:"center"}}>
+							<ThemeText style={{ fontSize: 35}}>
+								{Math.floor(wordsRangeNumber)}
+							</ThemeText>
+							<Slider
+								style={{ width: 200, height: 40 }}
+								minimumValue={2}
+								maximumValue={cards.length}
+								value={wordsRangeNumber}
+								onSlidingComplete={onChangeCardsRange}
+								minimumTrackTintColor="#FFFFFF"
+								maximumTrackTintColor="#000000"
+							/>
+						</View>
+							
+						<Pressable onPress={incWordsRange}>
+							<FontAwesome name="plus" color={colors.primary} size={40}/>
+						</Pressable>
 						{filteredCards.length > cards.length && (
 							<Pressable
 								style={{
