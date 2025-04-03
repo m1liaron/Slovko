@@ -1,9 +1,9 @@
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
-import { store } from "./redux/store";
+import { store } from "./src/redux/store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import ProtectedRoute from "./navigation/ProtectedRoute/ProtectedRoute";
-import { ThemeProvider } from "./contexts/ThemeProvider";
+import ProtectedRoute from "./src/navigation/ProtectedRoute/ProtectedRoute";
+import { ThemeProvider } from "./src/contexts/ThemeProvider";
 
 export default function App() {
 	return (
