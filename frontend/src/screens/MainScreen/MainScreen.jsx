@@ -185,10 +185,10 @@ const MainScreen = () => {
 				<FlatList
 					data={repeatedGroupsIds}
 					contentContainerStyle={{ overflow: "visible", height: 500 }}
-					keyExtractor={(item) => item.id}
+					keyExtractor={(item) => item}
 					renderItem={({ item }) => (
 						<Pressable
-							key={item.id}
+							key={item}
 							style={[
 								styles.item,
 								{ backgroundColor: theme.colors.lightBackground },
