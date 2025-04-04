@@ -1,4 +1,15 @@
-const lightTheme = {
+type Theme = {
+	dark: boolean,
+	colors: {
+		primary: string,
+		background: string,
+		lightBackground: string,
+		iconColor: string,
+		text: string,
+	},
+}
+
+const lightTheme: Theme = {
 	dark: false,
 	colors: {
 		primary: "#12171D",
@@ -9,7 +20,7 @@ const lightTheme = {
 	},
 };
 
-const darkTheme = {
+const darkTheme: Theme = {
 	dark: true,
 	colors: {
 		primary: "#fff",

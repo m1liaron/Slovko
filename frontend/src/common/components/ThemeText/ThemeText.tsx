@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Text } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 
@@ -9,7 +9,12 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
  * @constructor
  */
 
-const ThemeText = ({ children, style }) => {
+interface ThemeTextProps {
+	children: ReactNode;
+	style: {}
+}
+
+const ThemeText = ({ children, style }: ThemeTextProps) => {
 	const {
 		theme: {
 			colors: { primary },
