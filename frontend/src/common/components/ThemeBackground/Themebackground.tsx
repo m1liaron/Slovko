@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ThemeBackgroundProps {
   children: ReactNode;
-  style: {}
+  style?: {}
 }
 
 const ThemeBackground = ({ children, style }: ThemeBackgroundProps) => {

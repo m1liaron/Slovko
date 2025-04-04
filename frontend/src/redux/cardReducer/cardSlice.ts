@@ -9,12 +9,12 @@ import {
 	getRepeatedCardsFromIds,
 } from "./cardThunk";
 import { DataStatus, IDataStatus } from "../../common/enums/app/app";
-import { ICard } from "@/common/enums/types/card.type";
+import { ICard, IRepeatedGroup } from "@/common/enums/types/card.type";
 
 interface InitialState {
 	cards: ICard[],
 	filteredCards: ICard[],
-	repeatedCards: string[],
+	repeatedCards: IRepeatedGroup[],
 	status: IDataStatus,
 	error: string | null,
 }

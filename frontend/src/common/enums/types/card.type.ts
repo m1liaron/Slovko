@@ -10,4 +10,9 @@ type ICard = {
     reviewCount: Date;
 }
 
-export { ICard };
+type IRepeatedGroup = {
+    title: string;
+    cards: string[]
+}
+
+export { ICard, IRepeatedGroup };

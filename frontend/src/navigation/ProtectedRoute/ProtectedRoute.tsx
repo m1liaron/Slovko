@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";
-import { AppPath } from "../../common/enums/app/app";
+import { AppPath, TypeAppPath } from "../../common/enums/app/app";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import Loading from "../../components/Loading";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = Record<TypeAppPath[number], undefined>
+export type StackNavigation = NavigationProp<RootStackParamList>;
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
 	const [isLoading, setIsLoading] = useState(true);
-	const { isAuthenticated } = useSelector(selectUser);
-	const dispatch = useDispatch();
+	const { isAuthenticated } = useAppSelector(selectUser);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		const checkAuth = async () => {
 			const token = await AsyncStorage.getItem("token");
 			if (token) {
-				await dispatch(getUser());
+				dispatch(getUser());
 			}
 			setIsLoading(false);
 		};

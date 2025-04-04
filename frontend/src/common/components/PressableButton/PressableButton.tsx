@@ -14,8 +14,8 @@ import styles from "./PressableButton.styles";
 interface PressableButtonProps {
 	text: string; 
 	onPress: () => void; 
-	buttonStyle: object; 
-	disabled: boolean;
+	buttonStyle?: object; 
+	disabled?: boolean;
 } 
 
 const PressableButton = ({ text, onPress, buttonStyle, disabled }: PressableButtonProps) => {
