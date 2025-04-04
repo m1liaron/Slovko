@@ -8,11 +8,19 @@ import {
 	buyFreeze,
 	getUserStreakDates,
 } from "./userThunk";
-import { DataStatus } from "../../common/enums/app/app";
+import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
+import { IUser, IStreakDate } from "@/common/enums/types/user.type";
 
-const initialState = {
-	user: {},
-	streakDates: {},
+interface InitialState {
+	user: IUser | null,
+	streakDates: IStreakDate[],
+	isAuthenticated: boolean,
+	status: IDataStatus,
+}
+
+const initialState: InitialState = {
+	user: null,
+	streakDates: [],
 	isAuthenticated: false,
 	status: DataStatus.IDLE,
 };
@@ -23,7 +31,7 @@ const userSlice = createSlice({
 	reducers: {
 		logout: (state) => {
 			state.isAuthenticated = false;
-			state.user = {};
+			state.user = null;
 			localStorage.removeItem("token");
 		},
 	},
@@ -117,6 +125,6 @@ const userSlice = createSlice({
 });
 
 export const { logout } = userSlice.actions;
-export const selectUser = (state) => state.user;
+export const selectUser = (state: { user: InitialState }) => state.user;
 export { login, register, getUser, updateUserStreak } from "./userThunk";
 export const userReducers = userSlice.reducer;
