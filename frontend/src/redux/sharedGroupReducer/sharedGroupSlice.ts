@@ -6,17 +6,28 @@ import {
 	copySharedGroup,
 	removeSharedGroup,
 } from "./sharedGroupThunk";
-import { DataStatus } from "../../common/enums/app/DataStatus";
+import { DataStatus, IDataStatus } from "../../common/enums/app/DataStatus";
+import { ISharedGroup } from "@/common/enums/types/sharedGroup";
+
+interface InitialState {
+	sharedGroups: ISharedGroup[],
+	filteredGroups: ISharedGroup[],
+	sharedGroup: ISharedGroup | null,
+	status: IDataStatus,
+	error: null
+};
+
+const initialState: InitialState = {
+	sharedGroups: [],
+	filteredGroups: [],
+	sharedGroup: null,
+	status: DataStatus.IDLE,
+	error: null
+};
 
 const sharedGroupSlice = createSlice({
 	name: "sharedGroup",
-	initialState: {
-		sharedGroups: [],
-		filteredGroups: [],
-		sharedGroup: {},
-		status: DataStatus.IDLE,
-		error: null,
-	},
+	initialState,
 	reducers: {
 		filterSharedGroups: (state, action) => {
 			state.sharedGroups = state.filteredGroups.filter((item) =>
@@ -86,7 +97,7 @@ const sharedGroupSlice = createSlice({
 
 export const { filterSharedGroups, resetSharedGroups, filterMySharedGroups } =
 	sharedGroupSlice.actions;
-export const selectSharedGroup = (state) => state.sharedGroups.sharedGroups;
+export const selectSharedGroup = (state: { sharedGroups: { sharedGroups: InitialState }}) => state.sharedGroups.sharedGroups;
 export {
 	getAllSharedGroups,
 	saveSharedGroup,
