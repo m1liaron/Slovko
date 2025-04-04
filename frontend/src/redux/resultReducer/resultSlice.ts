@@ -1,19 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
 	saveResults,
 	getResults,
 	getResultDetails,
 	getResultsStatistics,
 } from "./resultThunk";
+import { DataStatus, IDataStatus } from "@/common/enums/app/DataStatus";
+import { IResult } from "@/common/enums/types/types";
 
-const initialState = {
+interface InitialState {
+	results: IResult[],
+	filteredResults: IResult[],
+	statistics: IResult[],
+	result: IResult | null,
+	isLoading: boolean,
+	error: string | null,
+	status: IDataStatus,
+}
+
+const initialState: InitialState = {
 	results: [],
 	filteredResults: [],
-	statistics: {},
-	result: {},
+	statistics: [],
+	result: null,
 	isLoading: false,
 	error: null,
-	status: "ide",
+	status: DataStatus.IDLE,
 };
 
 const resultSlice = createSlice({
@@ -25,13 +37,20 @@ const resultSlice = createSlice({
 				item.title.startsWith(action.payload),
 			);
 		},
-		sortResults: (state, action) => {
-			const { key, direction } = action.payload;
-			state.results = [...state.results].sort((a, b) => {
-				if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-				if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-				return 0;
-			});
+		sortResults: (state, action: PayloadAction<{key: keyof IResult; direction: "asc" | "desc"}>) => {
+			const { key = "completionTime", direction = "asc" } = action.payload;
+				state.results = [...state.results].sort((a, b) => {
+					const aValue = a[key];
+    				const bValue = b[key];
+
+					if(!aValue || !bValue) {
+						return 0;
+					}
+					
+					if (aValue < bValue) return direction === "asc" ? -1 : 1;
+					if (aValue > bValue) return direction === "asc" ? 1 : -1;
+					return 0;
+				});
 		},
 		resetResults: (state) => {
 			state.results = [...state.filteredResults];
@@ -40,65 +59,65 @@ const resultSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(saveResults.pending, (state) => {
-				state.status = "loading";
+				state.status = DataStatus.PENDING;
 				state.isLoading = true;
 			})
 			.addCase(saveResults.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.results.push(action.payload);
 				state.filteredResults.push(action.payload);
 				state.isLoading = false;
 			})
 			.addCase(saveResults.rejected, (state) => {
-				state.status = "error";
+				state.status = DataStatus.ERROR;
 				state.isLoading = false;
 			})
 			.addCase(getResults.pending, (state) => {
-				state.status = "loading";
+				state.status = DataStatus.PENDING;
 				state.isLoading = true;
 			})
 			.addCase(getResults.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.results = action.payload;
 				state.filteredResults = action.payload;
 				state.isLoading = false;
 			})
 			.addCase(getResults.rejected, (state) => {
-				state.status = "error";
+				state.status = DataStatus.ERROR;
 				state.isLoading = false;
 			})
 			.addCase(getResultDetails.pending, (state) => {
-				state.status = "loading";
+				state.status = DataStatus.PENDING;
 				state.isLoading = true;
 			})
 			.addCase(getResultDetails.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.result = action.payload;
 				state.isLoading = false;
 			})
 			.addCase(getResultDetails.rejected, (state) => {
-				state.status = "error";
+				state.status = DataStatus.ERROR;
 				state.isLoading = false;
 			})
 
 			.addCase(getResultsStatistics.pending, (state) => {
-				state.status = "loading";
+				state.status = DataStatus.PENDING;
 				state.isLoading = true;
 			})
 			.addCase(getResultsStatistics.fulfilled, (state, action) => {
-				state.status = "success";
+				state.status = DataStatus.SUCCESS;
 				state.statistics = action.payload;
 				state.isLoading = false;
 			})
 			.addCase(getResultsStatistics.rejected, (state) => {
-				state.status = "error";
+				state.status = DataStatus.ERROR;
 				state.isLoading = false;
 			});
 	},
 });
 
 export const { filterResults, sortResults, resetResults } = resultSlice.actions;
-export const selectResult = (state) => state.results;
+export const selectResult = (state: { results: InitialState }) => state.results;
 export {
 	saveResults,
 	getResults,
