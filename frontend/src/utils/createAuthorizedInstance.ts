@@ -1,7 +1,12 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const createAuthorizedInstance = async () => {
+/**
+ * Creates an authorized Axios instance with a Bearer token.
+ * @returns {Promise<AxiosInstance>} A Promise that resolves to an Axios instance with auth headers.
+ */
+
+export const createAuthorizedInstance = async (): Promise<AxiosInstance> => {
 	try {
 		const token = await AsyncStorage.getItem("token");
 
@@ -14,6 +19,6 @@ export const createAuthorizedInstance = async () => {
 		});
 	} catch (error) {
 		console.error("Error retrieving token:", error);
-		throw error;
+		throw error instanceof Error ? error : new Error("Unknown error occurred");
 	}
 };
