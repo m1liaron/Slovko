@@ -1,10 +1,16 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { darkTheme, lightTheme } from "../common/enums/app/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ThemeContext = createContext({});
+type Theme = typeof lightTheme;
+type ThemeContextType = {
+	theme: Theme;
+	toggleTheme: () => void;
+}
 
-export const ThemeProvider = ({ children }) => {
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setTheme] = useState(lightTheme); // Default theme
 
 	useEffect(() => {
@@ -37,4 +43,10 @@ export const ThemeProvider = ({ children }) => {
 	);
 };
 
-export const useAppTheme = () => useContext(ThemeContext);
+export const useAppTheme = () => {
+	const context = useContext(ThemeContext);
+	if (!context) {
+		throw new Error("useAppTheme must be used within a ThemeProvider");
+	}
+	return context;
+};

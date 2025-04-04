@@ -12,12 +12,19 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
  * @constructor
  */
 
+interface AddInputProps {
+	placeholder: string;
+	placeholderTextColor: string;
+	value: string;
+	onChangeText: () => void
+}
+
 const AddInput = ({
 	placeholder = "",
 	placeholderTextColor,
 	value = "",
 	onChangeText,
-}) => {
+}: AddInputProps) => {
 	const {
 		theme: {
 			colors: { lightBackground, primary },

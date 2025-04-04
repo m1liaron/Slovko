@@ -1,15 +1,20 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Text } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 
 /**
- * @param children {object}
+ * @param children {ReactNode}
  * @param style {object}
  * @returns {JSX.Element}
  * @constructor
  */
 
-const ThemeText = ({ children, style }) => {
+interface ThemeTextProps {
+  children: ReactNode;
+  style: {}
+} 
+
+const ThemeText = ({ children, style }: ThemeTextProps) => {
 	const {
 		theme: {
 			colors: { primary },

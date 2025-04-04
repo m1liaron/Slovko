@@ -11,7 +11,14 @@ import styles from "./PressableButton.styles";
  * @constructor
  */
 
-const PressableButton = ({ text, onPress, buttonStyle, disabled }) => {
+interface PressableButtonProps {
+	text: string; 
+	onPress: () => void; 
+	buttonStyle: object; 
+	disabled: boolean;
+} 
+
+const PressableButton = ({ text, onPress, buttonStyle, disabled }: PressableButtonProps) => {
 	return (
 		<Pressable onPress={onPress} style={[styles.button, { ...buttonStyle }]} disabled={disabled}>
 			<Text style={styles.buttonText}>{text}</Text>
