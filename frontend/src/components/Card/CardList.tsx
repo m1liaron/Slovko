@@ -253,7 +253,6 @@ const CardList = ({ groupId }) => {
 
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
-					<PressableButton onPress={navigateToLearn} text="Вчитися" />
 					<View  style={{ flexDirection: "row", justifyContent:"center", alignItems:"center"}}> 
 						<Pressable onPress={decWordsRange}>
 							<FontAwesome name="minus" color={colors.primary} size={40}/>
@@ -291,6 +290,7 @@ const CardList = ({ groupId }) => {
 							</Pressable>
 						)}
 					</View>
+					<PressableButton onPress={navigateToLearn} text="Вчитися" />
 				</View>
 			)}
 			<AddButton onPress={() => setShowAddModal(true)} />

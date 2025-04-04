@@ -48,6 +48,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 	const frontAnimatedStyle = useAnimatedStyle(() => {
 		return {
 			transform: [
+				{ perspective: 1000 } ,
 				{
 					rotateY: `${interpolate(rotation.value, [0, 180], [0, Math.PI])}rad`,
 				},
@@ -58,6 +59,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 	const backAnimatedStyle = useAnimatedStyle(() => {
 		return {
 			transform: [
+				{ perspective: 1000 },
 				{
 					rotateY: `${interpolate(rotation.value, [0, 180], [Math.PI, 0])}rad`,
 				},
