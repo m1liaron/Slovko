@@ -20,7 +20,7 @@ export const requestNotificationPermission = async () => {
 	return true;
 };
 
-export const scheduleNotification = async (title, body, trigger) => {
+export const scheduleNotification = async (title: string, body: string, trigger: any) => {
 	await Notifications.scheduleNotificationAsync({
 		content: {
 			title,
