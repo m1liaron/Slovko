@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
 	getCards,
 	addCard,
@@ -8,32 +8,43 @@ import {
 	getRepeatedCards,
 	getRepeatedCardsFromIds,
 } from "./cardThunk";
-import { DataStatus } from "../../common/enums/app/app";
+import { DataStatus, IDataStatus } from "../../common/enums/app/app";
+import { ICard } from "@/common/enums/types/card.type";
+
+interface InitialState {
+	cards: ICard[],
+	filteredCards: ICard[],
+	repeatedCards: string[],
+	status: IDataStatus,
+	error: string | null,
+}
+
+const initialState: InitialState = {
+	cards: [],
+	filteredCards: [],
+	repeatedCards: [],
+	status: DataStatus.IDLE,
+	error: null,
+};
 
 const cardSlice = createSlice({
 	name: "cards",
-	initialState: {
-		cards: [],
-		filteredCards: [],
-		repeatedCards: [],
-		status: DataStatus.IDLE,
-		error: null,
-	},
+	initialState,
 	reducers: {
 		rangeCards: (state, action) => {
 			if (action.payload) {
 				state.cards = [...state.cards.slice(0, action.payload)];
 			}
 		},
-		sortCards: (state, action) => {
+		sortCards: (state, action: PayloadAction<"asc" | "desc">) => {
 			state.cards.sort((a, b) => {
-				const dateA = new Date(a.nextReviewAt);
-				const dateB = new Date(b.nextReviewAt);
+				const timeA  = new Date(a.nextReviewAt).getTime();
+				const timeB = new Date(b.nextReviewAt).getTime();
 
 				if (action.payload === "asc") {
-					return dateA - dateB; // Ascending order
+					return timeA - timeB; // Ascending order
 				}
-					return dateB - dateA;
+					return timeB - timeA;
 			});
 		},
 		filterCardsByStatus: (state, action) => {
@@ -57,7 +68,7 @@ const cardSlice = createSlice({
 			})
 			.addCase(getCards.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
-				state.error = action.error.message;
+				state.error = action.error.message || null;
 			})
 
 			.addCase(updateCardsAfterLearn.pending, (state) => {
@@ -70,10 +81,10 @@ const cardSlice = createSlice({
 			})
 			.addCase(updateCardsAfterLearn.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
-				state.error = action.error.message;
+				state.error = action.error.message || null;
 			})
 
-			.addCase(addCard.pending, (state, action) => {
+			.addCase(addCard.pending, (state) => {
 				state.status = DataStatus.PENDING;
 			})
 			.addCase(addCard.fulfilled, (state, action) => {
@@ -83,10 +94,10 @@ const cardSlice = createSlice({
 			})
 			.addCase(addCard.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
-				state.error = action.payload;
+				state.error = action.error.message || null;
 			})
 			// remove card
-			.addCase(removeCard.pending, (state, action) => {
+			.addCase(removeCard.pending, (state) => {
 				state.status = DataStatus.PENDING;
 			})
 			.addCase(removeCard.fulfilled, (state, action) => {
@@ -130,7 +141,7 @@ const cardSlice = createSlice({
 			})
 			.addCase(getRepeatedCards.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
-				state.error = action.error.message;
+				state.error = action.error.message || null;
 			})
 			// get repeated cards
 			.addCase(getRepeatedCardsFromIds.pending, (state) => {
@@ -142,14 +153,14 @@ const cardSlice = createSlice({
 			})
 			.addCase(getRepeatedCardsFromIds.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
-				state.error = action.error.message;
+				state.error = action.error.message || null;
 			});
 	},
 });
 
 export const { filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
-export const selectCard = (state) => state.cards.cards;
+export const selectCard = (state: { cards: { cards: InitialState }}) => state.cards.cards;
 export {
 	getCards,
 	addCard,

@@ -1,7 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
+import { ICard } from "@/common/enums/types/card.type";
 
-export const getCards = createAsyncThunk("card/fetchCards", async (data) => {
+export const getCards = createAsyncThunk("card/fetchCards", async (data: ICard) => {
 	try {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.get(`/cards/${data.groupId}`);
@@ -14,22 +15,23 @@ export const getCards = createAsyncThunk("card/fetchCards", async (data) => {
 
 export const addCard = createAsyncThunk(
 	"card/addCard",
-	async (data, thunkAPI) => {
+	async (data: ICard, thunkAPI) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
 			const response = await axiosInstance.post("/cards", data);
 			return response.data;
 		} catch (error) {
-			const errorMessage = error.response.data.message;
-			return thunkAPI.rejectWithValue(errorMessage);
+			let message = 'Unknown Error'
+			if (error instanceof Error) message = error.message
+			return thunkAPI.rejectWithValue(message);
 		}
 	},
 );
 
-export const removeCard = createAsyncThunk("card/remove", async (data) => {
+export const removeCard = createAsyncThunk("card/remove", async (cardId: string) => {
 	try {
 		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.delete(`/cards/${data}`);
+		const response = await axiosInstance.delete(`/cards/${cardId}`);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching cards:", error);
@@ -37,7 +39,7 @@ export const removeCard = createAsyncThunk("card/remove", async (data) => {
 	}
 });
 
-export const updateCard = createAsyncThunk("card/update", async (data) => {
+export const updateCard = createAsyncThunk("card/update", async (data: ICard) => {
 	try {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.patch(`/cards/${data.id}`, data);
@@ -50,7 +52,7 @@ export const updateCard = createAsyncThunk("card/update", async (data) => {
 
 export const updateCardsAfterLearn = createAsyncThunk(
 	"card/learnCards",
-	async (data) => {
+	async (data: ICard) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
 			const url = data.groupId ? `/cards/${data.groupId}` : "/cards";
@@ -79,7 +81,7 @@ export const getRepeatedCards = createAsyncThunk(
 
 export const getRepeatedCardsFromIds = createAsyncThunk(
 	"card/getRepeatedCardsFromIds",
-	async (data) => {
+	async (data: string[]) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
 			const response = await axiosInstance.post("/cards/repeated", data);
