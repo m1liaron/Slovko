@@ -7,7 +7,13 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import styles from "./ExitModal.styles";
 
-const ExitModal = ({ modalVisible, handleClose, text }) => {
+interface ExitModalProps {
+	modalVisible: boolean; 
+	handleClose: () => {};
+	text: string;
+}
+
+const ExitModal = ({ modalVisible, handleClose, text }: ExitModalProps) => {
 	const navigation = useNavigation();
 	const {
 		theme: { colors },
@@ -22,7 +28,7 @@ const ExitModal = ({ modalVisible, handleClose, text }) => {
 		<DefaultModal isVisible={modalVisible} handleClose={handleClose}>
 			<View>
 				<ThemeText
-					style={{ color: colors.primary, fontWeight: "bold", fontSize: 40 }}
+					style={{ fontWeight: "bold", fontSize: 40 }}
 				>
 					{text}
 				</ThemeText>
