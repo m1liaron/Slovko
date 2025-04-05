@@ -1,14 +1,16 @@
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { useDispatch } from "react-redux";
-import AddInput from "../../common/components/AddInput/AddInput";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import { updateCard } from "../../redux/cardReducer/cardSlice";
-import pickImage from "../../utils/pickImage";
-import DefaultModal from "../DefaultModal/DefaultModal";
+import AddInput from "../../../common/components/AddInput/AddInput";
+import PressableButton from "../../../common/components/PressableButton/PressableButton";
+import { useAppTheme } from "../../../contexts/ThemeProvider";
+import { updateCard } from "../../../redux/cardReducer/cardSlice";
+import pickImage from "../../../utils/pickImage";
+import DefaultModal from "../../DefaultModal/DefaultModal";
+import { useAppDispatch } from "@/hooks/redux.hooks";
+import { ICard } from "@/common/enums/types/card.type";
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -18,20 +20,26 @@ import DefaultModal from "../DefaultModal/DefaultModal";
  * @constructor
  */
 
-const CardItem = ({ item, onRemove, groupId }) => {
+interface CardItemProps {
+	item: ICard;
+	onRemove: () => void;
+	groupId: string;
+}
+
+const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const [showEditModal, setShowEditModal] = useState(false);
-	const [title, setTitle] = useState(item.word);
-	const [translate, setTranslate] = useState(item.translateWord);
-	const [imageUri, setImageUri] = useState("");
+	const [showEditModal, setShowEditModal] = useState<boolean>(false);
+	const [title, setTitle] = useState<string>(item.word);
+	const [translate, setTranslate] = useState<string>(item.translateWord);
+	const [imageUri, setImageUri] = useState<string>("");
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
-	const formatReviewTime = (reviewTime) => {
-		const now = new Date();
-		const timeDifference = new Date(reviewTime) - now; // Now it's future time, so we subtract now from reviewTime
+	const formatReviewTime = (reviewTime: Date) => {
+		const now = new Date().getTime();
+		const timeDifference = new Date(reviewTime).getTime() - now; // Now it's future time, so we subtract now from reviewTime
 
 		const oneDay = 24 * 60 * 60 * 1000;
 		const oneHour = 60 * 60 * 1000;
@@ -101,12 +109,13 @@ const CardItem = ({ item, onRemove, groupId }) => {
 						size={24}
 						color={colors.iconColor}
 					/>
-					<Entypo
-						name="cross"
-						onPress={onRemove}
-						size={24}
-						color={colors.iconColor}
-					/>
+					<Pressable onPress={onRemove}>
+						<Entypo
+							name="cross"
+							size={24}
+							color={colors.iconColor}
+						/>
+					</Pressable>
 				</View>
 			</View>
 			<Text style={[styles.translate, { color: colors.primary }]}>
@@ -137,13 +146,13 @@ const CardItem = ({ item, onRemove, groupId }) => {
 				handleClose={() => setShowEditModal(false)}
 			>
 				<View>
-					<Text style={{ color: colors.primary }}>Оновити карточку!</Text>
-					<Text style={{ color: colors.primary }}>Слово</Text>
+					<ThemeText>Оновити карточку!</ThemeText>
+					<ThemeText>Слово</ThemeText>
 					<AddInput value={title} onChangeText={setTitle} />
 				</View>
 
 				<View>
-					<Text style={{ color: colors.primary }}>Переклад</Text>
+					<ThemeText>Переклад</ThemeText>
 					<AddInput value={translate} onChangeText={setTranslate} />
 				</View>
 

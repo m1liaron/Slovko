@@ -1,4 +1,4 @@
-import { type ICard, AddCardRequest } from "@/common/enums/types/types";
+import { type ICard, AddCardRequest, UpdateCardRequst } from "@/common/enums/types/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
@@ -47,7 +47,7 @@ export const removeCard = createAsyncThunk(
 
 export const updateCard = createAsyncThunk(
 	"card/update",
-	async (data: ICard) => {
+	async (data: UpdateCardRequst) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
 			const response = await axiosInstance.patch(`/cards/${data.id}`, data);

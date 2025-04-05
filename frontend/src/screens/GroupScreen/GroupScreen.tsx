@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
-import { RouteProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import AddInput from "../../common/components/AddInput/AddInput";

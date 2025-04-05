@@ -3,12 +3,24 @@ type ICard = {
 	word: string;
 	translateWord: string;
 	groupId?: string;
-	image?: string;
+	image?: CardImage;
 	status: string;
 	learnedAt: Date;
 	nextReviewAt: Date;
 	reviewCount: Date;
 };
+
+type CardImage = {
+	url: string;
+}
+
+type UpdateCardRequst = {
+	id: string;
+	word: string;
+	translateWord: string;
+	groupId?: string;
+	imageUri?: string;
+}
 
 type AddCardRequest = {
 	word: string;
@@ -22,4 +34,4 @@ type IRepeatedGroup = {
 	cards: string[];
 };
 
-export type { ICard, IRepeatedGroup, AddCardRequest };
+export type { ICard, IRepeatedGroup, AddCardRequest, UpdateCardRequst };

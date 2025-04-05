@@ -28,10 +28,10 @@ import {
 } from "../../../redux/cardReducer/cardSlice";
 import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
-import CardItem from "../CardItem";
+import CardItem from "../CardItem/CardItem";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import styles from "./CardList";
+import styles from "./CardList.styles";
 
 const MemoCardItem = memo(CardItem);
 

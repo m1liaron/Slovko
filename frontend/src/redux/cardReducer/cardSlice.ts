@@ -1,4 +1,4 @@
-import type { ICard, IRepeatedGroup } from "@/common/enums/types/card.type";
+import type { ICard, IRepeatedGroup } from "@/common/enums/types/types";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
 import {
