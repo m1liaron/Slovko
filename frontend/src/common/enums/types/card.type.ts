@@ -10,9 +10,16 @@ type ICard = {
 	reviewCount: Date;
 };
 
+type AddCardRequest = {
+	word: string;
+	translateWord: string;
+	imageUri: string;
+	groupId: string;
+}
+
 type IRepeatedGroup = {
 	title: string;
 	cards: string[];
 };
 
-export type { ICard, IRepeatedGroup };
+export type { ICard, IRepeatedGroup, AddCardRequest };

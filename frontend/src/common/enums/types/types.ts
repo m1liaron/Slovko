@@ -1,5 +1,5 @@
 export { IUser, IStreakDate, IUpdateUser, RegisterUser } from "./user.type";
 export { IGroup } from "./group.type";
-export { ICard } from "./card.type";
+export { ICard, AddCardRequest } from "./card.type";
 export { IResult, IStatistics } from "./result.type";
 export { ISharedGroup } from "./sharedGroup";

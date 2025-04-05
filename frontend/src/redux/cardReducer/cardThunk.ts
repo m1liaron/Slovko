@@ -1,13 +1,13 @@
-import { type ICard, IRepeatedGroup } from "@/common/enums/types/card.type";
+import { type ICard, AddCardRequest } from "@/common/enums/types/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
 export const getCards = createAsyncThunk(
 	"card/fetchCards",
-	async (data: ICard) => {
+	async ({ groupId }: { groupId: string}) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.get(`/cards/${data.groupId}`);
+			const response = await axiosInstance.get(`/cards/${groupId}`);
 			return response.data;
 		} catch (error) {
 			console.error("Error fetching cards:", error);
@@ -18,7 +18,7 @@ export const getCards = createAsyncThunk(
 
 export const addCard = createAsyncThunk(
 	"card/addCard",
-	async (data: ICard, thunkAPI) => {
+	async (data: AddCardRequest, thunkAPI) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
 			const response = await axiosInstance.post("/cards", data);

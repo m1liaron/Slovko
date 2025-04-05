@@ -9,7 +9,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import { DataStatus } from "../../common/enums/app/app";
 import BackButton from "../../components/BackButton/BackButton";
-import CardList from "../../components/Card/CardList";
+import CardList from "../../components/Card/CardList/CardList";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import {

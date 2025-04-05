@@ -2,36 +2,36 @@ import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from "expo-checkbox";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
 import {
 	FlatList,
 	Image,
 	Platform,
 	Pressable,
-	StyleSheet,
 	Text,
 	View,
 } from "react-native";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import { useDispatch, useSelector } from "react-redux";
 import noCardsImage from "../../assets/images/no-cards.png";
-import AddButton from "../../common/components/AddButton/AddButton";
-import AddInput from "../../common/components/AddInput/AddInput";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import ThemeText from "../../common/components/ThemeText/ThemeText";
-import { AppPath, DataStatus } from "../../common/enums/app/app";
-import { useAppTheme } from "../../contexts/ThemeProvider";
+import AddButton from "../../../common/components/AddButton/AddButton";
+import AddInput from "../../../common/components/AddInput/AddInput";
+import PressableButton from "../../../common/components/PressableButton/PressableButton";
+import ThemeText from "../../../common/components/ThemeText/ThemeText";
+import { AppPath, DataStatus } from "../../../common/enums/app/app";
+import { useAppTheme } from "../../../contexts/ThemeProvider";
 import {
 	addCard,
 	getCards,
 	rangeCards,
 	removeCard,
 	resetFilter,
-} from "../../redux/cardReducer/cardSlice";
-import pickImage from "../../utils/pickImage";
-import DefaultModal from "../DefaultModal/DefaultModal";
-import Loading from "../Loading";
-import CardItem from "./CardItem";
+} from "../../../redux/cardReducer/cardSlice";
+import pickImage from "../../../utils/pickImage";
+import DefaultModal from "../../DefaultModal/DefaultModal";
+import CardItem from "../CardItem";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import styles from "./CardList";
 
 const MemoCardItem = memo(CardItem);
 
@@ -41,28 +41,32 @@ const MemoCardItem = memo(CardItem);
  * @constructor
  */
 
-const CardList = ({ groupId }) => {
+type CardListProps = {
+	groupId: string;
+}
+
+const CardList = ({ groupId }: CardListProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { group } = useSelector((state) => state.groups);
-	const { cards, filteredCards, isLoading, error, status } = useSelector(
+	const { group } = useAppSelector((state) => state.groups);
+	const { cards, filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
 	);
+	const dispatch = useAppDispatch();
 
-	const [addCardMode, setAddCardMode] = useState(0);
-	const [valueWords, setValueWords] = useState({});
-	const [value, setValue] = useState("");
-	const [answerWord, setAnswerWord] = useState("");
-	const [isValidateWord, setIsValidateWord] = useState(true);
-	const [showAddModal, setShowAddModal] = useState(false);
-	const [imageUri, setImageUri] = useState("");
-	const [jsonOutput, setJsonOutput] = useState(null);
-	const [wordsRangeNumber, setWordsRangeNumber] = useState(cards.length || 2);
-	const navigation = useNavigation();
-	const dispatch = useDispatch();
+	const [addCardMode, setAddCardMode] = useState<number>(0);
+	const [valueWords, setValueWords] = useState<Record<string, string>>({});
+	const [value, setValue] = useState<string>("");
+	const [answerWord, setAnswerWord] = useState<string>("");
+	const [isValidateWord, setIsValidateWord] = useState<boolean>(true);
+	const [showAddModal, setShowAddModal] = useState<boolean>(false);
+	const [imageUri, setImageUri] = useState<string>("");
+	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
+	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(cards.length || 2);
+	const navigation = useNavigation<StackNavigation>();
 
-	const onChangeCardsRange = useCallback((value) => {
+	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
 	}, []);
 
@@ -78,50 +82,57 @@ const CardList = ({ groupId }) => {
 		}
 	};
 
-	const handleFileChange = (event) => {
-		const file = event.target.files[0];
-		if (!file) return;
-
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			const fileContent = e.target.result;
-
-			const lines = fileContent.split("\n");
-			const jsonObject = {};
-
-			lines.forEach((line, index) => {
-				const [key, value] = line.split(":");
-				if (key && value) {
-					jsonObject[key.trim()] = value.trim();
-				} else {
-					console.warn(
-						`Line ${index + 1} is not in the correct format: "${line}"`,
-					);
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const files = (event.target as HTMLInputElement).files;
+		if(files){
+			const file = files[0]
+			
+			const reader = new FileReader();
+			reader.onload = (e: ProgressEvent<FileReader>) => {
+				if(e?.target?.result) {
+					const fileContent = e.target.result.toString();
+	
+					const lines = fileContent.split("\n");
+					const jsonObject: Record<string, string> = {};
+	
+					lines.forEach((line: string, index) => {
+						const [key, value] = line.split(":");
+						if (key && value) {
+							jsonObject[key.trim()] = value.trim();
+						} else {
+							console.warn(
+								`Line ${index + 1} is not in the correct format: "${line}"`,
+							);
+						}
+					});
+	
+					setJsonOutput(jsonObject);
+					setValueWords(jsonObject);
 				}
-			});
+			};
 
-			setJsonOutput(jsonObject);
-			setValueWords(jsonObject);
-		};
-
-		reader.readAsText(file);
+			reader.readAsText(file);
+		}
 	};
 
 	useEffect(() => {
-		if (group.id !== groupId) {
+		if (group?.id !== groupId) {
 			dispatch(getCards({ groupId }));
 		}
 	}, [dispatch, groupId, group?.id]);
 
-	const convertImageToBase64 = async (uri) => {
+	const convertImageToBase64 = async (uri: string): Promise<string> => {
 		const response = await fetch(uri);
 		const blob = await response.blob();
 		const reader = new FileReader();
 
 		return new Promise((resolve, reject) => {
 			reader.onloadend = () => {
-				const base64data = reader.result.split(",")[1]; // Get the Base64 part
-				resolve(base64data);
+				if(reader?.result) {
+					const readerResult = reader.result.toString();
+					const base64data = readerResult.split(",")[1]; // Get the Base64 part
+					resolve(base64data);
+				}
 			};
 			reader.onerror = () =>
 				reject(new Error("Failed to convert image to base64"));
@@ -130,7 +141,7 @@ const CardList = ({ groupId }) => {
 	};
 
 	const onSaveCard = async () => {
-		let finalImageUri = imageUri;
+		let finalImageUri: string = imageUri;
 
 		if (Platform.OS === "web" && imageUri.startsWith("blob:")) {
 			try {
@@ -149,7 +160,7 @@ const CardList = ({ groupId }) => {
 			}
 		}
 
-		function validateWord(word) {
+		function validateWord(word: string) {
 			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
 			const formattedWord = cleanedWord
 				.split(" ")
@@ -198,24 +209,28 @@ const CardList = ({ groupId }) => {
 		}
 	};
 
-	const onRemoveCard = async (courseId) => {
+	const onRemoveCard = async (courseId: string) => {
 		dispatch(removeCard(courseId));
 	};
 
-	const navigateTo = (name) => {
-		navigation.navigate(name, { groupId });
+	const navigateTo = (name: string) => {
+		navigation.navigate(`${name}/${groupId}`);
+		// name, { groupId }
 	};
 
-	const convertBlobToBase64 = (blobUri) => {
+	const convertBlobToBase64 = (blobUri: string): Promise<string> => {
 		return new Promise((resolve, reject) => {
 			fetch(blobUri)
 				.then((response) => response.blob())
 				.then((blob) => {
 					const reader = new FileReader();
-					reader.onloadend = () => resolve(reader.result);
-					reader.onerror = () =>
-						reject(new Error("Failed to convert blob to base64"));
-					reader.readAsDataURL(blob);
+					const readerResult = reader.result?.toString();
+					if(readerResult) {
+						reader.onloadend = () => resolve(readerResult);
+						reader.onerror = () =>
+							reject(new Error("Failed to convert blob to base64"));
+						reader.readAsDataURL(blob);
+					}
 				})
 				.catch((error) => reject(error));
 		});
@@ -230,7 +245,6 @@ const CardList = ({ groupId }) => {
 
 	return (
 		<View style={styles.container}>
-			{isLoading && <Loading />}
 			{!cards.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
@@ -383,14 +397,12 @@ const CardList = ({ groupId }) => {
 							<AddInput
 								value={value}
 								onChangeText={setValue}
-								style={styles.input}
 								placeholder="Слово..."
 							/>
 
 							<AddInput
 								value={answerWord}
 								onChangeText={setAnswerWord}
-								style={styles.input}
 								placeholder="Відповідь..."
 							/>
 							<View style={{ flexDirection: "row" }}>
@@ -412,108 +424,5 @@ const CardList = ({ groupId }) => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	formContainer: {
-		padding: 20,
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
-	image: {
-		width: 100,
-		height: 100,
-		marginVertical: 10,
-		borderRadius: 10,
-	},
-	listContainer: {
-		marginHorizontal: 30,
-		gap: 10,
-	},
-	modeToggle: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		marginBottom: 20,
-	},
-	modeButton: {
-		flex: 1,
-		padding: 10,
-		borderRadius: 5,
-		marginHorizontal: 5,
-	},
-	bulkAddContainer: {
-		paddingVertical: 10,
-	},
-	fileInputContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		backgroundColor: "#f1f1f1",
-		padding: 10,
-		borderRadius: 5,
-		marginBottom: 10,
-	},
-	fileInput: {
-		marginLeft: 10,
-		fontSize: 16,
-	},
-	jsonTableContainer: {
-		marginTop: 10,
-	},
-	jsonTableTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
-	jsonTable: {
-		borderWidth: 1,
-		borderColor: "#ccc",
-		borderRadius: 5,
-		padding: 10,
-		backgroundColor: "#f9f9f9",
-		height: 400,
-		overflow: "auto",
-	},
-	jsonRow: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		paddingVertical: 5,
-		borderBottomWidth: 1,
-		borderBottomColor: "#e0e0e0",
-	},
-	jsonKey: {
-		fontWeight: "bold",
-		fontSize: 16,
-		flex: 1,
-	},
-	jsonValue: {
-		fontSize: 16,
-		flex: 1,
-		textAlign: "right",
-	},
-	singleAddContainer: {
-		marginTop: 10,
-	},
-	inputField: {
-		marginVertical: 10,
-		borderWidth: 1,
-		borderColor: "#ccc",
-		borderRadius: 5,
-		padding: 10,
-	},
-	imagePreview: {
-		width: 100,
-		height: 100,
-		borderRadius: 10,
-		marginVertical: 10,
-	},
-	saveButton: {
-		marginTop: 20,
-	},
-});
 
 export default CardList;
