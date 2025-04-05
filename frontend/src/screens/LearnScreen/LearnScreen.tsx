@@ -5,7 +5,6 @@ import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Platform, Pressable, Text, View } from "react-native";
 import { Switch } from "react-native-gesture-handler";
-import { useDispatch, useSelector } from "react-redux";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import { AppPath, DataStatus } from "../../common/enums/app/app";
@@ -24,43 +23,56 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { ICard } from "@/common/enums/types/card.type";
+import { ResultsCard } from "@/common/enums/types/result.type";
 
-const LearnScreen = ({ route }) => {
+type Section = "cards" | "quiz" | "word" | "finish";
+
+interface LearnScreenProps {
+	route: { params: { groupId: string }};
+}
+
+
+const LearnScreen = ({ route }: LearnScreenProps) => {
 	const { theme } = useAppTheme();
 	const { groupId } = route.params || {};
-	const groups = useSelector(selectGroup);
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
-	const { repeatedCards, cards, status } = useSelector((state) => state.cards);
+	const groups = useAppSelector(selectGroup);
+	const dispatch = useAppDispatch();
+	const navigaiton = useNavigation<StackNavigation>();
+	const { repeatedCards, cards, status } = useAppSelector((state) => state.cards);
 
-	const [isQuizEnabled, setIsQuizEnabled] = useState(true);
-	const [isGuessWordEnabled, setIsGuessWordEnabled] = useState(true);
-	const [showExitModal, setShowExitModal] = useState(false);
-	const [showSettingsModal, setShowSettingsModal] = useState(false);
-	const [currentSection, setCurrentSection] = useState("cards");
+	// Section State
+	const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
+	const [currentSection, setCurrentSection] = useState<Section>("cards");
 	const [finishedSections, setFinishedSections] = useState([]);
-	const [isLessonOver, setIsLessonOver] = useState(false);
 
+	// Modes Toggles
+	const [isQuizEnabled, setIsQuizEnabled] = useState<boolean>(true);
+	const [isGuessWordEnabled, setIsGuessWordEnabled] = useState<boolean>(true);
+	const [showExitModal, setShowExitModal] = useState<boolean>(false);
+	const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
+
+	// Cards State
 	const [flashCards, setFlashCards] = useState([]);
 	const [quizCards, setQuizCards] = useState([]);
 	const [guessWordCards, setGuessWordCards] = useState([]);
-	const [startLearnDate, setStartLearnDate] = useState(null);
-	const [elapsedTime, setElapsedTime] = useState("");
+
+	// Timing State
+	const [startLearnDate, setStartLearnDate] = useState<Date>(new Date());
+	const [elapsedTime, setElapsedTime] = useState<string>("");
 
 	const projectName = groups?.find((group) => group.id === groupId)?.title;
 
-	useEffect(() => {
-		setStartLearnDate(new Date());
-	}, []);
-
-	const toggleSwitch = (changeFunction) =>
-		changeFunction((previousState) => !previousState);
+	const toggleSwitch = (changeFunction: React.Dispatch<React.SetStateAction<boolean>>) => changeFunction((previousState) => !previousState);
 
 	const handleNextSection = () => {
-		const transitions = {
+		const transitions: Record<Section, Section> = {
 			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
 			word: finishedSections.includes("quiz") ? "finish" : "quiz",
+			finish: "finish"
 		};
 		const nextSection = transitions[currentSection] || "finish";
 		if (nextSection === "finish") {
@@ -71,27 +83,22 @@ const LearnScreen = ({ route }) => {
 		}
 	};
 
-	const handleSetData = (card, isCorrect) => {
-		const newCard = {
-			wordId: card.id,
-			word: card.word,
-			translateWord: card.translateWord,
-			mistakesAmount: 0,
-		};
-		if (!isCorrect) {
-			newCard.mistakesAmount = 1;
-		}
+	const handleSetData = (card: ICard, isCorrect: boolean) => {
+		const updateOrAddCard = (
+			cards: ICard[], 
+			setCards: React.Dispatch<React.SetStateAction<ResultsCard[]>>
+		) => {
+			const newCard = {
+				wordId: card.id,
+				word: card.word,
+				translateWord: card.translateWord,
+				mistakesAmount: isCorrect ? 0 : 1,
+			};
 
-		const updateOrAddCard = (cards, setCards) => {
 			setCards((prev) => {
-				const existingCardIndex = prev.findIndex(
-					(item) => item.wordId === card.id,
-				);
-
-				if (existingCardIndex !== -1 && isCorrect) {
-					return prev;
-				}
-				if (existingCardIndex !== -1) {
+				const existingCardIndex = prev.findIndex((item) => item.wordId === card.id);
+				if(existingCardIndex !== -1) {
+					if (isCorrect) return prev;
 					// If card exists, increment mistakesAmount
 					const updatedCards = [...prev];
 					updatedCards[existingCardIndex] = {
@@ -133,15 +140,12 @@ const LearnScreen = ({ route }) => {
 		setCurrentSection("cards");
 		setIsLessonOver(true);
 
-		const endLearnDate = new Date();
-		const totalLearnedTime = endLearnDate - startLearnDate; // in milliseconds
+		const endLearnDate = new Date().getTime();
+		const totalLearnedTime = endLearnDate - startLearnDate.getTime(); // in milliseconds
 		setElapsedTime(formatTime(totalLearnedTime));
 
-		if (groupId) {
-			dispatch(updateCardsAfterLearn({ groupId }));
-		} else {
-			const repeatedCardsIds = cards?.map((card) => card.id);
-			dispatch(updateCardsAfterLearn(repeatedCardsIds));
+		const repeatedCardsIds = cards?.map((card) => card.id);
+		dispatch(updateCardsAfterLearn(repeatedCardsIds));
 		}
 		dispatch(updateUserStreak());
 		handleSaveResults();
@@ -154,7 +158,10 @@ const LearnScreen = ({ route }) => {
 		navigation.navigate(AppPath.Main);
 	};
 
-	const switchSection = (changeState, sectionName) => {
+	const switchSection = (
+		changeState: React.Dispatch<React.SetStateAction<boolean>>, 
+		sectionName: string
+	) => {
 		toggleSwitch(changeState);
 
 		if (currentSection === sectionName) {
@@ -205,11 +212,9 @@ const LearnScreen = ({ route }) => {
 
 	if (Platform.OS === "web") {
 		useEffect(() => {
-			const handleBeforeUnload = (event) => {
+			const handleBeforeUnload = (event: BeforeUnloadEvent) => {
 				event.preventDefault();
 
-				event.returnValue =
-					"Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.";
 				return "Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.";
 			};
 

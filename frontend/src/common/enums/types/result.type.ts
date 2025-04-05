@@ -40,4 +40,20 @@ type IStatistics = {
 	};
 };
 
-export type { IResult, IStatistics, ModeName };
+type ResultsCard = {
+	wordId: string;
+	word: string;
+	translateWord: string;
+	mistakesAmount: number,
+}
+
+type SaveResultsRequest = {
+	title: string | Date,
+	flashCards: ResultsCard[],
+	quiz: ResultsCard[],
+	guessWord: ResultsCard[],
+	startedLearn: Date,
+	completionTime: Date,
+}
+
+export type { IResult, IStatistics, ModeName, SaveResultsRequest, ResultsCard };
