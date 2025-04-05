@@ -8,16 +8,19 @@ import { Entypo } from "@expo/vector-icons";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+
 
 const RegisterScreen = () => {
-	const navigation = useNavigation();
-	const dispatch = useDispatch();
+	const navigation = useNavigation<StackNavigation>();
+	const dispatch = useAppDispatch();
 
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
-	const [notShowPassword, setNotShowPassword] = useState(true);
+	const [name, setName] = useState<string>("");
+	const [email, setEmail] = useState<string>("");
+	const [password, setPassword] = useState<string>("");
+	const [confirmPassword, setConfirmPassword] = useState<string>("");
+	const [notShowPassword, setNotShowPassword] = useState<boolean>(true);
 
 	const handleSubmit = async () => {
 		if (!email.length || !password.length) {
