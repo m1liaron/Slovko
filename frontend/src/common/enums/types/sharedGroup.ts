@@ -1,3 +1,5 @@
+import { IUser } from "./user.type";
+
 type ISharedCard = {
     id: string;
     word: string;
@@ -10,6 +12,8 @@ type ISharedGroup = {
     title: string;
     userId?: string;
     sharedCards: ISharedCard[];
+    user?: IUser;
+    createdAt: Date;
 }
 
 export { ISharedGroup };

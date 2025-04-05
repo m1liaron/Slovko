@@ -12,7 +12,7 @@ import styles from "./AddButton.styles";
 
 interface AddButtonProps {
 	onPress: () => void;
-	iconSize: number
+	iconSize?: number
 } 
 
 const AddButton = ({ onPress, iconSize = 30 }: AddButtonProps) => {

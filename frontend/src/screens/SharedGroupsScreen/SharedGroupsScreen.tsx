@@ -7,9 +7,7 @@ import {
 	TextInput,
 	View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import { useDispatch, useSelector } from "react-redux";
 import {
 	filterMySharedGroups,
 	filterSharedGroups,
@@ -31,19 +29,23 @@ import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import AvatarImage from "../../../assets/images/avatar.png";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { ISharedGroup } from "@/common/enums/types/sharedGroup";
+import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { IGroup } from "@/common/enums/types/group.type";
 
 const SharedGroupsScreen = () => {
-	const { user } = useSelector(selectUser);
+	const { user } = useAppSelector(selectUser);
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
-	const sharedGroups = useSelector(selectSharedGroup);
-	const groups = useSelector(selectGroup);
+	const dispatch = useAppDispatch();
+	const navigation = useNavigation<StackNavigation>();
+	const sharedGroups = useAppSelector(selectSharedGroup);
+	const groups = useAppSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
-	const [selectedGroup, setSelectedGroup] = useState(null);
+	const [selectedGroup, setSelectedGroup] = useState<IGroup | null>(null);
 	const [sharedGroupTitle, setSharedGroupTitle] = useState(
 		selectedGroup?.title,
 	);
@@ -54,9 +56,9 @@ const SharedGroupsScreen = () => {
 		dispatch(getAllSharedGroups());
 	}, [dispatch]);
 
-	const formatTime = (createdAt) => {
-		const now = new Date();
-		const timeDifference = now - new Date(createdAt);
+	const formatTime = (createdAt: Date) => {
+		const now = new Date().getTime();
+		const timeDifference = now - new Date(createdAt).getTime();
 
 		const oneDay = 24 * 60 * 60 * 1000;
 		const sevenDays = 7 * oneDay;
@@ -78,7 +80,7 @@ const SharedGroupsScreen = () => {
 		return new Date(createdAt).toLocaleTimeString();
 	};
 
-	const addRemoveSelectedGroup = (newGroup) => {
+	const addRemoveSelectedGroup = (newGroup: IGroup) => {
 		setSelectedGroup(!selectedGroup ? newGroup : null);
 		setSharedGroupTitle(!sharedGroupTitle ? newGroup.title : "");
 	};
@@ -88,14 +90,15 @@ const SharedGroupsScreen = () => {
 			alert("Please select a shared group");
 		}
 
+		if(selectedGroup) {
 		const sharedGroupData = {
 			groupId: selectedGroup.id,
-			title: sharedGroupTitle,
+			title: sharedGroupTitle || "Shared Group Title",
 		};
 		dispatch(saveSharedGroup(sharedGroupData));
 	};
 
-	const renderItem = ({ item }) => (
+	const renderItem = ({ item }: { item: ISharedGroup}) => (
 		<View
 			style={{
 				flexDirection: "row",
@@ -114,7 +117,7 @@ const SharedGroupsScreen = () => {
 				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
 					<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
 						<Image
-							source={item.user.image || AvatarImage}
+							source={item?.user?.image ? { uri: item.user.image } : AvatarImage}
 							style={{
 								width: 40,
 								height: 40,
@@ -124,7 +127,7 @@ const SharedGroupsScreen = () => {
 							}}
 						/>
 						<Text style={{ color: colors.primary, fontSize: 30 }}>
-							{item.user.name}
+							{item?.user?.name}
 						</Text>
 					</View>
 					<View
@@ -145,7 +148,7 @@ const SharedGroupsScreen = () => {
 					{formatTime(item.createdAt)}
 				</Text>
 			</Link>
-			{item.user.id === user.id && (
+			{item?.user?.id === user?.id && (
 				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
@@ -164,7 +167,7 @@ const SharedGroupsScreen = () => {
 					</Text>
 					<PressableButton
 						text="Мої поширені групи"
-						onPress={() => dispatch(filterMySharedGroups({ userId: user.id }))}
+						onPress={() => dispatch(filterMySharedGroups({ userId: user?.id }))}
 					/>
 					<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
 						<FontAwesome name="search" color={colors.iconColor} size={40} />
@@ -186,7 +189,7 @@ const SharedGroupsScreen = () => {
 							borderColor: colors.primary,
 							padding: 15,
 							width: "30%",
-							alignSelf: "end",
+							alignSelf: "flex-end",
 							color: colors.primary,
 						}}
 						placeholder="Фільтр"
@@ -200,7 +203,7 @@ const SharedGroupsScreen = () => {
 							borderRadius: 20,
 							borderColor: colors.primary,
 							padding: 15,
-							alignSelf: "end",
+							alignSelf: "flex-end",
 						}}
 						onPress={() => dispatch(filterSharedGroups(filterValue))}
 					>
@@ -212,7 +215,7 @@ const SharedGroupsScreen = () => {
 							borderRadius: 20,
 							borderColor: colors.primary,
 							padding: 15,
-							alignSelf: "end",
+							alignSelf: "flex-end",
 						}}
 						onPress={() => dispatch(resetSharedGroups())}
 					>
@@ -221,7 +224,7 @@ const SharedGroupsScreen = () => {
 				</View>
 			)}
 
-			{groups.length ? (
+			{sharedGroups?.length ? (
 				<FlatList
 					data={sharedGroups}
 					contentContainerStyle={{
@@ -248,7 +251,7 @@ const SharedGroupsScreen = () => {
 				{groups.length ? (
 					<FlatList
 						data={groups}
-						renderItem={({ item }) => (
+						renderItem={({ item }: { item: IGroup}) => (
 							<Pressable onPress={() => addRemoveSelectedGroup(item)}>
 								<Text
 									style={{
@@ -289,6 +292,6 @@ const SharedGroupsScreen = () => {
 			</DefaultModal>
 		</ThemeBackground>
 	);
-};
+}};
 
 export default SharedGroupsScreen;

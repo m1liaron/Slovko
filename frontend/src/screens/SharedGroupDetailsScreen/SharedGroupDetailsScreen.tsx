@@ -83,6 +83,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 					</Text>
 				</View>
 			)}
+			// !TODO function to copy shared group
 			<PressableButton text="Скопіювати групу" />
 		</ThemeBackground>
 	);

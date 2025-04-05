@@ -12,7 +12,7 @@ export const getAllSharedGroups = createAsyncThunk(
 
 export const saveSharedGroup = createAsyncThunk(
 	"sharedGroup/save",
-	async (data) => {
+	async (data: { groupId: string; title: string}) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.post("/sharedGroups", data);
 		return response.data;
@@ -39,7 +39,7 @@ export const copySharedGroup = createAsyncThunk(
 
 export const removeSharedGroup = createAsyncThunk(
 	"sharedGroup/remove",
-	async (sharedGroupId) => {
+	async (sharedGroupId: string) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.delete(
 			`/sharedGroups/${sharedGroupId}`,

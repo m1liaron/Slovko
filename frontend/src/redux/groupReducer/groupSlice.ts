@@ -8,6 +8,7 @@ import {
 } from "./groupThunk";
 import { DataStatus, type IDataStatus } from "../../common/enums/app/DataStatus";
 import { IGroup } from "@/common/enums/types/group.type";
+import { RootState } from "../store";
 
 interface InitialState {
 	groups: IGroup[];
@@ -95,7 +96,7 @@ const groupSlice = createSlice({
 	},
 });
 
-export const selectGroup = (state: { groups: { groups: InitialState } }) => state.groups.groups;
+export const selectGroup = (state: RootState) => state.groups.groups;
 export {
 	getAllGroups,
 	getGroup,
