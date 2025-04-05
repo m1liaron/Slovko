@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
 import Toast from "react-native-toast-message";
 import { register } from "../../redux/userReducer/userSlice";
 import { Entypo } from "@expo/vector-icons";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { useAppDispatch } from '@/hooks/redux.hooks';
 import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 
 
@@ -46,11 +45,12 @@ const RegisterScreen = () => {
 
 		const response = await dispatch(register(registerData));
 		if (register.rejected.match(response)) {
-			const error = response.payload || "Registration failed";
+			// const error = response.payload || "Registration failed";
+			// !Todo make type for error
 			return Toast.show({
 				type: "error",
 				text1: "Помилка",
-				text2: error,
+				text2: "Registration failed",
 			});
 		}
 		navigation.navigate(AppPath.Home);

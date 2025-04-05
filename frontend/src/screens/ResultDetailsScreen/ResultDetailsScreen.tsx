@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./ResultDetailsScreen.styles";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { useDispatch, useSelector } from "react-redux";
 import { getResultDetails } from "../../redux/resultReducer/resultSlice";
 import Loading from "../../components/Loading";
 import BackButton from "../../components/BackButton/BackButton";
@@ -11,22 +9,30 @@ import formatDMTDate from "../../utils/formatDMTDate";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { formatTime } from "../../utils/formatTime";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 
-const ResultDetailsScreen = ({ route }) => {
+type ResultDetailsScreenProps = {
+	route: { params: { resultId: string }};
+};
+
+const ResultDetailsScreen = ({ route }: ResultDetailsScreenProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
 	const { resultId } = route.params;
-	const { result, isLoading } = useSelector((state) => state.results);
-	const dispatch = useDispatch();
-	const [selectedMode, setSelectedMode] = useState(0); // 0 - flashCards, 1 - quiz, 2 - guessWord
+	const { result, isLoading } = useAppSelector((state) => state.results);
+	const dispatch = useAppDispatch();
+	const [selectedMode, setSelectedMode] = useState<number>(0); // 0 - flashCards, 1 - quiz, 2 - guessWord
 
 	useEffect(() => {
 		dispatch(getResultDetails(resultId));
 	}, [dispatch, resultId]);
 
-	const resultTime =
-		new Date(result.completionTime) - new Date(result.startedLearn);
+	if(!result) {
+		return dispatch(getResultDetails(resultId));
+	}
+
+ 	const resultTime = new Date(result.completionTime).getTime() - new Date(result.startedLearn).getTime();
 	const formattedTime = formatTime(resultTime);
 
 	const calculateCorrectPercentage = () => {

@@ -20,7 +20,8 @@ type IResult = {
     userId?: string;
     startedLearn: Date;
     completionTime: Date;
-    mode: IResultMode[]
+    mode: IResultMode[];
+    createdAt: Date;
 }
 
 export { IResult };

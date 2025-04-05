@@ -15,7 +15,7 @@ export const getResults = createAsyncThunk("results/get", async () => {
 
 export const getResultDetails = createAsyncThunk(
 	"resultDetails/get",
-	async (id) => {
+	async (id: string) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.get(`/results/${id}`);
 		return response.data;
