@@ -163,11 +163,7 @@ const ResultsScreen = () => {
 									styles.itemContainer,
 									{ backgroundColor: colors.lightBackground },
 								]}
-								to={{
-									// !TODO Fix this type error
-									screen: AppPath.ResultDetails,
-									params: { resultId: result.id },
-								}}
+								to={`/${AppPath.ResultDetails}/${result.id}`}
 							>
 								<View style={styles.flex}>
 									<Text

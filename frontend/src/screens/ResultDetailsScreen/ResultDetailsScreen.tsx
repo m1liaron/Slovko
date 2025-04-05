@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import styles from "./ResultDetailsScreen.styles";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import { getResultDetails } from "../../redux/resultReducer/resultSlice";
@@ -29,7 +29,7 @@ const ResultDetailsScreen = ({ route }: ResultDetailsScreenProps) => {
 	}, [dispatch, resultId]);
 
 	if(!result) {
-		return dispatch(getResultDetails(resultId));
+		return <ActivityIndicator/>
 	}
 
  	const resultTime = new Date(result.completionTime).getTime() - new Date(result.startedLearn).getTime();
