@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { cardReducers } from "./cardReducer/cardSlice";
-import { userReducers } from "./userReducer/userSlice";
 import { groupReducers } from "./groupReducer/groupSlice";
 import { resultReducers } from "./resultReducer/resultSlice";
 import { sharedGroupReducers } from "./sharedGroupReducer/sharedGroupSlice";
+import { userReducers } from "./userReducer/userSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -16,5 +16,5 @@ export const store = configureStore({
 });
 
 export type AppStore = typeof store;
-export type RootState = ReturnType<AppStore['getState']>
-export type AppDispatch = AppStore['dispatch'];
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];

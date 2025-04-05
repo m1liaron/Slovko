@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text } from "react-native";
-import styles from "./ProgressContainer.styles";
+import { Text, View } from "react-native";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import styles from "./ProgressContainer.styles";
 
 /**
  * @param index {number}

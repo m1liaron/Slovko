@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, Pressable, GestureResponderEvent } from "react-native";
+import { GestureResponderEvent, Pressable, Text } from "react-native";
 import styles from "./PressableButton.styles";
 
 /**
@@ -12,15 +12,24 @@ import styles from "./PressableButton.styles";
  */
 
 interface PressableButtonProps {
-	text: string; 
-	onPress?: () => void; 
-	buttonStyle?: object; 
+	text: string;
+	onPress?: () => void;
+	buttonStyle?: object;
 	disabled?: boolean;
-} 
+}
 
-const PressableButton = ({ text, onPress, buttonStyle, disabled }: PressableButtonProps) => {
+const PressableButton = ({
+	text,
+	onPress,
+	buttonStyle,
+	disabled,
+}: PressableButtonProps) => {
 	return (
-		<Pressable onPress={onPress} style={[styles.button, { ...buttonStyle }]} disabled={disabled}>
+		<Pressable
+			onPress={onPress}
+			style={[styles.button, { ...buttonStyle }]}
+			disabled={disabled}
+		>
 			<Text style={styles.buttonText}>{text}</Text>
 		</Pressable>
 	);

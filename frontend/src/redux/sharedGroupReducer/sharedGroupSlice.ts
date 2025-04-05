@@ -1,29 +1,32 @@
+import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
 import { createSlice } from "@reduxjs/toolkit";
 import {
-	getAllSharedGroups,
-	saveSharedGroup,
-	getSharedGroup,
+	DataStatus,
+	type IDataStatus,
+} from "../../common/enums/app/DataStatus";
+import type { RootState } from "../store";
+import {
 	copySharedGroup,
+	getAllSharedGroups,
+	getSharedGroup,
 	removeSharedGroup,
+	saveSharedGroup,
 } from "./sharedGroupThunk";
-import { DataStatus, IDataStatus } from "../../common/enums/app/DataStatus";
-import { ISharedGroup } from "@/common/enums/types/sharedGroup";
-import { RootState } from "../store";
 
 interface InitialState {
-	sharedGroups: ISharedGroup[],
-	filteredGroups: ISharedGroup[],
-	sharedGroup: ISharedGroup | null,
-	status: IDataStatus,
-	error: null
-};
+	sharedGroups: ISharedGroup[];
+	filteredGroups: ISharedGroup[];
+	sharedGroup: ISharedGroup | null;
+	status: IDataStatus;
+	error: null;
+}
 
 const initialState: InitialState = {
 	sharedGroups: [],
 	filteredGroups: [],
 	sharedGroup: null,
 	status: DataStatus.IDLE,
-	error: null
+	error: null,
 };
 
 const sharedGroupSlice = createSlice({
@@ -98,7 +101,8 @@ const sharedGroupSlice = createSlice({
 
 export const { filterSharedGroups, resetSharedGroups, filterMySharedGroups } =
 	sharedGroupSlice.actions;
-export const selectSharedGroup = (state: RootState) => state.sharedGroups.sharedGroups;
+export const selectSharedGroup = (state: RootState) =>
+	state.sharedGroups.sharedGroups;
 export {
 	getAllSharedGroups,
 	saveSharedGroup,

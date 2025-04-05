@@ -1,9 +1,12 @@
-import * as ImagePicker from "expo-image-picker";
-import * as ImageManipulator from "expo-image-manipulator";
-import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
+import * as ImageManipulator from "expo-image-manipulator";
+import * as ImagePicker from "expo-image-picker";
+import { Platform } from "react-native";
 
-const pickImage = async (imageUri: string, setImageUri: (imageUri: string) => void) => {
+const pickImage = async (
+	imageUri: string,
+	setImageUri: (imageUri: string) => void,
+) => {
 	const result = await ImagePicker.launchImageLibraryAsync({
 		mediaTypes: ImagePicker.MediaTypeOptions.Images,
 		allowsEditing: true,

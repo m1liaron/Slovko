@@ -1,13 +1,13 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect } from "react";
-import { View, Text, FlatList } from "react-native";
-import styles from "./SharedGroupDetailsScreen.styles";
-import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import { FlatList, Text, View } from "react-native";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import ThemeText from "@/common/components/ThemeText/ThemeText";
+import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import styles from "./SharedGroupDetailsScreen.styles";
 
 /**
  * @param route { object: { params }}
@@ -16,7 +16,7 @@ import ThemeText from "@/common/components/ThemeText/ThemeText";
  */
 
 type SharedGroupDetailsScreenProps = {
-	route: { params: { sharedGroupId: string }};
+	route: { params: { sharedGroupId: string } };
 };
 
 const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
@@ -51,9 +51,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 					</View>
 				)}
 			</View>
-
-			{sharedGroup?.sharedCards &&
-			sharedGroup.sharedCards.length > 0 ? (
+			{sharedGroup?.sharedCards && sharedGroup.sharedCards.length > 0 ? (
 				<FlatList
 					data={sharedGroup.sharedCards}
 					showsHorizontalScrollIndicator={false}
@@ -66,9 +64,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 								{ backgroundColor: colors.lightBackground },
 							]}
 						>
-							<ThemeText>
-								{item.word}
-							</ThemeText>
+							<ThemeText>{item.word}</ThemeText>
 							<ThemeText>
 								Переклад:{" "}
 								<Text style={{ fontWeight: "bold" }}>{item.translateWord}</Text>
@@ -83,7 +79,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 					</Text>
 				</View>
 			)}
-			// !TODO function to copy shared group
+			{/*  !TODO function to copy shared group */}
 			<PressableButton text="Скопіювати групу" />
 		</ThemeBackground>
 	);

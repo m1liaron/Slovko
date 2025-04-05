@@ -1,27 +1,29 @@
+import type { IResult } from "@/common/enums/types/result.type";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Link } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, TextInput, Pressable } from "react-native";
-import styles from "./ResultsScreen.styles";
+import { FlatList, Pressable, Text, TextInput, View } from "react-native";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { AppPath } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	filterResults,
 	getResults,
 	resetResults,
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
-import { Link } from "@react-navigation/native";
-import { AppPath } from "../../common/enums/app/app";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { IResult } from "@/common/enums/types/result.type";
+import styles from "./ResultsScreen.styles";
 
 type GroupedResults = {
 	[date: string]: IResult[];
-}
+};
 
 const ResultsScreen = () => {
 	const dispatch = useAppDispatch();
-	const { theme: { colors } } = useAppTheme();
+	const {
+		theme: { colors },
+	} = useAppTheme();
 	const { results } = useAppSelector((state) => state.results);
 	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);
@@ -144,7 +146,7 @@ const ResultsScreen = () => {
 			<FlatList
 				data={Object.entries(groupedResults)}
 				keyExtractor={(item) => item[0]}
-				renderItem={({ item }: { item: [string, IResult[]]}) => (
+				renderItem={({ item }: { item: [string, IResult[]] }) => (
 					<View style={{ marginBottom: 20 }}>
 						<Text
 							style={{

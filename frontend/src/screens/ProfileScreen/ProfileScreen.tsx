@@ -1,31 +1,31 @@
-import { useState, useEffect } from "react";
+import { AppPath } from "@/common/enums/app/AppPath";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { Feather } from "@expo/vector-icons";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
-	View,
-	Text,
-	TextInput,
-	Pressable,
-	Platform,
 	Alert,
 	Image,
+	Platform,
+	Pressable,
+	Text,
+	TextInput,
+	View,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch, useSelector } from "react-redux";
-import { logout, selectUser } from "../../redux/userReducer/userSlice";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import { Switch } from "react-native-gesture-handler";
-import { Feather } from "@expo/vector-icons";
-import styles from "./ProfileScreen.styles";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { useDispatch, useSelector } from "react-redux";
 import AvatarImage from "../../../assets/images/avatar.png";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { useAppTheme } from "../../contexts/ThemeProvider";
+import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import pickImage from "../../utils/pickImage";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { AppPath } from "@/common/enums/app/AppPath";
-import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import styles from "./ProfileScreen.styles";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -80,10 +80,10 @@ export default function ProfileScreen() {
 				.then((blob) => {
 					const reader = new FileReader();
 					reader.onloadend = () => {
-						if(typeof reader.result !== "string") {
+						if (typeof reader.result !== "string") {
 							return reject(new Error("Result is not a string"));
 						}
-						resolve(reader.result)
+						resolve(reader.result);
 					};
 					reader.onerror = () =>
 						reject(new Error("Failed to convert blob to base64"));
@@ -100,7 +100,11 @@ export default function ProfileScreen() {
 
 		return new Promise((resolve, reject) => {
 			reader.onloadend = () => {
-				if(typeof reader.result === "string" && reader.result && reader.result) {
+				if (
+					typeof reader.result === "string" &&
+					reader.result &&
+					reader.result
+				) {
 					const base64data = reader.result.split(",")[1]; // Get the Base64 part
 					resolve(base64data);
 				} else {
@@ -138,7 +142,7 @@ export default function ProfileScreen() {
 			name: userName,
 			email: userEmail,
 		};
-		if(user) {
+		if (user) {
 			dispatch(updateUser({ data, id: user.id }));
 			setIsEditing(false);
 		}
@@ -154,7 +158,7 @@ export default function ProfileScreen() {
 	};
 
 	return (
-		<ThemeBackground style={{ paddingHorizontal: 40}}>
+		<ThemeBackground style={{ paddingHorizontal: 40 }}>
 			<Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
 
 			<View>
@@ -164,7 +168,7 @@ export default function ProfileScreen() {
 							<View style={{ alignSelf: "center" }}>
 								<Image
 									style={styles.avatarPhoto}
-									source={image ? { uri: image } : AvatarImage }
+									source={image ? { uri: image } : AvatarImage}
 								/>
 							</View>
 						) : (
@@ -174,7 +178,7 @@ export default function ProfileScreen() {
 							>
 								<Image
 									style={styles.avatarPhoto}
-									source={image ? { uri: image } : AvatarImage }
+									source={image ? { uri: image } : AvatarImage}
 								/>
 							</Pressable>
 						)}
@@ -286,9 +290,7 @@ export default function ProfileScreen() {
 										color={colors.iconColor}
 									/>
 									<TextInput
-										style={[
-											styles.textInputStyle,{ color: colors.primary },
-										]}
+										style={[styles.textInputStyle, { color: colors.primary }]}
 										value={userEmail}
 										onChangeText={(text) => setUserEmail(text)}
 									/>

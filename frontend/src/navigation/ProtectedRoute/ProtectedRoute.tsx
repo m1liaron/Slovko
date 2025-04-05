@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { NavigationContainer, NavigationProp } from "@react-navigation/native";
-import AuthNavigator from "../AuthNavigator/AuthNavigator";
-import { AppPath, TypeAppPath } from "../../common/enums/app/app";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getUser, selectUser } from "../../redux/userReducer/userSlice";
-import Loading from "../../components/Loading";
-import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+	NavigationContainer,
+	type NavigationProp,
+} from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React, { useEffect, useState } from "react";
+import { AppPath, type TypeAppPath } from "../../common/enums/app/app";
+import Loading from "../../components/Loading";
+import { getUser, selectUser } from "../../redux/userReducer/userSlice";
+import AuthNavigator from "../AuthNavigator/AuthNavigator";
+import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 
-export type RootStackParamList = Record<TypeAppPath[number], undefined>
+export type RootStackParamList = Record<TypeAppPath[number], undefined>;
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

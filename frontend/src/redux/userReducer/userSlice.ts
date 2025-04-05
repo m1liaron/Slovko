@@ -1,21 +1,21 @@
+import type { IStreakDate, IUser } from "@/common/enums/types/user.type";
 import { createSlice } from "@reduxjs/toolkit";
+import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
 import {
+	buyFreeze,
+	getUser,
+	getUserStreakDates,
 	login,
 	register,
-	getUser,
 	updateUser,
 	updateUserStreak,
-	buyFreeze,
-	getUserStreakDates,
 } from "./userThunk";
-import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
-import { IUser, IStreakDate } from "@/common/enums/types/user.type";
 
 interface InitialState {
-	user: IUser | null,
-	streakDates: IStreakDate[],
-	isAuthenticated: boolean,
-	status: IDataStatus,
+	user: IUser | null;
+	streakDates: IStreakDate[];
+	isAuthenticated: boolean;
+	status: IDataStatus;
 }
 
 const initialState: InitialState = {

@@ -1,15 +1,15 @@
+import type { IStatistics, ModeName } from "@/common/enums/types/result.type";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useState } from "react";
-import { View, Dimensions, ActivityIndicator } from "react-native";
-import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
+import { ActivityIndicator, Dimensions, View } from "react-native";
+import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
+import RNPickerSelect from "react-native-picker-select";
 import { useDispatch, useSelector } from "react-redux";
-import { selectResult } from "../../redux/resultReducer/resultSlice";
-import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import RNPickerSelect from "react-native-picker-select";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { IStatistics, ModeName } from "@/common/enums/types/result.type";
+import { selectResult } from "../../redux/resultReducer/resultSlice";
+import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
 
 const StatisticsScreen = () => {
 	const {
@@ -18,7 +18,8 @@ const StatisticsScreen = () => {
 	const { statistics } = useAppSelector(selectResult);
 	const dispatch = useAppDispatch();
 	const [selectedMode, setSelectedMode] = useState<string>("flashCards");
-	const [selectedWordsMode, setSelectedWordsMode] = useState<string>("wordLength"); // Mistakes || wordLength;
+	const [selectedWordsMode, setSelectedWordsMode] =
+		useState<string>("wordLength"); // Mistakes || wordLength;
 	const [selectedGraph, setSelectedGraph] = useState<string>("LineChart");
 
 	useEffect(() => {
@@ -39,7 +40,7 @@ const StatisticsScreen = () => {
 	];
 
 	const renderGraph = () => {
-		if(!statistics) {
+		if (!statistics) {
 			return null;
 		}
 		const chartConfig = {
@@ -54,18 +55,22 @@ const StatisticsScreen = () => {
 			},
 		};
 
-		if(!statistics) {
-			return <ActivityIndicator/>
+		if (!statistics) {
+			return <ActivityIndicator />;
 		}
 
-		const selectedModeKey = selectedMode as keyof IStatistics["amountMistakesCards"];
-		const selectedWordsModeKey = selectedWordsMode as keyof IStatistics["amountMistakesCards"][ModeName];
+		const selectedModeKey =
+			selectedMode as keyof IStatistics["amountMistakesCards"];
+		const selectedWordsModeKey =
+			selectedWordsMode as keyof IStatistics["amountMistakesCards"][ModeName];
 
 		const data = {
 			labels: statistics.resultsMonths,
 			datasets: [
 				{
-					data: statistics.amountMistakesCards[selectedModeKey][selectedWordsModeKey],
+					data: statistics.amountMistakesCards[selectedModeKey][
+						selectedWordsModeKey
+					],
 				},
 			],
 		};

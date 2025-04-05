@@ -1,22 +1,22 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { DataStatus, type IDataStatus } from "@/common/enums/app/DataStatus";
+import type { IResult, IStatistics } from "@/common/enums/types/types";
+import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import type { RootState } from "../store";
 import {
-	saveResults,
-	getResults,
 	getResultDetails,
+	getResults,
 	getResultsStatistics,
+	saveResults,
 } from "./resultThunk";
-import { DataStatus, IDataStatus } from "@/common/enums/app/DataStatus";
-import { IResult, IStatistics } from "@/common/enums/types/types";
-import { RootState } from "../store";
 
 interface InitialState {
-	results: IResult[],
-	filteredResults: IResult[],
-	statistics: IStatistics | null,
-	result: IResult | null,
-	isLoading: boolean,
-	error: string | null,
-	status: IDataStatus,
+	results: IResult[];
+	filteredResults: IResult[];
+	statistics: IStatistics | null;
+	result: IResult | null;
+	isLoading: boolean;
+	error: string | null;
+	status: IDataStatus;
 }
 
 const initialState: InitialState = {
@@ -38,20 +38,23 @@ const resultSlice = createSlice({
 				item.title.startsWith(action.payload),
 			);
 		},
-		sortResults: (state, action: PayloadAction<{key: keyof IResult; direction: "asc" | "desc"}>) => {
+		sortResults: (
+			state,
+			action: PayloadAction<{ key: keyof IResult; direction: "asc" | "desc" }>,
+		) => {
 			const { key = "completionTime", direction = "asc" } = action.payload;
-				state.results = [...state.results].sort((a, b) => {
-					const aValue = a[key];
-    				const bValue = b[key];
+			state.results = [...state.results].sort((a, b) => {
+				const aValue = a[key];
+				const bValue = b[key];
 
-					if(!aValue || !bValue) {
-						return 0;
-					}
-					
-					if (aValue < bValue) return direction === "asc" ? -1 : 1;
-					if (aValue > bValue) return direction === "asc" ? 1 : -1;
+				if (!aValue || !bValue) {
 					return 0;
-				});
+				}
+
+				if (aValue < bValue) return direction === "asc" ? -1 : 1;
+				if (aValue > bValue) return direction === "asc" ? 1 : -1;
+				return 0;
+			});
 		},
 		resetResults: (state) => {
 			state.results = [...state.filteredResults];

@@ -1,15 +1,15 @@
-import React, { ReactNode, useEffect, useRef } from "react";
+import React, { type ReactNode, useEffect, useRef } from "react";
 import {
-	View,
+	Animated,
+	type GestureResponderEvent,
 	Modal,
 	Pressable,
-	Animated,
+	View,
 	useWindowDimensions,
-	GestureResponderEvent,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import styles from "./styles";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import styles from "./styles";
 
 /**
  * @param isVisible { boolean}

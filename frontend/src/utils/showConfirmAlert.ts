@@ -1,6 +1,10 @@
 import { Alert, Platform } from "react-native";
 
-export const showConfirmAlert = (message: string, onConfirm: () => boolean, onCancel: () => boolean) => {
+export const showConfirmAlert = (
+	message: string,
+	onConfirm: () => boolean,
+	onCancel: () => boolean,
+) => {
 	if (Platform.OS === "web") {
 		const confirmed = window.confirm(message);
 		if (confirmed) {

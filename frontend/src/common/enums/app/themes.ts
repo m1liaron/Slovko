@@ -1,13 +1,13 @@
 type Theme = {
-	dark: boolean,
+	dark: boolean;
 	colors: {
-		primary: string,
-		background: string,
-		lightBackground: string,
-		iconColor: string,
-		text: string,
-	},
-}
+		primary: string;
+		background: string;
+		lightBackground: string;
+		iconColor: string;
+		text: string;
+	};
+};
 
 const lightTheme: Theme = {
 	dark: false,

@@ -1,14 +1,17 @@
+import type { IGroup } from "@/common/enums/types/group.type";
 import { createSlice } from "@reduxjs/toolkit";
 import {
+	DataStatus,
+	type IDataStatus,
+} from "../../common/enums/app/DataStatus";
+import type { RootState } from "../store";
+import {
+	addGroup,
 	getAllGroups,
 	getGroup,
-	addGroup,
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
-import { DataStatus, type IDataStatus } from "../../common/enums/app/DataStatus";
-import { IGroup } from "@/common/enums/types/group.type";
-import { RootState } from "../store";
 
 interface InitialState {
 	groups: IGroup[];

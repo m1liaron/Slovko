@@ -1,12 +1,18 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { darkTheme, lightTheme } from "../common/enums/app/app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, {
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from "react";
+import { darkTheme, lightTheme } from "../common/enums/app/app";
 
 type Theme = typeof lightTheme;
 type ThemeContextType = {
 	theme: Theme;
 	toggleTheme: () => void;
-}
+};
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { TextInput, TextInputProps } from "react-native";
-import styles from "./AddInput.styles";
+import { TextInput, type TextInputProps } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
+import styles from "./AddInput.styles";
 
 /**
  * @param placeholder { string }
@@ -12,7 +12,11 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
  * @constructor
  */
 
-interface AddInputProps extends Pick<TextInputProps, 'placeholder' | 'placeholderTextColor' | 'value' | 'onChangeText'> {}
+interface AddInputProps
+	extends Pick<
+		TextInputProps,
+		"placeholder" | "placeholderTextColor" | "value" | "onChangeText"
+	> {}
 
 const AddInput = ({
 	placeholder = "",

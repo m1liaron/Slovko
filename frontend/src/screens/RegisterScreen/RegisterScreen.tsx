@@ -1,15 +1,14 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import Toast from "react-native-toast-message";
-import { register } from "../../redux/userReducer/userSlice";
+import { useAppDispatch } from "@/hooks/redux.hooks";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo } from "@expo/vector-icons";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import ThemeText from '../../common/components/ThemeText/ThemeText';
-import { AppPath } from '../../common/enums/app/app';
-import { useAppDispatch } from '@/hooks/redux.hooks';
-import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-
+import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import Toast from "react-native-toast-message";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath } from "../../common/enums/app/app";
+import { register } from "../../redux/userReducer/userSlice";
 
 const RegisterScreen = () => {
 	const navigation = useNavigation<StackNavigation>();
@@ -57,7 +56,7 @@ const RegisterScreen = () => {
 	};
 	return (
 		<ThemeBackground style={styles.container}>
-			<Toast/>
+			<Toast />
 			<ThemeText style={styles.title}>Реєстрація</ThemeText>
 
 			<TextInput

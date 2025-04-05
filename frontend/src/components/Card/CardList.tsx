@@ -1,14 +1,26 @@
+import { Entypo, FontAwesome } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
+import { useNavigation } from "@react-navigation/native";
+import Checkbox from "expo-checkbox";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import {
-	View,
-	Text,
-	StyleSheet,
 	FlatList,
 	Image,
 	Platform,
 	Pressable,
+	StyleSheet,
+	Text,
+	View,
 } from "react-native";
-import CardItem from "./CardItem";
+import Fontisto from "react-native-vector-icons/Fontisto";
+import { useDispatch, useSelector } from "react-redux";
+import noCardsImage from "../../assets/images/no-cards.png";
+import AddButton from "../../common/components/AddButton/AddButton";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeText from "../../common/components/ThemeText/ThemeText";
+import { AppPath, DataStatus } from "../../common/enums/app/app";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	addCard,
 	getCards,
@@ -16,22 +28,10 @@ import {
 	removeCard,
 	resetFilter,
 } from "../../redux/cardReducer/cardSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import { AppPath, DataStatus } from "../../common/enums/app/app";
-import noCardsImage from "../../assets/images/no-cards.png";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import AddInput from "../../common/components/AddInput/AddInput";
-import AddButton from "../../common/components/AddButton/AddButton";
-import DefaultModal from "../DefaultModal/DefaultModal";
 import pickImage from "../../utils/pickImage";
+import DefaultModal from "../DefaultModal/DefaultModal";
 import Loading from "../Loading";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import Fontisto from "react-native-vector-icons/Fontisto";
-import Slider from "@react-native-community/slider";
-import { Entypo, FontAwesome } from "@expo/vector-icons";
-import Checkbox from 'expo-checkbox';
-import ThemeText from "../../common/components/ThemeText/ThemeText";
+import CardItem from "./CardItem";
 
 const MemoCardItem = memo(CardItem);
 
@@ -63,20 +63,20 @@ const CardList = ({ groupId }) => {
 	const dispatch = useDispatch();
 
 	const onChangeCardsRange = useCallback((value) => {
-		setWordsRangeNumber(value)
+		setWordsRangeNumber(value);
 	}, []);
 
 	const decWordsRange = () => {
-		if(wordsRangeNumber > 2) {
+		if (wordsRangeNumber > 2) {
 			setWordsRangeNumber(wordsRangeNumber - 1);
 		}
-	}
+	};
 
 	const incWordsRange = () => {
-		if(wordsRangeNumber < cards.length) {
+		if (wordsRangeNumber < cards.length) {
 			setWordsRangeNumber(wordsRangeNumber + 1);
 		}
-	}
+	};
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
@@ -163,10 +163,12 @@ const CardList = ({ groupId }) => {
 			return formattedWord;
 		}
 
-		const validatedAnswer = isValidateWord ? validateWord(answerWord) : answerWord;
+		const validatedAnswer = isValidateWord
+			? validateWord(answerWord)
+			: answerWord;
 
 		if (Object.keys(valueWords).length > 0) {
-			for(const [key, value] of Object.entries(valueWords)) {
+			for (const [key, value] of Object.entries(valueWords)) {
 				dispatch(
 					addCard({
 						word: validateWord(key),
@@ -253,12 +255,24 @@ const CardList = ({ groupId }) => {
 
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
-					<View  style={{ flexDirection: "row", justifyContent:"center", alignItems:"center"}}> 
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
 						<Pressable onPress={decWordsRange}>
-							<FontAwesome name="minus" color={colors.primary} size={40}/>
+							<FontAwesome name="minus" color={colors.primary} size={40} />
 						</Pressable>
-						<View style={{ flexDirection: "column", justifyContent:"center", alignItems:"center"}}>
-							<ThemeText style={{ fontSize: 35}}>
+						<View
+							style={{
+								flexDirection: "column",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<ThemeText style={{ fontSize: 35 }}>
 								{Math.floor(wordsRangeNumber)}
 							</ThemeText>
 							<Slider
@@ -271,9 +285,9 @@ const CardList = ({ groupId }) => {
 								maximumTrackTintColor="#000000"
 							/>
 						</View>
-							
+
 						<Pressable onPress={incWordsRange}>
-							<FontAwesome name="plus" color={colors.primary} size={40}/>
+							<FontAwesome name="plus" color={colors.primary} size={40} />
 						</Pressable>
 						{filteredCards.length > cards.length && (
 							<Pressable
@@ -381,7 +395,10 @@ const CardList = ({ groupId }) => {
 							/>
 							<View style={{ flexDirection: "row" }}>
 								<ThemeText>Валідація: </ThemeText>
-								<Checkbox value={isValidateWord} onValueChange={setIsValidateWord} />
+								<Checkbox
+									value={isValidateWord}
+									onValueChange={setIsValidateWord}
+								/>
 							</View>
 						</View>
 					)}

@@ -1,22 +1,22 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type { ICard, IRepeatedGroup } from "@/common/enums/types/card.type";
+import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
 import {
-	getCards,
 	addCard,
+	getCards,
+	getRepeatedCards,
+	getRepeatedCardsFromIds,
 	removeCard,
 	updateCard,
 	updateCardsAfterLearn,
-	getRepeatedCards,
-	getRepeatedCardsFromIds,
 } from "./cardThunk";
-import { DataStatus, IDataStatus } from "../../common/enums/app/app";
-import { ICard, IRepeatedGroup } from "@/common/enums/types/card.type";
 
 interface InitialState {
-	cards: ICard[],
-	filteredCards: ICard[],
-	repeatedCards: IRepeatedGroup[],
-	status: IDataStatus,
-	error: string | null,
+	cards: ICard[];
+	filteredCards: ICard[];
+	repeatedCards: IRepeatedGroup[];
+	status: IDataStatus;
+	error: string | null;
 }
 
 const initialState: InitialState = {
@@ -38,13 +38,13 @@ const cardSlice = createSlice({
 		},
 		sortCards: (state, action: PayloadAction<"asc" | "desc">) => {
 			state.cards.sort((a, b) => {
-				const timeA  = new Date(a.nextReviewAt).getTime();
+				const timeA = new Date(a.nextReviewAt).getTime();
 				const timeB = new Date(b.nextReviewAt).getTime();
 
 				if (action.payload === "asc") {
 					return timeA - timeB; // Ascending order
 				}
-					return timeB - timeA;
+				return timeB - timeA;
 			});
 		},
 		filterCardsByStatus: (state, action) => {
@@ -160,7 +160,8 @@ const cardSlice = createSlice({
 
 export const { filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
-export const selectCard = (state: { cards: { cards: InitialState }}) => state.cards.cards;
+export const selectCard = (state: { cards: { cards: InitialState } }) =>
+	state.cards.cards;
 export {
 	getCards,
 	addCard,

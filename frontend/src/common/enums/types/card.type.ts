@@ -1,18 +1,18 @@
 type ICard = {
-    id: string;
-    word: string;
-    translateWord: string;
-    groupId?: string;
-    image?:string;
-    status: string;
-    learnedAt: Date;
-    nextReviewAt: Date;
-    reviewCount: Date;
-}
+	id: string;
+	word: string;
+	translateWord: string;
+	groupId?: string;
+	image?: string;
+	status: string;
+	learnedAt: Date;
+	nextReviewAt: Date;
+	reviewCount: Date;
+};
 
 type IRepeatedGroup = {
-    title: string;
-    cards: string[]
-}
+	title: string;
+	cards: string[];
+};
 
-export { ICard, IRepeatedGroup };
+export type { ICard, IRepeatedGroup };

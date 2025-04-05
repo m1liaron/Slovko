@@ -1,5 +1,5 @@
-import axios, { AxiosInstance } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios, { type AxiosInstance } from "axios";
 
 /**
  * Creates an authorized Axios instance with a Bearer token.

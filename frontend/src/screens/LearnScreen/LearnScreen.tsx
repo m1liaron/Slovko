@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import styles from "./LearnScreen.styles";
 
-import { Switch } from "react-native-gesture-handler";
-import { View, Text, Pressable, Platform } from "react-native";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Platform, Pressable, Text, View } from "react-native";
+import { Switch } from "react-native-gesture-handler";
+import { useDispatch, useSelector } from "react-redux";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { AppPath, DataStatus } from "../../common/enums/app/app";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import LearnCards from "../../components/Learn/LearnCards/LearnCards";
-import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
 import LearnGuessWord from "../../components/Learn/LearnGuessWord/LearnGuessWord";
-import { useDispatch, useSelector } from "react-redux";
+import LearnQuiz from "../../components/Learn/LearnQuiz/LearnQuiz";
+import Loading from "../../components/Loading";
+import ExitModal from "../../components/Modals/ExitModal/ExitModal";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	getRepeatedCards,
 	updateCardsAfterLearn,
 } from "../../redux/cardReducer/cardSlice";
-import { AppPath, DataStatus } from "../../common/enums/app/app";
-import ExitModal from "../../components/Modals/ExitModal/ExitModal";
-import { saveResults } from "../../redux/resultReducer/resultSlice";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
-import { useNavigation } from "@react-navigation/native";
-import Loading from "../../components/Loading";
+import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 
 const LearnScreen = ({ route }) => {
 	const { theme } = useAppTheme();
@@ -100,7 +100,7 @@ const LearnScreen = ({ route }) => {
 					};
 					return updatedCards;
 				}
-					return [...prev, newCard];
+				return [...prev, newCard];
 			});
 		};
 

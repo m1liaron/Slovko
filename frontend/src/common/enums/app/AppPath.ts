@@ -36,7 +36,7 @@ type TypeAppPath = [
 	ResultDetails: string,
 	Login: string,
 	Register: string,
-]
+];
 
 const AppPath: IAppPath = {
 	Loading: "loading",
@@ -58,4 +58,4 @@ const AppPath: IAppPath = {
 	Register: "register",
 };
 
-export { AppPath, TypeAppPath };
+export { AppPath, type TypeAppPath };

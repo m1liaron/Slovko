@@ -5,7 +5,7 @@ const DataStatus = {
 	ERROR: "error",
 } as const;
 
-type IDataStatus = typeof DataStatus[keyof typeof DataStatus];
+type IDataStatus = (typeof DataStatus)[keyof typeof DataStatus];
 
 export { DataStatus };
-export type { IDataStatus }
+export type { IDataStatus };

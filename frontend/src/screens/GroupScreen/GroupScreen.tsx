@@ -1,26 +1,26 @@
-import CardList from "../../components/Card/CardList";
-import BackButton from "../../components/BackButton/BackButton";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { RouteProp, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import AddInput from "../../common/components/AddInput/AddInput";
+import PressableButton from "../../common/components/PressableButton/PressableButton";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
+import { DataStatus } from "../../common/enums/app/app";
+import BackButton from "../../components/BackButton/BackButton";
+import CardList from "../../components/Card/CardList";
+import DefaultModal from "../../components/DefaultModal/DefaultModal";
+import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	filterCardsByStatus,
 	resetFilter,
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import React, { useEffect, useMemo, useState } from "react";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
-import { DataStatus } from "../../common/enums/app/app";
-import { useNavigation, RouteProp } from "@react-navigation/native";
-import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
-import DefaultModal from "../../components/DefaultModal/DefaultModal";
-import AddInput from "../../common/components/AddInput/AddInput";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 
 type GroupScreenProps = {
-	route: { params: { groupId: string }};
+	route: { params: { groupId: string } };
 };
 
 const GroupScreen = ({ route }: GroupScreenProps) => {
@@ -31,7 +31,7 @@ const GroupScreen = ({ route }: GroupScreenProps) => {
 	const { group, status } = useAppSelector((state) => state.groups);
 	const [showEditModal, setShowEditModal] = useState<boolean>(false);
 	const [groupTitle, setGroupTitle] = useState<string>("");
-	const [nextReviewSort, setNextReviewSort] = useState< "asc" | "desc">("asc"); // asc || desc
+	const [nextReviewSort, setNextReviewSort] = useState<"asc" | "desc">("asc"); // asc || desc
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
 

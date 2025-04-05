@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { Text } from "react-native";
+import React, { type ReactNode } from "react";
+import { type StyleProp, Text, type TextStyle } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 
 /**
@@ -10,9 +10,9 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
  */
 
 interface ThemeTextProps {
-  children: ReactNode;
-  style?: {}
-} 
+	children: ReactNode;
+	style?: StyleProp<TextStyle>;
+}
 
 const ThemeText = ({ children, style }: ThemeTextProps) => {
 	const {
@@ -20,7 +20,7 @@ const ThemeText = ({ children, style }: ThemeTextProps) => {
 			colors: { primary },
 		},
 	} = useAppTheme();
-	return <Text style={[ style ,{ color: primary }]}>{children}</Text>;
+	return <Text style={[style, { color: primary }]}>{children}</Text>;
 };
 
 export default ThemeText;

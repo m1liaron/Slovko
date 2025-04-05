@@ -1,5 +1,6 @@
+import * as Speech from "expo-speech";
 import React, { useState } from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import Animated, {
 	interpolate,
@@ -7,11 +8,10 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
+import { useSelector } from "react-redux";
+import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
-import { useSelector } from "react-redux";
-import * as Speech from "expo-speech";
-import { useAppTheme } from "../../../contexts/ThemeProvider";
 
 const LearnCards = ({ onComplete, setFlashCards }) => {
 	const {
@@ -48,7 +48,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 	const frontAnimatedStyle = useAnimatedStyle(() => {
 		return {
 			transform: [
-				{ perspective: 1000 } ,
+				{ perspective: 1000 },
 				{
 					rotateY: `${interpolate(rotation.value, [0, 180], [0, Math.PI])}rad`,
 				},

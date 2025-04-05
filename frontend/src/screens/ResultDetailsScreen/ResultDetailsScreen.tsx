@@ -1,18 +1,18 @@
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import styles from "./ResultDetailsScreen.styles";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { getResultDetails } from "../../redux/resultReducer/resultSlice";
-import Loading from "../../components/Loading";
+import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
-import formatDMTDate from "../../utils/formatDMTDate";
+import Loading from "../../components/Loading";
 import { useAppTheme } from "../../contexts/ThemeProvider";
+import { getResultDetails } from "../../redux/resultReducer/resultSlice";
+import formatDMTDate from "../../utils/formatDMTDate";
 import { formatTime } from "../../utils/formatTime";
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import styles from "./ResultDetailsScreen.styles";
 
 type ResultDetailsScreenProps = {
-	route: { params: { resultId: string }};
+	route: { params: { resultId: string } };
 };
 
 const ResultDetailsScreen = ({ route }: ResultDetailsScreenProps) => {
@@ -28,11 +28,13 @@ const ResultDetailsScreen = ({ route }: ResultDetailsScreenProps) => {
 		dispatch(getResultDetails(resultId));
 	}, [dispatch, resultId]);
 
-	if(!result) {
-		return <ActivityIndicator/>
+	if (!result) {
+		return <ActivityIndicator />;
 	}
 
- 	const resultTime = new Date(result.completionTime).getTime() - new Date(result.startedLearn).getTime();
+	const resultTime =
+		new Date(result.completionTime).getTime() -
+		new Date(result.startedLearn).getTime();
 	const formattedTime = formatTime(resultTime);
 
 	const calculateCorrectPercentage = () => {
