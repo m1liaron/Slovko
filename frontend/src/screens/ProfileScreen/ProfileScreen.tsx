@@ -23,17 +23,19 @@ import AvatarImage from "../../../assets/images/avatar.png";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import pickImage from "../../utils/pickImage";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { AppPath } from "@/common/enums/app/AppPath";
+import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 
 export default function ProfileScreen() {
-	const { user } = useSelector(selectUser);
+	const { user } = useAppSelector(selectUser);
 	const { theme, toggleTheme } = useAppTheme();
 	const colors = theme.colors;
-	const navigation = useNavigation();
-	const dispatch = useDispatch();
-	const [image, setImage] = useState("");
-	const [modalVisible, setModalVisible] = useState(false);
-	const [userName, setUserName] = useState("");
-	const [userEmail, setUserEmail] = useState("");
+	const navigation = useNavigation<StackNavigation>();
+	const dispatch = useAppDispatch();
+	const [image, setImage] = useState<string>("");
+	const [userName, setUserName] = useState<string>("");
+	const [userEmail, setUserEmail] = useState<string>("");
 
 	const [isThemeDark, setThemeDark] = useState(theme.dark === true);
 	const [isEditing, setIsEditing] = useState(false);
@@ -62,7 +64,7 @@ export default function ProfileScreen() {
 						text: "Logout",
 						onPress: async () => {
 							await AsyncStorage.removeItem("token");
-							navigation.navigate("login");
+							navigation.navigate(AppPath.Login);
 						},
 					},
 				],
@@ -71,13 +73,18 @@ export default function ProfileScreen() {
 		}
 	};
 
-	const convertBlobToBase64 = (blobUri) => {
+	const convertBlobToBase64 = (blobUri: string): Promise<string> => {
 		return new Promise((resolve, reject) => {
 			fetch(blobUri)
 				.then((response) => response.blob())
 				.then((blob) => {
 					const reader = new FileReader();
-					reader.onloadend = () => resolve(reader.result);
+					reader.onloadend = () => {
+						if(typeof reader.result !== "string") {
+							return reject(new Error("Result is not a string"));
+						}
+						resolve(reader.result)
+					};
 					reader.onerror = () =>
 						reject(new Error("Failed to convert blob to base64"));
 					reader.readAsDataURL(blob);
@@ -86,15 +93,19 @@ export default function ProfileScreen() {
 		});
 	};
 
-	const convertImageToBase64 = async (uri) => {
+	const convertImageToBase64 = async (uri: string): Promise<string> => {
 		const response = await fetch(uri);
 		const blob = await response.blob();
 		const reader = new FileReader();
 
 		return new Promise((resolve, reject) => {
 			reader.onloadend = () => {
-				const base64data = reader.result.split(",")[1]; // Get the Base64 part
-				resolve(base64data);
+				if(typeof reader.result === "string" && reader.result && reader.result) {
+					const base64data = reader.result.split(",")[1]; // Get the Base64 part
+					resolve(base64data);
+				} else {
+					reject(new Error("Result is not a string"));
+				}
 			};
 			reader.onerror = () =>
 				reject(new Error("Failed to convert image to base64"));
@@ -103,7 +114,7 @@ export default function ProfileScreen() {
 	};
 
 	const handleUpdateUser = async () => {
-		let finalImageUri = image;
+		let finalImageUri: string = image;
 
 		if (Platform.OS === "web" && image.startsWith("blob:")) {
 			try {
@@ -127,8 +138,10 @@ export default function ProfileScreen() {
 			name: userName,
 			email: userEmail,
 		};
-		dispatch(updateUser({ data, id: user.id }));
-		setIsEditing(false);
+		if(user) {
+			dispatch(updateUser({ data, id: user.id }));
+			setIsEditing(false);
+		}
 	};
 
 	const onEditInfo = () => {
@@ -144,14 +157,14 @@ export default function ProfileScreen() {
 		<ThemeBackground style={{ paddingHorizontal: 40}}>
 			<Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
 
-			<View style={styles.container}>
+			<View>
 				{user ? (
 					<View>
 						{!isEditing ? (
 							<View style={{ alignSelf: "center" }}>
 								<Image
 									style={styles.avatarPhoto}
-									source={image || AvatarImage}
+									source={image ? { uri: image } : AvatarImage }
 								/>
 							</View>
 						) : (
@@ -161,7 +174,7 @@ export default function ProfileScreen() {
 							>
 								<Image
 									style={styles.avatarPhoto}
-									source={image || AvatarImage}
+									source={image ? { uri: image } : AvatarImage }
 								/>
 							</Pressable>
 						)}
@@ -223,7 +236,6 @@ export default function ProfileScreen() {
 										style={[
 											styles.textInputStyle,
 											{
-												textDecorationStyle: colors.primary,
 												color: colors.primary,
 											},
 										]}
@@ -275,11 +287,7 @@ export default function ProfileScreen() {
 									/>
 									<TextInput
 										style={[
-											styles.textInputStyle,
-											{
-												textDecorationStyle: colors.primary,
-												color: colors.primary,
-											},
+											styles.textInputStyle,{ color: colors.primary },
 										]}
 										value={userEmail}
 										onChangeText={(text) => setUserEmail(text)}
