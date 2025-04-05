@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Calendar } from "react-native-calendars";
 import BackButton from "../../components/BackButton/BackButton";
-import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "./StreakScreen.styles";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import { Text, View } from 'react-native';
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -14,25 +12,37 @@ import {
 	getUserStreakDates,
 } from "../../redux/userReducer/userThunk";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+
+type DateType = {
+	month: number;
+	year: number;
+};
+
+type MarkedDate = {
+	selected: boolean;
+	marked: boolean;
+	selectedColor: string;
+	dotColor: string;
+	disableTouchEvent: boolean;
+};
 
 const StreakScreen = () => {
-	const {
-		theme: { colors },
-	} = useAppTheme();
-	const { streakDates, user: { frozen } } = useSelector(selectUser);
-	const [date, setDate] = useState({});
-	const dispatch = useDispatch();
+	const { theme: { colors }, } = useAppTheme();
+	const { streakDates, user } = useAppSelector(selectUser);
+	const [date, setDate] = useState<DateType>({ month: new Date().getMonth() + 1, year: new Date().getFullYear() });
+	const dispatch = useAppDispatch();
 	const now = new Date();
 
 	useEffect(() => {
-		if (Object.keys(date).length) {
+		if (date && date.month && date.year) {
 			const { month, year } = date;
 			dispatch(getUserStreakDates({ month, year }));
 		}
 	}, [date, dispatch]);
 
 	const validatedMarkedDates = streakDates?.length
-		? streakDates.reduce((total, item) => {
+		? streakDates.reduce<{ [key: string]: MarkedDate}>((total, item) => {
 				total[item.date.slice(0, 10)] = {
 					selected: true,
 					marked: true,
@@ -72,10 +82,8 @@ const StreakScreen = () => {
 					initialDate={now.toISOString().split("T")[0]}
 					minDate={earliestDate}
 					maxDate={getLastDayOfCurrentMonth()}
-					onDayPress={(day) => console.log("selected day", day)}
-					onDayLongPress={(day) => console.log("selected day", day)}
 					monthFormat={"yyyy MM"}
-					onMonthChange={(month) => setDate(month)}
+					onMonthChange={(month: DateType) => setDate(month)}
 					hideArrows={false} // Show navigation arrows
 					hideExtraDays={true}
 					disableMonthChange={false} // Allow changing months
@@ -118,18 +126,20 @@ const StreakScreen = () => {
 					}}
 				/>
 
-				<View
+				{user?.frozen ? (
+					<View
 					style={{ width: 100, justifyContent: "center", alignItems: "center" }}
 				>
 					<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
 					<PressableButton
 						text="Купити Заморозку"
 						onPress={() => dispatch(buyFreeze({ froze: 100 }))}
-						buttonStyle={{ backgroundColor: frozen && "#002d5d", padding: 20}}
-						disabled={!frozen}
+						buttonStyle={{ backgroundColor: user.frozen && "#002d5d", padding: 20}}
+						disabled={!user.frozen}
 					/>
-					{frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}
+					{user.frozen && <Text style={{ color: colors.primary }}>Заморозку вже купленно</Text>}
 				</View>
+				) : null}
 			</View>
 		</ThemeBackground>
 	);

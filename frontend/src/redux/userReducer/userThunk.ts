@@ -43,7 +43,7 @@ const updateUserStreak = createAsyncThunk(
 
 const buyFreeze = createAsyncThunk(
 	"user/buyFreeze",
-	async ({ froze }: { froze: boolean}) => {
+	async ({ froze }: { froze: number}) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.put("/users/streak/froze", { froze });
 		return response.data;
@@ -52,7 +52,7 @@ const buyFreeze = createAsyncThunk(
 
 const getUserStreakDates = createAsyncThunk(
 	"user/getStreakDates",
-	async ({ month, year }: { month: Date; year: Date}) => {
+	async ({ month, year }: { month: number; year: number}) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.get(
 			`/users/streak?month=${month}&year=${year}`,
