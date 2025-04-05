@@ -11,7 +11,12 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
  * @constructor
  */
 
-const BackButton = ({ showAlert, iconSize = 30 }) => {
+interface BackButtonProps {
+	showAlert?: boolean;
+	iconSize?: number;
+}
+
+const BackButton = ({ showAlert, iconSize = 30 }: BackButtonProps) => {
 	const navigation = useNavigation();
 	const { theme } = useAppTheme();
 

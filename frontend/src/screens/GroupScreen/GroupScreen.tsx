@@ -1,7 +1,6 @@
 import CardList from "../../components/Card/CardList";
 import BackButton from "../../components/BackButton/BackButton";
 import { Pressable, Text, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
 import {
 	filterCardsByStatus,
 	resetFilter,
@@ -11,26 +10,32 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import React, { useEffect, useMemo, useState } from "react";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
 import { DataStatus } from "../../common/enums/app/app";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, RouteProp } from "@react-navigation/native";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import AddInput from "../../common/components/AddInput/AddInput";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 
-const GroupScreen = ({ route }) => {
+type GroupScreenProps = {
+	route: { params: { groupId: string }};
+};
+
+const GroupScreen = ({ route }: GroupScreenProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
 	const { groupId } = route.params;
-	const { group } = useSelector((state) => state.groups);
-	const [showEditModal, setShowEditModal] = useState(false);
-	const [groupTitle, setGroupTitle] = useState("");
-	const [nextReviewSort, setNextReviewSort] = useState(null); // asc || desc
-	const dispatch = useDispatch();
-	const navigation = useNavigation();
+	const { group, status } = useAppSelector((state) => state.groups);
+	const [showEditModal, setShowEditModal] = useState<boolean>(false);
+	const [groupTitle, setGroupTitle] = useState<string>("");
+	const [nextReviewSort, setNextReviewSort] = useState< "asc" | "desc">("asc"); // asc || desc
+	const dispatch = useAppDispatch();
+	const navigation = useNavigation<StackNavigation>();
 
-	if (!group && group.status === DataStatus.ERROR) {
+	if (!group && status === DataStatus.ERROR) {
 		navigation.goBack();
 	}
 
@@ -111,7 +116,7 @@ const GroupScreen = ({ route }) => {
 					<Text
 						style={{ fontSize: 30, fontWeight: "bold", color: colors.primary }}
 					>
-						{group.title}
+						{group?.title}
 					</Text>
 					<Entypo
 						name="pencil"
