@@ -17,7 +17,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import { AppPath } from "../../common/enums/app/app";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
-import { GroupList } from "../../components/Group/GroupList";
+import { GroupList } from "../../components/Group/GroupList/GroupList";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	getRepeatedCards,

@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { useDispatch, useSelector } from "react-redux";
 import noGroupsImage from "../../assets/images/no_groups.png";
-import AddButton from "../../common/components/AddButton/AddButton";
-import AddInput from "../../common/components/AddInput/AddInput";
-import PressableButton from "../../common/components/PressableButton/PressableButton";
-import { useAppTheme } from "../../contexts/ThemeProvider";
+import AddButton from "../../../common/components/AddButton/AddButton";
+import AddInput from "../../../common/components/AddInput/AddInput";
+import PressableButton from "../../../common/components/PressableButton/PressableButton";
+import { useAppTheme } from "../../../contexts/ThemeProvider";
 import {
 	addGroup,
 	getAllGroups,
 	selectGroup,
-} from "../../redux/groupReducer/groupSlice";
-import DefaultModal from "../DefaultModal/DefaultModal";
-import { GroupItem } from "./GroupItem";
+} from "../../../redux/groupReducer/groupSlice";
+import DefaultModal from "../../DefaultModal/DefaultModal";
+import { GroupItem } from "../GroupItem";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import styles from "./GroupList.styles";
 
 export const GroupList = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const groups = useSelector(selectGroup);
-	const dispatch = useDispatch();
-	const [title, setTitle] = useState("");
-	const [showAddModal, setShowAddModal] = useState(false);
+	const groups = useAppSelector(selectGroup);
+	const dispatch = useAppDispatch();
+	const [title, setTitle] = useState<string>("");
+	const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
 	useEffect(() => {
 		dispatch(getAllGroups());
@@ -74,21 +75,3 @@ export const GroupList = () => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		padding: 20,
-		justifyContent: "center",
-		alignSelf: "center",
-		width: "90%",
-		flex: 1,
-	},
-	groupListContainer: {
-		flexDirection: "column",
-		flex: 1,
-	},
-	noGroupsContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-	},
-});
