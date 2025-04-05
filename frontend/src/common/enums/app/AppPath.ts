@@ -1,4 +1,44 @@
-const AppPath = {
+interface IAppPath {
+	Loading: string;
+	Group: string;
+	SharedGroup: string;
+	SharedGroupDetails: string;
+	Home: string;
+	Main: string;
+	Profile: string;
+	Streak: string;
+	Learn: string;
+	Quiz: string;
+	Word: string;
+	Study: string;
+	Results: string;
+	Statistics: string;
+	ResultDetails: string;
+	Login: string;
+	Register: string;
+}
+
+type TypeAppPath = [
+	Loading: string,
+	Group: string,
+	SharedGroup: string,
+	SharedGroupDetails: string,
+	Home: string,
+	Main: string,
+	Profile: string,
+	Streak: string,
+	Learn: string,
+	Quiz: string,
+	Word: string,
+	Study: string,
+	Results: string,
+	Statistics: string,
+	ResultDetails: string,
+	Login: string,
+	Register: string,
+]
+
+const AppPath: IAppPath = {
 	Loading: "loading",
 	Group: "group",
 	SharedGroup: "shared-group",
@@ -18,4 +58,4 @@ const AppPath = {
 	Register: "register",
 };
 
-export { AppPath };
+export { AppPath, TypeAppPath };

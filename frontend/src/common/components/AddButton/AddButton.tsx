@@ -10,7 +10,12 @@ import styles from "./AddButton.styles";
  * @constructor
  */
 
-const AddButton = ({ onPress, iconSize = 30 }) => {
+interface AddButtonProps {
+	onPress: () => void;
+	iconSize: number
+} 
+
+const AddButton = ({ onPress, iconSize = 30 }: AddButtonProps) => {
 	return (
 		<View style={styles.addButtonContainer}>
 			<Pressable onPress={onPress} style={styles.addButton}>

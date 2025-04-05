@@ -12,11 +12,11 @@ import styles from "./PressableButton.styles";
  */
 
 interface PressableButtonProps {
-	text: string;
-	onPress: (event: GestureResponderEvent) => void;
-	buttonStyle: {};
-	disabled: boolean;
-}
+	text: string; 
+	onPress: () => void; 
+	buttonStyle?: object; 
+	disabled?: boolean;
+} 
 
 const PressableButton = ({ text, onPress, buttonStyle, disabled }: PressableButtonProps) => {
 	return (

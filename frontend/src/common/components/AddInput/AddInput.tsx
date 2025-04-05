@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput } from "react-native";
+import { TextInput, TextInputProps } from "react-native";
 import styles from "./AddInput.styles";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 
@@ -12,12 +12,14 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
  * @constructor
  */
 
+interface AddInputProps extends Pick<TextInputProps, 'placeholder' | 'placeholderTextColor' | 'value' | 'onChangeText'> {}
+
 const AddInput = ({
 	placeholder = "",
 	placeholderTextColor,
 	value = "",
 	onChangeText,
-}) => {
+}: AddInputProps) => {
 	const {
 		theme: {
 			colors: { lightBackground, primary },

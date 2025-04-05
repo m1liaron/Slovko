@@ -9,6 +9,17 @@ export type IUser = {
     frozen: boolean;
 }
 
+export type RegisterUser = {
+    name: string;
+    email: string;
+}
+
+export type IUpdateUser = {
+    image: string;
+    name: string;
+    email: string;
+}
+
 export type IStreakDate = {
     id: string;
     date: string;

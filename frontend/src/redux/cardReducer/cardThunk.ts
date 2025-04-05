@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
-import { ICard } from "@/common/enums/types/card.type";
+import { ICard, IRepeatedGroup } from "@/common/enums/types/card.type";
 
 export const getCards = createAsyncThunk("card/fetchCards", async (data: ICard) => {
 	try {

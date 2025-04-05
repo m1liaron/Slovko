@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { ReactNode, useEffect, useRef } from "react";
 import {
 	View,
 	Modal,
 	Pressable,
 	Animated,
 	useWindowDimensions,
+	GestureResponderEvent,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import styles from "./styles";
@@ -21,6 +22,15 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
  * @constructor
  */
 
+interface DefaultModalProps {
+	isVisible: boolean;
+	handleClose: () => void;
+	modalStyle?: object;
+	backgroundColor?: string;
+	animationType?: "none" | "slide" | "fade";
+	children: ReactNode;
+}
+
 const DefaultModal = ({
 	isVisible,
 	handleClose,
@@ -28,7 +38,7 @@ const DefaultModal = ({
 	backgroundColor,
 	animationType,
 	children,
-}) => {
+}: DefaultModalProps) => {
 	const { width } = useWindowDimensions();
 	const { theme } = useAppTheme();
 	const opacity = useRef(new Animated.Value(0)).current; // Initial opacity for fade-in
@@ -58,7 +68,7 @@ const DefaultModal = ({
 		}
 	}, [isVisible, opacity, scale]);
 
-	const handleOverlayPress = (event) => {
+	const handleOverlayPress = (event: GestureResponderEvent) => {
 		if (event.target === event.currentTarget) {
 			handleClose();
 		}
