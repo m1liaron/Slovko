@@ -1,30 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TextInput, Pressable } from "react-native";
 import styles from "./ResultsScreen.styles";
-import { useDispatch, useSelector } from "react-redux";
 import {
 	filterResults,
 	getResults,
 	resetResults,
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "@react-navigation/native";
 import { AppPath } from "../../common/enums/app/app";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { IResult } from "@/common/enums/types/result.type";
+
+type GroupedResults = {
+	[date: string]: IResult[];
+}
 
 const ResultsScreen = () => {
-	const dispatch = useDispatch();
-	const {
-		theme: { colors },
-	} = useAppTheme();
-	const { results } = useSelector((state) => state.results);
-	const [filterValue, setFilterValue] = useState("");
+	const dispatch = useAppDispatch();
+	const { theme: { colors } } = useAppTheme();
+	const { results } = useAppSelector((state) => state.results);
+	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);
-	const [sortOrder, setSortOrder] = useState("asc");
-	const [groupedResults, setGroupedResults] = useState({});
+	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+	const [groupedResults, setGroupedResults] = useState<GroupedResults>({});
 
 	useEffect(() => {
 		if (results.length > 0) {
@@ -33,8 +35,8 @@ const ResultsScreen = () => {
 		}
 	}, [results]);
 
-	const groupResultsByDay = (results) => {
-		return results.reduce((groups, item) => {
+	const groupResultsByDay = (results: IResult[]): GroupedResults => {
+		return results.reduce<GroupedResults>((groups, item) => {
 			const date = new Date(item.createdAt).toISOString().split("T")[0]; // Format as YYYY-MM-DD
 			if (!groups[date]) {
 				groups[date] = [];
@@ -100,7 +102,7 @@ const ResultsScreen = () => {
 							borderColor: colors.primary,
 							padding: 15,
 							width: "30%",
-							alignSelf: "end",
+							alignSelf: "flex-end",
 							color: colors.primary,
 						}}
 						placeholder="Фільтр"
@@ -114,7 +116,7 @@ const ResultsScreen = () => {
 							borderRadius: 20,
 							borderColor: colors.primary,
 							padding: 15,
-							alignSelf: "end",
+							alignSelf: "flex-end",
 						}}
 						onPress={() => dispatch(filterResults(filterValue))}
 					>
@@ -126,7 +128,7 @@ const ResultsScreen = () => {
 							borderRadius: 20,
 							borderColor: colors.primary,
 							padding: 15,
-							alignSelf: "end",
+							alignSelf: "flex-end",
 						}}
 						onPress={() => dispatch(resetResults())}
 					>
@@ -142,7 +144,7 @@ const ResultsScreen = () => {
 			<FlatList
 				data={Object.entries(groupedResults)}
 				keyExtractor={(item) => item[0]}
-				renderItem={({ item }) => (
+				renderItem={({ item }: { item: [string, IResult[]]}) => (
 					<View style={{ marginBottom: 20 }}>
 						<Text
 							style={{
