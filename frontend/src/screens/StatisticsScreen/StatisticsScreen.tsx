@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, ActivityIndicator } from "react-native";
 import { LineChart, BarChart, PieChart } from "react-native-chart-kit";
 import { useDispatch, useSelector } from "react-redux";
 import { selectResult } from "../../redux/resultReducer/resultSlice";
 import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
-import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import RNPickerSelect from "react-native-picker-select";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { IStatistics, ModeName } from "@/common/enums/types/result.type";
 
 const StatisticsScreen = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { statistics } = useSelector(selectResult);
-	const dispatch = useDispatch();
-	const [selectedMode, setSelectedMode] = useState("flashCards");
-	const [selectedWordsMode, setSelectedWordsMode] = useState("wordLength"); // Mistakes || wordLength;
-	const [selectedGraph, setSelectedGraph] = useState("LineChart");
+	const { statistics } = useAppSelector(selectResult);
+	const dispatch = useAppDispatch();
+	const [selectedMode, setSelectedMode] = useState<string>("flashCards");
+	const [selectedWordsMode, setSelectedWordsMode] = useState<string>("wordLength"); // Mistakes || wordLength;
+	const [selectedGraph, setSelectedGraph] = useState<string>("LineChart");
 
 	useEffect(() => {
 		dispatch(getResultsStatistics());
@@ -38,6 +39,9 @@ const StatisticsScreen = () => {
 	];
 
 	const renderGraph = () => {
+		if(!statistics) {
+			return null;
+		}
 		const chartConfig = {
 			backgroundColor: "#011d65",
 			backgroundGradientFrom: "#002efb",
@@ -50,11 +54,18 @@ const StatisticsScreen = () => {
 			},
 		};
 
+		if(!statistics) {
+			return <ActivityIndicator/>
+		}
+
+		const selectedModeKey = selectedMode as keyof IStatistics["amountMistakesCards"];
+		const selectedWordsModeKey = selectedWordsMode as keyof IStatistics["amountMistakesCards"][ModeName];
+
 		const data = {
 			labels: statistics.resultsMonths,
 			datasets: [
 				{
-					data: statistics.amountMistakesCards[selectedMode][selectedWordsMode],
+					data: statistics.amountMistakesCards[selectedModeKey][selectedWordsModeKey],
 				},
 			],
 		};
@@ -65,6 +76,7 @@ const StatisticsScreen = () => {
 			case "BarChart":
 				return (
 					<BarChart
+						yAxisLabel=""
 						yAxisSuffix=""
 						data={data}
 						width={chartWidth}
@@ -76,8 +88,8 @@ const StatisticsScreen = () => {
 			case "PieChart":
 				return (
 					<PieChart
-						data={statistics.amountMistakesCards[selectedMode][
-							selectedWordsMode
+						data={statistics.amountMistakesCards[selectedModeKey][
+							selectedWordsModeKey
 						].map((value, index) => ({
 							name: statistics.resultsMonths[index],
 							population: value,
@@ -212,7 +224,7 @@ const StatisticsScreen = () => {
 			</View>
 
 			<View style={{ margin: 20 }}>
-				{statistics?.amountMistakesCards && renderGraph()}
+				{statistics?.amountMistakesCards ? renderGraph() : null}
 			</View>
 		</ThemeBackground>
 	);

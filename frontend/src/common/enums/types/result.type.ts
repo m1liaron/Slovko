@@ -24,4 +24,16 @@ type IResult = {
     createdAt: Date;
 }
 
-export { IResult };
+type ModeName = "flashCards" | "quiz" | "guessWord" | "check";
+
+type IStatistics = {
+    resultsMonths: string[]
+    amountMistakesCards: {
+        [key in ModeName]: {
+            mistakes: number[];
+            wordLength: number[]
+        }
+    }
+}
+
+export { IResult, IStatistics, ModeName };

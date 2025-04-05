@@ -6,12 +6,13 @@ import {
 	getResultsStatistics,
 } from "./resultThunk";
 import { DataStatus, IDataStatus } from "@/common/enums/app/DataStatus";
-import { IResult } from "@/common/enums/types/types";
+import { IResult, IStatistics } from "@/common/enums/types/types";
+import { RootState } from "../store";
 
 interface InitialState {
 	results: IResult[],
 	filteredResults: IResult[],
-	statistics: IResult[],
+	statistics: IStatistics | null,
 	result: IResult | null,
 	isLoading: boolean,
 	error: string | null,
@@ -21,7 +22,7 @@ interface InitialState {
 const initialState: InitialState = {
 	results: [],
 	filteredResults: [],
-	statistics: [],
+	statistics: null,
 	result: null,
 	isLoading: false,
 	error: null,
@@ -117,7 +118,7 @@ const resultSlice = createSlice({
 });
 
 export const { filterResults, sortResults, resetResults } = resultSlice.actions;
-export const selectResult = (state: { results: InitialState }) => state.results;
+export const selectResult = (state: RootState) => state.results;
 export {
 	saveResults,
 	getResults,
