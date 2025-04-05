@@ -10,7 +10,12 @@ import styles from "./ProgressContainer.styles";
  * @constructor
  */
 
-const ProgressContainer = ({ index, length }) => {
+interface ProgressContainerProps {
+	index: number;
+	length: number;
+}
+
+const ProgressContainer = ({ index, length }: ProgressContainerProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
