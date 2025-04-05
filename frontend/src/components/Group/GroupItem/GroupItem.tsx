@@ -1,15 +1,23 @@
 import { Entypo } from "@expo/vector-icons";
 import { Link } from "@react-navigation/native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
-import { useAppTheme } from "../../contexts/ThemeProvider";
-import { removeGroup } from "../../redux/groupReducer/groupSlice";
+import { Pressable, Text, View } from "react-native";
+import { useAppTheme } from "../../../contexts/ThemeProvider";
+import { removeGroup } from "../../../redux/groupReducer/groupSlice";
+import styles from "./Group.styles";
+import { useAppDispatch } from "@/hooks/redux.hooks";
 
-export const GroupItem = ({ item: { id, title } }) => {
+interface GroupItemProps  {
+	item: { 
+		id: string;
+		title: string;
+	}
+}
+
+export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const handleRemoveGroup = () => {
 		dispatch(removeGroup(id));
@@ -36,12 +44,3 @@ export const GroupItem = ({ item: { id, title } }) => {
 		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	item: {
-		width: "100%",
-		padding: 10,
-		margin: 10,
-		borderRadius: 5,
-	},
-});

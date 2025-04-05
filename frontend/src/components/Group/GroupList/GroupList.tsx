@@ -12,7 +12,7 @@ import {
 	selectGroup,
 } from "../../../redux/groupReducer/groupSlice";
 import DefaultModal from "../../DefaultModal/DefaultModal";
-import { GroupItem } from "../GroupItem";
+import { GroupItem } from "../GroupItem/GroupItem";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import styles from "./GroupList.styles";
 
