@@ -13,7 +13,7 @@ import styles from "./PressableButton.styles";
 
 interface PressableButtonProps {
 	text: string; 
-	onPress: () => void; 
+	onPress?: () => void; 
 	buttonStyle?: object; 
 	disabled?: boolean;
 } 

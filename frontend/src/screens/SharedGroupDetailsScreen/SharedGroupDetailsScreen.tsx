@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { View, Text, FlatList } from "react-native";
 import styles from "./SharedGroupDetailsScreen.styles";
-import { useDispatch, useSelector } from "react-redux";
 import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
-import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 /**
  * @param route { object: { params }}
@@ -15,13 +15,17 @@ import ThemeBackground from '../../common/components/ThemeBackground/Themebackgr
  * @constructor
  */
 
-const SharedGroupDetailsScreen = ({ route }) => {
+type SharedGroupDetailsScreenProps = {
+	route: { params: { sharedGroupId: string }};
+};
+
+const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
 	const { sharedGroupId } = route.params;
-	const { sharedGroup } = useSelector((state) => state.sharedGroups);
-	const dispatch = useDispatch();
+	const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		dispatch(getSharedGroup(sharedGroupId));
@@ -62,13 +66,13 @@ const SharedGroupDetailsScreen = ({ route }) => {
 								{ backgroundColor: colors.lightBackground },
 							]}
 						>
-							<Text style={[styles.title, { color: colors.primary }]}>
+							<ThemeText>
 								{item.word}
-							</Text>
-							<Text style={[styles.translate, { color: colors.primary }]}>
+							</ThemeText>
+							<ThemeText>
 								Переклад:{" "}
 								<Text style={{ fontWeight: "bold" }}>{item.translateWord}</Text>
-							</Text>
+							</ThemeText>
 						</View>
 					)}
 				/>

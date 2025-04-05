@@ -9,7 +9,7 @@ type ISharedGroup = {
     id: string;
     title: string;
     userId?: string;
-    cards: ISharedCard[];
+    sharedCards: ISharedCard[];
 }
 
 export { ISharedGroup };

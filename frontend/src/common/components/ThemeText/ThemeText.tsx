@@ -11,7 +11,7 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 
 interface ThemeTextProps {
   children: ReactNode;
-  style: {}
+  style?: {}
 } 
 
 const ThemeText = ({ children, style }: ThemeTextProps) => {

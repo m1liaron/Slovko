@@ -164,6 +164,7 @@ const ResultsScreen = () => {
 									{ backgroundColor: colors.lightBackground },
 								]}
 								to={{
+									// !TODO Fix this type error
 									screen: AppPath.ResultDetails,
 									params: { resultId: result.id },
 								}}
