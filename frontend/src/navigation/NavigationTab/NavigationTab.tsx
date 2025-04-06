@@ -9,8 +9,9 @@ import {
 	ResultsScreen,
 	SharedGroupsScreen,
 } from "../../screens";
+import { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const NavigationTab = () => {
 	const { theme } = useAppTheme();

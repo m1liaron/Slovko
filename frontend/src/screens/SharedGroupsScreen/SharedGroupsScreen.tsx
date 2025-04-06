@@ -112,10 +112,7 @@ const SharedGroupsScreen = () => {
 						styles.container,
 						{ backgroundColor: colors.lightBackground },
 					]}
-					to={{
-						screen: AppPath.SharedGroupDetails,
-						params: { sharedGroupId: item.id },
-					}}
+					to={`/${AppPath.SharedGroupDetails}/${item.id}`}
 				>
 					<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
 						<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>

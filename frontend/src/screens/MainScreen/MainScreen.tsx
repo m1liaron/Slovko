@@ -1,6 +1,6 @@
 import appLogo from "@/assets/images/favicon.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useCallback } from "react";
@@ -29,8 +29,11 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
+import { StackScreenProps } from "@react-navigation/stack";
 
-const MainScreen = () => {
+type MainScreenProps = StackScreenProps<RootStackParamList, typeof AppPath.Main>;
+
+const MainScreen: React.FC<MainScreenProps> = () => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigation<StackNavigation>();
 	const { user } = useAppSelector(selectUser);

@@ -27,7 +27,7 @@ const LoginScreen = () => {
 			});
 		}
 
-		const response = await dispatch(login({ email, password }));
+		const response = dispatch(login({ email, password }));
 		if (login.rejected.match(response)) {
 			const error = response.payload || "Login failed";
 

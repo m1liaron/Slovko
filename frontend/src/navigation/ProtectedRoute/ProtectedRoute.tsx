@@ -12,7 +12,19 @@ import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 
-export type RootStackParamList = Record<TypeAppPath[number], undefined>;
+export type RootStackParamList = {
+	[AppPath.Main]: undefined;
+	[AppPath.Group]: { groupId: string };
+	[AppPath.Learn]: { groupId: string };
+	[AppPath.ResultDetails]: { resultId: string };
+	[AppPath.SharedGroupDetails]: { sharedGroupId: string };
+	[AppPath.Statistics]: undefined;
+	[AppPath.Streak]: undefined;
+	[AppPath.Home]: undefined;
+	[AppPath.Profile]: undefined;
+	[AppPath.Results]: undefined;
+	[AppPath.SharedGroup]: undefined;
+  };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

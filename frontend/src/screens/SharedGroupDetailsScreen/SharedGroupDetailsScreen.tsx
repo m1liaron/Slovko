@@ -8,6 +8,9 @@ import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { AppPath } from "@/common/enums/app/AppPath";
 
 /**
  * @param route { object: { params }}
@@ -15,15 +18,16 @@ import styles from "./SharedGroupDetailsScreen.styles";
  * @constructor
  */
 
-type SharedGroupDetailsScreenProps = {
-	route: { params: { sharedGroupId: string } };
-};
+type SharedGroupDetailsScreenProps = StackScreenProps<
+	RootStackParamList,
+	typeof AppPath.SharedGroupDetails
+>;
 
 const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { sharedGroupId } = route.params;
+	const { sharedGroupId } = route.params as { sharedGroupId: string };
 	const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
 	const dispatch = useAppDispatch();
 

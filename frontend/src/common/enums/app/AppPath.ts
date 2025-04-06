@@ -18,26 +18,6 @@ interface IAppPath {
 	Register: string;
 }
 
-type TypeAppPath = [
-	Loading: string,
-	Group: string,
-	SharedGroup: string,
-	SharedGroupDetails: string,
-	Home: string,
-	Main: string,
-	Profile: string,
-	Streak: string,
-	Learn: string,
-	Quiz: string,
-	Word: string,
-	Study: string,
-	Results: string,
-	Statistics: string,
-	ResultDetails: string,
-	Login: string,
-	Register: string,
-];
-
 const AppPath: IAppPath = {
 	Loading: "loading",
 	Group: "group",
@@ -56,6 +36,7 @@ const AppPath: IAppPath = {
 	ResultDetails: "results/resultId",
 	Login: "login",
 	Register: "register",
-};
+} as const;
 
-export { AppPath, type TypeAppPath };
+export type TypeAppPath = typeof AppPath
+export { AppPath };

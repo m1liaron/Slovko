@@ -10,16 +10,20 @@ import { getResultDetails } from "../../redux/resultReducer/resultSlice";
 import formatDMTDate from "../../utils/formatDMTDate";
 import { formatTime } from "../../utils/formatTime";
 import styles from "./ResultDetailsScreen.styles";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { AppPath } from "@/common/enums/app/AppPath";
 
-type ResultDetailsScreenProps = {
-	route: { params: { resultId: string } };
-};
+type ResultDetailsScreenProps = StackScreenProps<
+  RootStackParamList,
+  typeof AppPath.ResultDetails
+>;
 
-const ResultDetailsScreen = ({ route }: ResultDetailsScreenProps) => {
+const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { resultId } = route.params;
+	const { resultId } = route.params as { resultId: string };
 	const { result, isLoading } = useAppSelector((state) => state.results);
 	const dispatch = useAppDispatch();
 	const [selectedMode, setSelectedMode] = useState<number>(0); // 0 - flashCards, 1 - quiz, 2 - guessWord

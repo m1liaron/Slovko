@@ -24,9 +24,10 @@ import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { ICard } from "@/common/enums/types/types";
 import { ResultsCard } from "@/common/enums/types/result.type";
+import { StackScreenProps } from "@react-navigation/stack";
 
 type Section = "cards" | "quiz" | "word" | "finish";
 
@@ -38,14 +39,11 @@ interface SectionOption {
 	sectionName: Section;
 }
   
-interface LearnScreenProps {
-	route: { params: { groupId: string }};
-}
+type LearnScreenProps = StackScreenProps<RootStackParamList, typeof AppPath.Learn>;
 
-
-const LearnScreen = ({ route }: LearnScreenProps) => {
+const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	const { theme } = useAppTheme();
-	const { groupId } = route.params || {};
+	const { groupId } = route.params as { groupId: string };
 	const groups = useAppSelector(selectGroup);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
@@ -269,7 +267,7 @@ const LearnScreen = ({ route }: LearnScreenProps) => {
 								{currentSection === "word" && isGuessWordEnabled && (
 									<LearnGuessWord
 										onComplete={handleNextSection}
-										handleSetDate={handleSetData}
+										handleSetData={handleSetData}
 									/>
 								)}
 
