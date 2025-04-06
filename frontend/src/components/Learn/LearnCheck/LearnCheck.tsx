@@ -68,50 +68,52 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 	const checkSelectedWordCorrect = (translation: string) => {
 		if (!selectedWord) return;
 
-		const currentCard: ICard = cards.find((card) => card.word === selectedWord);
-		const correctTranslation = cards.find(
-			(card) => card.word === selectedWord,
-		)?.translateWord;
+		const currentCard = cards.find((card) => card.word === selectedWord);
+		if(currentCard) {
+			const correctTranslation = cards.find(
+				(card) => card.word === selectedWord,
+			)?.translateWord;
 
-		if (translation === correctTranslation) {
-			const wordIndex = words.indexOf(selectedWord);
-			const translationIndex = answers.indexOf(translation);
+			if (translation === correctTranslation) {
+				const wordIndex = words.indexOf(selectedWord);
+				const translationIndex = answers.indexOf(translation);
 
-			handleSetData(currentCard, true);
-			setLearnedWords((prev) => [...prev, selectedWord]);
-			setSelectedWord(null);
+				handleSetData(currentCard, true);
+				setLearnedWords((prev) => [...prev, selectedWord]);
+				setSelectedWord(null);
 
-			const newCard = getNewWord();
-			if (!newCard) return;
-			const newWords = [...words];
-			const newAnswers = [...answers];
+				const newCard = getNewWord();
+				if (!newCard) return;
+				const newWords = [...words];
+				const newAnswers = [...answers];
 
-			newWords[wordIndex] = newCard.word;
-			newAnswers[translationIndex] = newCard.translateWord;
+				newWords[wordIndex] = newCard.word;
+				newAnswers[translationIndex] = newCard.translateWord;
 
-			setAnsweredWords((prev) => [...prev, newCard.word]);
-			setWords(newWords);
-			setAnswers(newAnswers);
+				setAnsweredWords((prev) => [...prev, newCard.word]);
+				setWords(newWords);
+				setAnswers(newAnswers);
 
-			setAnimateNewWord(newCard.word);
-			setAnimateNewAnswer(newCard.translateWord);
+				setAnimateNewWord(newCard.word);
+				setAnimateNewAnswer(newCard.translateWord);
 
-			newFadeAnim.setValue(0);
-			Animated.timing(newFadeAnim, {
-			toValue: 1,
-			duration: 4000,
-			useNativeDriver: true,
-			}).start(() => {
-			// Clear animate markers after the animation completes.
-			setAnimateNewWord(null);
-			setAnimateNewAnswer(null);
-			});
-		} else {
-			setWrongAnswer(translation);
-			handleSetData(currentCard, false);
-			setTimeout(() => {
-				setWrongAnswer(null);
-			}, 1000);
+				newFadeAnim.setValue(0);
+				Animated.timing(newFadeAnim, {
+				toValue: 1,
+				duration: 4000,
+				useNativeDriver: true,
+				}).start(() => {
+				// Clear animate markers after the animation completes.
+				setAnimateNewWord(null);
+				setAnimateNewAnswer(null);
+				});
+			} else {
+				setWrongAnswer(translation);
+				handleSetData(currentCard, false);
+				setTimeout(() => {
+					setWrongAnswer(null);
+				}, 1000);
+			}		
 		}
 	};
 
@@ -124,10 +126,10 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 	const isAllCardsLearned = answeredWords.length === cards.length;
 	const isTranslateDisappear = (item: string) => {
 		const word = cards.find((card) => card.translateWord === item)?.word;
-		return learnedWords.includes(word);
+		return learnedWords.includes(word || "");
 	};
 
-	const renderWordItem = ({ item }) => {
+	const renderWordItem = ({ item }: { item: string}) => {
 		const animatedStyle =
       animateNewWord && animateNewWord === item
         ? { opacity: newFadeAnim }
@@ -154,7 +156,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 		)
 	}
 
-	const renderAnswerItem = ({ item }) => {
+	const renderAnswerItem = ({ item }: { item: string }) => {
 		const animatedStyle =
       animateNewAnswer && animateNewAnswer === item
         ? { opacity: newFadeAnim }
