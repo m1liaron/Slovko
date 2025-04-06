@@ -12,23 +12,30 @@ import { useSelector } from "react-redux";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
+import { ResultsCard } from "@/common/enums/types/result.type";
+import { ICard } from "@/common/enums/types/card.type";
 
-const LearnCards = ({ onComplete, setFlashCards }) => {
+interface LearnCardsProps {
+	onComplete: () => void;
+	setFlashCards: (card: ICard, isCorrect: boolean) => void
+}
+
+const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
 	const cards = useSelector(selectCard);
-	const [flippedIndex, setFlippedIndex] = useState(null);
-	const [learningCards, setLearningCards] = useState([...cards]);
-	const [showLeftSwipeView, setShowLeftSwipeView] = useState(false);
-	const [showRightSwipeView, setShowRightSwipeView] = useState(false);
-	const [flippedCards, setFlippedCards] = useState({});
-	const [currentCardIndex, setCurrentCardIndex] = useState(0);
-	const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false);
+	const [flippedIndex, setFlippedIndex] = useState<number | null>(null);
+	const [learningCards, setLearningCards] = useState<ICard[]>([...cards]);
+	const [showLeftSwipeView, setShowLeftSwipeView] = useState<boolean>(false);
+	const [showRightSwipeView, setShowRightSwipeView] = useState<boolean>(false);
+	const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
+	const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
+	const [isHorizontalSwipe, setIsHorizontalSwipe] = useState<boolean>(false);
 
 	const rotation = useSharedValue(0);
 
-	const handleFlipCard = (index) => {
+	const handleFlipCard = (index: number) => {
 		setFlippedCards((prevFlippedCards) => {
 			if (prevFlippedCards[index]) {
 				return prevFlippedCards;
@@ -77,7 +84,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 		setFlashCards(learningCards[currentCardIndex], true);
 	};
 
-	const handleSwipeLeft = (index) => {
+	const handleSwipeLeft = (index: number) => {
 		setShowLeftSwipeView(true);
 		setTimeout(() => setShowLeftSwipeView(false), 1000);
 
@@ -98,7 +105,7 @@ const LearnCards = ({ onComplete, setFlashCards }) => {
 		setIsHorizontalSwipe(false);
 	};
 
-	const renderCard = (card, index) => (
+	const renderCard = (card: ICard, index: number) => (
 		<Pressable
 			onPress={() => handleFlipCard(index)}
 			style={[styles.cardContainer]}

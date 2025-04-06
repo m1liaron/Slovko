@@ -10,6 +10,7 @@ import {
 	updateCard,
 	updateCardsAfterLearn,
 } from "./cardThunk";
+import { RootState } from "../store";
 
 interface InitialState {
 	cards: ICard[];
@@ -160,7 +161,7 @@ const cardSlice = createSlice({
 
 export const { filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
-export const selectCard = (state: { cards: { cards: InitialState } }) =>
+export const selectCard = (state: RootState) =>
 	state.cards.cards;
 export {
 	getCards,
