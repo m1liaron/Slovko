@@ -179,11 +179,17 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 			overlayLabels={{
 				left: {
 					title: "Не знаю",
-					style: styles.overlayLabelLeft,
+					style: {
+						label: styles.overlayLabelLeftTitle,
+						wrapper: styles.overlayLabelLeftWrapper,
+					},
 				},
 				right: {
 					title: "Знаю",
-					style: styles.overlayLabelRight,
+					style: {
+						label: styles.overlayLabelRightTitle,
+						wrapper: styles.overlayLabelRightWrapper,
+					},
 				},
 			}}
 		/>

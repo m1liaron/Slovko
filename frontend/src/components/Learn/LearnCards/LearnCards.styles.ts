@@ -56,28 +56,25 @@ const styles = StyleSheet.create({
 		fontWeight: "700",
 		textAlign: "center",
 	},
-	overlayLabelLeft: {
-		title: {
-			color: "white",
-			backgroundColor: "#ff6b6b",
-			paddingVertical: 8,
-			paddingHorizontal: 20,
-			borderRadius: 8,
-			fontSize: 16,
-			fontWeight: "700",
-			maxWidth: CARD_WIDTH - 40, // Ensures the label doesn't exceed card width
-		},
-		wrapper: {
-			position: "absolute",
-			top: "-35%",
-			left: 100,
-			transform: [{ translateY: -20 }], // Adjusts the label to be centered vertically
-			justifyContent: "center",
-			alignItems: "center",
-		},
+	overlayLabelLeftTitle: {
+		color: "white",
+		backgroundColor: "#ff6b6b",
+		paddingVertical: 8,
+		paddingHorizontal: 20,
+		borderRadius: 8,
+		fontSize: 16,
+		fontWeight: "700",
+		maxWidth: CARD_WIDTH - 40,
 	},
-	overlayLabelRight: {
-		title: {
+	overlayLabelLeftWrapper: {
+		position: "absolute",
+		top: "-35%",
+		left: 100,
+		transform: [{ translateY: -20 }],
+		justifyContent: "center",
+		alignItems: "center",
+	},
+		overlayLabelRightTitle: {
 			color: "white",
 			backgroundColor: "#1dd1a1",
 			paddingVertical: 8,
@@ -87,7 +84,7 @@ const styles = StyleSheet.create({
 			fontWeight: "700",
 			maxWidth: CARD_WIDTH - 40, // Ensures the label doesn't exceed card width
 		},
-		wrapper: {
+		overlayLabelRightWrapper: {
 			position: "absolute",
 			top: "-35%",
 			right: 100,
@@ -95,7 +92,6 @@ const styles = StyleSheet.create({
 			justifyContent: "center",
 			alignItems: "center",
 		},
-	},
 });
 
 export default styles;
