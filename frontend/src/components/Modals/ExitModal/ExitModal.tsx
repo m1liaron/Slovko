@@ -9,7 +9,7 @@ import styles from "./ExitModal.styles";
 
 interface ExitModalProps {
 	modalVisible: boolean; 
-	handleClose: () => {};
+	handleClose: () => void;
 	text: string;
 }
 

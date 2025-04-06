@@ -25,11 +25,19 @@ import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { ICard } from "@/common/enums/types/card.type";
+import { ICard } from "@/common/enums/types/types";
 import { ResultsCard } from "@/common/enums/types/result.type";
 
 type Section = "cards" | "quiz" | "word" | "finish";
 
+interface SectionOption {
+	text: string;
+	iconName: keyof typeof MaterialIcons.glyphMap;
+	state: boolean;
+	changeState: React.Dispatch<React.SetStateAction<boolean>>;
+	sectionName: Section;
+}
+  
 interface LearnScreenProps {
 	route: { params: { groupId: string }};
 }
@@ -40,13 +48,13 @@ const LearnScreen = ({ route }: LearnScreenProps) => {
 	const { groupId } = route.params || {};
 	const groups = useAppSelector(selectGroup);
 	const dispatch = useAppDispatch();
-	const navigaiton = useNavigation<StackNavigation>();
+	const navigation = useNavigation<StackNavigation>();
 	const { repeatedCards, cards, status } = useAppSelector((state) => state.cards);
 
 	// Section State
 	const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
 	const [currentSection, setCurrentSection] = useState<Section>("cards");
-	const [finishedSections, setFinishedSections] = useState([]);
+	const [finishedSections, setFinishedSections] = useState<Section[]>([]);
 
 	// Modes Toggles
 	const [isQuizEnabled, setIsQuizEnabled] = useState<boolean>(true);
@@ -55,9 +63,9 @@ const LearnScreen = ({ route }: LearnScreenProps) => {
 	const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
 	// Cards State
-	const [flashCards, setFlashCards] = useState([]);
-	const [quizCards, setQuizCards] = useState([]);
-	const [guessWordCards, setGuessWordCards] = useState([]);
+	const [flashCards, setFlashCards] = useState<ResultsCard[]>([]);
+	const [quizCards, setQuizCards] = useState<ResultsCard[]>([]);
+	const [guessWordCards, setGuessWordCards] = useState<ResultsCard[]>([]);
 
 	// Timing State
 	const [startLearnDate, setStartLearnDate] = useState<Date>(new Date());
@@ -85,7 +93,7 @@ const LearnScreen = ({ route }: LearnScreenProps) => {
 
 	const handleSetData = (card: ICard, isCorrect: boolean) => {
 		const updateOrAddCard = (
-			cards: ICard[], 
+			cards: ResultsCard[], 
 			setCards: React.Dispatch<React.SetStateAction<ResultsCard[]>>
 		) => {
 			const newCard = {
@@ -152,7 +160,6 @@ const LearnScreen = ({ route }: LearnScreenProps) => {
 		if (repeatedCards.length) {
 			dispatch(getRepeatedCards());
 		}
-	};
 
 	const leaveStudy = () => {
 		navigation.navigate(AppPath.Main);
@@ -170,7 +177,7 @@ const LearnScreen = ({ route }: LearnScreenProps) => {
 	};
 
 	const generateSectionContent = () => {
-		const sections = [
+		const sections: SectionOption[] = [
 			{
 				text: "Quiz mode",
 				iconName: "quiz",

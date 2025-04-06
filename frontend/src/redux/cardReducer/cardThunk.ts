@@ -13,7 +13,7 @@ export const getCards = createAsyncThunk(
 			console.error("Error fetching cards:", error);
 			throw error;
 		}
-	},
+	}, 
 );
 
 export const addCard = createAsyncThunk(
