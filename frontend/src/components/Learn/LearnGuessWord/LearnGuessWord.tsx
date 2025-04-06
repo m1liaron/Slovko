@@ -1,26 +1,36 @@
 import { AntDesign } from "@expo/vector-icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Image, Platform, Pressable, Text, View } from "react-native";
-import { useSelector } from "react-redux";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 import styles from "./LearnGuessWord.styles";
+import { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 
-const LearnGuessWord = ({ onComplete, handleSetDate }) => {
+interface LetterColors {
+	[key: number]: string;
+  }
+
+interface LearnGuessWordProps {
+	onComplete: () => void;
+	handleSetData: (card: ICard, isCorrect: boolean) => void
+}
+
+const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const cards = useSelector(selectCard);
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [currentGuess, setCurrentGuess] = useState([]);
-	const [scrambledWord, setScrambledWord] = useState([]);
-	const [letterColors, setLetterColors] = useState({});
-	const [inCorrectLetter, setInCorrectLetter] = useState(null);
-	const [showTranslate, setShowTranslate] = useState(false);
-	const [correctAnswers, setCorrectAnswers] = useState([]);
+	const cards = useAppSelector(selectCard);
+	const [currentIndex, setCurrentIndex] = useState<number>(0);
+	const [currentGuess, setCurrentGuess] = useState<string[]>([]);
+	const [scrambledWord, setScrambledWord] = useState<string[]>([]);
+	const [letterColors, setLetterColors] = useState<LetterColors>({});
+	const [inCorrectLetter, setInCorrectLetter] = useState<string | null>(null);
+	const [showTranslate, setShowTranslate] = useState<boolean>(false);
+	const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
 	const currentCard = cards[currentIndex];
-	const currentWord = currentCard?.word;
+	const currentWord: string = currentCard?.word;
 
 	useEffect(() => {
 		if (currentWord) {
@@ -30,12 +40,10 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 		}
 	}, [currentWord]);
 
-	const generateDashes = (word) => {
-		return Array(word.length).fill("_"); // Create an array of underscores representing dashes
-	};
+	const generateDashes = (word: string): string[] => Array(word.length).fill("_"); // Create an array of underscores representing dashes
 
-	const generateScrambledWord = (word) => {
-		const wordArray = word.split("");
+	const generateScrambledWord = (word: string) => {
+		const wordArray: string[] = word.split("");
 		for (let i = 0; i < 3; i++) {
 			const randomLetter = getRandomLetter();
 			const randomIndex = getRandomInt(0, wordArray.length);
@@ -51,7 +59,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 		setScrambledWord(wordArray);
 	};
 
-	const getRandomInt = (min, max) =>
+	const getRandomInt = (min: number, max: number) =>
 		Math.floor(Math.random() * (max - min + 1)) + min;
 
 	const getRandomLetter = () => {
@@ -59,24 +67,23 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 		return alphabet[getRandomInt(0, alphabet.length - 1)];
 	};
 
-	const handleLetterSelection = (letter, index) => {
+	const handleLetterSelection = (letter: string, index: number) => {
 		const firstDashIndex = currentGuess.indexOf("_");
 		if (letter === currentWord[firstDashIndex]) {
-			setCurrentGuess(currentGuess + letter);
 			const updatedGuess = [...currentGuess];
 			updatedGuess[firstDashIndex] = letter;
 			setCurrentGuess(updatedGuess);
 			removeLetterFromScrambled(index);
 			setCorrectAnswers((prevState) => [...prevState, true]);
-			handleSetDate(currentCard, true);
+			handleSetData(currentCard, true);
 		} else {
 			highlightIncorrectLetter(index);
-			handleSetDate(currentCard, false);
+			handleSetData(currentCard, false);
 		}
 	};
 
 	const removeLetterFromScrambled = useCallback(
-		(index) => {
+		(index: number) => {
 			const updatedWord = [...scrambledWord];
 			updatedWord.splice(index, 1);
 			setScrambledWord(updatedWord);
@@ -85,7 +92,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 	);
 
 	const highlightIncorrectLetter = useCallback(
-		(index) => {
+		(index: number) => {
 			setLetterColors({ [index]: "red" });
 			setInCorrectLetter(currentWord[index]);
 			setTimeout(() => setLetterColors({}), 1000);
@@ -111,7 +118,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 
 	if (Platform.OS === "web") {
 		useEffect(() => {
-			const handleKeyDown = (event) => {
+			const handleKeyDown = (event: KeyboardEvent) => {
 				const pressedLetter = event.key;
 				if (event.key === "Shift") return;
 				const firstDashIndex = currentGuess.indexOf("_");
@@ -133,10 +140,10 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 					}
 
 					setCorrectAnswers((prevState) => [...prevState, true]);
-					handleSetDate(currentCard, true);
+					handleSetData(currentCard, true);
 				} else {
 					highlightIncorrectLetter(letterIndex);
-					handleSetDate(currentCard, false);
+					handleSetData(currentCard, false);
 				}
 			};
 
@@ -150,7 +157,7 @@ const LearnGuessWord = ({ onComplete, handleSetDate }) => {
 			currentWord,
 			scrambledWord,
 			currentCard,
-			handleSetDate,
+			handleSetData,
 			highlightIncorrectLetter,
 			removeLetterFromScrambled,
 		]);

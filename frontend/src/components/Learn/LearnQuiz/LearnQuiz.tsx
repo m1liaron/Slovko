@@ -1,12 +1,12 @@
 import { Audio } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
-import { useSelector } from "react-redux";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 import styles from "./LearnQuiz.styles";
 import { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 
 type QuizOption = {
 	text: string;
@@ -19,7 +19,7 @@ interface LearnQuizProps {
 }
 
 const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
-	const cards = useSelector(selectCard);
+	const cards = useAppSelector(selectCard);
 	const {
 		theme: { colors },
 	} = useAppTheme();
