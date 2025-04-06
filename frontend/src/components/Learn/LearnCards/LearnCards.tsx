@@ -8,12 +8,11 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from "react-native-reanimated";
-import { useSelector } from "react-redux";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
-import { ResultsCard } from "@/common/enums/types/result.type";
 import { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 
 interface LearnCardsProps {
 	onComplete: () => void;
@@ -24,7 +23,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const cards = useSelector(selectCard);
+	const cards = useAppSelector(selectCard);
 	const [flippedIndex, setFlippedIndex] = useState<number | null>(null);
 	const [learningCards, setLearningCards] = useState<ICard[]>([...cards]);
 	const [showLeftSwipeView, setShowLeftSwipeView] = useState<boolean>(false);

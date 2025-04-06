@@ -6,17 +6,28 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 import styles from "./LearnQuiz.styles";
+import { ICard } from "@/common/enums/types/card.type";
 
-const LearnQuiz = ({ onComplete, handleSetData }) => {
+type QuizOption = {
+	text: string;
+	isCorrect: boolean;
+}
+
+interface LearnQuizProps {
+	onComplete: () => void;
+	handleSetData: (card: ICard, isCorrect: boolean) => void
+}
+
+const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
 	const cards = useSelector(selectCard);
 	const {
 		theme: { colors },
 	} = useAppTheme();
 
-	const [displayedQuizIndex, setDisplayedQuizIndex] = useState(0);
-	const [quizOptions, setQuizOptions] = useState([]);
-	const [isCorrect, setIsCorrect] = useState(null);
-	const [selectedOption, setSelectedOption] = useState("");
+	const [displayedQuizIndex, setDisplayedQuizIndex] = useState<number>(0);
+	const [quizOptions, setQuizOptions] = useState<QuizOption[]>([]);
+	const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+	const [selectedOption, setSelectedOption] = useState<QuizOption | null>(null);
 	const currentCard = cards[displayedQuizIndex];
 
 	useEffect(() => {
@@ -25,7 +36,7 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 
 	const generateQuizOption = () => {
 		if (!currentCard) return;
-		const correctOption = { text: currentCard.translateWord, isCorrect: true };
+		const correctOption: QuizOption = { text: currentCard.translateWord, isCorrect: true };
 		const incorrectOptions = getIncorrectOptions();
 		const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
 		setQuizOptions(shuffledOptions);
@@ -39,7 +50,7 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 			.map((item) => ({ text: item.translateWord, isCorrect: false }));
 	};
 
-	const shuffleArray = (array) => {
+	const shuffleArray = (array: QuizOption[]) => {
 		return array.sort(() => Math.random() - 0.5);
 	};
 
@@ -54,7 +65,7 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 		}
 	};
 
-	const handleOptionPress = async (option) => {
+	const handleOptionPress = async (option: QuizOption) => {
 		setSelectedOption(option);
 		if (option.isCorrect) {
 			await playSuccessSound();
@@ -75,7 +86,7 @@ const LearnQuiz = ({ onComplete, handleSetData }) => {
 		try {
 			const { sound } = await Audio.Sound.createAsync(
 				require("../../../assets/audio/success.mp3"),
-				{ positionMillis: 0, durationMillis: 2000 },
+				{ positionMillis: 0 },
 			);
 
 			await sound.setVolumeAsync(0.2);
