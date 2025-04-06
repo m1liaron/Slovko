@@ -8,11 +8,14 @@ export const getAllGroups = createAsyncThunk("group/getAll", async () => {
 	return response.data;
 });
 
-export const addGroup = createAsyncThunk("group/add", async (data: { title: string}) => {
-	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.post("/groups", data);
-	return response.data;
-});
+export const addGroup = createAsyncThunk(
+	"group/add",
+	async (data: { title: string }) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post("/groups", data);
+		return response.data;
+	},
+);
 
 export const getGroup = createAsyncThunk("group/get", async (id: string) => {
 	const axiosInstance = await createAuthorizedInstance();

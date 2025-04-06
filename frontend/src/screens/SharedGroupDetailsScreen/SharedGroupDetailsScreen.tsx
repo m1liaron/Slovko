@@ -1,5 +1,8 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
+import type { AppPath } from "@/common/enums/app/AppPath";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
@@ -8,9 +11,6 @@ import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { AppPath } from "@/common/enums/app/AppPath";
 
 /**
  * @param route { object: { params }}

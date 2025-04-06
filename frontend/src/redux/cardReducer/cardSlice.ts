@@ -1,6 +1,7 @@
 import type { ICard, IRepeatedGroup } from "@/common/enums/types/types";
 import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
+import type { RootState } from "../store";
 import {
 	addCard,
 	getCards,
@@ -10,7 +11,6 @@ import {
 	updateCard,
 	updateCardsAfterLearn,
 } from "./cardThunk";
-import { RootState } from "../store";
 
 interface InitialState {
 	cards: ICard[];
@@ -161,8 +161,7 @@ const cardSlice = createSlice({
 
 export const { filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
-export const selectCard = (state: RootState) =>
-	state.cards.cards;
+export const selectCard = (state: RootState) => state.cards.cards;
 export {
 	getCards,
 	addCard,

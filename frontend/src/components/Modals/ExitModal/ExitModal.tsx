@@ -8,7 +8,7 @@ import DefaultModal from "../../DefaultModal/DefaultModal";
 import styles from "./ExitModal.styles";
 
 interface ExitModalProps {
-	modalVisible: boolean; 
+	modalVisible: boolean;
 	handleClose: () => void;
 	text: string;
 }
@@ -27,9 +27,7 @@ const ExitModal = ({ modalVisible, handleClose, text }: ExitModalProps) => {
 	return (
 		<DefaultModal isVisible={modalVisible} handleClose={handleClose}>
 			<View>
-				<ThemeText
-					style={{ fontWeight: "bold", fontSize: 40 }}
-				>
+				<ThemeText style={{ fontWeight: "bold", fontSize: 40 }}>
 					{text}
 				</ThemeText>
 			</View>

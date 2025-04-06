@@ -24,7 +24,7 @@ export type RootStackParamList = {
 	[AppPath.Profile]: undefined;
 	[AppPath.Results]: undefined;
 	[AppPath.SharedGroup]: undefined;
-  };
+};
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

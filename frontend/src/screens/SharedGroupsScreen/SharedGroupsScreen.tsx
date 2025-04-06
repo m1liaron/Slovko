@@ -97,8 +97,7 @@ const SharedGroupsScreen = () => {
 			};
 			dispatch(saveSharedGroup(sharedGroupData));
 		}
-	}
-
+	};
 
 	const renderItem = ({ item }: { item: ISharedGroup }) => (
 		<View
@@ -110,10 +109,7 @@ const SharedGroupsScreen = () => {
 			}}
 		>
 			<Link
-				style={[
-					styles.container,
-					{ backgroundColor: colors.lightBackground },
-				]}
+				style={[styles.container, { backgroundColor: colors.lightBackground }]}
 				to={`/${AppPath.SharedGroupDetails}/${item.id}`}
 			>
 				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
@@ -160,148 +156,146 @@ const SharedGroupsScreen = () => {
 		</View>
 	);
 
-		return (
-			<ThemeBackground>
-				<View style={{ justifyContent: "center" }}>
-					<View style={styles.header}>
-						<Text
-							style={{
-								fontSize: 40,
-								fontWeight: "bold",
-								color: colors.primary,
-							}}
-						>
-							2024
-						</Text>
-						<PressableButton
-							text="Мої поширені групи"
-							onPress={() =>
-								dispatch(filterMySharedGroups({ userId: user?.id }))
-							}
-						/>
-						<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
-							<FontAwesome name="search" color={colors.iconColor} size={40} />
-						</Pressable>
-					</View>
-				</View>
-				{showFilterInput && (
-					<View
+	return (
+		<ThemeBackground>
+			<View style={{ justifyContent: "center" }}>
+				<View style={styles.header}>
+					<Text
 						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							justifyContent: "flex-end",
+							fontSize: 40,
+							fontWeight: "bold",
+							color: colors.primary,
 						}}
 					>
-						<TextInput
-							style={{
-								borderWidth: 4,
-								borderRadius: 20,
-								borderColor: colors.primary,
-								padding: 15,
-								width: "30%",
-								alignSelf: "flex-end",
-								color: colors.primary,
-							}}
-							placeholder="Фільтр"
-							placeholderTextColor={colors.primary}
-							value={filterValue}
-							onChangeText={setFilterValue}
-						/>
-						<Pressable
-							style={{
-								borderWidth: 4,
-								borderRadius: 20,
-								borderColor: colors.primary,
-								padding: 15,
-								alignSelf: "flex-end",
-							}}
-							onPress={() => dispatch(filterSharedGroups(filterValue))}
-						>
-							<Text style={{ color: colors.primary }}>Фільтрувати</Text>
-						</Pressable>
-						<Pressable
-							style={{
-								borderWidth: 4,
-								borderRadius: 20,
-								borderColor: colors.primary,
-								padding: 15,
-								alignSelf: "flex-end",
-							}}
-							onPress={() => dispatch(resetSharedGroups())}
-						>
-							<FontAwesome6 name="arrow-rotate-left" color={colors.iconColor} />
-						</Pressable>
-					</View>
-				)}
-
-				{sharedGroups?.length ? (
-					<FlatList
-						data={sharedGroups}
-						contentContainerStyle={{
-							flexDirection: "column",
-							gap: 20,
-							padding: 10,
+						2024
+					</Text>
+					<PressableButton
+						text="Мої поширені групи"
+						onPress={() => dispatch(filterMySharedGroups({ userId: user?.id }))}
+					/>
+					<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
+						<FontAwesome name="search" color={colors.iconColor} size={40} />
+					</Pressable>
+				</View>
+			</View>
+			{showFilterInput && (
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "flex-end",
+					}}
+				>
+					<TextInput
+						style={{
+							borderWidth: 4,
+							borderRadius: 20,
+							borderColor: colors.primary,
+							padding: 15,
+							width: "30%",
+							alignSelf: "flex-end",
+							color: colors.primary,
 						}}
-						renderItem={renderItem}
+						placeholder="Фільтр"
+						placeholderTextColor={colors.primary}
+						value={filterValue}
+						onChangeText={setFilterValue}
+					/>
+					<Pressable
+						style={{
+							borderWidth: 4,
+							borderRadius: 20,
+							borderColor: colors.primary,
+							padding: 15,
+							alignSelf: "flex-end",
+						}}
+						onPress={() => dispatch(filterSharedGroups(filterValue))}
+					>
+						<Text style={{ color: colors.primary }}>Фільтрувати</Text>
+					</Pressable>
+					<Pressable
+						style={{
+							borderWidth: 4,
+							borderRadius: 20,
+							borderColor: colors.primary,
+							padding: 15,
+							alignSelf: "flex-end",
+						}}
+						onPress={() => dispatch(resetSharedGroups())}
+					>
+						<FontAwesome6 name="arrow-rotate-left" color={colors.iconColor} />
+					</Pressable>
+				</View>
+			)}
+
+			{sharedGroups?.length ? (
+				<FlatList
+					data={sharedGroups}
+					contentContainerStyle={{
+						flexDirection: "column",
+						gap: 20,
+						padding: 10,
+					}}
+					renderItem={renderItem}
+				/>
+			) : (
+				<Text>Немає пошеренних груп</Text>
+			)}
+
+			<AddButton onPress={() => setShowModal(true)} />
+			<DefaultModal
+				isVisible={showAddModal}
+				handleClose={() => setShowModal(false)}
+			>
+				<AddInput
+					value={sharedGroupTitle}
+					onChangeText={setSharedGroupTitle}
+					placeholder="Назва групи"
+				/>
+				{groups.length ? (
+					<FlatList
+						data={groups}
+						renderItem={({ item }: { item: IGroup }) => (
+							<Pressable onPress={() => addRemoveSelectedGroup(item)}>
+								<Text
+									style={{
+										color: colors.primary,
+										borderColor:
+											selectedGroup?.title === item.title
+												? "#007AFF"
+												: colors.primary,
+										borderWidth: 2,
+										borderRadius: 10,
+										fontSize: 30,
+										padding: 20,
+									}}
+								>
+									{item.title}
+								</Text>
+							</Pressable>
+						)}
 					/>
 				) : (
-					<Text>Немає пошеренних груп</Text>
-				)}
-
-				<AddButton onPress={() => setShowModal(true)} />
-				<DefaultModal
-					isVisible={showAddModal}
-					handleClose={() => setShowModal(false)}
-				>
-					<AddInput
-						value={sharedGroupTitle}
-						onChangeText={setSharedGroupTitle}
-						placeholder="Назва групи"
-					/>
-					{groups.length ? (
-						<FlatList
-							data={groups}
-							renderItem={({ item }: { item: IGroup }) => (
-								<Pressable onPress={() => addRemoveSelectedGroup(item)}>
-									<Text
-										style={{
-											color: colors.primary,
-											borderColor:
-												selectedGroup?.title === item.title
-													? "#007AFF"
-													: colors.primary,
-											borderWidth: 2,
-											borderRadius: 10,
-											fontSize: 30,
-											padding: 20,
-										}}
-									>
-										{item.title}
-									</Text>
-								</Pressable>
-							)}
+					<View>
+						<Text
+							style={{
+								color: colors.primary,
+								fontSize: 30,
+							}}
+						>
+							Немає груп
+						</Text>
+						<PressableButton
+							text="Створити групу"
+							onPress={() => navigation.navigate(AppPath.Home)}
+							buttonStyle={{ padding: 20 }}
 						/>
-					) : (
-						<View>
-							<Text
-								style={{
-									color: colors.primary,
-									fontSize: 30,
-								}}
-							>
-								Немає груп
-							</Text>
-							<PressableButton
-								text="Створити групу"
-								onPress={() => navigation.navigate(AppPath.Home)}
-								buttonStyle={{ padding: 20 }}
-							/>
-						</View>
-					)}
-					<PressableButton text="Поширити" onPress={shareGroup} />
-				</DefaultModal>
-			</ThemeBackground>
-		);
+					</View>
+				)}
+				<PressableButton text="Поширити" onPress={shareGroup} />
+			</DefaultModal>
+		</ThemeBackground>
+	);
 };
 
 export default SharedGroupsScreen;

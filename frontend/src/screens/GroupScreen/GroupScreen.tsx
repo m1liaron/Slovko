@@ -1,13 +1,18 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import type { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type {
+	RootStackParamList,
+	StackNavigation,
+} from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import React, { useEffect, useMemo, useState } from "react";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import AddInput from "../../common/components/AddInput/AddInput";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
-import { DataStatus, AppPath } from "../../common/enums/app/app";
+import { type AppPath, DataStatus } from "../../common/enums/app/app";
 import BackButton from "../../components/BackButton/BackButton";
 import CardList from "../../components/Card/CardList/CardList";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
@@ -18,11 +23,10 @@ import {
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
-import { StackScreenProps } from "@react-navigation/stack";
 
 type GroupScreenProps = StackScreenProps<
-  RootStackParamList,
-  typeof AppPath.Group
+	RootStackParamList,
+	typeof AppPath.Group
 >;
 
 const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {

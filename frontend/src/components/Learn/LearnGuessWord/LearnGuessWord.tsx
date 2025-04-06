@@ -1,3 +1,5 @@
+import type { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Image, Platform, Pressable, Text, View } from "react-native";
@@ -5,16 +7,14 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 import styles from "./LearnGuessWord.styles";
-import { ICard } from "@/common/enums/types/card.type";
-import { useAppSelector } from "@/hooks/redux.hooks";
 
 interface LetterColors {
 	[key: number]: string;
-  }
+}
 
 interface LearnGuessWordProps {
 	onComplete: () => void;
-	handleSetData: (card: ICard, isCorrect: boolean) => void
+	handleSetData: (card: ICard, isCorrect: boolean) => void;
 }
 
 const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
@@ -40,7 +40,8 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
 		}
 	}, [currentWord]);
 
-	const generateDashes = (word: string): string[] => Array(word.length).fill("_"); // Create an array of underscores representing dashes
+	const generateDashes = (word: string): string[] =>
+		Array(word.length).fill("_"); // Create an array of underscores representing dashes
 
 	const generateScrambledWord = (word: string) => {
 		const wordArray: string[] = word.split("");

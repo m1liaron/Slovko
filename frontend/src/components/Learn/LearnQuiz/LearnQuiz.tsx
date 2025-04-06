@@ -1,3 +1,5 @@
+import type { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import { Audio } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, View } from "react-native";
@@ -5,17 +7,15 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import ProgressContainer from "../../ProgressContainer/ProgressContainer";
 import styles from "./LearnQuiz.styles";
-import { ICard } from "@/common/enums/types/card.type";
-import { useAppSelector } from "@/hooks/redux.hooks";
 
 type QuizOption = {
 	text: string;
 	isCorrect: boolean;
-}
+};
 
 interface LearnQuizProps {
 	onComplete: () => void;
-	handleSetData: (card: ICard, isCorrect: boolean) => void
+	handleSetData: (card: ICard, isCorrect: boolean) => void;
 }
 
 const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
@@ -36,7 +36,10 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
 
 	const generateQuizOption = () => {
 		if (!currentCard) return;
-		const correctOption: QuizOption = { text: currentCard.translateWord, isCorrect: true };
+		const correctOption: QuizOption = {
+			text: currentCard.translateWord,
+			isCorrect: true,
+		};
 		const incorrectOptions = getIncorrectOptions();
 		const shuffledOptions = shuffleArray([correctOption, ...incorrectOptions]);
 		setQuizOptions(shuffledOptions);

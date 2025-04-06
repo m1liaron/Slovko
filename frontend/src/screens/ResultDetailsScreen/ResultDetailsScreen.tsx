@@ -1,5 +1,9 @@
+import type { AppPath } from "@/common/enums/app/AppPath";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import React, { useEffect, useState } from "react";
+import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
@@ -10,13 +14,10 @@ import { getResultDetails } from "../../redux/resultReducer/resultSlice";
 import formatDMTDate from "../../utils/formatDMTDate";
 import { formatTime } from "../../utils/formatTime";
 import styles from "./ResultDetailsScreen.styles";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { AppPath } from "@/common/enums/app/AppPath";
 
 type ResultDetailsScreenProps = StackScreenProps<
-  RootStackParamList,
-  typeof AppPath.ResultDetails
+	RootStackParamList,
+	typeof AppPath.ResultDetails
 >;
 
 const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {

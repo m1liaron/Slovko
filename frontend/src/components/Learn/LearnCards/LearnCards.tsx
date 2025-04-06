@@ -1,3 +1,5 @@
+import type { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import * as Speech from "expo-speech";
 import React, { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -11,12 +13,10 @@ import Animated, {
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCards.styles";
-import { ICard } from "@/common/enums/types/card.type";
-import { useAppSelector } from "@/hooks/redux.hooks";
 
 interface LearnCardsProps {
 	onComplete: () => void;
-	setFlashCards: (card: ICard, isCorrect: boolean) => void
+	setFlashCards: (card: ICard, isCorrect: boolean) => void;
 }
 
 const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {

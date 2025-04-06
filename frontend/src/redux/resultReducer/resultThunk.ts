@@ -1,12 +1,15 @@
+import type { SaveResultsRequest } from "@/common/enums/types/result.type";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
-import { SaveResultsRequest } from "@/common/enums/types/result.type";
 
-export const saveResults = createAsyncThunk("results/save", async (data: SaveResultsRequest) => {
-	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.post("/results", data);
-	return response.data;
-});
+export const saveResults = createAsyncThunk(
+	"results/save",
+	async (data: SaveResultsRequest) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post("/results", data);
+		return response.data;
+	},
+);
 
 export const getResults = createAsyncThunk("results/get", async () => {
 	const axiosInstance = await createAuthorizedInstance();

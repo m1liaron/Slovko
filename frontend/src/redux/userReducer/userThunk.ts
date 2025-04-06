@@ -9,11 +9,14 @@ import axios from "axios";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 const url: string = "http://192.168.31.196:3000";
 
-const login = createAsyncThunk("user/login", async (data: { email: string; password: string;}) => {
-	const response = await axios.post(`${url}/users/login`, data);
-	await AsyncStorage.setItem("token", response.data.token);
-	return response.data;
-});
+const login = createAsyncThunk(
+	"user/login",
+	async (data: { email: string; password: string }) => {
+		const response = await axios.post(`${url}/users/login`, data);
+		await AsyncStorage.setItem("token", response.data.token);
+		return response.data;
+	},
+);
 
 const register = createAsyncThunk(
 	"user/register",

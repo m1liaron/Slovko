@@ -1,6 +1,16 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
+import type { ICard } from "@/common/enums/types/card.type";
+import { useAppDispatch } from "@/hooks/redux.hooks";
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+	Dimensions,
+	Image,
+	Pressable,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
@@ -8,9 +18,6 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { updateCard } from "../../../redux/cardReducer/cardSlice";
 import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
-import { useAppDispatch } from "@/hooks/redux.hooks";
-import { ICard } from "@/common/enums/types/card.type";
-import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -110,11 +117,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 						color={colors.iconColor}
 					/>
 					<Pressable onPress={onRemove}>
-						<Entypo
-							name="cross"
-							size={24}
-							color={colors.iconColor}
-						/>
+						<Entypo name="cross" size={24} color={colors.iconColor} />
 					</Pressable>
 				</View>
 			</View>

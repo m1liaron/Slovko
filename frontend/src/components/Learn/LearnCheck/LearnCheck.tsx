@@ -1,15 +1,15 @@
+import type { ICard } from "@/common/enums/types/card.type";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { FlatList, Pressable, View, Animated } from "react-native";
+import { Animated, FlatList, Pressable, View } from "react-native";
 import ThemeText from "../../../common/components/ThemeText/ThemeText";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
 import styles from "./LearnCheck.styles";
-import { ICard } from "@/common/enums/types/card.type";
-import { useAppSelector } from "@/hooks/redux.hooks";
 
 interface LearnCheckProps {
 	onComplete: () => void;
-	handleSetData: (card: ICard, isCorrect: boolean) => void
+	handleSetData: (card: ICard, isCorrect: boolean) => void;
 }
 
 const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
@@ -19,7 +19,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 	const cards = useAppSelector(selectCard);
 
 	useEffect(() => {
-		if(cards.length <= 4) {
+		if (cards.length <= 4) {
 			onComplete();
 		}
 	}, []);
@@ -45,7 +45,9 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 	const [wrongAnswer, setWrongAnswer] = useState<string | null>(null);
 	const [words, setWords] = useState<string[]>(initialWords);
 	const [answers, setAnswers] = useState<string[]>(initialAnswers);
-	const [answeredWords, setAnsweredWords] = useState<string[]>([...initialWords]); // it's current words + words that left to learn
+	const [answeredWords, setAnsweredWords] = useState<string[]>([
+		...initialWords,
+	]); // it's current words + words that left to learn
 	const [learnedWords, setLearnedWords] = useState<string[]>([]); // it's only learned words
 
 	const [animateNewWord, setAnimateNewWord] = useState<string | null>(null);
@@ -69,7 +71,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 		if (!selectedWord) return;
 
 		const currentCard = cards.find((card) => card.word === selectedWord);
-		if(currentCard) {
+		if (currentCard) {
 			const correctTranslation = cards.find(
 				(card) => card.word === selectedWord,
 			)?.translateWord;
@@ -99,13 +101,13 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 
 				newFadeAnim.setValue(0);
 				Animated.timing(newFadeAnim, {
-				toValue: 1,
-				duration: 4000,
-				useNativeDriver: true,
+					toValue: 1,
+					duration: 4000,
+					useNativeDriver: true,
 				}).start(() => {
-				// Clear animate markers after the animation completes.
-				setAnimateNewWord(null);
-				setAnimateNewAnswer(null);
+					// Clear animate markers after the animation completes.
+					setAnimateNewWord(null);
+					setAnimateNewAnswer(null);
 				});
 			} else {
 				setWrongAnswer(translation);
@@ -113,7 +115,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 				setTimeout(() => {
 					setWrongAnswer(null);
 				}, 1000);
-			}		
+			}
 		}
 	};
 
@@ -129,59 +131,55 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 		return learnedWords.includes(word || "");
 	};
 
-	const renderWordItem = ({ item }: { item: string}) => {
+	const renderWordItem = ({ item }: { item: string }) => {
 		const animatedStyle =
-      animateNewWord && animateNewWord === item
-        ? { opacity: newFadeAnim }
-        : {};
+			animateNewWord && animateNewWord === item ? { opacity: newFadeAnim } : {};
 		return (
 			<Animated.View style={animatedStyle}>
 				<Pressable
-						key={item}
-						onPress={() => setSelectedWord(item)}
-						style={[
-							styles.optionItem,
-							{
-								width: maxWordWidth * 20,
-								backgroundColor:
-									selectedWord === item ? "#38809b" : colors.lightBackground,
-								opacity:
-									isAllCardsLearned && learnedWords.includes(item) ? 0 : 1,
-							},
-						]}
-					>
-						<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
-					</Pressable>
+					key={item}
+					onPress={() => setSelectedWord(item)}
+					style={[
+						styles.optionItem,
+						{
+							width: maxWordWidth * 20,
+							backgroundColor:
+								selectedWord === item ? "#38809b" : colors.lightBackground,
+							opacity: isAllCardsLearned && learnedWords.includes(item) ? 0 : 1,
+						},
+					]}
+				>
+					<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
+				</Pressable>
 			</Animated.View>
-		)
-	}
+		);
+	};
 
 	const renderAnswerItem = ({ item }: { item: string }) => {
 		const animatedStyle =
-      animateNewAnswer && animateNewAnswer === item
-        ? { opacity: newFadeAnim }
-        : {};
+			animateNewAnswer && animateNewAnswer === item
+				? { opacity: newFadeAnim }
+				: {};
 		return (
 			<Animated.View style={animatedStyle}>
 				<Pressable
-						key={item}
-						style={[
-							styles.optionItem,
-							{
-								width: maxWordWidth * 20,
-								backgroundColor:
-									wrongAnswer === item ? "red" : colors.lightBackground,
-								opacity:
-									isAllCardsLearned && isTranslateDisappear(item) ? 0 : 1,
-							},
-						]}
-						onPress={() => checkSelectedWordCorrect(item)}
-					>
-						<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
-					</Pressable>
+					key={item}
+					style={[
+						styles.optionItem,
+						{
+							width: maxWordWidth * 20,
+							backgroundColor:
+								wrongAnswer === item ? "red" : colors.lightBackground,
+							opacity: isAllCardsLearned && isTranslateDisappear(item) ? 0 : 1,
+						},
+					]}
+					onPress={() => checkSelectedWordCorrect(item)}
+				>
+					<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
+				</Pressable>
 			</Animated.View>
-		)
-	}
+		);
+	};
 
 	return (
 		<View style={styles.optionsContainer}>

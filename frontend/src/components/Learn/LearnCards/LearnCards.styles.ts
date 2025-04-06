@@ -74,24 +74,24 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-		overlayLabelRightTitle: {
-			color: "white",
-			backgroundColor: "#1dd1a1",
-			paddingVertical: 8,
-			paddingHorizontal: 20,
-			borderRadius: 8,
-			fontSize: 16,
-			fontWeight: "700",
-			maxWidth: CARD_WIDTH - 40, // Ensures the label doesn't exceed card width
-		},
-		overlayLabelRightWrapper: {
-			position: "absolute",
-			top: "-35%",
-			right: 100,
-			transform: [{ translateY: -20 }], // Adjusts the label to be centered vertically
-			justifyContent: "center",
-			alignItems: "center",
-		},
+	overlayLabelRightTitle: {
+		color: "white",
+		backgroundColor: "#1dd1a1",
+		paddingVertical: 8,
+		paddingHorizontal: 20,
+		borderRadius: 8,
+		fontSize: 16,
+		fontWeight: "700",
+		maxWidth: CARD_WIDTH - 40, // Ensures the label doesn't exceed card width
+	},
+	overlayLabelRightWrapper: {
+		position: "absolute",
+		top: "-35%",
+		right: 100,
+		transform: [{ translateY: -20 }], // Adjusts the label to be centered vertically
+		justifyContent: "center",
+		alignItems: "center",
+	},
 });
 
 export default styles;

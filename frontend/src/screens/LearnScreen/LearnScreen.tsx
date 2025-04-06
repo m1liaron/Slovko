@@ -1,8 +1,17 @@
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import styles from "./LearnScreen.styles";
 
+import type { ResultsCard } from "@/common/enums/types/result.type";
+import type { ICard } from "@/common/enums/types/types";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import type {
+	RootStackParamList,
+	StackNavigation,
+} from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import type { StackScreenProps } from "@react-navigation/stack";
 import { Platform, Pressable, Text, View } from "react-native";
 import { Switch } from "react-native-gesture-handler";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
@@ -23,11 +32,6 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { ICard } from "@/common/enums/types/types";
-import { ResultsCard } from "@/common/enums/types/result.type";
-import { StackScreenProps } from "@react-navigation/stack";
 
 type Section = "cards" | "quiz" | "word" | "finish";
 
@@ -38,8 +42,11 @@ interface SectionOption {
 	changeState: React.Dispatch<React.SetStateAction<boolean>>;
 	sectionName: Section;
 }
-  
-type LearnScreenProps = StackScreenProps<RootStackParamList, typeof AppPath.Learn>;
+
+type LearnScreenProps = StackScreenProps<
+	RootStackParamList,
+	typeof AppPath.Learn
+>;
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	const { theme } = useAppTheme();
@@ -47,7 +54,9 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	const groups = useAppSelector(selectGroup);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
-	const { repeatedCards, cards, status } = useAppSelector((state) => state.cards);
+	const { repeatedCards, cards, status } = useAppSelector(
+		(state) => state.cards,
+	);
 
 	// Section State
 	const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
@@ -71,14 +80,16 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 
 	const projectName = groups?.find((group) => group.id === groupId)?.title;
 
-	const toggleSwitch = (changeFunction: React.Dispatch<React.SetStateAction<boolean>>) => changeFunction((previousState) => !previousState);
+	const toggleSwitch = (
+		changeFunction: React.Dispatch<React.SetStateAction<boolean>>,
+	) => changeFunction((previousState) => !previousState);
 
 	const handleNextSection = () => {
 		const transitions: Record<Section, Section> = {
 			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
 			word: finishedSections.includes("quiz") ? "finish" : "quiz",
-			finish: "finish"
+			finish: "finish",
 		};
 		const nextSection = transitions[currentSection] || "finish";
 		if (nextSection === "finish") {
@@ -91,8 +102,8 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 
 	const handleSetData = (card: ICard, isCorrect: boolean) => {
 		const updateOrAddCard = (
-			cards: ResultsCard[], 
-			setCards: React.Dispatch<React.SetStateAction<ResultsCard[]>>
+			cards: ResultsCard[],
+			setCards: React.Dispatch<React.SetStateAction<ResultsCard[]>>,
 		) => {
 			const newCard = {
 				wordId: card.id,
@@ -102,8 +113,10 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			};
 
 			setCards((prev) => {
-				const existingCardIndex = prev.findIndex((item) => item.wordId === card.id);
-				if(existingCardIndex !== -1) {
+				const existingCardIndex = prev.findIndex(
+					(item) => item.wordId === card.id,
+				);
+				if (existingCardIndex !== -1) {
 					if (isCorrect) return prev;
 					// If card exists, increment mistakesAmount
 					const updatedCards = [...prev];
@@ -152,20 +165,20 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 
 		const repeatedCardsIds = cards?.map((card) => card.id);
 		dispatch(updateCardsAfterLearn(repeatedCardsIds));
-		}
-		dispatch(updateUserStreak());
-		handleSaveResults();
-		if (repeatedCards.length) {
-			dispatch(getRepeatedCards());
-		}
+	};
+	dispatch(updateUserStreak());
+	handleSaveResults();
+	if (repeatedCards.length) {
+		dispatch(getRepeatedCards());
+	}
 
 	const leaveStudy = () => {
 		navigation.navigate(AppPath.Main);
 	};
 
 	const switchSection = (
-		changeState: React.Dispatch<React.SetStateAction<boolean>>, 
-		sectionName: string
+		changeState: React.Dispatch<React.SetStateAction<boolean>>,
+		sectionName: string,
 	) => {
 		toggleSwitch(changeState);
 

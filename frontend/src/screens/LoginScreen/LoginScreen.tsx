@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/hooks/redux.hooks";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
@@ -7,8 +9,6 @@ import ThemeBackground from "../../common/components/ThemeBackground/Themebackgr
 import ThemeText from "../../common/components/ThemeText/ThemeText";
 import { AppPath } from "../../common/enums/app/app";
 import { login } from "../../redux/userReducer/userSlice";
-import { useAppDispatch } from "@/hooks/redux.hooks";
-import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 
 const LoginScreen = () => {
 	const navigation = useNavigation<StackNavigation>();

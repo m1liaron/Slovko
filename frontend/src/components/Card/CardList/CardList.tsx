@@ -1,18 +1,19 @@
+import noCardsImage from "@/assets/images/no-cards.png";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from "expo-checkbox";
-import React, { ChangeEvent, memo, useCallback, useEffect, useState } from "react";
-import {
-	FlatList,
-	Image,
-	Platform,
-	Pressable,
-	Text,
-	View,
-} from "react-native";
+import React, {
+	type ChangeEvent,
+	memo,
+	useCallback,
+	useEffect,
+	useState,
+} from "react";
+import { FlatList, Image, Platform, Pressable, Text, View } from "react-native";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import noCardsImage from "@/assets/images/no-cards.png";
 import AddButton from "../../../common/components/AddButton/AddButton";
 import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
@@ -29,8 +30,6 @@ import {
 import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import styles from "./CardList.styles";
 
 const MemoCardItem = memo(CardItem);
@@ -43,7 +42,7 @@ const MemoCardItem = memo(CardItem);
 
 type CardListProps = {
 	groupId: string;
-}
+};
 
 const CardList = ({ groupId }: CardListProps) => {
 	const {
@@ -63,7 +62,9 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);
 	const [imageUri, setImageUri] = useState<string>("");
 	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
-	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(cards.length || 2);
+	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
+		cards.length || 2,
+	);
 	const navigation = useNavigation<StackNavigation>();
 
 	const onChangeCardsRange = useCallback((value: number) => {
@@ -84,17 +85,17 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const files = (event.target as HTMLInputElement).files;
-		if(files){
-			const file = files[0]
-			
+		if (files) {
+			const file = files[0];
+
 			const reader = new FileReader();
 			reader.onload = (e: ProgressEvent<FileReader>) => {
-				if(e?.target?.result) {
+				if (e?.target?.result) {
 					const fileContent = e.target.result.toString();
-	
+
 					const lines = fileContent.split("\n");
 					const jsonObject: Record<string, string> = {};
-	
+
 					lines.forEach((line: string, index) => {
 						const [key, value] = line.split(":");
 						if (key && value) {
@@ -105,7 +106,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							);
 						}
 					});
-	
+
 					setJsonOutput(jsonObject);
 					setValueWords(jsonObject);
 				}
@@ -128,7 +129,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		return new Promise((resolve, reject) => {
 			reader.onloadend = () => {
-				if(reader?.result) {
+				if (reader?.result) {
 					const readerResult = reader.result.toString();
 					const base64data = readerResult.split(",")[1]; // Get the Base64 part
 					resolve(base64data);
@@ -225,7 +226,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				.then((blob) => {
 					const reader = new FileReader();
 					const readerResult = reader.result?.toString();
-					if(readerResult) {
+					if (readerResult) {
 						reader.onloadend = () => resolve(readerResult);
 						reader.onerror = () =>
 							reject(new Error("Failed to convert blob to base64"));

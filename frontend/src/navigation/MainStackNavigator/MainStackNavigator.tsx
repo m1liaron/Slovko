@@ -10,7 +10,7 @@ import {
 	StreakScreen,
 } from "../../screens";
 import NavigationTab from "../NavigationTab/NavigationTab";
-import { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
+import type { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
 
 const Stack = createStackNavigator<RootStackParamList>();
 

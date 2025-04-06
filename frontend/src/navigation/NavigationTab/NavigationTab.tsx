@@ -9,7 +9,7 @@ import {
 	ResultsScreen,
 	SharedGroupsScreen,
 } from "../../screens";
-import { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
+import type { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -29,8 +29,9 @@ const NavigationTab = () => {
 					shadowColor: theme.colors.background, // Shadow color for iOS
 				},
 				tabBarIcon: ({ focused, color, size }) => {
-
-					const iconMap: Partial<Record<keyof typeof AppPath, [string, string]>> = {
+					const iconMap: Partial<
+						Record<keyof typeof AppPath, [string, string]>
+					> = {
 						[AppPath.Home]: ["home", "home-outline"],
 						[AppPath.Profile]: ["person", "person-outline"],
 						[AppPath.Results]: ["search", "search-outline"],
@@ -38,10 +39,20 @@ const NavigationTab = () => {
 					};
 
 					const icons = iconMap[route.name as keyof typeof AppPath];
-					const iconName = icons ? (focused ? icons[0] : icons[1]) : "home-outline"
+					const iconName = icons
+						? focused
+							? icons[0]
+							: icons[1]
+						: "home-outline";
 
 					// Return the icon component
-					return <Ionicons name={iconName as keyof typeof Ionicons.glyphMap} size={size} color={color} />;
+					return (
+						<Ionicons
+							name={iconName as keyof typeof Ionicons.glyphMap}
+							size={size}
+							color={color}
+						/>
+					);
 				},
 				tabBarActiveTintColor: theme.colors.iconColor, // Active icon color
 				tabBarInactiveTintColor: "#8e8e93", // Inactive icon color

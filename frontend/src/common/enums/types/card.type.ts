@@ -12,7 +12,7 @@ type ICard = {
 
 type CardImage = {
 	url: string;
-}
+};
 
 type UpdateCardRequst = {
 	id: string;
@@ -20,14 +20,14 @@ type UpdateCardRequst = {
 	translateWord: string;
 	groupId?: string;
 	imageUri?: string;
-}
+};
 
 type AddCardRequest = {
 	word: string;
 	translateWord: string;
 	imageUri: string;
 	groupId: string;
-}
+};
 
 type IRepeatedGroup = {
 	title: string;

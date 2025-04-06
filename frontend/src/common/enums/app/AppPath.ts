@@ -38,5 +38,5 @@ const AppPath: IAppPath = {
 	Register: "register",
 } as const;
 
-export type TypeAppPath = typeof AppPath
+export type TypeAppPath = typeof AppPath;
 export { AppPath };
