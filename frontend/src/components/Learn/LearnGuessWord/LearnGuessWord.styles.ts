@@ -4,7 +4,6 @@ const styles = StyleSheet.create({
 	wordContainer: {
 		width: "100%",
 		height: 300,
-		overflowX: "scroll",
 		flexDirection: "row",
 		flexWrap: "wrap",
 		justifyContent: "center",

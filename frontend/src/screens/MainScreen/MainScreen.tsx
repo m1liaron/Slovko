@@ -5,6 +5,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useCallback } from "react";
 import {
+	ActivityIndicator,
 	FlatList,
 	Image,
 	Linking,
@@ -29,11 +30,8 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
-import { StackScreenProps } from "@react-navigation/stack";
 
-type MainScreenProps = StackScreenProps<RootStackParamList, typeof AppPath.Main>;
-
-const MainScreen: React.FC<MainScreenProps> = () => {
+const MainScreen = () => {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigation<StackNavigation>();
 	const { user } = useAppSelector(selectUser);
@@ -142,8 +140,7 @@ const MainScreen: React.FC<MainScreenProps> = () => {
 	};
 
 	if (!user) {
-		dispatch(logout());
-		return navigate.navigate(AppPath.Login);
+		return <ActivityIndicator/>
 	}
 
 	const isStreakFire =

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { AppPath } from "../../common/enums/app/app";
+import { AppPath, TypeAppPath } from "../../common/enums/app/app";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import {
 	MainScreen,
@@ -29,20 +29,19 @@ const NavigationTab = () => {
 					shadowColor: theme.colors.background, // Shadow color for iOS
 				},
 				tabBarIcon: ({ focused, color, size }) => {
-					let iconName;
 
-					if (route.name === AppPath.Home) {
-						iconName = focused ? "home" : "home-outline"; // Change icons based on focus
-					} else if (route.name === AppPath.Profile) {
-						iconName = focused ? "person" : "person-outline";
-					} else if (route.name === AppPath.Results) {
-						iconName = focused ? "search" : "search-outline";
-					} else if (route.name === AppPath.SharedGroup) {
-						iconName = focused ? "share" : "share-outline";
-					}
+					const iconMap: Partial<Record<keyof typeof AppPath, [string, string]>> = {
+						[AppPath.Home]: ["home", "home-outline"],
+						[AppPath.Profile]: ["person", "person-outline"],
+						[AppPath.Results]: ["search", "search-outline"],
+						[AppPath.SharedGroup]: ["share", "share-outline"],
+					};
+
+					const icons = iconMap[route.name as keyof typeof AppPath];
+					const iconName = icons ? (focused ? icons[0] : icons[1]) : "home-outline"
 
 					// Return the icon component
-					return <Ionicons name={iconName} size={size} color={color} />;
+					return <Ionicons name={iconName as keyof typeof Ionicons.glyphMap} size={size} color={color} />;
 				},
 				tabBarActiveTintColor: theme.colors.iconColor, // Active icon color
 				tabBarInactiveTintColor: "#8e8e93", // Inactive icon color

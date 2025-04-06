@@ -6,7 +6,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
-import { AppPath, type TypeAppPath } from "../../common/enums/app/app";
+import { AppPath } from "../../common/enums/app/app";
 import Loading from "../../components/Loading";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";

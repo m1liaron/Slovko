@@ -97,66 +97,68 @@ const SharedGroupsScreen = () => {
 			};
 			dispatch(saveSharedGroup(sharedGroupData));
 		}
+	}
 
-		const renderItem = ({ item }: { item: ISharedGroup }) => (
-			<View
-				style={{
-					flexDirection: "row",
-					justifyContent: "center",
-					alignItems: "center",
-					gap: 20,
-				}}
+
+	const renderItem = ({ item }: { item: ISharedGroup }) => (
+		<View
+			style={{
+				flexDirection: "row",
+				justifyContent: "center",
+				alignItems: "center",
+				gap: 20,
+			}}
+		>
+			<Link
+				style={[
+					styles.container,
+					{ backgroundColor: colors.lightBackground },
+				]}
+				to={`/${AppPath.SharedGroupDetails}/${item.id}`}
 			>
-				<Link
-					style={[
-						styles.container,
-						{ backgroundColor: colors.lightBackground },
-					]}
-					to={`/${AppPath.SharedGroupDetails}/${item.id}`}
-				>
-					<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
-						<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
-							<Image
-								source={
-									item?.user?.image ? { uri: item.user.image } : AvatarImage
-								}
-								style={{
-									width: 40,
-									height: 40,
-									borderRadius: 100,
-									borderWidth: 2,
-									borderColor: colors.primary,
-								}}
-							/>
-							<Text style={{ color: colors.primary, fontSize: 30 }}>
-								{item?.user?.name}
-							</Text>
-						</View>
-						<View
+				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
+					<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
+						<Image
+							source={
+								item?.user?.image ? { uri: item.user.image } : AvatarImage
+							}
 							style={{
+								width: 40,
+								height: 40,
+								borderRadius: 100,
 								borderWidth: 2,
 								borderColor: colors.primary,
-								borderRadius: 10,
-								padding: 5,
 							}}
-						>
-							<Text style={{ color: colors.primary, fontSize: 30 }}>
-								{item.title}
-							</Text>
-						</View>
+						/>
+						<Text style={{ color: colors.primary, fontSize: 30 }}>
+							{item?.user?.name}
+						</Text>
 					</View>
+					<View
+						style={{
+							borderWidth: 2,
+							borderColor: colors.primary,
+							borderRadius: 10,
+							padding: 5,
+						}}
+					>
+						<Text style={{ color: colors.primary, fontSize: 30 }}>
+							{item.title}
+						</Text>
+					</View>
+				</View>
 
-					<Text style={{ color: colors.primary, fontSize: 30 }}>
-						{formatTime(item.createdAt)}
-					</Text>
-				</Link>
-				{item?.user?.id === user?.id && (
-					<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
-						<Feather name="trash" color={colors.primary} size={30} />
-					</Pressable>
-				)}
-			</View>
-		);
+				<Text style={{ color: colors.primary, fontSize: 30 }}>
+					{formatTime(item.createdAt)}
+				</Text>
+			</Link>
+			{item?.user?.id === user?.id && (
+				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
+					<Feather name="trash" color={colors.primary} size={30} />
+				</Pressable>
+			)}
+		</View>
+	);
 
 		return (
 			<ThemeBackground>
@@ -300,7 +302,6 @@ const SharedGroupsScreen = () => {
 				</DefaultModal>
 			</ThemeBackground>
 		);
-	};
 };
 
 export default SharedGroupsScreen;
