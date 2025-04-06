@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
-import noGroupsImage from "../../assets/images/no_groups.png";
+import noGroupsImage from "@/assets/images/no_groups.png";
 import AddButton from "../../../common/components/AddButton/AddButton";
 import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";

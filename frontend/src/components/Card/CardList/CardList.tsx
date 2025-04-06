@@ -12,7 +12,7 @@ import {
 	View,
 } from "react-native";
 import Fontisto from "react-native-vector-icons/Fontisto";
-import noCardsImage from "../../assets/images/no-cards.png";
+import noCardsImage from "@/assets/images/no-cards.png";
 import AddButton from "../../../common/components/AddButton/AddButton";
 import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
