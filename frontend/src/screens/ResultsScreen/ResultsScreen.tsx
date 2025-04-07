@@ -1,7 +1,7 @@
 import type { IResult } from "@/common/enums/types/result.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { Link } from "@react-navigation/native";
+import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
@@ -14,6 +14,7 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
+import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 
 type GroupedResults = {
 	[date: string]: IResult[];
@@ -25,6 +26,7 @@ const ResultsScreen = () => {
 		theme: { colors },
 	} = useAppTheme();
 	const { results } = useAppSelector((state) => state.results);
+	const navigation = useNavigation<StackNavigation>();
 	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -159,13 +161,13 @@ const ResultsScreen = () => {
 							{item[0]} {/* Date */}
 						</Text>
 						{item[1].map((result) => (
-							<Link
+							<Pressable
 								key={result.id}
 								style={[
 									styles.itemContainer,
 									{ backgroundColor: colors.lightBackground },
 								]}
-								to={`/${AppPath.ResultDetails}/${result.id}`}
+								onPress={() => navigation.navigate(AppPath.ResultDetails, { resultId: result.id })}
 							>
 								<View style={styles.flex}>
 									<Text
@@ -182,7 +184,7 @@ const ResultsScreen = () => {
 										{/* Show time */}
 									</Text>
 								</View>
-							</Link>
+							</Pressable>
 						))}
 					</View>
 				)}

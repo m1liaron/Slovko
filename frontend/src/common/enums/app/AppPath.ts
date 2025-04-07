@@ -33,7 +33,7 @@ const AppPath: IAppPath = {
 	Study: "study",
 	Results: "results",
 	Statistics: "statistics",
-	ResultDetails: "results/resultId",
+	ResultDetails: "result",
 	Login: "login",
 	Register: "register",
 } as const;

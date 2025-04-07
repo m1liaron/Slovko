@@ -108,9 +108,9 @@ const SharedGroupsScreen = () => {
 				gap: 20,
 			}}
 		>
-			<Link
+			<Pressable
 				style={[styles.container, { backgroundColor: colors.lightBackground }]}
-				to={`/${AppPath.SharedGroupDetails}/${item.id}`}
+				onPress={() => navigation.navigate(AppPath.SharedGroupDetails, { sharedGroupId: item.id})}
 			>
 				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
 					<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
@@ -147,7 +147,7 @@ const SharedGroupsScreen = () => {
 				<Text style={{ color: colors.primary, fontSize: 30 }}>
 					{formatTime(item.createdAt)}
 				</Text>
-			</Link>
+			</Pressable>
 			{item?.user?.id === user?.id && (
 				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
 					<Feather name="trash" color={colors.primary} size={30} />
