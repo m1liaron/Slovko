@@ -38,7 +38,7 @@ const ProtectedRoute = () => {
 		const checkAuth = async () => {
 			const token = await AsyncStorage.getItem("token");
 			if (token) {
-				dispatch(getUser());
+				await dispatch(getUser());
 			}
 			setIsLoading(false);
 		};
