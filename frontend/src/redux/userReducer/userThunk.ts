@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
-const url: string = "http://192.168.31.196:3000";
+const url: string = "http://localhost:3000";
 
 const login = createAsyncThunk(
 	"user/login",

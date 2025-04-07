@@ -177,6 +177,7 @@ const addCard = async (req, res) => {
 	try {
 		const findCard = await Card.findOne({
 			where: {
+				groupId: data.groupId,
 				word: {
 					[Op.iLike]: data.word,
 				},

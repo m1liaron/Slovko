@@ -12,6 +12,7 @@ import {
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
+import { copySharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
 
 interface InitialState {
 	groups: IGroup[];
@@ -95,7 +96,10 @@ const groupSlice = createSlice({
 			})
 			.addCase(updateGroup.rejected, (state) => {
 				state.status = DataStatus.ERROR;
-			});
+			})
+			.addCase(copySharedGroup.fulfilled, (state, action) => {
+				state.groups = [...state.groups, action.payload];
+			})
 	},
 });
 

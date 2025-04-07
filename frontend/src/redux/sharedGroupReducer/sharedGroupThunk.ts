@@ -30,7 +30,7 @@ export const getSharedGroup = createAsyncThunk(
 
 export const copySharedGroup = createAsyncThunk(
 	"sharedGroup/copy",
-	async (sharedGroupId) => {
+	async (sharedGroupId: string) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.post(`/sharedGroups/${sharedGroupId}`);
 		return response.data;
