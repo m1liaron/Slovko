@@ -81,6 +81,9 @@ const getAllCards = async (req, res) => {
 		const cards = await Card.findAll({
 			where: {
 				groupId,
+				status: {
+					[Op.in]: ["To Learn", "Repeated"]
+				}
 			},
 			include: [{ model: Image, as: "image" }],
 		});
@@ -120,23 +123,17 @@ const getAllStatusCards = async (req, res) => {
 
 const updateCardsAfterReview = async (req, res) => {
 	try {
-		const { groupId } = req.params;
 		const cardsIds = req.body;
-		let cardsToUpdate;
-		if (groupId) {
-			cardsToUpdate = await Card.findAll({ where: { groupId } });
-		} else if (Array.isArray(cardsIds) && cardsIds.length > 0) {
-			// Fetch cards by specific IDs
-			cardsToUpdate = await Card.findAll({
-				where: { id: { [Op.in]: cardsIds } },
-			});
-		} else {
+		if(!Array.isArray(cardsIds) && cardsIds.length <= 0) {
 			return res
-				.status(400)
-				.send({
-					error: "Invalid request. Provide groupId or an array of card IDs.",
-				});
+			.status(400)
+			.send({
+				error: "Invalid request. Provide an array of card IDs.",
+			});
 		}
+		const cardsToUpdate = await Card.findAll({
+			where: { id: { [Op.in]: cardsIds } },
+		});
 
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
@@ -159,6 +156,7 @@ const updateCardsAfterReview = async (req, res) => {
 				card.status = "Learned";
 			}
 
+			card.status = "Repeated";
 			card.learnedAt = new Date();
 			card.reviewCount = newReviewCount;
 			card.nextReviewAt = nextReviewDate;
