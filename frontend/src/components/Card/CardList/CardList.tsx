@@ -1,6 +1,6 @@
 import noCardsImage from "@/assets/images/no-cards.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
@@ -66,6 +66,10 @@ const CardList = ({ groupId }: CardListProps) => {
 		cards.length || 2,
 	);
 	const navigation = useNavigation<StackNavigation>();
+
+	useEffect(() => {
+		setWordsRangeNumber(cards.length);
+	}, [cards.length, groupId]);
 
 	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
@@ -214,11 +218,6 @@ const CardList = ({ groupId }: CardListProps) => {
 		dispatch(removeCard(courseId));
 	};
 
-	const navigateTo = (name: string) => {
-		navigation.navigate(`${name}/${groupId}`);
-		// name, { groupId }
-	};
-
 	const convertBlobToBase64 = (blobUri: string): Promise<string> => {
 		return new Promise((resolve, reject) => {
 			fetch(blobUri)
@@ -241,7 +240,7 @@ const CardList = ({ groupId }: CardListProps) => {
 		if (wordsRangeNumber !== cards.length) {
 			dispatch(rangeCards(wordsRangeNumber));
 		}
-		navigateTo(AppPath.Learn);
+		navigation.navigate(AppPath.Learn, { groupId });
 	};
 
 	return (

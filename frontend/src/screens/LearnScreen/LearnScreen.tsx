@@ -32,8 +32,9 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
+import LearnCheck from "@/components/Learn/LearnCheck/LearnCheck";
 
-type Section = "cards" | "quiz" | "word" | "finish";
+type Section = "cards" | "quiz" | "word" | "check" | "finish";
 
 interface SectionOption {
 	text: string;
@@ -66,6 +67,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	// Modes Toggles
 	const [isQuizEnabled, setIsQuizEnabled] = useState<boolean>(true);
 	const [isGuessWordEnabled, setIsGuessWordEnabled] = useState<boolean>(true);
+	const [isCheckEnabled, setIsCheckEnabled] = useState<boolean>(true);
 	const [showExitModal, setShowExitModal] = useState<boolean>(false);
 	const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
@@ -88,7 +90,8 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 		const transitions: Record<Section, Section> = {
 			cards: isQuizEnabled ? "quiz" : isGuessWordEnabled ? "word" : "finish",
 			quiz: isGuessWordEnabled ? "word" : "finish",
-			word: finishedSections.includes("quiz") ? "finish" : "quiz",
+			word: isCheckEnabled ? "check" : "finish",
+			check: "finish",
 			finish: "finish",
 		};
 		const nextSection = transitions[currentSection] || "finish";
@@ -149,7 +152,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			completionTime: new Date(),
 		};
 		dispatch(saveResults(resultData));
-	};
+	}
 
 	const finishLesson = () => {
 		setIsQuizEnabled(true);
@@ -165,12 +168,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 
 		const repeatedCardsIds = cards?.map((card) => card.id);
 		dispatch(updateCardsAfterLearn(repeatedCardsIds));
+
+		dispatch(updateUserStreak());
+		handleSaveResults();
+		if (repeatedCards.length) {
+			dispatch(getRepeatedCards());
+		}
 	};
-	dispatch(updateUserStreak());
-	handleSaveResults();
-	if (repeatedCards.length) {
-		dispatch(getRepeatedCards());
-	}
 
 	const leaveStudy = () => {
 		navigation.navigate(AppPath.Main);
@@ -202,6 +206,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 				state: isGuessWordEnabled,
 				changeState: setIsGuessWordEnabled,
 				sectionName: "word",
+			},
+			{
+				text: "Check Translate mode",
+				iconName: "checklist",
+				state: isCheckEnabled,
+				changeState: setIsCheckEnabled,
+				sectionName: "check",
 			},
 		];
 
@@ -279,6 +290,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 								)}
 								{currentSection === "word" && isGuessWordEnabled && (
 									<LearnGuessWord
+										onComplete={handleNextSection}
+										handleSetData={handleSetData}
+									/>
+								)}
+
+								{currentSection === "check" && isCheckEnabled && (
+									<LearnCheck
 										onComplete={handleNextSection}
 										handleSetData={handleSetData}
 									/>
