@@ -117,6 +117,10 @@ const removeSharedGroup = async (req, res) => {
 			return res.status(404).json({ error: true, message: "Group not found" });
 		}
 		const { id: sharedGroupId } = sharedGroup;
+		if (sharedGroup.userId !== req.user.id) {
+			res.status(400).json({ error: true, message: "You are not owner of this group!" });
+		}
+
 		await sharedGroup.destroy();
 
 		res.status(200).json(sharedGroupId);
@@ -139,9 +143,6 @@ const copySharedGroup = async (req, res) => {
 			return res
 				.status(404)
 				.json({ error: true, message: "Shared group is not found" });
-		}
-		if (sharedGroup.userId !== req.user.id) {
-			res.status(400).json({ error: true, message: "You are not owner of this group!" });
 		}
 		const newGroup = await Group.create({
 			title: sharedGroup.title,

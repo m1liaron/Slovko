@@ -167,7 +167,8 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		function validateWord(word: string) {
 			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
-			const formattedWord = cleanedWord
+			const formatWord = cleanedWord.length <= 0 ? word : cleanedWord	
+			const formattedWord = formatWord
 				.split(" ")
 				.filter(Boolean) // Remove any extra spaces
 				.map(
@@ -207,6 +208,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				groupId,
 			};
 
+			console.log(validatedAnswer)
 			dispatch(addCard(cardData));
 			setValue("");
 			setAnswerWord("");

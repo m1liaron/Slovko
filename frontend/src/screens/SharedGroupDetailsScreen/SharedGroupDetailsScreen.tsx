@@ -9,7 +9,7 @@ import PressableButton from "../../common/components/PressableButton/PressableBu
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
-import { getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
+import { copySharedGroup, getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
 
 /**
@@ -84,7 +84,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 				</View>
 			)}
 			{/*  !TODO function to copy shared group */}
-			<PressableButton text="Скопіювати групу" />
+			<PressableButton text="Скопіювати групу" onPress={() => dispatch(copySharedGroup(sharedGroupId))}/>
 		</ThemeBackground>
 	);
 };
