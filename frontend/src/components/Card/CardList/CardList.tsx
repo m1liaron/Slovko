@@ -1,6 +1,6 @@
 import noCardsImage from "@/assets/images/no-cards.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import type { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";

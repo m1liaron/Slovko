@@ -51,7 +51,7 @@ type LearnScreenProps = StackScreenProps<
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	const { theme } = useAppTheme();
-	const { groupId } = route.params as { groupId: string };
+	const groupId = (route.params as { groupId?: string | undefined})?.groupId;
 	const groups = useAppSelector(selectGroup);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
