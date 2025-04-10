@@ -13,6 +13,7 @@ import {
 	getUserStreakDates,
 } from "../../redux/userReducer/userThunk";
 import styles from "./StreakScreen.styles";
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 type DateType = {
 	month: number;
@@ -131,7 +132,16 @@ const StreakScreen = () => {
 					}}
 				/>
 
-				{user?.frozen ? (
+				{user?.frozen && (
+					<View>
+						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
+						<ThemeText>
+							Заморозку вже купленно
+						</ThemeText>
+					</View>
+				)}
+
+				{user?.frozen === false ? (
 					<View
 						style={{
 							width: 100,
@@ -144,16 +154,10 @@ const StreakScreen = () => {
 							text="Купити Заморозку"
 							onPress={() => dispatch(buyFreeze({ froze: 100 }))}
 							buttonStyle={{
-								backgroundColor: user.frozen && "#002d5d",
 								padding: 20,
 							}}
-							disabled={!user.frozen}
+							disabled={user.frozen}
 						/>
-						{user.frozen && (
-							<Text style={{ color: colors.primary }}>
-								Заморозку вже купленно
-							</Text>
-						)}
 					</View>
 				) : null}
 			</View>
