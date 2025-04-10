@@ -3,6 +3,7 @@ const {
 	calculateCurMonthAndYearDate,
 } = require("../helpers/calculateCurMonthAndYearDate");
 const { Result, ResultMode, WordResult, User } = require("../models/models");
+const { StatusCodes } = require("http-status-codes");
 
 const getResultsDetails = async (req, res) => {
 	try {
@@ -206,6 +207,10 @@ const saveResults = async (req, res) => {
 				}),
 			),
 		);
+
+		if(!Object.entries(data).length) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "No data provided as a result"});
+		}
 
 		await Promise.all(
 			Object.entries(data).map(([mode, words]) => {
