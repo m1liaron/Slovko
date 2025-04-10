@@ -1,3 +1,4 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IGroup } from "@/common/enums/types/group.type";
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
@@ -34,7 +35,6 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
-import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -112,7 +112,11 @@ const SharedGroupsScreen = () => {
 		>
 			<Pressable
 				style={[styles.container, { backgroundColor: colors.lightBackground }]}
-				onPress={() => navigation.navigate(AppPath.SharedGroupDetails, { sharedGroupId: item.id})}
+				onPress={() =>
+					navigation.navigate(AppPath.SharedGroupDetails, {
+						sharedGroupId: item.id,
+					})
+				}
 			>
 				<View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
 					<View style={{ flexDirection: "row", display: "flex", gap: 10 }}>
@@ -128,9 +132,7 @@ const SharedGroupsScreen = () => {
 								borderColor: colors.primary,
 							}}
 						/>
-						<ThemeText style={{ fontSize: 30 }}>
-							{item?.user?.name}
-						</ThemeText>
+						<ThemeText style={{ fontSize: 30 }}>{item?.user?.name}</ThemeText>
 					</View>
 					<View
 						style={{
@@ -140,9 +142,7 @@ const SharedGroupsScreen = () => {
 							padding: 5,
 						}}
 					>
-						<ThemeText style={{ fontSize: 30 }}>
-							{item.title}
-						</ThemeText>
+						<ThemeText style={{ fontSize: 30 }}>{item.title}</ThemeText>
 					</View>
 				</View>
 

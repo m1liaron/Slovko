@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { AppPath } from "../../common/enums/app/app";
 import { LoginScreen, RegisterScreen } from "../../screens/index";
-import { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
+import type { RootStackParamList } from "../ProtectedRoute/ProtectedRoute";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -1,8 +1,8 @@
 export enum Modes {
-	"flashCards",
-	"quiz",
-	"guessWord",
-	"check"
+	flashCards = 0,
+	quiz = 1,
+	guessWord = 2,
+	check = 3,
 }
 
 type IWord = {
@@ -57,4 +57,12 @@ type SaveResultsRequest = {
 	completionTime: Date;
 };
 
-export type { IResult, IStatistics, ModeName, SaveResultsRequest, ResultsCard, IResultMode, IWord };
+export type {
+	IResult,
+	IStatistics,
+	ModeName,
+	SaveResultsRequest,
+	ResultsCard,
+	IResultMode,
+	IWord,
+};

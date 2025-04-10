@@ -1,3 +1,4 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -13,7 +14,6 @@ import {
 	getUserStreakDates,
 } from "../../redux/userReducer/userThunk";
 import styles from "./StreakScreen.styles";
-import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 type DateType = {
 	month: number;
@@ -135,9 +135,7 @@ const StreakScreen = () => {
 				{user?.frozen && (
 					<View>
 						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
-						<ThemeText>
-							Заморозку вже купленно
-						</ThemeText>
+						<ThemeText>Заморозку вже купленно</ThemeText>
 					</View>
 				)}
 

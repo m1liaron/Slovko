@@ -1,8 +1,6 @@
 import appLogo from "@/assets/images/favicon.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import type {
-	StackNavigation,
-} from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useCallback } from "react";

@@ -12,8 +12,8 @@ export {
 	SaveResultsRequest,
 	ResultsCard,
 	ModeName,
-	IResultMode, 
+	IResultMode,
 	Modes,
-	IWord
+	IWord,
 } from "./result.type";
 export { ISharedGroup } from "./sharedGroup";

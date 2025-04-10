@@ -57,9 +57,9 @@ const createSharedGroup = async (req, res) => {
 		res.status(200).json(sharedGroupWithUser);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
@@ -76,9 +76,9 @@ const getAllSharedGroup = async (req, res) => {
 		res.status(200).json(allSharedGroups);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
@@ -101,9 +101,9 @@ const getSharedGroup = async (req, res) => {
 		res.status(200).json(sharedGroup);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
@@ -118,7 +118,9 @@ const removeSharedGroup = async (req, res) => {
 		}
 		const { id: sharedGroupId } = sharedGroup;
 		if (sharedGroup.userId !== req.user.id) {
-			res.status(400).json({ error: true, message: "You are not owner of this group!" });
+			res
+				.status(400)
+				.json({ error: true, message: "You are not owner of this group!" });
 		}
 
 		await sharedGroup.destroy();
@@ -126,9 +128,9 @@ const removeSharedGroup = async (req, res) => {
 		res.status(200).json(sharedGroupId);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
@@ -163,9 +165,9 @@ const copySharedGroup = async (req, res) => {
 		res.status(200).json(newGroup);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 

@@ -1,3 +1,4 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type {
 	RootStackParamList,
@@ -23,7 +24,6 @@ import {
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
-import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -119,17 +119,15 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 				}}
 			>
 				<BackButton />
-					<ThemeText
-						style={{ fontSize: 30, fontWeight: "bold" }}
-					>
-						{group?.title}
-					</ThemeText>
-					<Entypo
-						name="pencil"
-						onPress={() => setShowEditModal(true)}
-						size={24}
-						color={colors.iconColor}
-					/>
+				<ThemeText style={{ fontSize: 30, fontWeight: "bold" }}>
+					{group?.title}
+				</ThemeText>
+				<Entypo
+					name="pencil"
+					onPress={() => setShowEditModal(true)}
+					size={24}
+					color={colors.iconColor}
+				/>
 			</View>
 			<View
 				style={{

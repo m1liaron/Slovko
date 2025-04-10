@@ -1,3 +1,7 @@
+const { Op } = require("sequelize");
+const {
+	calculateCurMonthAndYearDate,
+} = require("../helpers/calculateCurMonthAndYearDate");
 const { Result, ResultMode, WordResult, User } = require("../models/models");
 
 const getResultsDetails = async (req, res) => {
@@ -70,28 +74,28 @@ const getResultsStatistics = async (req, res) => {
 		function getAllWordsMode(results) {
 			const modeMonthSum = {};
 
-			for(const result of results) {
+			for (const result of results) {
 				const month = months[new Date(result.createdAt).getMonth()];
 				const index = resultsMonths.indexOf(month); // Find the month index in resultsMonthes
 
 				if (index !== -1 && result.mode) {
-					for(const modeItem of result.mode) {
-							if (!modeMonthSum[modeItem.mode]) {
-								const array = new Array(resultsMonths.length).fill(0);
-								modeMonthSum[modeItem.mode] = {
-									mistakes: [...array],
-									wordLength: [...array],
-								};
-							}
+					for (const modeItem of result.mode) {
+						if (!modeMonthSum[modeItem.mode]) {
+							const array = new Array(resultsMonths.length).fill(0);
+							modeMonthSum[modeItem.mode] = {
+								mistakes: [...array],
+								wordLength: [...array],
+							};
+						}
 
-							const mistakesForCard = modeItem.words.reduce(
-								(acc, curr) => acc + curr.mistakesAmount,
-								0,
-							);
-							const wordCountForCard = modeItem.words.length;
+						const mistakesForCard = modeItem.words.reduce(
+							(acc, curr) => acc + curr.mistakesAmount,
+							0,
+						);
+						const wordCountForCard = modeItem.words.length;
 
-							modeMonthSum[modeItem.mode].mistakes[index] += mistakesForCard;
-							modeMonthSum[modeItem.mode].wordLength[index] += wordCountForCard;
+						modeMonthSum[modeItem.mode].mistakes[index] += mistakesForCard;
+						modeMonthSum[modeItem.mode].wordLength[index] += wordCountForCard;
 					}
 				}
 			}
@@ -110,8 +114,20 @@ const getResultsStatistics = async (req, res) => {
 
 const getResults = async (req, res) => {
 	try {
+		const {
+			month = new Date().getMonth() + 1,
+			year = new Date().getFullYear(),
+		} = req.query;
+		const { startDate, endDate } = calculateCurMonthAndYearDate(
+			month,
+			year,
+			res,
+		);
 		const result = await Result.findAll({
-			where: { userId: req.user.id },
+			where: {
+				userId: req.user.id,
+				createdAt: { [Op.between]: [startDate, endDate] },
+			},
 			order: [["createdAt", "DESC"]],
 		});
 		if (!result) {

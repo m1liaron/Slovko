@@ -110,7 +110,7 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
 				onComplete();
 			}
 		}
-	}, [currentGuess, currentWord, currentIndex, onComplete]);
+	}, [currentGuess, currentWord, currentIndex, onComplete, cards.length]);
 
 	const resetGameState = () => {
 		setCurrentGuess([]);
