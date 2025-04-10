@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import type { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useState, useMemo } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Platform, Text, View } from "react-native";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
@@ -14,6 +14,7 @@ import formatDMTDate from "../../utils/formatDMTDate";
 import { formatTime } from "../../utils/formatTime";
 import styles from "./ResultDetailsScreen.styles";
 import { IResultMode, IWord, ModeName, Modes } from "@/common/enums/types/types";
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 type ResultDetailsScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -37,7 +38,6 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 		if (!result?.mode) return {};
 		return result.mode.reduce((acc, modeItem) => {
 		  const modeKey = modeItem.mode as ModeName;
-		  console.log(modeKey)
 		  acc[modeKey] = modeItem;
 		  return acc;
 		}, {} as Partial<Record<ModeName, IResultMode>>);
@@ -94,7 +94,6 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 	const title = new Date(result.title);
 	const isTitleNotDate = isNaN(title.getTime())
 
-	console.log(modesMap)
 	return (
 		<ThemeBackground>
 		  <View
@@ -110,9 +109,9 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 			>
 			  <BackButton />
 			  {isTitleNotDate && (
-				<Text style={[styles.title, { color: colors.primary }]}>
+				<ThemeText style={[styles.title]}>
 				  {result.title}
-				</Text>
+				</ThemeText>
 			  )}
 			  <View
 				style={[
@@ -120,14 +119,16 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 				  { borderColor: colors.primary },
 				]}
 			  >
-				<Text style={[styles.title, { color: colors.primary }]}>
+				<ThemeText style={[styles.title]}>
 				  {formattedTime}
-				</Text>
+				</ThemeText>
 			  </View>
 			</View>
-			<Text style={[styles.title, { color: colors.primary }]}>
-			  {formatDMTDate(result.createdAt)}
-			</Text>
+			{Platform.OS === "web" && (
+				<ThemeText style={[styles.title]}>
+					{formatDMTDate(result.createdAt)}
+				</ThemeText>
+			)} 
 		  </View>
 	
 		  <View
@@ -151,7 +152,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 			{isLoading && <Loading />}
 			{modesMap[selectedMode] && (
 			  <FlatList
-				style={{ height: 600 }}
+				style={{ height: 400, width: "100%" }}
 				data={modesMap[selectedMode]?.words}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item }) => (
@@ -162,14 +163,14 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 					]}
 				  >
 					<View style={styles.resultContainer}>
-					  <Text style={[styles.title, { color: colors.primary }]}>
+					  <ThemeText style={[styles.title]}>
 						{item.word} - {item.translate}
-					  </Text>
+					  </ThemeText>
 					</View>
 					<View style={styles.mistakesAmountContainer}>
-					  <Text style={[styles.title, { color: colors.primary }]}>
+					  <ThemeText style={[styles.title]}>
 						{item.mistakesAmount}
-					  </Text>
+					  </ThemeText>
 					</View>
 				  </View>
 				)}
