@@ -1,7 +1,6 @@
 import appLogo from "@/assets/images/favicon.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type {
-	RootStackParamList,
 	StackNavigation,
 } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { FontAwesome6 } from "@expo/vector-icons";

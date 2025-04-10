@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import {
 	FlatList,
 	Image,
+	Platform,
 	Pressable,
 	Text,
 	TextInput,
@@ -33,6 +34,7 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -126,9 +128,9 @@ const SharedGroupsScreen = () => {
 								borderColor: colors.primary,
 							}}
 						/>
-						<Text style={{ color: colors.primary, fontSize: 30 }}>
+						<ThemeText style={{ fontSize: 30 }}>
 							{item?.user?.name}
-						</Text>
+						</ThemeText>
 					</View>
 					<View
 						style={{
@@ -138,15 +140,17 @@ const SharedGroupsScreen = () => {
 							padding: 5,
 						}}
 					>
-						<Text style={{ color: colors.primary, fontSize: 30 }}>
+						<ThemeText style={{ fontSize: 30 }}>
 							{item.title}
-						</Text>
+						</ThemeText>
 					</View>
 				</View>
 
-				<Text style={{ color: colors.primary, fontSize: 30 }}>
-					{formatTime(item.createdAt)}
-				</Text>
+				{Platform.OS === "web" && (
+					<ThemeText style={{ fontSize: 30 }}>
+						{formatTime(item.createdAt)}
+					</ThemeText>
+				)}
 			</Pressable>
 			{item?.user?.id === user?.id && (
 				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
@@ -160,15 +164,14 @@ const SharedGroupsScreen = () => {
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
-					<Text
+					<ThemeText
 						style={{
 							fontSize: 40,
 							fontWeight: "bold",
-							color: colors.primary,
 						}}
 					>
 						2024
-					</Text>
+					</ThemeText>
 					<PressableButton
 						text="Мої поширені групи"
 						onPress={() => dispatch(filterMySharedGroups({ userId: user?.id }))}
@@ -211,7 +214,7 @@ const SharedGroupsScreen = () => {
 						}}
 						onPress={() => dispatch(filterSharedGroups(filterValue))}
 					>
-						<Text style={{ color: colors.primary }}>Фільтрувати</Text>
+						<ThemeText>Фільтрувати</ThemeText>
 					</Pressable>
 					<Pressable
 						style={{
@@ -239,7 +242,7 @@ const SharedGroupsScreen = () => {
 					renderItem={renderItem}
 				/>
 			) : (
-				<Text>Немає пошеренних груп</Text>
+				<ThemeText>Немає пошеренних груп</ThemeText>
 			)}
 
 			<AddButton onPress={() => setShowModal(true)} />
@@ -257,9 +260,8 @@ const SharedGroupsScreen = () => {
 						data={groups}
 						renderItem={({ item }: { item: IGroup }) => (
 							<Pressable onPress={() => addRemoveSelectedGroup(item)}>
-								<Text
+								<ThemeText
 									style={{
-										color: colors.primary,
 										borderColor:
 											selectedGroup?.title === item.title
 												? "#007AFF"
@@ -271,20 +273,19 @@ const SharedGroupsScreen = () => {
 									}}
 								>
 									{item.title}
-								</Text>
+								</ThemeText>
 							</Pressable>
 						)}
 					/>
 				) : (
 					<View>
-						<Text
+						<ThemeText
 							style={{
-								color: colors.primary,
 								fontSize: 30,
 							}}
 						>
 							Немає груп
-						</Text>
+						</ThemeText>
 						<PressableButton
 							text="Створити групу"
 							onPress={() => navigation.navigate(AppPath.Home)}

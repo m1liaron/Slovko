@@ -11,6 +11,8 @@ import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { copySharedGroup, getSharedGroup } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
+import { formatTime } from "@/utils/formatTime";
+import formatDMTDate from "@/utils/formatDMTDate";
 
 /**
  * @param route { object: { params }}
@@ -38,20 +40,30 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 	return (
 		<ThemeBackground>
 			<View style={styles.header}>
-				<BackButton />
+				<View style={{ flexDirection: "row", alignItems: "center"}}>
+					<BackButton />
+					{sharedGroup && (
+						<ThemeText
+						style={{
+							fontSize: 30,
+							fontWeight: "bold",
+						}}
+					>
+						{sharedGroup.title}
+					</ThemeText>
+					)}
+				</View>
+
 				{sharedGroup && (
 					<View>
-						<View>
-							<Text
+						<ThemeText
 								style={{
-									color: colors.primary,
 									fontSize: 30,
 									fontWeight: "bold",
 								}}
 							>
-								{sharedGroup.title}
-							</Text>
-						</View>
+								{formatDMTDate(new Date(sharedGroup.createdAt))}
+							</ThemeText>
 					</View>
 				)}
 			</View>
