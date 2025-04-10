@@ -1,7 +1,8 @@
-enum Modes {
-	flashCards = 0,
-	quiz = 1,
-	guessWord = 2,
+export enum Modes {
+	"flashCards",
+	"quiz",
+	"guessWord",
+	"check"
 }
 
 type IWord = {
@@ -13,7 +14,7 @@ type IWord = {
 
 type IResultMode = {
 	id: string;
-	mode: Modes;
+	mode: ModeName;
 	resultId?: string;
 	words: IWord[];
 };
@@ -56,4 +57,4 @@ type SaveResultsRequest = {
 	completionTime: Date;
 };
 
-export type { IResult, IStatistics, ModeName, SaveResultsRequest, ResultsCard };
+export type { IResult, IStatistics, ModeName, SaveResultsRequest, ResultsCard, IResultMode, IWord };
