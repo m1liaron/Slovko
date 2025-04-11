@@ -118,25 +118,36 @@ const getResults = async (req, res) => {
 		const {
 			month = new Date().getMonth() + 1,
 			year = new Date().getFullYear(),
+			page, 
+			limit
 		} = req.query;
 		const { startDate, endDate } = calculateCurMonthAndYearDate(
 			month,
 			year,
 			res,
 		);
-		const result = await Result.findAll({
+		const results = await Result.findAll({
 			where: {
 				userId: req.user.id,
 				createdAt: { [Op.between]: [startDate, endDate] },
 			},
 			order: [["createdAt", "DESC"]],
 		});
-		if (!result) {
+		if (!results) {
 			return res
 				.status(404)
-				.send({ error: true, message: "Result is not find" });
+				.send({ error: true, message: "Results is not find" });
 		}
-		res.status(200).json(result);
+
+		console.log(results)
+		const pageNumber = Number.parseInt(page, 10) || 1;
+		const itemsPerPage = Number.parseInt(limit, 10) || 5;
+		
+		const skip = ( pageNumber - 1) * itemsPerPage;
+		const filteredResults = results.slice(skip, skip + itemsPerPage);
+		const haveMoreResults = skip + itemsPerPage < results.length;
+
+		res.status(200).json({ results: filteredResults, haveMoreResults});
 	} catch (error) {
 		res
 			.status(400)

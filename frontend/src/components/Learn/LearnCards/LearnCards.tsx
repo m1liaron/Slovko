@@ -101,7 +101,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 
 	const setCurrentIndexCardsFlipped = () => {
 		setCurrentCardIndex((prevIndex) => prevIndex + 1);
-		setIsHorizontalSwipe(false);
+		// setIsHorizontalSwipe(false);
 	};
 
 	const renderCard = (card: ICard, index: number) => (

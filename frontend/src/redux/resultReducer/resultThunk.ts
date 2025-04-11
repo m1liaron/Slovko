@@ -13,10 +13,10 @@ export const saveResults = createAsyncThunk(
 
 export const getResults = createAsyncThunk(
 	"results/get",
-	async (data: { month: number; year: number }) => {
+	async (data: { month: number; year: number, page: number }) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.get(
-			`/results?month=${data.month}&year=${data.year}`,
+			`/results?page=${data.page}&month=${data.month}&year=${data.year}`,
 		);
 		return response.data;
 	},

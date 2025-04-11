@@ -5,7 +5,7 @@ import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import { AppPath } from "../../common/enums/app/app";
 import { useAppTheme } from "../../contexts/ThemeProvider";
@@ -26,7 +26,7 @@ const ResultsScreen = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { results } = useAppSelector((state) => state.results);
+	const { results, haveMoreResults, isLoading } = useAppSelector((state) => state.results);
 	const navigation = useNavigation<StackNavigation>();
 	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);
@@ -38,6 +38,7 @@ const ResultsScreen = () => {
 	const [showResultsYear, setShowResultsYear] = useState<number>(
 		new Date().getFullYear(),
 	);
+	const [page, setPage] = useState(1);
 
 	useEffect(() => {
 		if (results.length > 0) {
@@ -58,13 +59,28 @@ const ResultsScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getResults({ year: showResultsYear, month: showResultsMonth }));
+		setPage(1);
+		dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: 1 }));
 	}, [dispatch, showResultsMonth, showResultsYear]);
+
+	const handleLoadMore = () => {
+		if(haveMoreResults && !isLoading) {
+			const nextPage = page + 1;
+			dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: nextPage }));
+			setPage(nextPage);
+		}
+	}
 
 	const handleSort = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));
 		setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
 	};
+
+	const renderFooter = () => isLoading ? (
+		<View style={{ paddingVertical: 20 }}>
+			<ActivityIndicator size="large" color={colors.primary} />
+		</View>
+	) : null
 
 	return (
 		<ThemeBackground>
@@ -197,6 +213,9 @@ const ResultsScreen = () => {
 						))}
 					</View>
 				)}
+				onEndReached={handleLoadMore}
+				onEndReachedThreshold={0.1}
+				ListFooterComponent={renderFooter}
 				contentContainerStyle={{ paddingBottom: 20 }}
 			/>
 		</ThemeBackground>
