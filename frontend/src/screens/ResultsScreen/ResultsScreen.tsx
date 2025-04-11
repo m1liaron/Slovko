@@ -2,7 +2,7 @@ import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
@@ -82,13 +82,40 @@ const ResultsScreen = () => {
 		</View>
 	) : null
 
+	const monthes = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Липень", "Червень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
+
+	const decShowMonth = () => {
+		if(showResultsMonth > 0) {
+			setShowResultsMonth(showResultsMonth - 1);
+		}
+	}
+
+	const incShowMonth = () => {
+		if(showResultsMonth < monthes.length) {
+			setShowResultsMonth(showResultsMonth + 1);
+		}
+	}
+
 	return (
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
-					<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
-						{new Date().getFullYear()}
-					</ThemeText>
+					<View style={{ flexDirection: "row", alignItems: "center" }}>
+						<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
+							{new Date().getFullYear()} - 
+						</ThemeText>
+						<View style={{ flexDirection: "row", alignItems: "center" }}>
+							<Pressable onPress={decShowMonth}>
+								<AntDesign name="caretleft" color={colors.primary} size={30}/>
+							</Pressable>
+							<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
+								{monthes[showResultsMonth]}
+							</ThemeText>
+							<Pressable onPress={incShowMonth}>
+								<AntDesign name="caretright" color={colors.primary} size={30}/>
+							</Pressable>
+						</View>
+					</View>
 					<View
 						style={{
 							justifyContent: "center",
