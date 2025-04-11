@@ -15,18 +15,22 @@ import {
 
 interface InitialState {
 	sharedGroups: ISharedGroup[];
+	haveMoreSharedGroups: boolean;
 	filteredGroups: ISharedGroup[];
 	sharedGroup: ISharedGroup | null;
 	status: IDataStatus;
 	error: null;
+	isLoading: boolean;
 }
 
 const initialState: InitialState = {
 	sharedGroups: [],
 	filteredGroups: [],
+	haveMoreSharedGroups: false,
 	sharedGroup: null,
 	status: DataStatus.IDLE,
 	error: null,
+	isLoading: false
 };
 
 const sharedGroupSlice = createSlice({
@@ -51,11 +55,14 @@ const sharedGroupSlice = createSlice({
 		builder
 			.addCase(getAllSharedGroups.pending, (state) => {
 				state.status = DataStatus.PENDING;
+				state.isLoading = true;
 			})
 			.addCase(getAllSharedGroups.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.sharedGroups = action.payload;
-				state.filteredGroups = action.payload;
+				state.sharedGroups = [...state.sharedGroups, ...action.payload.sharedGroups];
+				state.filteredGroups = [...state.sharedGroups, ...action.payload.sharedGroups];
+				state.haveMoreSharedGroups = action.payload.haveMoreSharedGroups;
+				state.isLoading = false;
 			})
 			.addCase(getAllSharedGroups.rejected, (state) => {
 				state.status = DataStatus.ERROR;
@@ -66,8 +73,8 @@ const sharedGroupSlice = createSlice({
 			})
 			.addCase(saveSharedGroup.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.sharedGroups.push(action.payload);
-				state.filteredGroups.push(action.payload);
+				state.sharedGroups = [...state.sharedGroups, action.payload]
+				state.filteredGroups = [...state.sharedGroups, action.payload]
 			})
 			.addCase(saveSharedGroup.rejected, (state) => {
 				state.status = DataStatus.ERROR;

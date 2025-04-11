@@ -63,8 +63,12 @@ const createSharedGroup = async (req, res) => {
 	}
 };
 
-const getAllSharedGroup = async (req, res) => {
+const getAllSharedGroups = async (req, res) => {
 	try {
+		const {
+			page,
+			limit,
+		} = req.query;
 		const allSharedGroups = await SharedGroup.findAll({
 			include: {
 				model: User,
@@ -73,7 +77,13 @@ const getAllSharedGroup = async (req, res) => {
 			},
 		});
 
-		res.status(200).json(allSharedGroups);
+		const pageNumber = Number.parseInt(page, 10) || 1;
+		const itemsPerPage = Number.parseInt(limit, 10) || 5;
+		const skip = (pageNumber - 1 ) * itemsPerPage;
+		const filteredSharedGroups = allSharedGroups.slice(skip, skip + itemsPerPage);
+		const haveMoreSharedGroups = skip + itemsPerPage < allSharedGroups.length;
+
+		res.status(200).json({ sharedGroups: filteredSharedGroups, haveMoreSharedGroups });
 	} catch (error) {
 		res.status(500).json({
 			error: true,
@@ -173,7 +183,7 @@ const copySharedGroup = async (req, res) => {
 
 module.exports = {
 	createSharedGroup,
-	getAllSharedGroup,
+	getAllSharedGroups,
 	getSharedGroup,
 	copySharedGroup,
 	removeSharedGroup,

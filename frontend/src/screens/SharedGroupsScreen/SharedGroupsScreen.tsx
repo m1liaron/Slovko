@@ -4,9 +4,10 @@ import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
-import { Link, useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React,{ useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	FlatList,
 	Image,
 	Platform,
@@ -31,7 +32,6 @@ import {
 	removeSharedGroup,
 	resetSharedGroups,
 	saveSharedGroup,
-	selectSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
@@ -43,7 +43,7 @@ const SharedGroupsScreen = () => {
 	} = useAppTheme();
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
-	const sharedGroups = useAppSelector(selectSharedGroup);
+	const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(state => state.sharedGroups);
 	const groups = useAppSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
@@ -53,10 +53,20 @@ const SharedGroupsScreen = () => {
 	);
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [filterValue, setFilterValue] = useState("");
+	const [page, setPage] = useState(1);
 
 	useEffect(() => {
-		dispatch(getAllSharedGroups());
+		dispatch(getAllSharedGroups({ page }));
 	}, [dispatch]);
+
+
+	const handleLoadMore = () => {
+		if(haveMoreSharedGroups && !isLoading) {
+			const nextPage = page + 1;
+			dispatch(getAllSharedGroups({ page: nextPage }));
+			setPage(nextPage);
+		}
+	}
 
 	const formatTime = (createdAt: Date) => {
 		const now = new Date().getTime();
@@ -160,6 +170,12 @@ const SharedGroupsScreen = () => {
 		</View>
 	);
 
+	const renderFooter = () => isLoading ? (
+		<View style={{ paddingVertical: 20 }}>
+			<ActivityIndicator size="large" color={colors.primary} />
+		</View>
+	) : null
+
 	return (
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
@@ -240,6 +256,9 @@ const SharedGroupsScreen = () => {
 						padding: 10,
 					}}
 					renderItem={renderItem}
+					onEndReached={handleLoadMore}
+					onEndReachedThreshold={0.1}
+					ListFooterComponent={renderFooter}
 				/>
 			) : (
 				<ThemeText>Немає пошеренних груп</ThemeText>

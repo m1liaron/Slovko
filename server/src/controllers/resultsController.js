@@ -139,7 +139,6 @@ const getResults = async (req, res) => {
 				.send({ error: true, message: "Results is not find" });
 		}
 
-		console.log(results);
 		const pageNumber = Number.parseInt(page, 10) || 1;
 		const itemsPerPage = Number.parseInt(limit, 10) || 5;
 
