@@ -15,7 +15,7 @@ import styles from "./AddInput.styles";
 interface AddInputProps
 	extends Pick<
 		TextInputProps,
-		"placeholder" | "placeholderTextColor" | "value" | "onChangeText"
+		"placeholder" | "placeholderTextColor" | "value" | "onChangeText" | "onFocus"
 	> {}
 
 const AddInput = ({
@@ -23,6 +23,7 @@ const AddInput = ({
 	placeholderTextColor,
 	value = "",
 	onChangeText,
+	onFocus
 }: AddInputProps) => {
 	const {
 		theme: {
@@ -39,6 +40,7 @@ const AddInput = ({
 			placeholderTextColor={placeholderTextColor || primary}
 			value={value}
 			onChangeText={onChangeText}
+			onFocus={onFocus}
 		/>
 	);
 };

@@ -31,6 +31,7 @@ import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
+import { getUnsplashPhotos } from "@/api/unsplash";
 
 const MemoCardItem = memo(CardItem);
 
@@ -60,6 +61,8 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [answerWord, setAnswerWord] = useState<string>("");
 	const [isValidateWord, setIsValidateWord] = useState<boolean>(true);
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);
+	const [unsplashImages, setUnsplashImages] = useState<string[]>([]);
+	const [chosenImage, setChosenImage] = useState<number | null>(null);
 	const [imageUri, setImageUri] = useState<string>("");
 	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
@@ -245,6 +248,18 @@ const CardList = ({ groupId }: CardListProps) => {
 		navigation.navigate(AppPath.Learn, { groupId });
 	};
 
+	const setChosenPhoto = (image: string, index: number) => {
+		setImageUri(image);
+		setChosenImage(index);
+	};
+
+	const fetchUnsplashPhotos = async () => {
+		const photos = await getUnsplashPhotos(value);
+		if(photos?.length) {
+			setUnsplashImages(photos);
+		}
+	}
+
 	return (
 		<View style={styles.container}>
 			{!cards.length ? (
@@ -396,10 +411,38 @@ const CardList = ({ groupId }: CardListProps) => {
 								<Image source={{ uri: imageUri }} style={styles.image} />
 							)}
 
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									flexWrap: "wrap",
+									gap: 5,
+								}}
+							>
+								{unsplashImages.length > 0 &&
+									unsplashImages.map((image, index) => (
+										<Pressable
+											style={{
+												borderWidth: 4,
+												borderColor:
+													chosenImage === index ? "#679bd7" : colors.primary,
+											}}
+											onPress={() => setChosenPhoto(image, index)}
+										>
+											<Image
+												key={index}
+												source={{ uri: image }}
+												style={styles.image}
+											/>
+										</Pressable>
+									))}
+							</View>
+
 							<AddInput
 								value={value}
 								onChangeText={setValue}
 								placeholder="Слово..."
+								onFocus={fetchUnsplashPhotos}
 							/>
 
 							<AddInput
