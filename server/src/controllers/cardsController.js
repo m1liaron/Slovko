@@ -38,12 +38,10 @@ const getRepeatedCards = async (req, res) => {
 
 		res.status(200).json(filteredData);
 	} catch (error) {
-		res
-			.status(400)
-			.send({
-				error: true,
-				message: error.message || "Error get repeated cards",
-			});
+		res.status(400).send({
+			error: true,
+			message: error.message || "Error get repeated cards",
+		});
 	}
 };
 
@@ -66,12 +64,10 @@ const getCardsFromIds = async (req, res) => {
 
 		res.status(200).json(cards);
 	} catch (error) {
-		res
-			.status(400)
-			.send({
-				error: true,
-				message: error.message || "Error get cards from ids",
-			});
+		res.status(400).send({
+			error: true,
+			message: error.message || "Error get cards from ids",
+		});
 	}
 };
 
@@ -82,8 +78,8 @@ const getAllCards = async (req, res) => {
 			where: {
 				groupId,
 				status: {
-					[Op.in]: ["To Learn", "Repeated"]
-				}
+					[Op.in]: ["To Learn", "Repeated"],
+				},
 			},
 			include: [{ model: Image, as: "image" }],
 		});
@@ -124,10 +120,8 @@ const getAllStatusCards = async (req, res) => {
 const updateCardsAfterReview = async (req, res) => {
 	try {
 		const cardsIds = req.body;
-		if(!Array.isArray(cardsIds) && cardsIds.length <= 0) {
-			return res
-			.status(400)
-			.send({
+		if (!Array.isArray(cardsIds) && cardsIds.length <= 0) {
+			return res.status(400).send({
 				error: "Invalid request. Provide an array of card IDs.",
 			});
 		}

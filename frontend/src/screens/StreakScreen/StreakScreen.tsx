@@ -1,3 +1,4 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -131,7 +132,14 @@ const StreakScreen = () => {
 					}}
 				/>
 
-				{user?.frozen ? (
+				{user?.frozen && (
+					<View>
+						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
+						<ThemeText>Заморозку вже купленно</ThemeText>
+					</View>
+				)}
+
+				{user?.frozen === false ? (
 					<View
 						style={{
 							width: 100,
@@ -144,16 +152,10 @@ const StreakScreen = () => {
 							text="Купити Заморозку"
 							onPress={() => dispatch(buyFreeze({ froze: 100 }))}
 							buttonStyle={{
-								backgroundColor: user.frozen && "#002d5d",
 								padding: 20,
 							}}
-							disabled={!user.frozen}
+							disabled={user.frozen}
 						/>
-						{user.frozen && (
-							<Text style={{ color: colors.primary }}>
-								Заморозку вже купленно
-							</Text>
-						)}
 					</View>
 				) : null}
 			</View>

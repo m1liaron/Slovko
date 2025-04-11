@@ -22,7 +22,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 		if (cards.length <= 4) {
 			onComplete();
 		}
-	}, []);
+	}, [cards.length, onComplete]);
 
 	const initialWords = useMemo(
 		() =>
@@ -123,7 +123,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 		if (learnedWords.length === cards.length) {
 			onComplete();
 		}
-	}, [learnedWords]);
+	}, [learnedWords, cards.length, onComplete]);
 
 	const isAllCardsLearned = answeredWords.length === cards.length;
 	const isTranslateDisappear = (item: string) => {

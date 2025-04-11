@@ -1,6 +1,6 @@
 import noCardsImage from "@/assets/images/no-cards.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import type { RootStackParamList, StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
@@ -69,7 +69,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	useEffect(() => {
 		setWordsRangeNumber(cards.length);
-	}, [cards.length, groupId]);
+	}, [cards.length]);
 
 	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
@@ -167,7 +167,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		function validateWord(word: string) {
 			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
-			const formatWord = cleanedWord.length <= 0 ? word : cleanedWord	
+			const formatWord = cleanedWord.length <= 0 ? word : cleanedWord;
 			const formattedWord = formatWord
 				.split(" ")
 				.filter(Boolean) // Remove any extra spaces
@@ -208,7 +208,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				groupId,
 			};
 
-			console.log(validatedAnswer)
+			console.log(validatedAnswer);
 			dispatch(addCard(cardData));
 			setValue("");
 			setAnswerWord("");

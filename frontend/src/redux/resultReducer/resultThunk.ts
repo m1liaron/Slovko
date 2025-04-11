@@ -11,11 +11,16 @@ export const saveResults = createAsyncThunk(
 	},
 );
 
-export const getResults = createAsyncThunk("results/get", async () => {
-	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.get("/results");
-	return response.data;
-});
+export const getResults = createAsyncThunk(
+	"results/get",
+	async (data: { month: number; year: number }) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.get(
+			`/results?month=${data.month}&year=${data.year}`,
+		);
+		return response.data;
+	},
+);
 
 export const getResultDetails = createAsyncThunk(
 	"resultDetails/get",

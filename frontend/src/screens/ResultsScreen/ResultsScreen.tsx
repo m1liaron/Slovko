@@ -1,5 +1,7 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
@@ -14,7 +16,6 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
-import { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 
 type GroupedResults = {
 	[date: string]: IResult[];
@@ -31,6 +32,12 @@ const ResultsScreen = () => {
 	const [showFilterInput, setShowFilterInput] = useState(false);
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 	const [groupedResults, setGroupedResults] = useState<GroupedResults>({});
+	const [showResultsMonth, setShowResultsMonth] = useState<number>(
+		new Date().getMonth() + 1,
+	);
+	const [showResultsYear, setShowResultsYear] = useState<number>(
+		new Date().getFullYear(),
+	);
 
 	useEffect(() => {
 		if (results.length > 0) {
@@ -51,8 +58,8 @@ const ResultsScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getResults());
-	}, [dispatch]);
+		dispatch(getResults({ year: showResultsYear, month: showResultsMonth }));
+	}, [dispatch, showResultsMonth, showResultsYear]);
 
 	const handleSort = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));
@@ -63,11 +70,9 @@ const ResultsScreen = () => {
 		<ThemeBackground>
 			<View style={{ justifyContent: "center" }}>
 				<View style={styles.header}>
-					<Text
-						style={{ fontSize: 40, fontWeight: "bold", color: colors.primary }}
-					>
-						2024
-					</Text>
+					<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
+						{new Date().getFullYear()}
+					</ThemeText>
 					<View
 						style={{
 							justifyContent: "center",
@@ -167,7 +172,11 @@ const ResultsScreen = () => {
 									styles.itemContainer,
 									{ backgroundColor: colors.lightBackground },
 								]}
-								onPress={() => navigation.navigate(AppPath.ResultDetails, { resultId: result.id })}
+								onPress={() =>
+									navigation.navigate(AppPath.ResultDetails, {
+										resultId: result.id,
+									})
+								}
 							>
 								<View style={styles.flex}>
 									<Text

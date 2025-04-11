@@ -15,7 +15,7 @@ import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
 export type RootStackParamList = {
 	[AppPath.Main]: undefined;
 	[AppPath.Group]: { groupId: string };
-	[AppPath.Learn]: { groupId: string };
+	[AppPath.Learn]: { groupId?: string | undefined };
 	[AppPath.ResultDetails]: { resultId: string };
 	[AppPath.SharedGroupDetails]: { sharedGroupId: string };
 	[AppPath.Statistics]: undefined;

@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from "react-native";
 const styles = StyleSheet.create({
 	header: {
 		flexDirection: "row",
-		justifyContent: "flex-start",
+		justifyContent: "space-between",
 		alignItems: "center",
 	},
 	cardsList: {

@@ -11,5 +11,9 @@ export {
 	IStatistics,
 	SaveResultsRequest,
 	ResultsCard,
+	ModeName,
+	IResultMode,
+	Modes,
+	IWord,
 } from "./result.type";
 export { ISharedGroup } from "./sharedGroup";

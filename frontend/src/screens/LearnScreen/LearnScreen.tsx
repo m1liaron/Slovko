@@ -4,6 +4,7 @@ import styles from "./LearnScreen.styles";
 
 import type { ResultsCard } from "@/common/enums/types/result.type";
 import type { ICard } from "@/common/enums/types/types";
+import LearnCheck from "@/components/Learn/LearnCheck/LearnCheck";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type {
 	RootStackParamList,
@@ -32,7 +33,6 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
-import LearnCheck from "@/components/Learn/LearnCheck/LearnCheck";
 
 type Section = "cards" | "quiz" | "word" | "check" | "finish";
 
@@ -51,7 +51,7 @@ type LearnScreenProps = StackScreenProps<
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	const { theme } = useAppTheme();
-	const { groupId } = route.params as { groupId: string };
+	const groupId = (route.params as { groupId?: string | undefined })?.groupId;
 	const groups = useAppSelector(selectGroup);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
@@ -152,7 +152,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			completionTime: new Date(),
 		};
 		dispatch(saveResults(resultData));
-	}
+	};
 
 	const finishLesson = () => {
 		setIsQuizEnabled(true);

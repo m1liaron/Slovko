@@ -4,6 +4,7 @@ import {
 	DataStatus,
 	type IDataStatus,
 } from "../../common/enums/app/DataStatus";
+import { copySharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
 import type { RootState } from "../store";
 import {
 	addGroup,
@@ -12,7 +13,6 @@ import {
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
-import { copySharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
 
 interface InitialState {
 	groups: IGroup[];
@@ -99,7 +99,7 @@ const groupSlice = createSlice({
 			})
 			.addCase(copySharedGroup.fulfilled, (state, action) => {
 				state.groups = [...state.groups, action.payload];
-			})
+			});
 	},
 });
 

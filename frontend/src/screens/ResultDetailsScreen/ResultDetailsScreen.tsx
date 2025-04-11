@@ -1,10 +1,22 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
+import {
+	type IResultMode,
+	type IWord,
+	type ModeName,
+	Modes,
+} from "@/common/enums/types/types";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import type { StackScreenProps } from "@react-navigation/stack";
-import type React from "react";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import {
+	ActivityIndicator,
+	FlatList,
+	Platform,
+	Text,
+	View,
+} from "react-native";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
@@ -27,11 +39,23 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 	const { resultId } = route.params as { resultId: string };
 	const { result, isLoading } = useAppSelector((state) => state.results);
 	const dispatch = useAppDispatch();
-	const [selectedMode, setSelectedMode] = useState<number>(0); // 0 - flashCards, 1 - quiz, 2 - guessWord
+	const [selectedMode, setSelectedMode] = useState<ModeName>("flashCards"); // 0 - flashCards, 1 - quiz, 2 - guessWord
 
 	useEffect(() => {
 		dispatch(getResultDetails(resultId));
 	}, [dispatch, resultId]);
+
+	const modesMap = useMemo((): Partial<Record<ModeName, IResultMode>> => {
+		if (!result?.mode) return {};
+		return result.mode.reduce(
+			(acc, modeItem) => {
+				const modeKey = modeItem.mode as ModeName;
+				acc[modeKey] = modeItem;
+				return acc;
+			},
+			{} as Partial<Record<ModeName, IResultMode>>,
+		);
+	}, [result?.mode]);
 
 	if (!result) {
 		return <ActivityIndicator />;
@@ -42,8 +66,8 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 		new Date(result.startedLearn).getTime();
 	const formattedTime = formatTime(resultTime);
 
-	const calculateCorrectPercentage = () => {
-		const words = result.mode ? result.mode[selectedMode].words : [];
+	const calculateCorrectPercentage = (): number => {
+		const words: IWord[] = modesMap[selectedMode]?.words || [];
 		const totalWords = words.length;
 		const correctWords = words.filter(
 			(word) => word.mistakesAmount === 0,
@@ -53,11 +77,36 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 
 	const correctPercentage = calculateCorrectPercentage();
 
-	const modesOptionsButtons = [
-		{ label: "Картки" },
-		{ label: "Вікторина" },
-		{ label: "Вгадай слово" },
+	const modesOptionsButtons: { key: ModeName; label: string }[] = [
+		{ key: "flashCards", label: "Картки" },
+		{ key: "check", label: "Вибери переклад" },
+		{ key: "quiz", label: "Вікторина" },
+		{ key: "guessWord", label: "Вгадай слово" },
 	];
+
+	const renderModeButtons = () => {
+		return modesOptionsButtons
+			.filter(
+				(modeOption) =>
+					modesMap[modeOption.key] &&
+					Boolean(modesMap[modeOption.key]?.words?.length),
+			)
+			.map((modeOption) => (
+				<PressableButton
+					key={modeOption.key}
+					text={modeOption.label}
+					buttonStyle={{
+						backgroundColor:
+							selectedMode === modeOption.key ? "#004da4" : "#007AFF",
+						padding: 4,
+					}}
+					onPress={() => setSelectedMode(modeOption.key)}
+				/>
+			));
+	};
+
+	const title = new Date(result.title);
+	const isTitleNotDate = Number.isNaN(title.getTime());
 
 	return (
 		<ThemeBackground>
@@ -73,24 +122,23 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 					}}
 				>
 					<BackButton />
-					<Text style={[styles.title, { color: colors.primary }]}>
-						{result.title}
-					</Text>
-
+					{isTitleNotDate && (
+						<ThemeText style={[styles.title]}>{result.title}</ThemeText>
+					)}
 					<View
 						style={[
 							styles.wastedTimeContainer,
 							{ borderColor: colors.primary },
 						]}
 					>
-						<Text style={[styles.title, { color: colors.primary }]}>
-							{formattedTime}
-						</Text>
+						<ThemeText style={[styles.title]}>{formattedTime}</ThemeText>
 					</View>
 				</View>
-				<Text style={[styles.title, { color: colors.primary }]}>
-					{formatDMTDate(result.createdAt)}
-				</Text>
+				{Platform.OS === "web" && (
+					<ThemeText style={[styles.title]}>
+						{formatDMTDate(result.createdAt)}
+					</ThemeText>
+				)}
 			</View>
 
 			<View
@@ -100,39 +148,22 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 					backgroundColor: "#40FF80",
 					borderRadius: 100,
 					padding: 10,
+					alignSelf: "center",
+					marginVertical: 20,
 				}}
 			>
-				<Text style={{ fontSize: 30, color: "#fff" }}>
+				<Text style={{ fontSize: 25, color: "#fff" }}>
 					{correctPercentage}% Вірно
 				</Text>
 			</View>
 
-			<View style={{ marginHorizontal: 100 }}>
-				<View style={styles.buttonsContainer}>
-					<FlatList
-						data={modesOptionsButtons.filter(
-							(_, index) =>
-								result.mode && result.mode[index]?.words?.length > 0,
-						)} // Do not show buttons that mode's words length equal 0
-						keyExtractor={(item) => item.label}
-						renderItem={({ item: { label }, index }) => (
-							<PressableButton
-								text={label}
-								buttonStyle={{
-									backgroundColor:
-										selectedMode === index ? "#004da4" : "#007AFF",
-								}}
-								onPress={() => setSelectedMode(index)}
-							/>
-						)}
-						contentContainerStyle={styles.buttonsContainer}
-					/>
-				</View>
-
+			<View style={{ marginHorizontal: 50 }}>
+				<View style={styles.buttonsContainer}>{renderModeButtons()}</View>
 				{isLoading && <Loading />}
-				{result.mode && (
+				{modesMap[selectedMode] && (
 					<FlatList
-						data={result.mode[selectedMode].words}
+						style={{ height: 400, width: "100%" }}
+						data={modesMap[selectedMode]?.words}
 						keyExtractor={(item) => item.id}
 						renderItem={({ item }) => (
 							<View
@@ -142,14 +173,14 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 								]}
 							>
 								<View style={styles.resultContainer}>
-									<Text style={[styles.title, { color: colors.primary }]}>
+									<ThemeText style={[styles.title]}>
 										{item.word} - {item.translate}
-									</Text>
+									</ThemeText>
 								</View>
 								<View style={styles.mistakesAmountContainer}>
-									<Text style={[styles.title, { color: colors.primary }]}>
+									<ThemeText style={[styles.title]}>
 										{item.mistakesAmount}
-									</Text>
+									</ThemeText>
 								</View>
 							</View>
 						)}
