@@ -118,8 +118,8 @@ const getResults = async (req, res) => {
 		const {
 			month = new Date().getMonth() + 1,
 			year = new Date().getFullYear(),
-			page, 
-			limit
+			page,
+			limit,
 		} = req.query;
 		const { startDate, endDate } = calculateCurMonthAndYearDate(
 			month,
@@ -139,15 +139,15 @@ const getResults = async (req, res) => {
 				.send({ error: true, message: "Results is not find" });
 		}
 
-		console.log(results)
+		console.log(results);
 		const pageNumber = Number.parseInt(page, 10) || 1;
 		const itemsPerPage = Number.parseInt(limit, 10) || 5;
-		
-		const skip = ( pageNumber - 1) * itemsPerPage;
+
+		const skip = (pageNumber - 1) * itemsPerPage;
 		const filteredResults = results.slice(skip, skip + itemsPerPage);
 		const haveMoreResults = skip + itemsPerPage < results.length;
 
-		res.status(200).json({ results: filteredResults, haveMoreResults});
+		res.status(200).json({ results: filteredResults, haveMoreResults });
 	} catch (error) {
 		res
 			.status(400)
@@ -219,8 +219,10 @@ const saveResults = async (req, res) => {
 			),
 		);
 
-		if(!Object.entries(data).length) {
-			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "No data provided as a result"});
+		if (!Object.entries(data).length) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: true, message: "No data provided as a result" });
 		}
 
 		await Promise.all(

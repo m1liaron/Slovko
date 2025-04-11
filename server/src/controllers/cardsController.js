@@ -4,6 +4,7 @@ const calculateNextReviewDate = require("../helpers/calculateNextReviewDate");
 const { Op } = require("sequelize");
 const { Group } = require("../models/models");
 const { StatusCodes } = require("http-status-codes");
+const { getDictionaryData } = require("../helpers/getDictionaryData");
 
 const getRepeatedCards = async (req, res) => {
 	try {
@@ -182,8 +183,16 @@ const addCard = async (req, res) => {
 				.status(StatusCodes.BAD_REQUEST)
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
+
+		const { definition, example } = await getDictionaryData(data.word);
+
 		const image = await Image.create({ url: imageUri });
-		const newCard = await Card.create({ imageId: image.id, ...data });
+		const newCard = await Card.create({
+			imageId: image.id,
+			...data,
+			definition,
+			example,
+		});
 
 		const card = await Card.findOne({
 			where: { id: newCard.id },
