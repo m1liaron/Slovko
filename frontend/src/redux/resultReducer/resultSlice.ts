@@ -12,6 +12,7 @@ import {
 interface InitialState {
 	results: IResult[];
 	haveMoreResults: boolean;
+	firstResult: Date | string;
 	filteredResults: IResult[];
 	statistics: IStatistics | null;
 	result: IResult | null;
@@ -22,9 +23,10 @@ interface InitialState {
 
 const initialState: InitialState = {
 	results: [],
+	haveMoreResults: false,
+	firstResult: "",
 	filteredResults: [],
 	statistics: null,
-	haveMoreResults: false,
 	result: null,
 	isLoading: false,
 	error: null,
@@ -84,10 +86,11 @@ const resultSlice = createSlice({
 			})
 			.addCase(getResults.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				const { results, haveMoreResults, replace } = action.payload;
+				const { results, haveMoreResults, replace, firstResult } = action.payload;
 				state.results = replace ? results : [...state.results, ...results];
 				state.filteredResults = replace ? results : [...state.results, ...results];
 				state.haveMoreResults = haveMoreResults;
+				state.firstResult = firstResult;
 
 				state.isLoading = false;
 			})

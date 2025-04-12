@@ -26,7 +26,7 @@ const ResultsScreen = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { results, haveMoreResults, isLoading } = useAppSelector((state) => state.results);
+	const { results, haveMoreResults, firstResult, isLoading } = useAppSelector((state) => state.results);
 	const navigation = useNavigation<StackNavigation>();
 	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);
@@ -82,17 +82,29 @@ const ResultsScreen = () => {
 		</View>
 	) : null
 
-	const monthes = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Липень", "Червень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
+	const monthes = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
+	const currentDate = new Date(showResultsYear, showResultsMonth);
+	const firstResultDate = firstResult ? new Date(firstResult) : null;
+	const moreFirstResult = firstResultDate ? currentDate > firstResultDate : false;
+
+	const currentMonth = new Date().getMonth();
+	const currentYear = new Date().getFullYear();
+	const lessCurrentMonth = currentDate < new Date(currentYear, currentMonth);
 
 	const decShowMonth = () => {
 		if(showResultsMonth > 0) {
 			setShowResultsMonth(showResultsMonth - 1);
+		} else if(showResultsMonth === 0 && moreFirstResult) {
+			setShowResultsMonth(monthes.length - 1);
+			setShowResultsYear(showResultsYear - 1);
 		}
 	}
-	const lessCurrentMonth = showResultsMonth < new Date().getMonth()
 
 	const incShowMonth = () => {
-		if(lessCurrentMonth) {
+		if(showResultsMonth === monthes.length - 1) {
+			setShowResultsYear(showResultsYear + 1);
+			setShowResultsMonth(0);
+		} else {
 			setShowResultsMonth(showResultsMonth + 1);
 		}
 	}
@@ -103,12 +115,14 @@ const ResultsScreen = () => {
 				<View style={styles.header}>
 					<View style={{ flexDirection: "row", alignItems: "center" }}>
 						<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
-							{new Date().getFullYear()} - 
+							{showResultsYear} - 
 						</ThemeText>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<Pressable onPress={decShowMonth}>
-								<AntDesign name="caretleft" color={colors.primary} size={30}/>
-							</Pressable>
+							{moreFirstResult && (
+								<Pressable onPress={decShowMonth}>
+									<AntDesign name="caretleft" color={colors.primary} size={30}/>
+								</Pressable>
+							)}
 							<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
 								{monthes[showResultsMonth]}
 							</ThemeText>

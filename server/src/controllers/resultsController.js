@@ -147,7 +147,14 @@ const getResults = async (req, res) => {
 
 		const haveMoreResults = offset + itemsPerPage < count;
 
-		res.status(200).json({ results: rows, haveMoreResults });
+		const earliestResult = await Result.findOne({
+			where: { userId: req.user.id },
+			order: [["createdAt", "ASC"]],
+			attributes: ["createdAt"]
+		});
+		const findResultDate = earliestResult ? earliestResult.createdAt : null;
+
+		res.status(200).json({ results: rows, haveMoreResults, firstResult: findResultDate });
 	} catch (error) {
 		res
 			.status(400)
