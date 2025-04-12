@@ -84,9 +84,11 @@ const resultSlice = createSlice({
 			})
 			.addCase(getResults.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.results = [...state.results, ...action.payload.results];
-				state.filteredResults = [...state.results, ...action.payload.results];
-				state.haveMoreResults = action.payload.haveMoreResults;
+				const { results, haveMoreResults, replace } = action.payload;
+				state.results = replace ? results : [...state.results, ...results];
+				state.filteredResults = replace ? results : [...state.results, ...results];
+				state.haveMoreResults = haveMoreResults;
+
 				state.isLoading = false;
 			})
 			.addCase(getResults.rejected, (state) => {

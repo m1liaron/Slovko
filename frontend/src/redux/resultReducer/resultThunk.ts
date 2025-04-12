@@ -13,12 +13,12 @@ export const saveResults = createAsyncThunk(
 
 export const getResults = createAsyncThunk(
 	"results/get",
-	async (data: { month: number; year: number, page: number }) => {
+	async (data: { month: number; year: number, page: number, replace: boolean }) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.get(
 			`/results?page=${data.page}&month=${data.month}&year=${data.year}`,
 		);
-		return response.data;
+		return {...response.data, replace: data.replace};
 	},
 );
 

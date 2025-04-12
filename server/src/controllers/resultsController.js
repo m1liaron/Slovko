@@ -126,27 +126,28 @@ const getResults = async (req, res) => {
 			year,
 			res,
 		);
-		const results = await Result.findAll({
+		const pageNumber = Number.parseInt(page, 10) || 1;
+		const itemsPerPage = Number.parseInt(limit, 10) || 10;
+		const offset = (pageNumber - 1) * itemsPerPage;
+
+		const { rows, count } = await Result.findAndCountAll({
 			where: {
 				userId: req.user.id,
 				createdAt: { [Op.between]: [startDate, endDate] },
 			},
 			order: [["createdAt", "DESC"]],
+			limit: itemsPerPage,
+			offset
 		});
-		if (!results) {
+		if (!rows) {
 			return res
 				.status(404)
 				.send({ error: true, message: "Results is not find" });
 		}
 
-		const pageNumber = Number.parseInt(page, 10) || 1;
-		const itemsPerPage = Number.parseInt(limit, 10) || 5;
+		const haveMoreResults = offset + itemsPerPage < count;
 
-		const skip = (pageNumber - 1) * itemsPerPage;
-		const filteredResults = results.slice(skip, skip + itemsPerPage);
-		const haveMoreResults = skip + itemsPerPage < results.length;
-
-		res.status(200).json({ results: filteredResults, haveMoreResults });
+		res.status(200).json({ results: rows, haveMoreResults });
 	} catch (error) {
 		res
 			.status(400)

@@ -60,13 +60,13 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: 1 }));
+		dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: 1, replace: true }));
 	}, [dispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
 		if(haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: nextPage }));
+			dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: nextPage, replace: false }));
 			setPage(nextPage);
 		}
 	}
@@ -89,9 +89,10 @@ const ResultsScreen = () => {
 			setShowResultsMonth(showResultsMonth - 1);
 		}
 	}
+	const lessCurrentMonth = showResultsMonth < new Date().getMonth() + 1
 
 	const incShowMonth = () => {
-		if(showResultsMonth < monthes.length) {
+		if(lessCurrentMonth) {
 			setShowResultsMonth(showResultsMonth + 1);
 		}
 	}
@@ -111,9 +112,12 @@ const ResultsScreen = () => {
 							<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
 								{monthes[showResultsMonth]}
 							</ThemeText>
-							<Pressable onPress={incShowMonth}>
-								<AntDesign name="caretright" color={colors.primary} size={30}/>
-							</Pressable>
+							{lessCurrentMonth ? (
+								<Pressable onPress={incShowMonth}>
+									<AntDesign name="caretright" color={colors.primary} size={30}/>
+								</Pressable>
+							) : null}
+							
 						</View>
 					</View>
 					<View
