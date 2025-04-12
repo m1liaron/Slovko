@@ -60,13 +60,13 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: 1, replace: true }));
+		dispatch(getResults({ year: showResultsYear, month: showResultsMonth + 1, page: 1, replace: true }));
 	}, [dispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
 		if(haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(getResults({ year: showResultsYear, month: showResultsMonth, page: nextPage, replace: false }));
+			dispatch(getResults({ year: showResultsYear, month: showResultsMonth + 1, page: nextPage, replace: false }));
 			setPage(nextPage);
 		}
 	}
