@@ -33,7 +33,7 @@ const ResultsScreen = () => {
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 	const [groupedResults, setGroupedResults] = useState<GroupedResults>({});
 	const [showResultsMonth, setShowResultsMonth] = useState<number>(
-		new Date().getMonth() + 1,
+		new Date().getMonth(),
 	);
 	const [showResultsYear, setShowResultsYear] = useState<number>(
 		new Date().getFullYear(),
@@ -89,7 +89,7 @@ const ResultsScreen = () => {
 			setShowResultsMonth(showResultsMonth - 1);
 		}
 	}
-	const lessCurrentMonth = showResultsMonth < new Date().getMonth() + 1
+	const lessCurrentMonth = showResultsMonth < new Date().getMonth()
 
 	const incShowMonth = () => {
 		if(lessCurrentMonth) {
