@@ -5,7 +5,14 @@ import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute
 import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Link, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	Pressable,
+	Text,
+	TextInput,
+	View,
+} from "react-native";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import { AppPath } from "../../common/enums/app/app";
 import { useAppTheme } from "../../contexts/ThemeProvider";
@@ -26,7 +33,9 @@ const ResultsScreen = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const { results, haveMoreResults, firstResult, isLoading } = useAppSelector((state) => state.results);
+	const { results, haveMoreResults, firstResult, isLoading } = useAppSelector(
+		(state) => state.results,
+	);
 	const navigation = useNavigation<StackNavigation>();
 	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);
@@ -60,54 +69,84 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		dispatch(getResults({ year: showResultsYear, month: showResultsMonth + 1, page: 1, replace: true }));
+		dispatch(
+			getResults({
+				year: showResultsYear,
+				month: showResultsMonth + 1,
+				page: 1,
+				replace: true,
+			}),
+		);
 	}, [dispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
-		if(haveMoreResults && !isLoading) {
+		if (haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(getResults({ year: showResultsYear, month: showResultsMonth + 1, page: nextPage, replace: false }));
+			dispatch(
+				getResults({
+					year: showResultsYear,
+					month: showResultsMonth + 1,
+					page: nextPage,
+					replace: false,
+				}),
+			);
 			setPage(nextPage);
 		}
-	}
+	};
 
 	const handleSort = () => {
 		dispatch(sortResults({ key: "title", direction: sortOrder }));
 		setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
 	};
 
-	const renderFooter = () => isLoading ? (
-		<View style={{ paddingVertical: 20 }}>
-			<ActivityIndicator size="large" color={colors.primary} />
-		</View>
-	) : null
+	const renderFooter = () =>
+		isLoading ? (
+			<View style={{ paddingVertical: 20 }}>
+				<ActivityIndicator size="large" color={colors.primary} />
+			</View>
+		) : null;
 
-	const monthes = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
+	const monthes = [
+		"Січень",
+		"Лютий",
+		"Березень",
+		"Квітень",
+		"Травень",
+		"Червень",
+		"Липень",
+		"Серпень",
+		"Вересень",
+		"Жовтень",
+		"Листопад",
+		"Грудень",
+	];
 	const currentDate = new Date(showResultsYear, showResultsMonth);
 	const firstResultDate = firstResult ? new Date(firstResult) : null;
-	const moreFirstResult = firstResultDate ? currentDate > firstResultDate : false;
+	const moreFirstResult = firstResultDate
+		? currentDate > firstResultDate
+		: false;
 
 	const currentMonth = new Date().getMonth();
 	const currentYear = new Date().getFullYear();
 	const lessCurrentMonth = currentDate < new Date(currentYear, currentMonth);
 
 	const decShowMonth = () => {
-		if(showResultsMonth > 0) {
+		if (showResultsMonth > 0) {
 			setShowResultsMonth(showResultsMonth - 1);
-		} else if(showResultsMonth === 0 && moreFirstResult) {
+		} else if (showResultsMonth === 0 && moreFirstResult) {
 			setShowResultsMonth(monthes.length - 1);
 			setShowResultsYear(showResultsYear - 1);
 		}
-	}
+	};
 
 	const incShowMonth = () => {
-		if(showResultsMonth === monthes.length - 1) {
+		if (showResultsMonth === monthes.length - 1) {
 			setShowResultsYear(showResultsYear + 1);
 			setShowResultsMonth(0);
 		} else {
 			setShowResultsMonth(showResultsMonth + 1);
 		}
-	}
+	};
 
 	return (
 		<ThemeBackground>
@@ -115,12 +154,16 @@ const ResultsScreen = () => {
 				<View style={styles.header}>
 					<View style={{ flexDirection: "row", alignItems: "center" }}>
 						<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
-							{showResultsYear} - 
+							{showResultsYear} -
 						</ThemeText>
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
 							{moreFirstResult && (
 								<Pressable onPress={decShowMonth}>
-									<AntDesign name="caretleft" color={colors.primary} size={30}/>
+									<AntDesign
+										name="caretleft"
+										color={colors.primary}
+										size={30}
+									/>
 								</Pressable>
 							)}
 							<ThemeText style={{ fontSize: 40, fontWeight: "bold" }}>
@@ -128,10 +171,13 @@ const ResultsScreen = () => {
 							</ThemeText>
 							{lessCurrentMonth ? (
 								<Pressable onPress={incShowMonth}>
-									<AntDesign name="caretright" color={colors.primary} size={30}/>
+									<AntDesign
+										name="caretright"
+										color={colors.primary}
+										size={30}
+									/>
 								</Pressable>
 							) : null}
-							
 						</View>
 					</View>
 					<View

@@ -86,9 +86,12 @@ const resultSlice = createSlice({
 			})
 			.addCase(getResults.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				const { results, haveMoreResults, replace, firstResult } = action.payload;
+				const { results, haveMoreResults, replace, firstResult } =
+					action.payload;
 				state.results = replace ? results : [...state.results, ...results];
-				state.filteredResults = replace ? results : [...state.results, ...results];
+				state.filteredResults = replace
+					? results
+					: [...state.results, ...results];
 				state.haveMoreResults = haveMoreResults;
 				state.firstResult = firstResult;
 

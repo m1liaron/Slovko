@@ -30,7 +30,7 @@ const initialState: InitialState = {
 	sharedGroup: null,
 	status: DataStatus.IDLE,
 	error: null,
-	isLoading: false
+	isLoading: false,
 };
 
 const sharedGroupSlice = createSlice({
@@ -59,8 +59,14 @@ const sharedGroupSlice = createSlice({
 			})
 			.addCase(getAllSharedGroups.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.sharedGroups = [...state.sharedGroups, ...action.payload.sharedGroups];
-				state.filteredGroups = [...state.sharedGroups, ...action.payload.sharedGroups];
+				state.sharedGroups = [
+					...state.sharedGroups,
+					...action.payload.sharedGroups,
+				];
+				state.filteredGroups = [
+					...state.sharedGroups,
+					...action.payload.sharedGroups,
+				];
 				state.haveMoreSharedGroups = action.payload.haveMoreSharedGroups;
 				state.isLoading = false;
 			})
@@ -73,8 +79,8 @@ const sharedGroupSlice = createSlice({
 			})
 			.addCase(saveSharedGroup.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.sharedGroups = [...state.sharedGroups, action.payload]
-				state.filteredGroups = [...state.sharedGroups, action.payload]
+				state.sharedGroups = [...state.sharedGroups, action.payload];
+				state.filteredGroups = [...state.sharedGroups, action.payload];
 			})
 			.addCase(saveSharedGroup.rejected, (state) => {
 				state.status = DataStatus.ERROR;

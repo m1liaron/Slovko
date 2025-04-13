@@ -1,3 +1,4 @@
+import { getUnsplashPhotos } from "@/api/unsplash";
 import noCardsImage from "@/assets/images/no-cards.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -31,7 +32,6 @@ import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
-import { getUnsplashPhotos } from "@/api/unsplash";
 
 const MemoCardItem = memo(CardItem);
 
@@ -255,10 +255,10 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	const fetchUnsplashPhotos = async () => {
 		const photos = await getUnsplashPhotos(value);
-		if(photos?.length) {
+		if (photos?.length) {
 			setUnsplashImages(photos);
 		}
-	}
+	};
 
 	return (
 		<View style={styles.container}>
@@ -422,6 +422,7 @@ const CardList = ({ groupId }: CardListProps) => {
 								{unsplashImages.length > 0 &&
 									unsplashImages.map((image, index) => (
 										<Pressable
+											key={image.slice(0, 10)}
 											style={{
 												borderWidth: 4,
 												borderColor:
@@ -430,7 +431,7 @@ const CardList = ({ groupId }: CardListProps) => {
 											onPress={() => setChosenPhoto(image, index)}
 										>
 											<Image
-												key={index}
+												key={image.slice(0, 10)}
 												source={{ uri: image }}
 												style={styles.image}
 											/>

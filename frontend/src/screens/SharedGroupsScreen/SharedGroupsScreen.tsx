@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator,
 	FlatList,
@@ -42,7 +42,9 @@ const SharedGroupsScreen = () => {
 	} = useAppTheme();
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
-	const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(state => state.sharedGroups);
+	const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
+		(state) => state.sharedGroups,
+	);
 	const groups = useAppSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
@@ -56,16 +58,15 @@ const SharedGroupsScreen = () => {
 
 	useEffect(() => {
 		dispatch(getAllSharedGroups({ page }));
-	}, [dispatch]);
-
+	}, [dispatch, page]);
 
 	const handleLoadMore = () => {
-		if(haveMoreSharedGroups && !isLoading) {
+		if (haveMoreSharedGroups && !isLoading) {
 			const nextPage = page + 1;
 			dispatch(getAllSharedGroups({ page: nextPage }));
 			setPage(nextPage);
 		}
-	}
+	};
 
 	const formatTime = (createdAt: Date) => {
 		const now = new Date().getTime();
@@ -169,11 +170,12 @@ const SharedGroupsScreen = () => {
 		</View>
 	);
 
-	const renderFooter = () => isLoading ? (
-		<View style={{ paddingVertical: 20 }}>
-			<ActivityIndicator size="large" color={colors.primary} />
-		</View>
-	) : null
+	const renderFooter = () =>
+		isLoading ? (
+			<View style={{ paddingVertical: 20 }}>
+				<ActivityIndicator size="large" color={colors.primary} />
+			</View>
+		) : null;
 
 	return (
 		<ThemeBackground>
