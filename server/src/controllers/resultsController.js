@@ -1,5 +1,9 @@
+const { Op } = require("sequelize");
+const {
+	calculateCurMonthAndYearDate,
+} = require("../helpers/calculateCurMonthAndYearDate");
 const { Result, ResultMode, WordResult, User } = require("../models/models");
-const { Op } = require('sequelize');
+const { StatusCodes } = require("http-status-codes");
 
 const getResultsDetails = async (req, res) => {
 	try {
@@ -71,28 +75,28 @@ const getResultsStatistics = async (req, res) => {
 		function getAllWordsMode(results) {
 			const modeMonthSum = {};
 
-			for(const result of results) {
+			for (const result of results) {
 				const month = months[new Date(result.createdAt).getMonth()];
 				const index = resultsMonths.indexOf(month); // Find the month index in resultsMonthes
 
-				if (index !== -1) {
-					for(const modeItem of result.mode) {
-							if (!modeMonthSum[modeItem.mode]) {
-								const array = new Array(resultsMonths.length).fill(0);
-								modeMonthSum[modeItem.mode] = {
-									mistakes: [...array],
-									wordLength: [...array],
-								};
-							}
+				if (index !== -1 && result.mode) {
+					for (const modeItem of result.mode) {
+						if (!modeMonthSum[modeItem.mode]) {
+							const array = new Array(resultsMonths.length).fill(0);
+							modeMonthSum[modeItem.mode] = {
+								mistakes: [...array],
+								wordLength: [...array],
+							};
+						}
 
-							const mistakesForCard = modeItem.words.reduce(
-								(acc, curr) => acc + curr.mistakesAmount,
-								0,
-							);
-							const wordCountForCard = modeItem.words.length;
+						const mistakesForCard = modeItem.words.reduce(
+							(acc, curr) => acc + curr.mistakesAmount,
+							0,
+						);
+						const wordCountForCard = modeItem.words.length;
 
-							modeMonthSum[modeItem.mode].mistakes[index] += mistakesForCard;
-							modeMonthSum[modeItem.mode].wordLength[index] += wordCountForCard;
+						modeMonthSum[modeItem.mode].mistakes[index] += mistakesForCard;
+						modeMonthSum[modeItem.mode].wordLength[index] += wordCountForCard;
 					}
 				}
 			}
@@ -113,37 +117,46 @@ const getResults = async (req, res) => {
 	const { year } = req.query;
 
 	try {
-		const currentYear = new Date().getFullYear();
-		const requestedYear = parseInt(year, 10); // Ensure it's an integer
+		const {
+			month = new Date().getMonth() + 1,
+			year = new Date().getFullYear(),
+			page,
+			limit,
+		} = req.query;
+		const { startDate, endDate } = calculateCurMonthAndYearDate(
+			month,
+			year,
+			res,
+		);
+		const pageNumber = Number.parseInt(page, 10) || 1;
+		const itemsPerPage = Number.parseInt(limit, 10) || 10;
+		const offset = (pageNumber - 1) * itemsPerPage;
 
-		// Validate year input
-		if (!requestedYear || isNaN(requestedYear) || requestedYear > currentYear) {
-			return res.status(400).json({ error: true, message: "Invalid year provided" });
-		}
-
-		// Get start and end of the requested year
-		const startOfYear = new Date(requestedYear, 0, 1);
-		const endOfYear = new Date(requestedYear + 1, 0, 1);
-
-		// Fetch results with correct filtering
-		const results = await Result.findAll({
+		const { rows, count } = await Result.findAndCountAll({
 			where: {
 				userId: req.user.id,
-				createdAt: {
-					[Op.gte]: startOfYear, // Greater than or equal to Jan 1st of requested year
-					[Op.lt]: endOfYear, // Less than Jan 1st of next year
-				},
+				createdAt: { [Op.between]: [startDate, endDate] },
 			},
 			order: [["createdAt", "DESC"]],
+			limit: itemsPerPage,
+			offset
 		});
-
-		// Handle no results found
-		if (!results.length) {
-			return res.status(404).json({ error: true, message: "No results found for the specified year" });
+		if (!rows) {
+			return res
+				.status(404)
+				.send({ error: true, message: "Results is not find" });
 		}
 
-		// Return results
-		res.status(200).json(results);
+		const haveMoreResults = offset + itemsPerPage < count;
+
+		const earliestResult = await Result.findOne({
+			where: { userId: req.user.id },
+			order: [["createdAt", "ASC"]],
+			attributes: ["createdAt"]
+		});
+		const findResultDate = earliestResult ? earliestResult.createdAt : null;
+
+		res.status(200).json({ results: rows, haveMoreResults, firstResult: findResultDate });
 	} catch (error) {
 		res.status(400).json({ error: true, message: error.message || "Error fetching results" });
 	}
@@ -212,6 +225,12 @@ const saveResults = async (req, res) => {
 				}),
 			),
 		);
+
+		if (!Object.entries(data).length) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: true, message: "No data provided as a result" });
+		}
 
 		await Promise.all(
 			Object.entries(data).map(([mode, words]) => {

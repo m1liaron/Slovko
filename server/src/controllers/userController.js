@@ -224,8 +224,15 @@ const getUserStreakDates = async (req, res) => {
 
 		const intMonth = Number.parseInt(month, 10);
 		const intYear = Number.parseInt(year, 10);
-		if (Number.isNaN(intMonth) || Number.isNaN(intYear) || intMonth < 1 || intMonth > 12) {
-			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "Invalid month or year" });
+		if (
+			Number.isNaN(intMonth) ||
+			Number.isNaN(intYear) ||
+			intMonth < 1 ||
+			intMonth > 12
+		) {
+			return res
+				.status(StatusCodes.BAD_REQUEST)
+				.json({ error: true, message: "Invalid month or year" });
 		}
 
 		const startDate = new Date(intYear, intMonth - 1, 1); // Month is 0-indexed in JavaScript Date
@@ -261,9 +268,9 @@ const buyFreeze = async (req, res) => {
 		}
 		if (user.points < froze) {
 			return res.status(StatusCodes.BAD_REQUEST).json({
-					error: true,
-					message: `You don't have points to buy freeze, you need more: ${froze - user.points} points`,
-				});
+				error: true,
+				message: `You don't have points to buy freeze, you need more: ${froze - user.points} points`,
+			});
 		}
 		if (user.frozen) {
 			return res

@@ -7,6 +7,8 @@ node_modules/
 .expo/
 dist/
 web-build/
+/android
+/ios
 android/
 ios/
 
@@ -41,5 +43,4 @@ yarn-error.*
 
 #python
 .venv
-.idea
 .vscode
