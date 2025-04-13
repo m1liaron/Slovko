@@ -62,19 +62,18 @@ const createSharedGroup = async (req, res) => {
 		res.status(200).json(sharedGroupWithUser);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
-const getAllSharedGroup = async (req, res) => {
-	const { page = 1, limit = 7 } = req.query;
-
-	const pageNumber = Number.parseInt(page, 10);
-	const itemsPerPage = Number.parseInt(limit, 10);
-
+const getAllSharedGroups = async (req, res) => {
 	try {
+		const {
+			page,
+			limit,
+		} = req.query;
 		const allSharedGroups = await SharedGroup.findAll({
 			include: {
 				model: User,
@@ -83,11 +82,13 @@ const getAllSharedGroup = async (req, res) => {
 			},
 		});
 
-		const offset = (pageNumber - 1) * itemsPerPage;
-		const paginationGroups = allSharedGroups.slice(offset, offset + itemsPerPage);
-		const haveMoreSharedGroups = offset + itemsPerPage < allSharedGroups.length;
+		const pageNumber = Number.parseInt(page, 10) || 1;
+		const itemsPerPage = Number.parseInt(limit, 10) || 5;
+		const skip = (pageNumber - 1 ) * itemsPerPage;
+		const filteredSharedGroups = allSharedGroups.slice(skip, skip + itemsPerPage);
+		const haveMoreSharedGroups = skip + itemsPerPage < allSharedGroups.length;
 
-		res.status(200).json({ sharedGroups: paginationGroups, haveMoreSharedGroups });
+		res.status(200).json({ sharedGroups: filteredSharedGroups, haveMoreSharedGroups });
 	} catch (error) {
 		res.status(500).json({
 			error: true,
@@ -115,9 +116,9 @@ const getSharedGroup = async (req, res) => {
 		res.status(200).json(sharedGroup);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
@@ -131,14 +132,20 @@ const removeSharedGroup = async (req, res) => {
 			return res.status(404).json({ error: true, message: "Group not found" });
 		}
 		const { id: sharedGroupId } = sharedGroup;
+		if (sharedGroup.userId !== req.user.id) {
+			res
+				.status(400)
+				.json({ error: true, message: "You are not owner of this group!" });
+		}
+
 		await sharedGroup.destroy();
 
 		res.status(200).json(sharedGroupId);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
@@ -153,9 +160,6 @@ const copySharedGroup = async (req, res) => {
 			return res
 				.status(404)
 				.json({ error: true, message: "Shared group is not found" });
-		}
-		if (sharedGroup.userId !== req.user.id) {
-			res.status(400).json({ error: true, message: "You are not owner of this group!" });
 		}
 		const newGroup = await Group.create({
 			title: sharedGroup.title,
@@ -176,15 +180,15 @@ const copySharedGroup = async (req, res) => {
 		res.status(200).json(newGroup);
 	} catch (error) {
 		res.status(500).json({
-				error: true,
-				message: error.message || "Server Error. Try again later.",
-			});
+			error: true,
+			message: error.message || "Server Error. Try again later.",
+		});
 	}
 };
 
 module.exports = {
 	createSharedGroup,
-	getAllSharedGroup,
+	getAllSharedGroups,
 	getSharedGroup,
 	copySharedGroup,
 	removeSharedGroup,

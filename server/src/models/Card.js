@@ -54,7 +54,7 @@ const Card = sequelize.define(
 			allowNull: true,
 		},
 		status: {
-			type: DataTypes.ENUM("Learned", "To Learn", "Know"),
+			type: DataTypes.ENUM("To Learn", "Repeated", "Know", "Learned"),
 			allowNull: false,
 			defaultValue: "To Learn",
 		},

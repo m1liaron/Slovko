@@ -4,9 +4,7 @@ const calculateNextReviewDate = require("../helpers/calculateNextReviewDate");
 const { Op } = require("sequelize");
 const { Group } = require("../models/models");
 const { StatusCodes } = require("http-status-codes");
-const getUnsplashApi = require("../api/unsplash");
-const dictionaryAPi = require("../api/dictionaryAPI");
-const axios = require('axios');
+const { getDictionaryData } = require("../helpers/getDictionaryData");
 
 const getRepeatedCards = async (req, res) => {
 	try {
@@ -41,12 +39,10 @@ const getRepeatedCards = async (req, res) => {
 
 		res.status(200).json(filteredData);
 	} catch (error) {
-		res
-			.status(400)
-			.send({
-				error: true,
-				message: error.message || "Error get repeated cards",
-			});
+		res.status(400).send({
+			error: true,
+			message: error.message || "Error get repeated cards",
+		});
 	}
 };
 
@@ -69,12 +65,10 @@ const getCardsFromIds = async (req, res) => {
 
 		res.status(200).json(cards);
 	} catch (error) {
-		res
-			.status(400)
-			.send({
-				error: true,
-				message: error.message || "Error get cards from ids",
-			});
+		res.status(400).send({
+			error: true,
+			message: error.message || "Error get cards from ids",
+		});
 	}
 };
 
@@ -84,6 +78,9 @@ const getAllCards = async (req, res) => {
 		const cards = await Card.findAll({
 			where: {
 				groupId,
+				status: {
+					[Op.in]: ["To Learn", "Repeated"],
+				},
 			},
 			include: [{ model: Image, as: "image" }],
 		});
@@ -124,19 +121,14 @@ const getAllStatusCards = async (req, res) => {
 const updateCardsAfterReview = async (req, res) => {
 	try {
 		const cardsIds = req.body;
-		let cardsToUpdate;
-		if (Array.isArray(cardsIds) && cardsIds.length > 0) {
-			// Fetch cards by specific IDs
-			cardsToUpdate = await Card.findAll({
-				where: { id: { [Op.in]: cardsIds } },
+		if (!Array.isArray(cardsIds) && cardsIds.length <= 0) {
+			return res.status(400).send({
+				error: "Invalid request. Provide an array of card IDs.",
 			});
-		} else {
-			return res
-				.status(400)
-				.send({
-					error: "Invalid request. Provide an array of card IDs.",
-				});
 		}
+		const cardsToUpdate = await Card.findAll({
+			where: { id: { [Op.in]: cardsIds } },
+		});
 
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
@@ -159,6 +151,7 @@ const updateCardsAfterReview = async (req, res) => {
 				card.status = "Learned";
 			}
 
+			card.status = "Repeated";
 			card.learnedAt = new Date();
 			card.reviewCount = newReviewCount;
 			card.nextReviewAt = nextReviewDate;
@@ -180,7 +173,7 @@ const addCard = async (req, res) => {
 	try {
 		const findCard = await Card.findOne({
 			where: {
-				groupId: req.body.groupId,
+				groupId: data.groupId,
 				word: {
 					[Op.iLike]: data.word,
 				},
@@ -192,33 +185,15 @@ const addCard = async (req, res) => {
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
 
-		// dictionary api use
-		const dictionaryApiResponse = await axios.get(`${dictionaryAPi}${data.word}`);
-		let definition = "";
-		let example = "";
-		if(dictionaryApiResponse) {
-			definition = dictionaryApiResponse?.data[0]?.meanings[2]?.definitions[0]?.definition
-			example = dictionaryApiResponse?.data[0]?.meanings[2]?.definitions[0]?.example;
-		}
+		const { definition, example } = await getDictionaryData(data.word);
 
-		let imageUrl = imageUri;
-		if(!imageUri)  {
-			const unsplashResponse = await unsplash.search.getPhotos({
-				query: data.word,
-				perPage: 1
-			});
-
-			if(unsplashResponse.response && unsplashResponse.response.results.length > 0) {
-					imageUrl = unsplashResponse.response.results[0].urls.regular;
-			}
-		}
-
-		let image = ""
-		if(imageUrl) {
-			image = await Image.create({ url: imageUrl })
-		}
-
-		const newCard = await Card.create({ imageId: image?.id || null, ...data, definition, example });
+		const image = await Image.create({ url: imageUri });
+		const newCard = await Card.create({
+			imageId: image.id,
+			...data,
+			definition,
+			example,
+		});
 
 		const card = await Card.findOne({
 			where: { id: newCard.id },
