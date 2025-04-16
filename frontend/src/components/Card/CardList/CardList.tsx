@@ -137,7 +137,8 @@ const CardList = ({ groupId }: CardListProps) => {
 				multiple: false
 			});
 			if(!result.canceled) {
-				const fileContent = await FileSystem.readAsStringAsync(result.uri);
+				const uri = result.assets[0].uri;
+				const fileContent = await FileSystem.readAsStringAsync(uri);
 				
 				const lines = fileContent.split("\n");
 				const jsonObject: Record<string, string> = {};
