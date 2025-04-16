@@ -121,33 +121,35 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 					</Pressable>
 				</View>
 			</View>
-			<Text style={[styles.translate, { color: colors.primary }]}>
-				Переклад:{" "}
-				<Text style={{ fontWeight: "bold" }}>{item.translateWord}</Text>
-			</Text>
+
+			{item.translateWord && (
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<ThemeText>Переклад: </ThemeText>
+					<ThemeText style={{ fontWeight: "bold" }}>{item.translateWord}</ThemeText>
+				</View>
+			)}
 
 			{item.nextReviewAt && (
-				<Text style={styles.reviewDate}>
-					Наступний перегляд:
-					<Text style={{ fontWeight: "bold" }}>
-						{formatReviewTime(item.nextReviewAt)}
-					</Text>
-				</Text>
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<ThemeText>Наступний перегляд: </ThemeText>
+					<ThemeText style={{ fontWeight: "bold" }}>{formatReviewTime(item.nextReviewAt)}</ThemeText>
+				</View>
 			)}
 
-			{item.definition && (
-				<ThemeText style={{ flexDirection: "row", alignItems: "baseline", gap: 1 }}>
-					Визначення: {""}
+			{item.definition ? (
+				<View style={{ flexDirection: "row", alignItems: "center" }}>
+					<ThemeText>Визначення: </ThemeText>
 					<ThemeText style={{ fontWeight: "bold" }}>{item.definition}</ThemeText>
-				</ThemeText>
-			)}
+				</View>
+			) : null}
 
-			{item.example && (
+
+			{item.example ? (
 				<View style={{ flexDirection: "row", alignItems: "center" }}>
 					<ThemeText>Приклад: </ThemeText>
 					<ThemeText style={{ fontWeight: "bold" }}>{item.example}</ThemeText>
 				</View>
-			)}
+			) : null}
 
 			<View style={{ marginTop: 10 }}>
 				{item.image?.url ? (

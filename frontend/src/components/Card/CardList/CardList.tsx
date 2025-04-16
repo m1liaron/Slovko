@@ -32,6 +32,8 @@ import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
+import * as FileSystem from "expo-file-system";
+import * as DocumentPicker from "expo-document-picker";
 
 const MemoCardItem = memo(CardItem);
 
@@ -91,7 +93,8 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const files = (event.target as HTMLInputElement).files;
+		if(Platform.OS === "web") {
+			const files = (event.target as HTMLInputElement).files;
 		if (files) {
 			const file = files[0];
 
@@ -121,7 +124,40 @@ const CardList = ({ groupId }: CardListProps) => {
 
 			reader.readAsText(file);
 		}
+		} else {
+			
+		}
 	};
+
+	const handleImportMobile = async () => {
+		try {
+			const result = await DocumentPicker.getDocumentAsync({
+				type: "text/plain",
+				copyToCacheDirectory: true,
+				multiple: false
+			});
+			if(!result.canceled) {
+				const fileContent = await FileSystem.readAsStringAsync(result.uri);
+				
+				const lines = fileContent.split("\n");
+				const jsonObject: Record<string, string> = {};
+
+				lines.forEach((line: string, index) => {
+					const [key, value] = line.split(":");
+					if(key && value) {
+						jsonObject[key.trim()] = value.trim();
+					} else {
+						console.log(`Line ${index + 1} is not in the correct format: "${line}"`)
+					}
+				});
+
+				setJsonOutput(jsonObject);
+				setValueWords(jsonObject);
+			}
+		} catch (error) {
+			console.error("Failed to read file: ", error);
+		}
+	}
 
 	useEffect(() => {
 		if (group?.id !== groupId) {
@@ -376,7 +412,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 					{addCardMode ? (
 						<View style={styles.bulkAddContainer}>
-							{Platform.OS === "web" && (
+							{Platform.OS === "web" ? (
 								<View style={styles.fileInputContainer}>
 									<Fontisto name="import" size={30} color={colors.background} />
 									<input
@@ -386,8 +422,15 @@ const CardList = ({ groupId }: CardListProps) => {
 										style={styles.fileInput}
 									/>
 								</View>
+							) : (
+								<View>
+									<PressableButton 
+										text="Імпортувати .txt"
+										onPress={handleImportMobile}
+									/>
+								</View>
 							)}
-							{jsonOutput && (
+							{jsonOutput.length && (
 								<View style={styles.jsonTableContainer}>
 									<View style={styles.jsonTable}>
 										<Text style={styles.jsonTableTitle}>Дані:</Text>
