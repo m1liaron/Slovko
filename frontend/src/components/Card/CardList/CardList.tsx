@@ -34,6 +34,7 @@ import styles from "./CardList.styles";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
+import * as XLSX from "xlsx";
 
 const MemoCardItem = memo(CardItem);
 
@@ -93,19 +94,22 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-		if(Platform.OS === "web") {
-			const files = (event.target as HTMLInputElement).files;
+		const files = (event.target as HTMLInputElement).files;
 		if (files) {
 			const file = files[0];
+			const fileType = file.name.split(".").pop()?.toLocaleLowerCase();
 
 			const reader = new FileReader();
 			reader.onload = (e: ProgressEvent<FileReader>) => {
-				if (e?.target?.result) {
-					const fileContent = e.target.result.toString();
+				const result = e.target?.result;
 
-					const lines = fileContent.split("\n");
-					const jsonObject: Record<string, string> = {};
+				if(!result) return;
 
+				const jsonObject: Record<string, string> = {};
+
+				console.log(fileType)
+				if(fileType === "txt") {
+					const lines = result.toString().split("\n");
 					lines.forEach((line: string, index) => {
 						const [key, value] = line.split(":");
 						if (key && value) {
@@ -116,16 +120,38 @@ const CardList = ({ groupId }: CardListProps) => {
 							);
 						}
 					});
+				} else if (fileType === "xlsx" || fileType === "xls") {
+					const data = new Uint8Array(result as ArrayBuffer);
+					const workbook: XLSX.WorkBook = XLSX.read(data, { type: "array" });
 
-					setJsonOutput(jsonObject);
-					setValueWords(jsonObject);
+					const sheetName: string = workbook.SheetNames[0];
+					const worksheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
+				
+					const parsed: (string | undefined)[][] = XLSX.utils.sheet_to_json(worksheet, {
+						header: 1,
+					}) as (string | undefined)[][];
+				
+					parsed.forEach((row: (string | undefined)[], index: number) => {
+						const [key, value] = row;
+						if (key && value) {
+							jsonObject[key.trim()] = value.trim();
+						} else {
+							console.warn(`Line ${index + 1} is not in the correct format: "${row}"`);
+						}
+					});
+				
 				}
-			};
+				console.log(jsonObject)
 
-			reader.readAsText(file);
-		}
-		} else {
-			
+				setJsonOutput(jsonObject);
+				setValueWords(jsonObject);
+			}
+
+			if(fileType === "text") {
+				reader.readAsText(file);
+			} else if (fileType === "xlsx") {
+				reader.readAsArrayBuffer(file);
+			}
 		}
 	};
 
@@ -381,7 +407,6 @@ const CardList = ({ groupId }: CardListProps) => {
 									<Fontisto name="import" size={30} color={colors.background} />
 									<input
 										type="file"
-										accept=".txt"
 										onChange={handleFileChange}
 										style={styles.fileInput}
 									/>
@@ -394,16 +419,24 @@ const CardList = ({ groupId }: CardListProps) => {
 									/>
 								</View>
 							)}
-							{jsonOutput.length && (
+
+							{Object.keys(jsonOutput).length > 0 && (
 								<View style={styles.jsonTableContainer}>
 									<View style={styles.jsonTable}>
 										<Text style={styles.jsonTableTitle}>Дані:</Text>
-										{Object.entries(jsonOutput).map(([key, value]) => (
-											<View key={value} style={styles.jsonRow}>
-												<Text style={styles.jsonKey}>{key}</Text>
-												<Text style={styles.jsonValue}>{value}</Text>
-											</View>
-										))}
+										<FlatList
+											data={Object.entries(jsonOutput)}
+											keyExtractor={([key]) => key}
+											renderItem={({ item }) => {
+												const [key, value] = item;
+												return (
+													<View key={value} style={styles.jsonRow}>
+													<Text style={styles.jsonKey}>{key}</Text>
+													<Text style={styles.jsonValue}>{value}</Text>
+												</View>
+												)
+											}}
+										/>
 									</View>
 								</View>
 							)}
