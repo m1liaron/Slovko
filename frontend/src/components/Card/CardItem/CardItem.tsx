@@ -16,8 +16,8 @@ import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { updateCard } from "../../../redux/cardReducer/cardSlice";
-import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
+import { pickImage } from "@/utils/utils";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}

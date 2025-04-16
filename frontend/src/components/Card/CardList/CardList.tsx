@@ -28,12 +28,12 @@ import {
 	removeCard,
 	resetFilter,
 } from "../../../redux/cardReducer/cardSlice";
-import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
+import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
 
 const MemoCardItem = memo(CardItem);
 
@@ -166,25 +166,6 @@ const CardList = ({ groupId }: CardListProps) => {
 		}
 	}, [dispatch, groupId, group?.id]);
 
-	const convertImageToBase64 = async (uri: string): Promise<string> => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const reader = new FileReader();
-
-		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				if (reader?.result) {
-					const readerResult = reader.result.toString();
-					const base64data = readerResult.split(",")[1]; // Get the Base64 part
-					resolve(base64data);
-				}
-			};
-			reader.onerror = () =>
-				reject(new Error("Failed to convert image to base64"));
-			reader.readAsDataURL(blob);
-		});
-	};
-
 	const onSaveCard = async () => {
 		let finalImageUri: string = imageUri;
 
@@ -258,24 +239,6 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	const onRemoveCard = async (courseId: string) => {
 		dispatch(removeCard(courseId));
-	};
-
-	const convertBlobToBase64 = (blobUri: string): Promise<string> => {
-		return new Promise((resolve, reject) => {
-			fetch(blobUri)
-				.then((response) => response.blob())
-				.then((blob) => {
-					const reader = new FileReader();
-					const readerResult = reader.result?.toString();
-					if (readerResult) {
-						reader.onloadend = () => resolve(readerResult);
-						reader.onerror = () =>
-							reject(new Error("Failed to convert blob to base64"));
-						reader.readAsDataURL(blob);
-					}
-				})
-				.catch((error) => reject(error));
-		});
 	};
 
 	const navigateToLearn = () => {

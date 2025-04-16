@@ -1,4 +1,4 @@
-export default function formatDMTDate(propsDate: Date) {
+function formatDMTDate(propsDate: Date) {
 	const date = new Date(propsDate);
 	const day = date.getDay();
 	const month = date.getMonth() + 1;
@@ -7,3 +7,6 @@ export default function formatDMTDate(propsDate: Date) {
 
 	return `${day}.${month}, ${hours}:${minutes}`;
 }
+
+
+export { formatDMTDate }

@@ -17,16 +17,14 @@ import {
 } from "react-native";
 import { Switch } from "react-native-gesture-handler";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useDispatch, useSelector } from "react-redux";
 import AvatarImage from "../../../assets/images/avatar.png";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
-import convertImageToBase64 from "../../utils/convertImageToBase64";
-import pickImage from "../../utils/pickImage";
 import styles from "./ProfileScreen.styles";
+import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -72,50 +70,6 @@ export default function ProfileScreen() {
 				{ cancelable: true }, // Allow dismissing the alert by tapping outside
 			);
 		}
-	};
-
-	const convertBlobToBase64 = (blobUri: string): Promise<string> => {
-		return new Promise((resolve, reject) => {
-			fetch(blobUri)
-				.then((response) => response.blob())
-				.then((blob) => {
-					const reader = new FileReader();
-					reader.onloadend = () => {
-						if (typeof reader.result !== "string") {
-							return reject(new Error("Result is not a string"));
-						}
-						resolve(reader.result);
-					};
-					reader.onerror = () =>
-						reject(new Error("Failed to convert blob to base64"));
-					reader.readAsDataURL(blob);
-				})
-				.catch((error) => reject(error));
-		});
-	};
-
-	const convertImageToBase64 = async (uri: string): Promise<string> => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		const reader = new FileReader();
-
-		return new Promise((resolve, reject) => {
-			reader.onloadend = () => {
-				if (
-					typeof reader.result === "string" &&
-					reader.result &&
-					reader.result
-				) {
-					const base64data = reader.result.split(",")[1]; // Get the Base64 part
-					resolve(base64data);
-				} else {
-					reject(new Error("Result is not a string"));
-				}
-			};
-			reader.onerror = () =>
-				reject(new Error("Failed to convert image to base64"));
-			reader.readAsDataURL(blob);
-		});
 	};
 
 	const handleUpdateUser = async () => {

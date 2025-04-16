@@ -42,4 +42,4 @@ const pickImage = async (
 	}
 };
 
-export default pickImage;
+export { pickImage };
