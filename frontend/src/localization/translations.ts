@@ -32,6 +32,24 @@ const translations = {
 				"July", "August", "September", "October", "November", "December",
 			],
 		},
+        profileScreen: {
+            profileTitle: "Your Profile",
+            edit: "Edit",
+            saveChanges: "Save Changes",
+            name: "Name",
+            email: "Email",
+            personalInfo: "Personal Information",
+            points: "Points",
+            interaction: "Interaction",
+            logout: "Log Out",
+            confirmLogout: "Confirm Logout",
+            confirmLogoutMessage: "Are you sure you want to log out?",
+            cancel: "Cancel",
+            changeTheme: "Change Theme",
+            changeLanguage: "Change Language",
+            noUserInfo:
+                "No information about this user. Please re-login to the app or account.",
+            }
 	},
 	uk: {
 		mainScreen: {
@@ -65,6 +83,24 @@ const translations = {
 				"Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень",
 			],
 		},
+        profileScreen: {
+            profileTitle: "Ваш профіль",
+            edit: "Редагувати",
+            saveChanges: "Зберегти зміни",
+            name: "Ім'я",
+            email: "Пошта",
+            personalInfo: "Особиста інформація",
+            points: "Очків",
+            interaction: "Взаємодія",
+            logout: "Вийти з акаунту",
+            confirmLogout: "Підтвердити вихід",
+            confirmLogoutMessage: "Ви впевнені, що хочете вийти з акаунту?",
+            cancel: "Скасувати",
+            changeTheme: "Змінити тему",
+            changeLanguage: "Змінити мову",
+            noUserInfo:
+                "Немає інформації про данного користувача, перезайдіть у застосунок або в акаунт.",
+        }
 	},
 };
 

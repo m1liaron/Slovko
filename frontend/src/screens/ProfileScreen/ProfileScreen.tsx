@@ -27,6 +27,8 @@ import styles from "./ProfileScreen.styles";
 import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useLanguage } from "@/contexts/LanguageProvider";
+import { i18n } from "@/localization/i18n";
+import React from "react";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -122,7 +124,7 @@ export default function ProfileScreen() {
 
 	return (
 		<ThemeBackground style={{ paddingHorizontal: 40 }}>
-			<ThemeText style={styles.title}>Ваш профіль</ThemeText>
+			<ThemeText style={styles.title}>{i18n.t("resultsScreen.profileTitle")}</ThemeText>
 
 			<View>
 				{user ? (
@@ -173,21 +175,21 @@ export default function ProfileScreen() {
 									>
 										<ThemeText>{user.points}</ThemeText>
 									</View>
-									<ThemeText>Очків</ThemeText>
+									<ThemeText>{i18n.t("resultsScreen.points")}</ThemeText>
 								</View>
 							</View>
 						)}
 						<Pressable onPress={onEditInfo}>
-							<Text style={styles.editTitle}>Редагувати</Text>
+							<Text style={styles.editTitle}>{i18n.t("resultsScreen.edit")}</Text>
 						</Pressable>
 						{!isEditing && (
 							<ThemeText style={styles.textInfo}>
-								Особиста інформація
+								{i18n.t("resultsScreen.personalInfo")}
 							</ThemeText>
 						)}
 						{isEditing && (
 							<View>
-								<Text style={styles.keyName}>Ім'я</Text>
+								<Text style={styles.keyName}>{i18n.t("resultsScreen.name")}</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -228,7 +230,7 @@ export default function ProfileScreen() {
 											color={colors.iconColor}
 										/>
 										<ThemeText style={styles.keyName}>
-											Пошта
+											{i18n.t("resultsScreen.email")}
 										</ThemeText>
 									</View>
 									<ThemeText
@@ -264,7 +266,7 @@ export default function ProfileScreen() {
 						{!isEditing ? (
 							<View>
 								<ThemeText style={styles.textInfo}>
-									Взаємодія
+									{i18n.t("resultsScreen.interaction")}
 								</ThemeText>
 								<Pressable
 									style={[
@@ -286,7 +288,7 @@ export default function ProfileScreen() {
 											color={colors.iconColor}
 										/>
 										<ThemeText style={styles.keyName}>
-											Вийти з акаунту
+											{i18n.t("resultsScreen.logout")}
 										</ThemeText>
 									</View>
 									<AntDesign
@@ -315,7 +317,7 @@ export default function ProfileScreen() {
 											<Feather name="sun" size={35} color={colors.iconColor} />
 										)}
 										<ThemeText style={styles.keyName}>
-											Змінити тему
+											{i18n.t("resultsScreen.changeTheme")}	
 										</ThemeText>
 									</View>
 									<Switch
@@ -350,7 +352,7 @@ export default function ProfileScreen() {
 									>
 										<ThemeText>{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}</ThemeText>
 										<ThemeText style={styles.keyName}>
-											Змінити тему
+											{i18n.t("resultsScreen.changeLanguage")}
 										</ThemeText>
 									</View>
 									<Switch
@@ -372,7 +374,7 @@ export default function ProfileScreen() {
 							</View>
 						) : (
 							<PressableButton
-								text="Зберегти зміни"
+								text={i18n.t("resultsScreen.saveChanges")}
 								onPress={handleUpdateUser}
 							/>
 						)}
@@ -380,8 +382,7 @@ export default function ProfileScreen() {
 				) : (
 					<View>
 						<ThemeText>
-							Немає інформації про данного користувача, перезайдіть у застосунок
-							або в акаунт.
+							{i18n.t("resultsScreen.noUserInfo")}
 						</ThemeText>
 					</View>
 				)}
