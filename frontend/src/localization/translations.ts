@@ -63,6 +63,14 @@ const translations = {
 			copyGroupButton: "Copy group",
 			translation: "Translation: ",
 		},
+        resultDetailsScreen: {
+            title: "Result Details",
+            correctPercentage: "Correct Percentage",
+            flashCards: "Flashcards",
+            check: "Choose Translation",
+            quiz: "Quiz",
+            guessWord: "Guess the Word",
+          },
 	},
 	uk: {
 		mainScreen: {
@@ -127,6 +135,14 @@ const translations = {
 			copyGroupButton: "Скопіювати групу",
 			translation: "Переклад: ",
 		},
+        resultDetailsScreen: {
+            title: "Деталі Результату",
+            correctPercentage: "Відсоток Вірних Відповідей",
+            flashCards: "Картки",
+            check: "Вибір Перекладу",
+            quiz: "Вікторина",
+            guessWord: "Вгадай Слово",
+          },
 	},
 };
 

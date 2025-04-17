@@ -23,9 +23,10 @@ import BackButton from "../../components/BackButton/BackButton";
 import Loading from "../../components/Loading";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { getResultDetails } from "../../redux/resultReducer/resultSlice";
-import formatDMTDate from "../../utils/formatDMTDate";
-import { formatTime } from "../../utils/formatTime";
+import { formatTime, formatDMTDate } from "../../utils/utils";
 import styles from "./ResultDetailsScreen.styles";
+import { i18n } from "@/localization/i18n";
+import React from "react";
 
 type ResultDetailsScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -78,10 +79,10 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 	const correctPercentage = calculateCorrectPercentage();
 
 	const modesOptionsButtons: { key: ModeName; label: string }[] = [
-		{ key: "flashCards", label: "Картки" },
-		{ key: "check", label: "Вибери переклад" },
-		{ key: "quiz", label: "Вікторина" },
-		{ key: "guessWord", label: "Вгадай слово" },
+		{ key: "flashCards", label: i18n.t("resultDetailsScreen.flashCards") },
+		{ key: "check", label: i18n.t("resultDetailsScreen.check")},
+		{ key: "quiz", label: i18n.t("resultDetailsScreen.quiz")},
+		{ key: "guessWord", label: i18n.t("resultDetailsScreen.guessWord")},
 	];
 
 	const renderModeButtons = () => {
@@ -153,7 +154,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 				}}
 			>
 				<Text style={{ fontSize: 25, color: "#fff" }}>
-					{correctPercentage}% Вірно
+					{correctPercentage}% {i18n.t("resultDetailsScreen.correctPercentage")}
 				</Text>
 			</View>
 
