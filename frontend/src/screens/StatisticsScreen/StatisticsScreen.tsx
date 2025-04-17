@@ -10,6 +10,7 @@ import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectResult } from "../../redux/resultReducer/resultSlice";
 import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
+import { i18n } from "@/localization/i18n";
 
 const StatisticsScreen = () => {
 	const {
@@ -27,17 +28,19 @@ const StatisticsScreen = () => {
 	}, [dispatch]);
 
 	const modesOptions = [
-		{ label: "Вікторина", value: "quiz" },
-		{ label: "Відгадай слово", value: "guessWord" },
-	];
+		{ label: i18n.t("statisticsScreen.quiz"), value: "quiz" },
+		{ label: i18n.t("statisticsScreen.guessWord"), value: "guessWord" },
+	  ]
 
-	const wordsModeOptions = [{ label: "Кількість слів", value: "wordLength" }];
+	const wordsModeOptions = [
+		{ label: i18n.t("statisticsScreen.wordLength"), value: "wordLength" },
+	  ]
 
 	const graphOptions = [
-		{ label: "Лінійний", value: "LinearChart" },
-		{ label: "Стовпчатий", value: "BarChart" },
-		{ label: "Пиріг", value: "PieChart" },
-	];
+		{ label: i18n.t("statisticsScreen.linear"), value: "LinearChart" },
+		{ label: i18n.t("statisticsScreen.bar"), value: "BarChart" },
+		{ label: i18n.t("statisticsScreen.pie"), value: "PieChart" },
+	  ]
 
 	const renderGraph = () => {
 		if (!statistics) {
@@ -148,7 +151,7 @@ const StatisticsScreen = () => {
 						onValueChange={(value) => setSelectedMode(value)}
 						items={modesOptions}
 						value={selectedMode}
-						placeholder={{ label: "Картки", value: "flashCards" }}
+						placeholder={{ label: i18n.t("statisticsScreen.selectMode"), value: "flashCards" }}
 						style={{
 							inputWeb: {
 								color: "#000",
@@ -176,7 +179,7 @@ const StatisticsScreen = () => {
 						onValueChange={(value) => setSelectedWordsMode(value)}
 						items={wordsModeOptions}
 						value={selectedWordsMode}
-						placeholder={{ label: "Помилок", value: "mistakes" }}
+						placeholder={{ label: i18n.t("statisticsScreen.mistakes"), value: "mistakes" }}
 						style={{
 							inputWeb: {
 								color: "#000",
@@ -204,7 +207,7 @@ const StatisticsScreen = () => {
 					onValueChange={(value) => setSelectedGraph(value)}
 					items={graphOptions}
 					value={selectedGraph}
-					placeholder={{ label: "Виберіть графік", value: null }}
+					placeholder={{ label: i18n.t("statisticsScreen.selectGraph"), value: null }}
 					style={{
 						inputWeb: {
 							color: "#000",

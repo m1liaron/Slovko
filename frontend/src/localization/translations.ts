@@ -71,6 +71,18 @@ const translations = {
             quiz: "Quiz",
             guessWord: "Guess the Word",
           },
+          statisticsScreen: {
+            quiz: "Quiz",
+            guessWord: "Guess Word",
+            wordLength: "Word Length",
+            mistakes: "Mistakes",
+            linear: "Linear",
+            bar: "Bar",
+            pie: "Pie",
+            selectGraph: "Select Graph",
+            selectMode: "Select Mode",
+            selectWordsMode: "Select Words Mode",
+          },
 	},
 	uk: {
 		mainScreen: {
@@ -142,6 +154,18 @@ const translations = {
             check: "Вибір Перекладу",
             quiz: "Вікторина",
             guessWord: "Вгадай Слово",
+          },
+        statisticsScreen: {
+            quiz: "Вікторина",
+            guessWord: "Відгадай слово",
+            wordLength: "Довжина слова",
+            mistakes: "Помилки",
+            linear: "Лінійний",
+            bar: "Стовпчатий",
+            pie: "Пиріг",
+            selectGraph: "Виберіть графік",
+            selectMode: "Виберіть режим",
+            selectWordsMode: "Виберіть режим слів",
           },
 	},
 };
