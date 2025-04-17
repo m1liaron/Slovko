@@ -9,6 +9,7 @@ import ThemeBackground from "../../common/components/ThemeBackground/Themebackgr
 import ThemeText from "../../common/components/ThemeText/ThemeText";
 import { AppPath } from "../../common/enums/app/app";
 import { login } from "../../redux/userReducer/userSlice";
+import { i18n } from "@/localization/i18n";
 
 const LoginScreen = () => {
 	const navigation = useNavigation<StackNavigation>();
@@ -42,10 +43,10 @@ const LoginScreen = () => {
 	return (
 		<ThemeBackground style={styles.container}>
 			<Toast />
-			<ThemeText style={styles.title}>Вхід</ThemeText>
+			<ThemeText style={styles.title}>{i18n.t("loginScreen.title")}</ThemeText>
 			<TextInput
 				style={styles.input}
-				placeholder="Пошта"
+				placeholder={i18n.t("loginScreen.emailPlaceholder")}
 				placeholderTextColor="#ccc"
 				keyboardType="email-address"
 				autoCapitalize="none"
@@ -56,7 +57,7 @@ const LoginScreen = () => {
 			<View style={styles.passwordContainer}>
 				<TextInput
 					style={[styles.input, { flex: 1 }]}
-					placeholder="Пароль"
+					placeholder={i18n.t("loginScreen.passwordPlaceholder")}
 					placeholderTextColor="#ccc"
 					secureTextEntry={notShowPassword}
 					value={password}
@@ -75,11 +76,11 @@ const LoginScreen = () => {
 			</View>
 
 			<Pressable style={styles.button} onPress={handleSubmit}>
-				<Text style={styles.buttonText}>Увійти</Text>
+			<Text style={styles.buttonText}>{i18n.t("loginScreen.loginButton")}</Text>
 			</Pressable>
 
 			<Pressable onPress={() => navigation.navigate(AppPath.Register)}>
-				<Text style={styles.switchText}>Не маєте акаунта? Зареєструйтеся</Text>
+			<Text style={styles.switchText}>{i18n.t("loginScreen.switchText")}</Text>
 			</Pressable>
 		</ThemeBackground>
 	);

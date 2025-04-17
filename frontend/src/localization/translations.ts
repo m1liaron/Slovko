@@ -101,6 +101,17 @@ const translations = {
               registrationFailed: "Registration failed",
             },
           },
+          loginScreen: {
+            title: "Login",
+            emailPlaceholder: "Email",
+            passwordPlaceholder: "Password",
+            loginButton: "Login",
+            switchText: "Don't have an account? Sign Up",
+            errorMessage: {
+              requiredFields: "Fields must be filled!",
+              loginFailed: "Login failed",
+            },
+          },
 	},
 	uk: {
 		mainScreen: {
@@ -201,6 +212,17 @@ const translations = {
               requiredFields: "Поля мають бути заповнені!",
               passwordsDoNotMatch: "Паролі не збігаються!",
               registrationFailed: "Реєстрація не вдалася",
+            },
+          },
+          loginScreen: {
+            title: "Вхід",
+            emailPlaceholder: "Пошта",
+            passwordPlaceholder: "Пароль",
+            loginButton: "Увійти",
+            switchText: "Не маєте акаунта? Зареєструйтеся",
+            errorMessage: {
+              requiredFields: "Поля мають бути заповнені!",
+              loginFailed: "Невдача",
             },
           },
 	},
