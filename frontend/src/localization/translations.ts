@@ -49,7 +49,15 @@ const translations = {
             changeLanguage: "Change Language",
             noUserInfo:
                 "No information about this user. Please re-login to the app or account.",
-            }
+         },
+         group: {
+			studying: "Studying",
+			reviewed: "Reviewed",
+			known: "Known",
+			changeTitle: "Change title",
+			inputPlaceholder: "Title...",
+			changeButton: "Change",
+		},
 	},
 	uk: {
 		mainScreen: {
@@ -100,7 +108,15 @@ const translations = {
             changeLanguage: "Змінити мову",
             noUserInfo:
                 "Немає інформації про данного користувача, перезайдіть у застосунок або в акаунт.",
-        }
+        },
+        group: {
+			studying: "Вивчаю",
+			reviewed: "Повторенні",
+			known: "Знаю",
+			changeTitle: "Змініть назву",
+			inputPlaceholder: "Назва...",
+			changeButton: "Змінити",
+		},
 	},
 };
 

@@ -24,6 +24,7 @@ import {
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
+import { i18n } from "@/localization/i18n";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -56,19 +57,19 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		if (!group) return [];
 		return [
 			{
-				title: "Вивчаю",
+				title: i18n.t("group.studying"),
 				status: "To Learn",
 				amount: group.learnToCardsAmount || 0,
 				color: "#32C74D",
 			},
 			{
-				title: "Повторенні",
+				title: i18n.t("group.reviewed"),
 				status: "Learned",
 				amount: group.learnedCardsAmount || 0,
 				color: "#62CBE9",
 			},
 			{
-				title: "Знаю",
+				title: i18n.t("group.known"),
 				status: "Know",
 				amount: group.knowCardsAmount || 0,
 				color: "#a8a800",
@@ -169,14 +170,14 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 				isVisible={showEditModal}
 				handleClose={() => setShowEditModal(false)}
 			>
-				<Text style={{ color: colors.primary }}>Змініть назву</Text>
+				<ThemeText>{i18n.t("group.changeTitle")}</ThemeText>
 				<AddInput
 					value={groupTitle}
 					onChangeText={setGroupTitle}
-					placeholder="Назва..."
+					placeholder={i18n.t("group.inputPlaceholder")}
 				/>
 
-				<PressableButton text="Змінити" onPress={updateGroupTitle} />
+				<PressableButton text={i18n.t("group.changeButton")} onPress={updateGroupTitle} />
 			</DefaultModal>
 		</ThemeBackground>
 	);
