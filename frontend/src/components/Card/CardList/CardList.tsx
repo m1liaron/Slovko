@@ -328,6 +328,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				);
 			}
 			setValueWords({});
+			setJsonOutput({});
 			alert("Cards added from file successfully!");
 			return;
 		}
@@ -476,7 +477,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							}}
 						/>
 						<PressableButton
-							text="Багато"
+							text="Багато, НОВИНКА"
 							onPress={() => setAddCardMode(1)}
 							buttonStyle={{
 								flex: 1,
@@ -488,14 +489,18 @@ const CardList = ({ groupId }: CardListProps) => {
 					{addCardMode ? (
 						<View style={styles.bulkAddContainer}>
 							{Platform.OS === "web" ? (
-								<View style={styles.fileInputContainer}>
-									<Fontisto name="import" size={30} color={colors.background} />
-									<input
-										type="file"
-										onChange={handleFileChange}
-										style={styles.fileInput}
-									/>
+								<View>
+									<View style={styles.fileInputContainer}>
+										<Fontisto name="import" size={30} color={colors.background} />
+										<input
+											type="file"
+											onChange={handleFileChange}
+											style={styles.fileInput}
+										/>
+									</View>
+									<ThemeText>Доступні типи файлів: txt, text/plain, НОВИНКА: xlsx, xls</ThemeText>
 								</View>
+
 							) : (
 								<View>
 									<PressableButton 
