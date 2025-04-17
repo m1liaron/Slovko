@@ -83,6 +83,10 @@ const translations = {
             selectMode: "Select Mode",
             selectWordsMode: "Select Words Mode",
           },
+          streakScreen: {
+            frozenAlreadyBought: "Freeze already bought",
+            buyFreeze: "Buy Freeze",
+          },
 	},
 	uk: {
 		mainScreen: {
@@ -166,6 +170,10 @@ const translations = {
             selectGraph: "Виберіть графік",
             selectMode: "Виберіть режим",
             selectWordsMode: "Виберіть режим слів",
+          },
+          streakScreen: {
+            frozenAlreadyBought: "Заморозку вже куплено",
+            buyFreeze: "Купити Заморозку",
           },
 	},
 };
