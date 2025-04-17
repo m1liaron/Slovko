@@ -58,6 +58,11 @@ const translations = {
 			inputPlaceholder: "Title...",
 			changeButton: "Change",
 		},
+        sharedGroup: {
+			noCards: "No cards here",
+			copyGroupButton: "Copy group",
+			translation: "Translation: ",
+		},
 	},
 	uk: {
 		mainScreen: {
@@ -116,6 +121,11 @@ const translations = {
 			changeTitle: "Змініть назву",
 			inputPlaceholder: "Назва...",
 			changeButton: "Змінити",
+		},
+        sharedGroup: {
+			noCards: "Немає карток тут",
+			copyGroupButton: "Скопіювати групу",
+			translation: "Переклад: ",
 		},
 	},
 };

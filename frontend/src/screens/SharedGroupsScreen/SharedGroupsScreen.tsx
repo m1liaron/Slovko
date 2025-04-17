@@ -114,6 +114,7 @@ const SharedGroupsScreen = () => {
 
 	const renderItem = ({ item }: { item: ISharedGroup }) => (
 		<View
+			key={item.id}
 			style={{
 				flexDirection: "row",
 				justifyContent: "center",
@@ -257,6 +258,7 @@ const SharedGroupsScreen = () => {
 						gap: 20,
 						padding: 10,
 					}}
+					keyExtractor={(item) => `${item.id}-${item.user?.id}`} 
 					renderItem={renderItem}
 					onEndReached={handleLoadMore}
 					onEndReachedThreshold={0.1}
@@ -279,8 +281,9 @@ const SharedGroupsScreen = () => {
 				{groups.length ? (
 					<FlatList
 						data={groups}
+						keyExtractor={item => item.id}
 						renderItem={({ item }: { item: IGroup }) => (
-							<Pressable onPress={() => addRemoveSelectedGroup(item)}>
+							<Pressable key={item.id} onPress={() => addRemoveSelectedGroup(item)}>
 								<ThemeText
 									style={{
 										borderColor:
@@ -297,6 +300,7 @@ const SharedGroupsScreen = () => {
 								</ThemeText>
 							</Pressable>
 						)}
+						style={{ height: 400 }}
 					/>
 				) : (
 					<View>
