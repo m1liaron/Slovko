@@ -34,6 +34,7 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
+import { i18n } from "@/localization/i18n";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -190,7 +191,7 @@ const SharedGroupsScreen = () => {
 						2024
 					</ThemeText>
 					<PressableButton
-						text="Мої поширені групи"
+						text={i18n.t("sharedGroupsScreen.mySharedGroups")}
 						onPress={() => dispatch(filterMySharedGroups({ userId: user?.id }))}
 					/>
 					<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
@@ -216,7 +217,7 @@ const SharedGroupsScreen = () => {
 							alignSelf: "flex-end",
 							color: colors.primary,
 						}}
-						placeholder="Фільтр"
+						placeholder={i18n.t("sharedGroupsScreen.filter")}
 						placeholderTextColor={colors.primary}
 						value={filterValue}
 						onChangeText={setFilterValue}
@@ -231,7 +232,7 @@ const SharedGroupsScreen = () => {
 						}}
 						onPress={() => dispatch(filterSharedGroups(filterValue))}
 					>
-						<ThemeText>Фільтрувати</ThemeText>
+						<ThemeText>{i18n.t("sharedGroupsScreen.filterButton")}</ThemeText>
 					</Pressable>
 					<Pressable
 						style={{
@@ -262,7 +263,7 @@ const SharedGroupsScreen = () => {
 					ListFooterComponent={renderFooter}
 				/>
 			) : (
-				<ThemeText>Немає пошеренних груп</ThemeText>
+				<ThemeText>{i18n.t("sharedGroupsScreen.noGroups")}</ThemeText>
 			)}
 
 			<AddButton onPress={() => setShowModal(true)} />
@@ -273,7 +274,7 @@ const SharedGroupsScreen = () => {
 				<AddInput
 					value={sharedGroupTitle}
 					onChangeText={setSharedGroupTitle}
-					placeholder="Назва групи"
+					placeholder={i18n.t("sharedGroupsScreen.placeholder")}
 				/>
 				{groups.length ? (
 					<FlatList
@@ -304,16 +305,16 @@ const SharedGroupsScreen = () => {
 								fontSize: 30,
 							}}
 						>
-							Немає груп
+							{i18n.t("sharedGroupsScreen.noUserGroups")}
 						</ThemeText>
 						<PressableButton
-							text="Створити групу"
+							text={i18n.t("sharedGroupsScreen.createGroup")}
 							onPress={() => navigation.navigate(AppPath.Home)}
 							buttonStyle={{ padding: 20 }}
 						/>
 					</View>
 				)}
-				<PressableButton text="Поширити" onPress={shareGroup} />
+				<PressableButton text={i18n.t("sharedGroupsScreen.share")} onPress={shareGroup} />
 			</DefaultModal>
 		</ThemeBackground>
 	);
