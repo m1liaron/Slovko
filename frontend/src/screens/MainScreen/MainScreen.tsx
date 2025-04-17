@@ -30,6 +30,7 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
+import { i18n } from "@/localization/i18n";
 
 const MainScreen = () => {
 	const dispatch = useAppDispatch();
@@ -165,7 +166,7 @@ const MainScreen = () => {
 				<Text style={{ color: streakColor, fontSize: 35 }}>{user?.streak}</Text>
 			</Pressable>
 			<Text style={styles.timePassedText}>
-				Вже минуло {daysPassed} з початку війни.
+				{i18n.t("mainScreen.alreadyPassed")} {daysPassed} {i18n.t("mainScreen.daysPassed")}
 			</Text>
 
 			{repeatedGroupsIds.length ? (
