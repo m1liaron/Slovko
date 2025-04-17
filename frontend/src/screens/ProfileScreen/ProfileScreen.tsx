@@ -25,6 +25,8 @@ import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
 import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
+import ThemeText from "@/common/components/ThemeText/ThemeText";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -38,6 +40,8 @@ export default function ProfileScreen() {
 
 	const [isThemeDark, setThemeDark] = useState(theme.dark === true);
 	const [isEditing, setIsEditing] = useState(false);
+
+	const { language, setLanguage } = useLanguage();
 
 	useEffect(() => {
 		if (user) {
@@ -112,9 +116,13 @@ export default function ProfileScreen() {
 		toggleTheme();
 	};
 
+	const toggleLanguage = () => {
+		setLanguage(language === "en" ? "uk" : "en");
+	};
+
 	return (
 		<ThemeBackground style={{ paddingHorizontal: 40 }}>
-			<Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
+			<ThemeText style={styles.title}>Ваш профіль</ThemeText>
 
 			<View>
 				{user ? (
@@ -145,9 +153,9 @@ export default function ProfileScreen() {
 									gap: 10,
 								}}
 							>
-								<Text style={[styles.title, { color: colors.primary }]}>
+								<ThemeText style={styles.title}>
 									{user.name}
-								</Text>
+								</ThemeText>
 								<View
 									style={{
 										flexDirection: "row",
@@ -163,9 +171,9 @@ export default function ProfileScreen() {
 											borderRadius: 10,
 										}}
 									>
-										<Text>{user.points}</Text>
+										<ThemeText>{user.points}</ThemeText>
 									</View>
-									<Text style={{ color: colors.primary }}>Очків</Text>
+									<ThemeText>Очків</ThemeText>
 								</View>
 							</View>
 						)}
@@ -173,9 +181,9 @@ export default function ProfileScreen() {
 							<Text style={styles.editTitle}>Редагувати</Text>
 						</Pressable>
 						{!isEditing && (
-							<Text style={[styles.textInfo, { color: colors.primary }]}>
+							<ThemeText style={styles.textInfo}>
 								Особиста інформація
-							</Text>
+							</ThemeText>
 						)}
 						{isEditing && (
 							<View>
@@ -219,15 +227,15 @@ export default function ProfileScreen() {
 											size={35}
 											color={colors.iconColor}
 										/>
-										<Text style={[styles.keyName, { color: colors.primary }]}>
+										<ThemeText style={styles.keyName}>
 											Пошта
-										</Text>
+										</ThemeText>
 									</View>
-									<Text
-										style={[styles.userInfoText, { color: colors.primary }]}
+									<ThemeText
+										style={styles.userInfoText}
 									>
 										{user.email}
-									</Text>
+									</ThemeText>
 								</View>
 							</>
 						) : (
@@ -255,9 +263,9 @@ export default function ProfileScreen() {
 
 						{!isEditing ? (
 							<View>
-								<Text style={[styles.textInfo, { color: colors.primary }]}>
+								<ThemeText style={styles.textInfo}>
 									Взаємодія
-								</Text>
+								</ThemeText>
 								<Pressable
 									style={[
 										styles.infoItem,
@@ -277,9 +285,9 @@ export default function ProfileScreen() {
 											size={35}
 											color={colors.iconColor}
 										/>
-										<Text style={[styles.keyName, { color: colors.primary }]}>
+										<ThemeText style={styles.keyName}>
 											Вийти з акаунту
-										</Text>
+										</ThemeText>
 									</View>
 									<AntDesign
 										name="arrowright"
@@ -306,9 +314,9 @@ export default function ProfileScreen() {
 										) : (
 											<Feather name="sun" size={35} color={colors.iconColor} />
 										)}
-										<Text style={[styles.keyName, { color: colors.primary }]}>
+										<ThemeText style={styles.keyName}>
 											Змінити тему
-										</Text>
+										</ThemeText>
 									</View>
 									<Switch
 										value={isThemeDark}
@@ -326,6 +334,41 @@ export default function ProfileScreen() {
 										}}
 									/>
 								</View>
+
+								<View
+									style={[
+										styles.infoItem,
+										{ backgroundColor: colors.lightBackground },
+									]}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											gap: 10,
+										}}
+									>
+										<ThemeText>{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}</ThemeText>
+										<ThemeText style={styles.keyName}>
+											Змінити тему
+										</ThemeText>
+									</View>
+									<Switch
+										value={language === "uk"}
+										onValueChange={toggleLanguage}
+										trackColor={{
+											false: colors.background,
+											true: colors.primary,
+										}}
+										thumbColor={
+											language === "uk"  ? colors.primary : colors.lightBackground
+										}
+										ios_backgroundColor={colors.lightBackground}
+										style={{
+											transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+										}}
+									/>
+								</View>
 							</View>
 						) : (
 							<PressableButton
@@ -336,10 +379,10 @@ export default function ProfileScreen() {
 					</View>
 				) : (
 					<View>
-						<Text style={{ color: colors.primary }}>
+						<ThemeText>
 							Немає інформації про данного користувача, перезайдіть у застосунок
 							або в акаунт.
-						</Text>
+						</ThemeText>
 					</View>
 				)}
 			</View>
