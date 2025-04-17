@@ -31,6 +31,7 @@ import {
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
 import { i18n } from "@/localization/i18n";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 const MainScreen = () => {
 	const dispatch = useAppDispatch();
@@ -39,13 +40,13 @@ const MainScreen = () => {
 	const { theme } = useAppTheme();
 	const [daysPassed, setDaysPassed] = useState("");
 	const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
-	const repeatedGroupsIds = useAppSelector(
-		(state) => state.cards.repeatedCards,
-	);
+	const repeatedGroupsIds = useAppSelector((state) => state.cards.repeatedCards);
 	const repeatedCardsLength = repeatedGroupsIds.reduce(
 		(prev, curr) => prev + curr.cards.length,
 		0,
 	);
+
+	const { language, setLanguage } = useLanguage();
 
 	useEffect(() => {
 		if (Platform.OS === "android" || Platform.OS === "ios") {
@@ -60,10 +61,13 @@ const MainScreen = () => {
 	}, []);
 
 	useEffect(() => {
-		const notificationText = `У вас є ${repeatedGroupsIds.length} для повторення.`;
 		if (Platform.OS === "android" || Platform.OS === "ios") {
 			if (repeatedGroupsIds.length > 0) {
-				scheduleNotification("Час для повторення!", notificationText, null);
+				scheduleNotification(
+					i18n.t("mainScreen.notificationTitle"),
+					i18n.t("mainScreen.notificationBody", { count: repeatedCardsLength }),
+					null
+				);
 			}
 		} else {
 			sendNotification();
@@ -81,12 +85,12 @@ const MainScreen = () => {
 					if (permission === "granted") {
 						const appLogoUri = Image.resolveAssetSource(appLogo).uri;
 						const notificationOptions = {
-							body: `У вас є ${repeatedCardsLength} слова для повторення.`,
+							body: i18n.t("mainScreen.notificationBody", { count: repeatedCardsLength }),
 							icon: appLogoUri,
 						};
-						new Notification("Push Notification", notificationOptions);
+						new Notification(i18n.t("mainScreen.notificationTitle"), notificationOptions);
 					} else {
-						alert("Дозвольте надсилати повідомлення про слова для повторення");
+						alert(i18n.t("mainScreen.notificationPermissionDenied"));
 						console.log("Повідомлення заблоковані користувачем.");
 					}
 				}
@@ -101,9 +105,8 @@ const MainScreen = () => {
 	const daysSince = useCallback((dateString: string) => {
 		const targetDate = new Date(dateString).getTime();
 		const now = new Date().getTime();
-
 		const totalDays = Math.floor((now - targetDate) / (1000 * 3600 * 24));
-		return `${totalDays} днів`;
+		return `${totalDays}`;
 	}, []);
 
 	useEffect(() => {
@@ -165,6 +168,7 @@ const MainScreen = () => {
 				<FontAwesome6 name="fire-flame-simple" size={30} color={streakColor} />
 				<Text style={{ color: streakColor, fontSize: 35 }}>{user?.streak}</Text>
 			</Pressable>
+
 			<Text style={styles.timePassedText}>
 				{i18n.t("mainScreen.alreadyPassed")} {daysPassed} {i18n.t("mainScreen.daysPassed")}
 			</Text>
@@ -175,17 +179,25 @@ const MainScreen = () => {
 					onPress={() => setShowRepeatedModal(true)}
 				>
 					<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-						Повторити слова - {repeatedCardsLength}
+						{i18n.t("mainScreen.repeatWords")} - {repeatedCardsLength}
 					</Text>
 				</Pressable>
 			) : null}
 
 			<GroupList />
+
 			<View style={styles.anouncement}>
 				<Pressable onPress={openLink}>
-					<Text style={styles.title}>Save Ukraine!</Text>
+					<Text style={styles.title}>{i18n.t("mainScreen.saveUkraine")}</Text>
 				</Pressable>
 			</View>
+
+			<Pressable
+				onPress={() => setLanguage(language === "en" ? "uk" : "en")}
+				style={{ position: "absolute", top: 50, right: 20, padding: 10 }}
+			>
+				<Text>{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}</Text>
+			</Pressable>
 
 			<DefaultModal
 				isVisible={showRepeatedModal}
@@ -213,10 +225,9 @@ const MainScreen = () => {
 						</Pressable>
 					)}
 				/>
-				<PressableButton text="Повторити усі" onPress={learnAllRepeatedCards} />
+				<PressableButton text={i18n.t("mainScreen.repeatAll")} onPress={learnAllRepeatedCards} />
 			</DefaultModal>
 		</ThemeBackground>
 	);
 };
-
 export default MainScreen;

@@ -29,4 +29,5 @@ const translations = {
 export const i18n = new I18n(translations);
 
 i18n.enableFallback = true;
-i18n.locale = getLocales()[0].languageCode ?? "en";
+// i18n.locale = getLocales()[0].languageCode ?? "en";
+i18n.locale = "uk";
