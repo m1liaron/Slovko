@@ -22,6 +22,16 @@ const translations = {
 			selectSharedGroupAlert: "Please select a shared group",
 			year: "2024",
 		},
+        resultsScreen: {
+			filterPlaceholder: "Filter",
+			filterButton: "Filter",
+			resetButton: "Reset",
+			yourStats: "Your statistics",
+			monthNames: [
+				"January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December",
+			],
+		},
 	},
 	uk: {
 		mainScreen: {
@@ -44,6 +54,16 @@ const translations = {
 			share: "Поширити",
 			placeholder: "Назва групи",
 			selectSharedGroupAlert: "Будь ласка, виберіть групу",
+		},
+        resultsScreen: {
+			filterPlaceholder: "Фільтр",
+			filterButton: "Фільтрувати",
+			resetButton: "Скинути",
+			yourStats: "Ваша статистика",
+			monthNames: [
+				"Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень",
+				"Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень",
+			],
 		},
 	},
 };
