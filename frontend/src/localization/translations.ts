@@ -87,6 +87,20 @@ const translations = {
             frozenAlreadyBought: "Freeze already bought",
             buyFreeze: "Buy Freeze",
           },
+          registerScreen: {
+            title: "Registration",
+            namePlaceholder: "Name",
+            emailPlaceholder: "Email",
+            passwordPlaceholder: "Password",
+            confirmPasswordPlaceholder: "Confirm Password",
+            signUpButton: "Sign Up",
+            switchText: "Already have an account? Login",
+            errorMessage: {
+              requiredFields: "Fields must be filled!",
+              passwordsDoNotMatch: "Passwords do not match!",
+              registrationFailed: "Registration failed",
+            },
+          },
 	},
 	uk: {
 		mainScreen: {
@@ -174,6 +188,20 @@ const translations = {
           streakScreen: {
             frozenAlreadyBought: "Заморозку вже куплено",
             buyFreeze: "Купити Заморозку",
+          },
+          registerScreen: {
+            title: "Реєстрація",
+            namePlaceholder: "Ім'я",
+            emailPlaceholder: "Пошта",
+            passwordPlaceholder: "Пароль",
+            confirmPasswordPlaceholder: "Пітвердіть Пароль",
+            signUpButton: "Зареєструватися",
+            switchText: "Вже маєте акаунт? Увійти",
+            errorMessage: {
+              requiredFields: "Поля мають бути заповнені!",
+              passwordsDoNotMatch: "Паролі не збігаються!",
+              registrationFailed: "Реєстрація не вдалася",
+            },
           },
 	},
 };
