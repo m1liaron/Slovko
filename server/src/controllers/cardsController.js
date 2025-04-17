@@ -168,7 +168,6 @@ const updateCardsAfterReview = async (req, res) => {
 };
 
 const addCard = async (req, res) => {
-	const unsplash = await getUnsplashApi();
 	const { imageUri, ...data } = req.body;
 	try {
 		const findCard = await Card.findOne({

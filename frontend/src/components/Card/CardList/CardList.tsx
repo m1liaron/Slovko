@@ -34,6 +34,8 @@ import styles from "./CardList.styles";
 import * as FileSystem from "expo-file-system";
 import * as DocumentPicker from "expo-document-picker";
 import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
+import * as XLSX from "xlsx";
+import Toast from "react-native-toast-message";
 
 const MemoCardItem = memo(CardItem);
 
@@ -92,73 +94,182 @@ const CardList = ({ groupId }: CardListProps) => {
 		}
 	};
 
-	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-		if(Platform.OS === "web") {
-			const files = (event.target as HTMLInputElement).files;
-		if (files) {
-			const file = files[0];
-
-			const reader = new FileReader();
-			reader.onload = (e: ProgressEvent<FileReader>) => {
-				if (e?.target?.result) {
-					const fileContent = e.target.result.toString();
-
-					const lines = fileContent.split("\n");
-					const jsonObject: Record<string, string> = {};
-
-					lines.forEach((line: string, index) => {
-						const [key, value] = line.split(":");
-						if (key && value) {
-							jsonObject[key.trim()] = value.trim();
-						} else {
-							console.warn(
-								`Line ${index + 1} is not in the correct format: "${line}"`,
-							);
-						}
-					});
-
-					setJsonOutput(jsonObject);
-					setValueWords(jsonObject);
-				}
-			};
-
-			reader.readAsText(file);
+	/**
+	 * Converts an array of strings or rows (from Excel) into an object.
+	 * Each line/row is expected to be in the "key: value" format.
+	 */
+	const parseToJsonObject = (
+		data: string[] | (string | undefined)[][]
+	): Record<string, string> => {
+		const jsonObject: Record<string, string> = {};
+	
+		data.forEach((line, index) => {
+		let key: string | undefined;
+		let value: string | undefined;
+	
+		if (Array.isArray(line)) {
+			// For Excel rows (arrays)
+			[key, value] = line;
+		} else if (typeof line === "string") {
+			// For plain text
+			[key, value] = line.split(":");
 		}
+	
+		if (key && value) {
+			jsonObject[key.trim()] = value.trim();
 		} else {
-			
+			console.warn(`Line ${index + 1} is not in the correct format: "${line}"`);
 		}
+		});
+	
+		return jsonObject;
 	};
+	
 
-	const handleImportMobile = async () => {
-		try {
-			const result = await DocumentPicker.getDocumentAsync({
-				type: "text/plain",
-				copyToCacheDirectory: true,
-				multiple: false
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const files = (event.target as HTMLInputElement).files;
+		if (!files || files.length === 0) return;
+		
+		const file = files[0];
+		// If there’s no dot in the name, extension will be empty
+		const extension = file.name.includes(".")
+		  ? file.name.split(".").pop()?.toLowerCase() || ""
+		  : "";
+		const mimeType = file.type ? file.type.toLowerCase() : "";
+		
+		const reader = new FileReader();
+	  
+		reader.onload = (e: ProgressEvent<FileReader>) => {
+		  const result = e.target?.result;
+		  if (!result) return;
+	  
+		  let jsonObject: Record<string, string> = {};
+		  
+		  // Process TXT: either if the extension is "txt", mime is "text/plain", or no extension but the mime is correct.
+		  if (extension === "txt" || mimeType === "text/plain" || extension === "") {
+			// result is a string for text files
+			const lines = result.toString().split("\n");
+			jsonObject = parseToJsonObject(lines);
+		  }
+		  // Process XLSX / XLS
+		  else if (
+			extension === "xlsx" ||
+			extension === "xls" ||
+			mimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+			mimeType === "application/vnd.ms-excel"
+		  ) {
+			const data = new Uint8Array(result as ArrayBuffer);
+			const workbook: XLSX.WorkBook = XLSX.read(data, { type: "array" });
+			const sheetName: string = workbook.SheetNames[0];
+			const worksheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
+			const parsed = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as (string | undefined)[][];
+			jsonObject = parseToJsonObject(parsed);
+		  } else {
+			Toast.show({
+			  type: "error",
+			  text1: "Unsupported file format",
+			  text2: `The file "${file.name}" is not a supported type.`,
 			});
-			if(!result.canceled) {
-				const uri = result.assets[0].uri;
-				const fileContent = await FileSystem.readAsStringAsync(uri);
-				
-				const lines = fileContent.split("\n");
-				const jsonObject: Record<string, string> = {};
-
-				lines.forEach((line: string, index) => {
-					const [key, value] = line.split(":");
-					if(key && value) {
-						jsonObject[key.trim()] = value.trim();
-					} else {
-						console.log(`Line ${index + 1} is not in the correct format: "${line}"`)
-					}
-				});
-
-				setJsonOutput(jsonObject);
-				setValueWords(jsonObject);
-			}
-		} catch (error) {
-			console.error("Failed to read file: ", error);
+			return;
+		  }
+	  
+		  // If parsing yielded no keys, notify and stop.
+		  if (Object.keys(jsonObject).length === 0) {
+			Toast.show({
+			  type: "error",
+			  text1: "No valid data",
+			  text2: `The file "${file.name}" did not contain any valid data.`,
+			});
+			return;
+		  }
+	  
+		  setJsonOutput(jsonObject);
+		  setValueWords(jsonObject);
+		};
+	  
+		// Decide which method to read the file:
+		if (extension === "txt" || mimeType === "text/plain" || extension === "") {
+		  reader.readAsText(file);
+		} else if (
+		  extension === "xlsx" ||
+		  extension === "xls" ||
+		  mimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+		  mimeType === "application/vnd.ms-excel"
+		) {
+		  reader.readAsArrayBuffer(file);
+		} else {
+		  Toast.show({
+			type: "error",
+			text1: "Unsupported file format",
+			text2: `The file "${file.name}" is not a supported type.`,
+		  });
 		}
-	}
+	  };
+
+	  const handleImportMobile = async () => {
+		try {
+		  const result = await DocumentPicker.getDocumentAsync({
+			type: [
+			  "text/plain",
+			  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			  "application/vnd.ms-excel"
+			],
+			copyToCacheDirectory: true,
+			multiple: false,
+		  });
+	  
+		  if (result.canceled) return;
+	  
+		  const { uri, name, mimeType } = result.assets[0];
+		  const extension = name.includes(".")
+			? name.split(".").pop()?.toLowerCase() || ""
+			: "";
+	  
+		  let jsonObject: Record<string, string> = {};
+	  
+		  if (extension === "txt" || mimeType === "text/plain" || extension === "") {
+			const fileContent = await FileSystem.readAsStringAsync(uri);
+			const lines = fileContent.split("\n");
+			jsonObject = parseToJsonObject(lines);
+		  } else if (
+			extension === "xlsx" ||
+			extension === "xls" ||
+			mimeType === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+			mimeType === "application/vnd.ms-excel"
+		  ) {
+			const fileContent = await FileSystem.readAsStringAsync(uri, {
+			  encoding: FileSystem.EncodingType.Base64,
+			});
+			const workbook = XLSX.read(fileContent, { type: "base64" });
+			const sheetName = workbook.SheetNames[0];
+			const worksheet = workbook.Sheets[sheetName];
+			const parsed = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as (string | undefined)[][];
+			jsonObject = parseToJsonObject(parsed);
+		  } else {
+			Toast.show({
+			  type: "error",
+			  text1: "Unsupported file format",
+			  text2: `The file "${name}" is not a supported type.`,
+			});
+			return;
+		  }
+	  
+		  if (Object.keys(jsonObject).length === 0) {
+			Toast.show({
+			  type: "error",
+			  text1: "No valid data",
+			  text2: `The file "${name}" did not contain any valid data.`,
+			});
+			return;
+		  }
+	  
+		  setJsonOutput(jsonObject);
+		  setValueWords(jsonObject);
+		} catch (error) {
+		  console.error("Failed to read file: ", error);
+		}
+	  };
+	  
 
 	useEffect(() => {
 		if (group?.id !== groupId) {
@@ -217,6 +328,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				);
 			}
 			setValueWords({});
+			setJsonOutput({});
 			alert("Cards added from file successfully!");
 			return;
 		}
@@ -365,7 +477,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							}}
 						/>
 						<PressableButton
-							text="Багато"
+							text="Багато, НОВИНКА"
 							onPress={() => setAddCardMode(1)}
 							buttonStyle={{
 								flex: 1,
@@ -377,15 +489,18 @@ const CardList = ({ groupId }: CardListProps) => {
 					{addCardMode ? (
 						<View style={styles.bulkAddContainer}>
 							{Platform.OS === "web" ? (
-								<View style={styles.fileInputContainer}>
-									<Fontisto name="import" size={30} color={colors.background} />
-									<input
-										type="file"
-										accept=".txt"
-										onChange={handleFileChange}
-										style={styles.fileInput}
-									/>
+								<View>
+									<View style={styles.fileInputContainer}>
+										<Fontisto name="import" size={30} color={colors.background} />
+										<input
+											type="file"
+											onChange={handleFileChange}
+											style={styles.fileInput}
+										/>
+									</View>
+									<ThemeText>Доступні типи файлів: txt, text/plain, НОВИНКА: xlsx, xls</ThemeText>
 								</View>
+
 							) : (
 								<View>
 									<PressableButton 
@@ -394,16 +509,24 @@ const CardList = ({ groupId }: CardListProps) => {
 									/>
 								</View>
 							)}
-							{jsonOutput.length && (
+
+							{Object.keys(jsonOutput).length > 0 && (
 								<View style={styles.jsonTableContainer}>
 									<View style={styles.jsonTable}>
 										<Text style={styles.jsonTableTitle}>Дані:</Text>
-										{Object.entries(jsonOutput).map(([key, value]) => (
-											<View key={value} style={styles.jsonRow}>
-												<Text style={styles.jsonKey}>{key}</Text>
-												<Text style={styles.jsonValue}>{value}</Text>
-											</View>
-										))}
+										<FlatList
+											data={Object.entries(jsonOutput)}
+											keyExtractor={([key]) => key}
+											renderItem={({ item }) => {
+												const [key, value] = item;
+												return (
+													<View key={value} style={styles.jsonRow}>
+													<Text style={styles.jsonKey}>{key}</Text>
+													<Text style={styles.jsonValue}>{value}</Text>
+												</View>
+												)
+											}}
+										/>
 									</View>
 								</View>
 							)}

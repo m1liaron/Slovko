@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	jsonTableContainer: {
-		marginTop: 10,
+		marginTop: 10
 	},
 	jsonTableTitle: {
 		fontSize: 18,

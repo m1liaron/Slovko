@@ -109,7 +109,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 						{item.word}
 					</Text>
 				</View>
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View style={{ flexDirection: "row" }}>
 					<Entypo
 						name="pencil"
 						onPress={() => setShowEditModal(true)}
@@ -123,32 +123,34 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 			</View>
 
 			{item.translateWord && (
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<ThemeText>Переклад: </ThemeText>
-					<ThemeText style={{ fontWeight: "bold" }}>{item.translateWord}</ThemeText>
+				<View style={{ flexDirection: "row" }}>
+					<ThemeText style={{ fontWeight: "bold" }}>Переклад: </ThemeText>
+					<ThemeText>{item.translateWord}</ThemeText>
 				</View>
 			)}
 
 			{item.nextReviewAt && (
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<ThemeText>Наступний перегляд: </ThemeText>
-					<ThemeText style={{ fontWeight: "bold" }}>{formatReviewTime(item.nextReviewAt)}</ThemeText>
+				<View style={{ flexDirection: "row" }}>
+					<ThemeText style={{ fontWeight: "bold" }}>Наступний перегляд: </ThemeText>
+					<ThemeText>{formatReviewTime(item.nextReviewAt)}</ThemeText>
 				</View>
 			)}
 
 			{item.definition ? (
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<ThemeText>Визначення: </ThemeText>
-					<ThemeText style={{ fontWeight: "bold" }}>{item.definition}</ThemeText>
+				<View style={{ flexDirection: "row" }}>
+					<ThemeText>
+						<Text style={{ fontWeight: "bold" }}>Визначення: </Text>
+						<Text>{item.definition}</Text>
+					</ThemeText>
 				</View>
 			) : null}
 
 
 			{item.example ? (
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<ThemeText>Приклад: </ThemeText>
-					<ThemeText style={{ fontWeight: "bold" }}>{item.example}</ThemeText>
-				</View>
+				<ThemeText>
+						<Text style={{ fontWeight: "bold" }}>Приклад: </Text>
+						<Text>{item.example}</Text>
+					</ThemeText>
 			) : null}
 
 			<View style={{ marginTop: 10 }}>
