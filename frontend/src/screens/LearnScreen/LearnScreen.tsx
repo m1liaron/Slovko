@@ -33,6 +33,7 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
+import { i18n } from "@/localization/i18n";
 
 type Section = "cards" | "quiz" | "word" | "check" | "finish";
 
@@ -194,21 +195,21 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 	const generateSectionContent = () => {
 		const sections: SectionOption[] = [
 			{
-				text: "Quiz mode",
+				text: i18n.t("learnScreen.quizMode"),
 				iconName: "quiz",
 				state: isQuizEnabled,
 				changeState: setIsQuizEnabled,
 				sectionName: "quiz",
 			},
 			{
-				text: "Guess Word mode",
+				text: i18n.t("learnScreen.guessWordMode"),
 				iconName: "wordpress",
 				state: isGuessWordEnabled,
 				changeState: setIsGuessWordEnabled,
 				sectionName: "word",
 			},
 			{
-				text: "Check Translate mode",
+				text: i18n.t("learnScreen.checkTranslateMode"),
 				iconName: "checklist",
 				state: isCheckEnabled,
 				changeState: setIsCheckEnabled,
@@ -244,7 +245,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			const handleBeforeUnload = (event: BeforeUnloadEvent) => {
 				event.preventDefault();
 
-				return "Ваш прогрес буде не збережен, якщо ви покинете цю сторінку.";
+				return i18n.t("learnScreen.leaveStudyMessage");
 			};
 
 			window.addEventListener("beforeunload", handleBeforeUnload);
@@ -318,7 +319,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 						<ExitModal
 							modalVisible={showExitModal}
 							handleClose={() => setShowExitModal(false)}
-							text="Вийти з навчання та втратити прогрес?"
+							text={i18n.t("learnScreen.leaveStudyMessage")}
 						/>
 
 						<DefaultModal
@@ -352,7 +353,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 									fontSize: 30,
 								}}
 							>
-								Молодець! Гарно позаймався/лась
+								{i18n.t("learnScreen.lessonCompleteTitle")}
 							</Text>
 
 							<View style={{ marginBottom: 30 }}>
@@ -374,7 +375,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 									]}
 								>
 									<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-										{correctAnswersAmount * 10} очок
+										{correctAnswersAmount * 10} {i18n.t("learnScreen.score")}
 									</Text>
 								</View>
 								<View
@@ -384,12 +385,12 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 									]}
 								>
 									<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-										{accuracy}% точність
+										{accuracy}% {i18n.t("learnScreen.accuracy")}
 									</Text>
 								</View>
 							</View>
 						</View>
-						<PressableButton text="Продовжити" onPress={leaveStudy} />
+						<PressableButton text={i18n.t("learnScreen.continueButton")} onPress={leaveStudy} />
 					</>
 				)}
 			</View>

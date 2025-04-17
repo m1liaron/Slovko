@@ -112,6 +112,21 @@ const translations = {
               loginFailed: "Login failed",
             },
           },
+          learnScreen: {
+            quizMode: "Quiz mode",
+            guessWordMode: "Guess Word mode",
+            checkTranslateMode: "Check Translate mode",
+            leaveStudyMessage: "Are you sure you want to leave the study session and lose your progress?",
+            lessonCompleteTitle: "Well done! Great work!",
+            sessionDuration: "Duration",
+            score: "Score",
+            accuracy: "Accuracy",
+            continueButton: "Continue",
+            lessonOverMessage: "You have completed the lesson!",
+            timeSpent: "Time Spent",
+            totalScore: "Total Score",
+            accuracyPercentage: "Accuracy Percentage",
+          }
 	},
 	uk: {
 		mainScreen: {
@@ -225,6 +240,21 @@ const translations = {
               loginFailed: "Невдача",
             },
           },
+          learnScreen: {
+            quizMode: "Режим вікторини",
+            guessWordMode: "Режим вгадування слів",
+            checkTranslateMode: "Режим перевірки перекладу",
+            leaveStudyMessage: "Ви дійсно хочете покинути навчання та втратити прогрес?",
+            lessonCompleteTitle: "Молодець! Гарно позаймався/лась",
+            sessionDuration: "Тривалість",
+            score: "Бали",
+            accuracy: "Точність",
+            continueButton: "Продовжити",
+            lessonOverMessage: "Ви завершили урок!",
+            timeSpent: "Час витрачено",
+            totalScore: "Загальний бал",
+            accuracyPercentage: "Відсоток точності",
+          }
 	},
 };
 
