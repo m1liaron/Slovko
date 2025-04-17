@@ -124,7 +124,7 @@ export default function ProfileScreen() {
 
 	return (
 		<ThemeBackground style={{ paddingHorizontal: 40 }}>
-			<ThemeText style={styles.title}>{i18n.t("resultsScreen.profileTitle")}</ThemeText>
+			<ThemeText style={styles.title}>{i18n.t("profileScreen.profileTitle")}</ThemeText>
 
 			<View>
 				{user ? (
@@ -175,21 +175,21 @@ export default function ProfileScreen() {
 									>
 										<ThemeText>{user.points}</ThemeText>
 									</View>
-									<ThemeText>{i18n.t("resultsScreen.points")}</ThemeText>
+									<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 								</View>
 							</View>
 						)}
 						<Pressable onPress={onEditInfo}>
-							<Text style={styles.editTitle}>{i18n.t("resultsScreen.edit")}</Text>
+							<Text style={styles.editTitle}>{i18n.t("profileScreen.edit")}</Text>
 						</Pressable>
 						{!isEditing && (
 							<ThemeText style={styles.textInfo}>
-								{i18n.t("resultsScreen.personalInfo")}
+								{i18n.t("profileScreen.personalInfo")}
 							</ThemeText>
 						)}
 						{isEditing && (
 							<View>
-								<Text style={styles.keyName}>{i18n.t("resultsScreen.name")}</Text>
+								<Text style={styles.keyName}>{i18n.t("profileScreen.name")}</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -230,7 +230,7 @@ export default function ProfileScreen() {
 											color={colors.iconColor}
 										/>
 										<ThemeText style={styles.keyName}>
-											{i18n.t("resultsScreen.email")}
+											{i18n.t("profileScreen.email")}
 										</ThemeText>
 									</View>
 									<ThemeText
@@ -242,7 +242,7 @@ export default function ProfileScreen() {
 							</>
 						) : (
 							<>
-								<Text style={styles.keyName}>Пошта</Text>
+								<Text style={styles.keyName}>{i18n.t("profileScreen.email")}</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -266,7 +266,7 @@ export default function ProfileScreen() {
 						{!isEditing ? (
 							<View>
 								<ThemeText style={styles.textInfo}>
-									{i18n.t("resultsScreen.interaction")}
+									{i18n.t("profileScreen.interaction")}
 								</ThemeText>
 								<Pressable
 									style={[
@@ -288,7 +288,7 @@ export default function ProfileScreen() {
 											color={colors.iconColor}
 										/>
 										<ThemeText style={styles.keyName}>
-											{i18n.t("resultsScreen.logout")}
+											{i18n.t("profileScreen.logout")}
 										</ThemeText>
 									</View>
 									<AntDesign
@@ -317,7 +317,7 @@ export default function ProfileScreen() {
 											<Feather name="sun" size={35} color={colors.iconColor} />
 										)}
 										<ThemeText style={styles.keyName}>
-											{i18n.t("resultsScreen.changeTheme")}	
+											{i18n.t("profileScreen.changeTheme")}	
 										</ThemeText>
 									</View>
 									<Switch
@@ -352,7 +352,7 @@ export default function ProfileScreen() {
 									>
 										<ThemeText>{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}</ThemeText>
 										<ThemeText style={styles.keyName}>
-											{i18n.t("resultsScreen.changeLanguage")}
+											{i18n.t("profileScreen.changeLanguage")}
 										</ThemeText>
 									</View>
 									<Switch
@@ -374,7 +374,7 @@ export default function ProfileScreen() {
 							</View>
 						) : (
 							<PressableButton
-								text={i18n.t("resultsScreen.saveChanges")}
+								text={i18n.t("profileScreen.saveChanges")}
 								onPress={handleUpdateUser}
 							/>
 						)}
@@ -382,7 +382,7 @@ export default function ProfileScreen() {
 				) : (
 					<View>
 						<ThemeText>
-							{i18n.t("resultsScreen.noUserInfo")}
+							{i18n.t("profileScreen.noUserInfo")}
 						</ThemeText>
 					</View>
 				)}
