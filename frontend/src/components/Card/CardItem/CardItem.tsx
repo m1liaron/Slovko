@@ -16,8 +16,8 @@ import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { updateCard } from "../../../redux/cardReducer/cardSlice";
-import pickImage from "../../../utils/pickImage";
 import DefaultModal from "../../DefaultModal/DefaultModal";
+import { pickImage } from "@/utils/utils";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -109,7 +109,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 						{item.word}
 					</Text>
 				</View>
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View style={{ flexDirection: "row" }}>
 					<Entypo
 						name="pencil"
 						onPress={() => setShowEditModal(true)}
@@ -121,33 +121,37 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 					</Pressable>
 				</View>
 			</View>
-			<Text style={[styles.translate, { color: colors.primary }]}>
-				Переклад:{" "}
-				<Text style={{ fontWeight: "bold" }}>{item.translateWord}</Text>
-			</Text>
 
-			{item.nextReviewAt && (
-				<Text style={styles.reviewDate}>
-					Наступний перегляд:
-					<Text style={{ fontWeight: "bold" }}>
-						{formatReviewTime(item.nextReviewAt)}
-					</Text>
-				</Text>
-			)}
-
-			{item.definition && (
-				<ThemeText style={{ flexDirection: "row", alignItems: "baseline", gap: 1 }}>
-					Визначення: {""}
-					<ThemeText style={{ fontWeight: "bold" }}>{item.definition}</ThemeText>
-				</ThemeText>
-			)}
-
-			{item.example && (
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<ThemeText>Приклад: </ThemeText>
-					<ThemeText style={{ fontWeight: "bold" }}>{item.example}</ThemeText>
+			{item.translateWord && (
+				<View style={{ flexDirection: "row" }}>
+					<ThemeText style={{ fontWeight: "bold" }}>Переклад: </ThemeText>
+					<ThemeText>{item.translateWord}</ThemeText>
 				</View>
 			)}
+
+			{item.nextReviewAt && (
+				<View style={{ flexDirection: "row" }}>
+					<ThemeText style={{ fontWeight: "bold" }}>Наступний перегляд: </ThemeText>
+					<ThemeText>{formatReviewTime(item.nextReviewAt)}</ThemeText>
+				</View>
+			)}
+
+			{item.definition ? (
+				<View style={{ flexDirection: "row" }}>
+					<ThemeText>
+						<Text style={{ fontWeight: "bold" }}>Визначення: </Text>
+						<Text>{item.definition}</Text>
+					</ThemeText>
+				</View>
+			) : null}
+
+
+			{item.example ? (
+				<ThemeText>
+						<Text style={{ fontWeight: "bold" }}>Приклад: </Text>
+						<Text>{item.example}</Text>
+					</ThemeText>
+			) : null}
 
 			<View style={{ marginTop: 10 }}>
 				{item.image?.url ? (

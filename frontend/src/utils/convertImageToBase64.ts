@@ -18,4 +18,4 @@ const convertImageToBase64 = async (uri: string): Promise<string> => {
 	});
 };
 
-export default convertImageToBase64;
+export { convertImageToBase64 };

@@ -8,7 +8,7 @@ Notifications.setNotificationHandler({
 	}),
 });
 
-export const requestNotificationPermission = async () => {
+const requestNotificationPermission = async () => {
 	const { status } = await Notifications.getPermissionsAsync();
 	if (status !== "granted") {
 		const { status: newStatus } = await Notifications.requestPermissionsAsync();
@@ -17,7 +17,7 @@ export const requestNotificationPermission = async () => {
 	return true;
 };
 
-export const scheduleNotification = async (
+const scheduleNotification = async (
 	title: string,
 	body: string,
 	trigger: Notifications.NotificationTriggerInput,
@@ -31,3 +31,6 @@ export const scheduleNotification = async (
 		trigger,
 	});
 };
+
+
+export { requestNotificationPermission, scheduleNotification };
