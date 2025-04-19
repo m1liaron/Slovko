@@ -24,14 +24,13 @@ import {
 	getRepeatedCards,
 	getRepeatedCardsFromIds,
 } from "../../redux/cardReducer/cardSlice";
-import { getUser, logout, selectUser } from "../../redux/userReducer/userSlice";
+import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import {
 	requestNotificationPermission,
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
 import { i18n } from "@/localization/i18n";
-import { useLanguage } from "@/contexts/LanguageProvider";
 
 const MainScreen = () => {
 	const dispatch = useAppDispatch();
@@ -45,8 +44,6 @@ const MainScreen = () => {
 		(prev, curr) => prev + curr.cards.length,
 		0,
 	);
-
-	const { language, setLanguage } = useLanguage();
 
 	useEffect(() => {
 		if (Platform.OS === "android" || Platform.OS === "ios") {
@@ -191,13 +188,6 @@ const MainScreen = () => {
 					<Text style={styles.title}>{i18n.t("mainScreen.saveUkraine")}</Text>
 				</Pressable>
 			</View>
-
-			<Pressable
-				onPress={() => setLanguage(language === "en" ? "uk" : "en")}
-				style={{ position: "absolute", top: 50, right: 20, padding: 10 }}
-			>
-				<Text>{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}</Text>
-			</Pressable>
 
 			<DefaultModal
 				isVisible={showRepeatedModal}
