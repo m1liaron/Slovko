@@ -1,5 +1,5 @@
-import { I18n } from "i18n-js";
 import { getLocales } from "expo-localization";
+import { I18n } from "i18n-js";
 import { translations } from "./translations";
 
 export const i18n = new I18n(translations);

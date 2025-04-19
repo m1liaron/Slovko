@@ -1,5 +1,6 @@
 import appLogo from "@/assets/images/favicon.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -30,7 +31,6 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
-import { i18n } from "@/localization/i18n";
 
 const MainScreen = () => {
 	const dispatch = useAppDispatch();
@@ -39,7 +39,9 @@ const MainScreen = () => {
 	const { theme } = useAppTheme();
 	const [daysPassed, setDaysPassed] = useState("");
 	const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
-	const repeatedGroupsIds = useAppSelector((state) => state.cards.repeatedCards);
+	const repeatedGroupsIds = useAppSelector(
+		(state) => state.cards.repeatedCards,
+	);
 	const repeatedCardsLength = repeatedGroupsIds.reduce(
 		(prev, curr) => prev + curr.cards.length,
 		0,
@@ -63,13 +65,13 @@ const MainScreen = () => {
 				scheduleNotification(
 					i18n.t("mainScreen.notificationTitle"),
 					i18n.t("mainScreen.notificationBody", { count: repeatedCardsLength }),
-					null
+					null,
 				);
 			}
 		} else {
 			sendNotification();
 		}
-	}, [repeatedGroupsIds]);
+	}, [repeatedGroupsIds, repeatedCardsLength]);
 
 	const sendNotification = () => {
 		if (!("Notification" in window)) {
@@ -82,10 +84,15 @@ const MainScreen = () => {
 					if (permission === "granted") {
 						const appLogoUri = Image.resolveAssetSource(appLogo).uri;
 						const notificationOptions = {
-							body: i18n.t("mainScreen.notificationBody", { count: repeatedCardsLength }),
+							body: i18n.t("mainScreen.notificationBody", {
+								count: repeatedCardsLength,
+							}),
 							icon: appLogoUri,
 						};
-						new Notification(i18n.t("mainScreen.notificationTitle"), notificationOptions);
+						new Notification(
+							i18n.t("mainScreen.notificationTitle"),
+							notificationOptions,
+						);
 					} else {
 						alert(i18n.t("mainScreen.notificationPermissionDenied"));
 						console.log("Повідомлення заблоковані користувачем.");
@@ -167,7 +174,8 @@ const MainScreen = () => {
 			</Pressable>
 
 			<Text style={styles.timePassedText}>
-				{i18n.t("mainScreen.alreadyPassed")} {daysPassed} {i18n.t("mainScreen.daysPassed")}
+				{i18n.t("mainScreen.alreadyPassed")} {daysPassed}{" "}
+				{i18n.t("mainScreen.daysPassed")}
 			</Text>
 
 			{repeatedGroupsIds.length ? (
@@ -215,7 +223,10 @@ const MainScreen = () => {
 						</Pressable>
 					)}
 				/>
-				<PressableButton text={i18n.t("mainScreen.repeatAll")} onPress={learnAllRepeatedCards} />
+				<PressableButton
+					text={i18n.t("mainScreen.repeatAll")}
+					onPress={learnAllRepeatedCards}
+				/>
 			</DefaultModal>
 		</ThemeBackground>
 	);

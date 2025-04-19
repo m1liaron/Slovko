@@ -1,6 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { formatDMTDate } from "@/utils/utils";
 import type { StackScreenProps } from "@react-navigation/stack";
@@ -15,7 +16,6 @@ import {
 	getSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
-import { i18n } from "@/localization/i18n";
 
 /**
  * @param route { object: { params }}

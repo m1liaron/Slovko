@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -9,7 +10,6 @@ import ThemeBackground from "../../common/components/ThemeBackground/Themebackgr
 import ThemeText from "../../common/components/ThemeText/ThemeText";
 import { AppPath } from "../../common/enums/app/app";
 import { login } from "../../redux/userReducer/userSlice";
-import { i18n } from "@/localization/i18n";
 
 const LoginScreen = () => {
 	const navigation = useNavigation<StackNavigation>();
@@ -76,11 +76,15 @@ const LoginScreen = () => {
 			</View>
 
 			<Pressable style={styles.button} onPress={handleSubmit}>
-			<Text style={styles.buttonText}>{i18n.t("loginScreen.loginButton")}</Text>
+				<Text style={styles.buttonText}>
+					{i18n.t("loginScreen.loginButton")}
+				</Text>
 			</Pressable>
 
 			<Pressable onPress={() => navigation.navigate(AppPath.Register)}>
-			<Text style={styles.switchText}>{i18n.t("loginScreen.switchText")}</Text>
+				<Text style={styles.switchText}>
+					{i18n.t("loginScreen.switchText")}
+				</Text>
 			</Pressable>
 		</ThemeBackground>
 	);

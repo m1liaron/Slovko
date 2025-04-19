@@ -1,6 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Link, useNavigation } from "@react-navigation/native";
@@ -23,7 +24,6 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
-import { i18n } from "@/localization/i18n"
 
 type GroupedResults = {
 	[date: string]: IResult[];
@@ -107,7 +107,7 @@ const ResultsScreen = () => {
 			</View>
 		) : null;
 
-	const monthes = i18n.t("resultsScreen.monthNames") as string[]
+	const monthes = i18n.t("resultsScreen.monthNames") as string[];
 	const currentDate = new Date(showResultsYear, showResultsMonth);
 	const firstResultDate = firstResult ? new Date(firstResult) : null;
 	const moreFirstResult = firstResultDate
@@ -224,7 +224,9 @@ const ResultsScreen = () => {
 						}}
 						onPress={() => dispatch(filterResults(filterValue))}
 					>
-						<Text style={{ color: colors.primary }}>{i18n.t("resultsScreen.filterButton")}</Text>
+						<Text style={{ color: colors.primary }}>
+							{i18n.t("resultsScreen.filterButton")}
+						</Text>
 					</Pressable>
 					<Pressable
 						style={{

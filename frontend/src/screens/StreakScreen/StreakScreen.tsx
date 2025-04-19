@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
@@ -14,7 +15,6 @@ import {
 	getUserStreakDates,
 } from "../../redux/userReducer/userThunk";
 import styles from "./StreakScreen.styles";
-import { i18n } from "@/localization/i18n";
 
 type DateType = {
 	month: number;

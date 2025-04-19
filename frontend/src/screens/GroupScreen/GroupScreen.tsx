@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type {
 	RootStackParamList,
 	StackNavigation,
@@ -24,7 +25,6 @@ import {
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
 import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
-import { i18n } from "@/localization/i18n";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -151,7 +151,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 						/>
 					</Pressable>
 				</View>
-				<RenderStatusButtons/>
+				<RenderStatusButtons />
 				<Pressable
 					style={{
 						padding: 5,
@@ -177,7 +177,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 					placeholder={i18n.t("group.inputPlaceholder")}
 				/>
 
-				<PressableButton text={i18n.t("group.changeButton")} onPress={updateGroupTitle} />
+				<PressableButton
+					text={i18n.t("group.changeButton")}
+					onPress={updateGroupTitle}
+				/>
 			</DefaultModal>
 		</ThemeBackground>
 	);

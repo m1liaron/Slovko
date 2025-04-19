@@ -6,6 +6,7 @@ import type { ResultsCard } from "@/common/enums/types/result.type";
 import type { ICard } from "@/common/enums/types/types";
 import LearnCheck from "@/components/Learn/LearnCheck/LearnCheck";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type {
 	RootStackParamList,
 	StackNavigation,
@@ -33,7 +34,6 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
-import { i18n } from "@/localization/i18n";
 
 type Section = "cards" | "quiz" | "word" | "check" | "finish";
 
@@ -390,7 +390,10 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 								</View>
 							</View>
 						</View>
-						<PressableButton text={i18n.t("learnScreen.continueButton")} onPress={leaveStudy} />
+						<PressableButton
+							text={i18n.t("learnScreen.continueButton")}
+							onPress={leaveStudy}
+						/>
 					</>
 				)}
 			</View>

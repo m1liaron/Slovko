@@ -1,4 +1,5 @@
 import { useAppDispatch } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -9,7 +10,6 @@ import ThemeBackground from "../../common/components/ThemeBackground/Themebackgr
 import ThemeText from "../../common/components/ThemeText/ThemeText";
 import { AppPath } from "../../common/enums/app/app";
 import { register } from "../../redux/userReducer/userSlice";
-import { i18n } from "@/localization/i18n";
 
 const RegisterScreen = () => {
 	const navigation = useNavigation<StackNavigation>();
@@ -58,7 +58,9 @@ const RegisterScreen = () => {
 	return (
 		<ThemeBackground style={styles.container}>
 			<Toast />
-			<ThemeText style={styles.title}>{i18n.t("registerScreen.title")}</ThemeText>
+			<ThemeText style={styles.title}>
+				{i18n.t("registerScreen.title")}
+			</ThemeText>
 
 			<TextInput
 				style={styles.input}
@@ -111,11 +113,15 @@ const RegisterScreen = () => {
 			/>
 
 			<Pressable style={styles.button} onPress={handleSubmit}>
-				<ThemeText style={styles.buttonText}>{i18n.t("registerScreen.signUpButton")}</ThemeText>
+				<ThemeText style={styles.buttonText}>
+					{i18n.t("registerScreen.signUpButton")}
+				</ThemeText>
 			</Pressable>
 
 			<Pressable onPress={() => navigation.navigate(AppPath.Login)}>
-				<Text style={styles.switchText}>{i18n.t("registerScreen.switchText")}</Text>
+				<Text style={styles.switchText}>
+					{i18n.t("registerScreen.switchText")}
+				</Text>
 			</Pressable>
 		</ThemeBackground>
 	);

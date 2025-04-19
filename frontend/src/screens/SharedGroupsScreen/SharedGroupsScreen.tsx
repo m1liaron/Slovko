@@ -2,6 +2,7 @@ import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IGroup } from "@/common/enums/types/group.type";
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -34,7 +35,6 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
-import { i18n } from "@/localization/i18n";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -258,7 +258,7 @@ const SharedGroupsScreen = () => {
 						gap: 20,
 						padding: 10,
 					}}
-					keyExtractor={(item) => `${item.id}-${item.user?.id}`} 
+					keyExtractor={(item) => `${item.id}-${item.user?.id}`}
 					renderItem={renderItem}
 					onEndReached={handleLoadMore}
 					onEndReachedThreshold={0.1}
@@ -281,9 +281,12 @@ const SharedGroupsScreen = () => {
 				{groups.length ? (
 					<FlatList
 						data={groups}
-						keyExtractor={item => item.id}
+						keyExtractor={(item) => item.id}
 						renderItem={({ item }: { item: IGroup }) => (
-							<Pressable key={item.id} onPress={() => addRemoveSelectedGroup(item)}>
+							<Pressable
+								key={item.id}
+								onPress={() => addRemoveSelectedGroup(item)}
+							>
 								<ThemeText
 									style={{
 										borderColor:
@@ -318,7 +321,10 @@ const SharedGroupsScreen = () => {
 						/>
 					</View>
 				)}
-				<PressableButton text={i18n.t("sharedGroupsScreen.share")} onPress={shareGroup} />
+				<PressableButton
+					text={i18n.t("sharedGroupsScreen.share")}
+					onPress={shareGroup}
+				/>
 			</DefaultModal>
 		</ThemeBackground>
 	);

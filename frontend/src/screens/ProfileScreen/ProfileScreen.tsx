@@ -1,11 +1,20 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { AppPath } from "@/common/enums/app/AppPath";
+import { useLanguage } from "@/contexts/LanguageProvider";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import {
+	convertBlobToBase64,
+	convertImageToBase64,
+	pickImage,
+} from "@/utils/utils";
 import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import React from "react";
 import {
 	Alert,
 	Image,
@@ -24,11 +33,6 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
-import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
-import ThemeText from "@/common/components/ThemeText/ThemeText";
-import { useLanguage } from "@/contexts/LanguageProvider";
-import { i18n } from "@/localization/i18n";
-import React from "react";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -124,7 +128,9 @@ export default function ProfileScreen() {
 
 	return (
 		<ThemeBackground style={{ paddingHorizontal: 40 }}>
-			<ThemeText style={styles.title}>{i18n.t("profileScreen.profileTitle")}</ThemeText>
+			<ThemeText style={styles.title}>
+				{i18n.t("profileScreen.profileTitle")}
+			</ThemeText>
 
 			<View>
 				{user ? (
@@ -155,9 +161,7 @@ export default function ProfileScreen() {
 									gap: 10,
 								}}
 							>
-								<ThemeText style={styles.title}>
-									{user.name}
-								</ThemeText>
+								<ThemeText style={styles.title}>{user.name}</ThemeText>
 								<View
 									style={{
 										flexDirection: "row",
@@ -180,7 +184,9 @@ export default function ProfileScreen() {
 							</View>
 						)}
 						<Pressable onPress={onEditInfo}>
-							<Text style={styles.editTitle}>{i18n.t("profileScreen.edit")}</Text>
+							<Text style={styles.editTitle}>
+								{i18n.t("profileScreen.edit")}
+							</Text>
 						</Pressable>
 						{!isEditing && (
 							<ThemeText style={styles.textInfo}>
@@ -189,7 +195,9 @@ export default function ProfileScreen() {
 						)}
 						{isEditing && (
 							<View>
-								<Text style={styles.keyName}>{i18n.t("profileScreen.name")}</Text>
+								<Text style={styles.keyName}>
+									{i18n.t("profileScreen.name")}
+								</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -233,16 +241,16 @@ export default function ProfileScreen() {
 											{i18n.t("profileScreen.email")}
 										</ThemeText>
 									</View>
-									<ThemeText
-										style={styles.userInfoText}
-									>
+									<ThemeText style={styles.userInfoText}>
 										{user.email}
 									</ThemeText>
 								</View>
 							</>
 						) : (
 							<>
-								<Text style={styles.keyName}>{i18n.t("profileScreen.email")}</Text>
+								<Text style={styles.keyName}>
+									{i18n.t("profileScreen.email")}
+								</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -317,7 +325,7 @@ export default function ProfileScreen() {
 											<Feather name="sun" size={35} color={colors.iconColor} />
 										)}
 										<ThemeText style={styles.keyName}>
-											{i18n.t("profileScreen.changeTheme")}	
+											{i18n.t("profileScreen.changeTheme")}
 										</ThemeText>
 									</View>
 									<Switch
@@ -350,7 +358,9 @@ export default function ProfileScreen() {
 											gap: 10,
 										}}
 									>
-										<ThemeText>{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}</ThemeText>
+										<ThemeText>
+											{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}
+										</ThemeText>
 										<ThemeText style={styles.keyName}>
 											{i18n.t("profileScreen.changeLanguage")}
 										</ThemeText>
@@ -363,7 +373,9 @@ export default function ProfileScreen() {
 											true: colors.primary,
 										}}
 										thumbColor={
-											language === "uk"  ? colors.primary : colors.lightBackground
+											language === "uk"
+												? colors.primary
+												: colors.lightBackground
 										}
 										ios_backgroundColor={colors.lightBackground}
 										style={{
@@ -381,9 +393,7 @@ export default function ProfileScreen() {
 					</View>
 				) : (
 					<View>
-						<ThemeText>
-							{i18n.t("profileScreen.noUserInfo")}
-						</ThemeText>
+						<ThemeText>{i18n.t("profileScreen.noUserInfo")}</ThemeText>
 					</View>
 				)}
 			</View>

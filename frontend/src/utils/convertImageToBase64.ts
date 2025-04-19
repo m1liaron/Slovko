@@ -5,8 +5,8 @@ const convertImageToBase64 = async (uri: string): Promise<string> => {
 
 	return new Promise((resolve, reject) => {
 		reader.onloadend = () => {
-			if (reader?.result && typeof reader.result === 'string') {
-				const base64data = reader.result.split(',')[1]; // Get the Base64 part
+			if (reader?.result && typeof reader.result === "string") {
+				const base64data = reader.result.split(",")[1]; // Get the Base64 part
 				resolve(base64data);
 			} else {
 				reject(new Error("Failed to read file as base64 string"));

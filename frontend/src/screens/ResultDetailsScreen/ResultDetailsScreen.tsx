@@ -7,9 +7,11 @@ import {
 	Modes,
 } from "@/common/enums/types/types";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import type { StackScreenProps } from "@react-navigation/stack";
 import { useEffect, useMemo, useState } from "react";
+import type React from "react";
 import {
 	ActivityIndicator,
 	FlatList,
@@ -23,10 +25,8 @@ import BackButton from "../../components/BackButton/BackButton";
 import Loading from "../../components/Loading";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { getResultDetails } from "../../redux/resultReducer/resultSlice";
-import { formatTime, formatDMTDate } from "../../utils/utils";
+import { formatDMTDate, formatTime } from "../../utils/utils";
 import styles from "./ResultDetailsScreen.styles";
-import { i18n } from "@/localization/i18n";
-import React from "react";
 
 type ResultDetailsScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -80,9 +80,9 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 
 	const modesOptionsButtons: { key: ModeName; label: string }[] = [
 		{ key: "flashCards", label: i18n.t("resultDetailsScreen.flashCards") },
-		{ key: "check", label: i18n.t("resultDetailsScreen.check")},
-		{ key: "quiz", label: i18n.t("resultDetailsScreen.quiz")},
-		{ key: "guessWord", label: i18n.t("resultDetailsScreen.guessWord")},
+		{ key: "check", label: i18n.t("resultDetailsScreen.check") },
+		{ key: "quiz", label: i18n.t("resultDetailsScreen.quiz") },
+		{ key: "guessWord", label: i18n.t("resultDetailsScreen.guessWord") },
 	];
 
 	const renderModeButtons = () => {

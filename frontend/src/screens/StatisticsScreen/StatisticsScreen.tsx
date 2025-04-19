@@ -1,5 +1,6 @@
 import type { IStatistics, ModeName } from "@/common/enums/types/result.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, View } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
@@ -10,7 +11,6 @@ import BackButton from "../../components/BackButton/BackButton";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectResult } from "../../redux/resultReducer/resultSlice";
 import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
-import { i18n } from "@/localization/i18n";
 
 const StatisticsScreen = () => {
 	const {
@@ -30,17 +30,17 @@ const StatisticsScreen = () => {
 	const modesOptions = [
 		{ label: i18n.t("statisticsScreen.quiz"), value: "quiz" },
 		{ label: i18n.t("statisticsScreen.guessWord"), value: "guessWord" },
-	  ]
+	];
 
 	const wordsModeOptions = [
 		{ label: i18n.t("statisticsScreen.wordLength"), value: "wordLength" },
-	  ]
+	];
 
 	const graphOptions = [
 		{ label: i18n.t("statisticsScreen.linear"), value: "LinearChart" },
 		{ label: i18n.t("statisticsScreen.bar"), value: "BarChart" },
 		{ label: i18n.t("statisticsScreen.pie"), value: "PieChart" },
-	  ]
+	];
 
 	const renderGraph = () => {
 		if (!statistics) {
@@ -151,7 +151,10 @@ const StatisticsScreen = () => {
 						onValueChange={(value) => setSelectedMode(value)}
 						items={modesOptions}
 						value={selectedMode}
-						placeholder={{ label: i18n.t("statisticsScreen.selectMode"), value: "flashCards" }}
+						placeholder={{
+							label: i18n.t("statisticsScreen.selectMode"),
+							value: "flashCards",
+						}}
 						style={{
 							inputWeb: {
 								color: "#000",
@@ -179,7 +182,10 @@ const StatisticsScreen = () => {
 						onValueChange={(value) => setSelectedWordsMode(value)}
 						items={wordsModeOptions}
 						value={selectedWordsMode}
-						placeholder={{ label: i18n.t("statisticsScreen.mistakes"), value: "mistakes" }}
+						placeholder={{
+							label: i18n.t("statisticsScreen.mistakes"),
+							value: "mistakes",
+						}}
 						style={{
 							inputWeb: {
 								color: "#000",
@@ -207,7 +213,10 @@ const StatisticsScreen = () => {
 					onValueChange={(value) => setSelectedGraph(value)}
 					items={graphOptions}
 					value={selectedGraph}
-					placeholder={{ label: i18n.t("statisticsScreen.selectGraph"), value: null }}
+					placeholder={{
+						label: i18n.t("statisticsScreen.selectGraph"),
+						value: null,
+					}}
 					style={{
 						inputWeb: {
 							color: "#000",
