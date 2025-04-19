@@ -36,6 +36,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
 import * as XLSX from "xlsx";
 import Toast from "react-native-toast-message";
+import { i18n } from "@/localization/i18n";
 
 const MemoCardItem = memo(CardItem);
 
@@ -447,7 +448,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							</Pressable>
 						)}
 					</View>
-					<PressableButton onPress={navigateToLearn} text="Вчитися" />
+					<PressableButton onPress={navigateToLearn} text={i18n.t("group.cardList.learnButton")} />
 				</View>
 			)}
 			<AddButton onPress={() => setShowAddModal(true)} />
@@ -458,7 +459,7 @@ const CardList = ({ groupId }: CardListProps) => {
 			>
 				<View style={styles.formContainer}>
 					<Text style={[styles.title, { color: colors.primary }]}>
-						Додайте Карточку!
+						{i18n.t("group.cardList.addCardTitle")}
 					</Text>
 					<View
 						style={{
@@ -469,7 +470,7 @@ const CardList = ({ groupId }: CardListProps) => {
 						}}
 					>
 						<PressableButton
-							text="Одна"
+							text={i18n.t("group.cardList.oneCard")}
 							onPress={() => setAddCardMode(0)}
 							buttonStyle={{
 								flex: 1,
@@ -477,7 +478,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							}}
 						/>
 						<PressableButton
-							text="Багато, НОВИНКА"
+							text={i18n.t("group.cardList.manyCards")}
 							onPress={() => setAddCardMode(1)}
 							buttonStyle={{
 								flex: 1,
@@ -498,13 +499,13 @@ const CardList = ({ groupId }: CardListProps) => {
 											style={styles.fileInput}
 										/>
 									</View>
-									<ThemeText>Доступні типи файлів: txt, text/plain, НОВИНКА: xlsx, xls</ThemeText>
+									<ThemeText>{i18n.t("group.cardList.fileTypes")}</ThemeText>
 								</View>
 
 							) : (
 								<View>
 									<PressableButton 
-										text="Імпортувати .txt"
+										text={i18n.t("group.cardList.importTxt")}
 										onPress={handleImportMobile}
 									/>
 								</View>
@@ -513,7 +514,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							{Object.keys(jsonOutput).length > 0 && (
 								<View style={styles.jsonTableContainer}>
 									<View style={styles.jsonTable}>
-										<Text style={styles.jsonTableTitle}>Дані:</Text>
+										<Text style={styles.jsonTableTitle}>{i18n.t("group.cardList.dataTitle")}</Text>
 										<FlatList
 											data={Object.entries(jsonOutput)}
 											keyExtractor={([key]) => key}
@@ -534,7 +535,7 @@ const CardList = ({ groupId }: CardListProps) => {
 					) : (
 						<View>
 							<PressableButton
-								text="Виберіть зображення з галереї"
+								text={i18n.t("group.cardList.chooseImage")}
 								onPress={() => pickImage(imageUri, setImageUri)}
 							/>
 							{imageUri !== "" && (
@@ -572,17 +573,17 @@ const CardList = ({ groupId }: CardListProps) => {
 							<AddInput
 								value={value}
 								onChangeText={setValue}
-								placeholder="Слово..."
+								placeholder={i18n.t("group.cardList.wordPlaceholder")}
 								onFocus={fetchUnsplashPhotos}
 							/>
 
 							<AddInput
 								value={answerWord}
 								onChangeText={setAnswerWord}
-								placeholder="Відповідь..."
+								placeholder={i18n.t("group.cardList.answerPlaceholder")}
 							/>
 							<View style={{ flexDirection: "row" }}>
-								<ThemeText>Валідація: </ThemeText>
+								<ThemeText>{i18n.t("group.cardList.validation")} </ThemeText>
 								<Checkbox
 									value={isValidateWord}
 									onValueChange={setIsValidateWord}
@@ -591,7 +592,7 @@ const CardList = ({ groupId }: CardListProps) => {
 						</View>
 					)}
 
-					<PressableButton onPress={onSaveCard} text="Додати" />
+					<PressableButton onPress={onSaveCard} text={i18n.t("group.cardList.addButton")} />
 					{error && status === DataStatus.ERROR && (
 						<Text style={{ fontSize: 30, color: "#ff0000" }}>{error}</Text>
 					)}
