@@ -1,11 +1,20 @@
+import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { AppPath } from "@/common/enums/app/AppPath";
+import { useLanguage } from "@/contexts/LanguageProvider";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import {
+	convertBlobToBase64,
+	convertImageToBase64,
+	pickImage,
+} from "@/utils/utils";
 import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import React from "react";
 import {
 	Alert,
 	Image,
@@ -24,7 +33,6 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
-import { convertBlobToBase64, convertImageToBase64, pickImage } from "@/utils/utils";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -38,6 +46,8 @@ export default function ProfileScreen() {
 
 	const [isThemeDark, setThemeDark] = useState(theme.dark === true);
 	const [isEditing, setIsEditing] = useState(false);
+
+	const { language, setLanguage } = useLanguage();
 
 	useEffect(() => {
 		if (user) {
@@ -112,9 +122,15 @@ export default function ProfileScreen() {
 		toggleTheme();
 	};
 
+	const toggleLanguage = () => {
+		setLanguage(language === "en" ? "uk" : "en");
+	};
+
 	return (
 		<ThemeBackground style={{ paddingHorizontal: 40 }}>
-			<Text style={[styles.title, { color: colors.primary }]}>Ваш профіль</Text>
+			<ThemeText style={styles.title}>
+				{i18n.t("profileScreen.profileTitle")}
+			</ThemeText>
 
 			<View>
 				{user ? (
@@ -145,9 +161,7 @@ export default function ProfileScreen() {
 									gap: 10,
 								}}
 							>
-								<Text style={[styles.title, { color: colors.primary }]}>
-									{user.name}
-								</Text>
+								<ThemeText style={styles.title}>{user.name}</ThemeText>
 								<View
 									style={{
 										flexDirection: "row",
@@ -163,23 +177,27 @@ export default function ProfileScreen() {
 											borderRadius: 10,
 										}}
 									>
-										<Text>{user.points}</Text>
+										<ThemeText>{user.points}</ThemeText>
 									</View>
-									<Text style={{ color: colors.primary }}>Очків</Text>
+									<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 								</View>
 							</View>
 						)}
 						<Pressable onPress={onEditInfo}>
-							<Text style={styles.editTitle}>Редагувати</Text>
+							<Text style={styles.editTitle}>
+								{i18n.t("profileScreen.edit")}
+							</Text>
 						</Pressable>
 						{!isEditing && (
-							<Text style={[styles.textInfo, { color: colors.primary }]}>
-								Особиста інформація
-							</Text>
+							<ThemeText style={styles.textInfo}>
+								{i18n.t("profileScreen.personalInfo")}
+							</ThemeText>
 						)}
 						{isEditing && (
 							<View>
-								<Text style={styles.keyName}>Ім'я</Text>
+								<Text style={styles.keyName}>
+									{i18n.t("profileScreen.name")}
+								</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -219,20 +237,20 @@ export default function ProfileScreen() {
 											size={35}
 											color={colors.iconColor}
 										/>
-										<Text style={[styles.keyName, { color: colors.primary }]}>
-											Пошта
-										</Text>
+										<ThemeText style={styles.keyName}>
+											{i18n.t("profileScreen.email")}
+										</ThemeText>
 									</View>
-									<Text
-										style={[styles.userInfoText, { color: colors.primary }]}
-									>
+									<ThemeText style={styles.userInfoText}>
 										{user.email}
-									</Text>
+									</ThemeText>
 								</View>
 							</>
 						) : (
 							<>
-								<Text style={styles.keyName}>Пошта</Text>
+								<Text style={styles.keyName}>
+									{i18n.t("profileScreen.email")}
+								</Text>
 								<View
 									style={[
 										styles.editInputContainer,
@@ -255,9 +273,9 @@ export default function ProfileScreen() {
 
 						{!isEditing ? (
 							<View>
-								<Text style={[styles.textInfo, { color: colors.primary }]}>
-									Взаємодія
-								</Text>
+								<ThemeText style={styles.textInfo}>
+									{i18n.t("profileScreen.interaction")}
+								</ThemeText>
 								<Pressable
 									style={[
 										styles.infoItem,
@@ -277,9 +295,9 @@ export default function ProfileScreen() {
 											size={35}
 											color={colors.iconColor}
 										/>
-										<Text style={[styles.keyName, { color: colors.primary }]}>
-											Вийти з акаунту
-										</Text>
+										<ThemeText style={styles.keyName}>
+											{i18n.t("profileScreen.logout")}
+										</ThemeText>
 									</View>
 									<AntDesign
 										name="arrowright"
@@ -306,9 +324,9 @@ export default function ProfileScreen() {
 										) : (
 											<Feather name="sun" size={35} color={colors.iconColor} />
 										)}
-										<Text style={[styles.keyName, { color: colors.primary }]}>
-											Змінити тему
-										</Text>
+										<ThemeText style={styles.keyName}>
+											{i18n.t("profileScreen.changeTheme")}
+										</ThemeText>
 									</View>
 									<Switch
 										value={isThemeDark}
@@ -326,20 +344,56 @@ export default function ProfileScreen() {
 										}}
 									/>
 								</View>
+
+								<View
+									style={[
+										styles.infoItem,
+										{ backgroundColor: colors.lightBackground },
+									]}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											gap: 10,
+										}}
+									>
+										<ThemeText>
+											{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}
+										</ThemeText>
+										<ThemeText style={styles.keyName}>
+											{i18n.t("profileScreen.changeLanguage")}
+										</ThemeText>
+									</View>
+									<Switch
+										value={language === "uk"}
+										onValueChange={toggleLanguage}
+										trackColor={{
+											false: colors.background,
+											true: colors.primary,
+										}}
+										thumbColor={
+											language === "uk"
+												? colors.primary
+												: colors.lightBackground
+										}
+										ios_backgroundColor={colors.lightBackground}
+										style={{
+											transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+										}}
+									/>
+								</View>
 							</View>
 						) : (
 							<PressableButton
-								text="Зберегти зміни"
+								text={i18n.t("profileScreen.saveChanges")}
 								onPress={handleUpdateUser}
 							/>
 						)}
 					</View>
 				) : (
 					<View>
-						<Text style={{ color: colors.primary }}>
-							Немає інформації про данного користувача, перезайдіть у застосунок
-							або в акаунт.
-						</Text>
+						<ThemeText>{i18n.t("profileScreen.noUserInfo")}</ThemeText>
 					</View>
 				)}
 			</View>

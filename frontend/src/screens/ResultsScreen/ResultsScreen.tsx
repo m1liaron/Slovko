@@ -1,6 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { AntDesign, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { Link, useNavigation } from "@react-navigation/native";
@@ -106,20 +107,7 @@ const ResultsScreen = () => {
 			</View>
 		) : null;
 
-	const monthes = [
-		"Січень",
-		"Лютий",
-		"Березень",
-		"Квітень",
-		"Травень",
-		"Червень",
-		"Липень",
-		"Серпень",
-		"Вересень",
-		"Жовтень",
-		"Листопад",
-		"Грудень",
-	];
+	const monthes = i18n.t("resultsScreen.monthNames") as string[];
 	const currentDate = new Date(showResultsYear, showResultsMonth);
 	const firstResultDate = firstResult ? new Date(firstResult) : null;
 	const moreFirstResult = firstResultDate
@@ -221,7 +209,7 @@ const ResultsScreen = () => {
 							alignSelf: "flex-end",
 							color: colors.primary,
 						}}
-						placeholder="Фільтр"
+						placeholder={i18n.t("resultsScreen.filterPlaceholder")}
 						placeholderTextColor={colors.primary}
 						value={filterValue}
 						onChangeText={setFilterValue}
@@ -236,7 +224,9 @@ const ResultsScreen = () => {
 						}}
 						onPress={() => dispatch(filterResults(filterValue))}
 					>
-						<Text style={{ color: colors.primary }}>Фільтрувати</Text>
+						<Text style={{ color: colors.primary }}>
+							{i18n.t("resultsScreen.filterButton")}
+						</Text>
 					</Pressable>
 					<Pressable
 						style={{
@@ -254,7 +244,7 @@ const ResultsScreen = () => {
 			)}
 
 			<Link to={`/${AppPath.Statistics}`} style={{ color: colors.primary }}>
-				Ваша статистика
+				{i18n.t("resultsScreen.yourStats")}
 			</Link>
 
 			<FlatList

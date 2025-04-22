@@ -8,5 +8,4 @@ function formatDMTDate(propsDate: Date) {
 	return `${day}.${month}, ${hours}:${minutes}`;
 }
 
-
-export { formatDMTDate }
+export { formatDMTDate };
