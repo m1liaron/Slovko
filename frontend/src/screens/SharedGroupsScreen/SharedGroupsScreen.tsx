@@ -14,6 +14,7 @@ import {
 	Platform,
 	Pressable,
 	TextInput,
+	useWindowDimensions,
 	View,
 } from "react-native";
 import AvatarImage from "../../../assets/images/avatar.png";
@@ -42,6 +43,7 @@ const SharedGroupsScreen = () => {
 		theme: { colors },
 	} = useAppTheme();
 	const dispatch = useAppDispatch();
+	const { width } = useWindowDimensions();
 	const navigation = useNavigation<StackNavigation>();
 	const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
 		(state) => state.sharedGroups,
@@ -123,7 +125,7 @@ const SharedGroupsScreen = () => {
 			}}
 		>
 			<Pressable
-				style={[styles.container, { backgroundColor: colors.lightBackground }]}
+				style={[styles.container, { backgroundColor: colors.lightBackground, flexWrap: "wrap" }]}
 				onPress={() =>
 					navigation.navigate(AppPath.SharedGroupDetails, {
 						sharedGroupId: item.id,
@@ -148,13 +150,11 @@ const SharedGroupsScreen = () => {
 					</View>
 					<View
 						style={{
-							borderWidth: 2,
-							borderColor: colors.primary,
-							borderRadius: 10,
 							padding: 5,
+							maxWidth: width - 300
 						}}
 					>
-						<ThemeText style={{ fontSize: 30 }}>{item.title}</ThemeText>
+						<ThemeText style={{ fontSize: 30, overflow: "hidden" }} numberOfLines={1}>{item.title}</ThemeText>
 					</View>
 				</View>
 
@@ -286,6 +286,7 @@ const SharedGroupsScreen = () => {
 							<Pressable
 								key={item.id}
 								onPress={() => addRemoveSelectedGroup(item)}
+								style={{ maxWidth: 100 }}
 							>
 								<ThemeText
 									style={{
@@ -298,6 +299,7 @@ const SharedGroupsScreen = () => {
 										fontSize: 30,
 										padding: 20,
 									}}
+									numberOfLines={1}
 								>
 									{item.title}
 								</ThemeText>
