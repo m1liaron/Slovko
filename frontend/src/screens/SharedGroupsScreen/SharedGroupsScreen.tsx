@@ -286,7 +286,6 @@ const SharedGroupsScreen = () => {
 							<Pressable
 								key={item.id}
 								onPress={() => addRemoveSelectedGroup(item)}
-								style={{ maxWidth: 100 }}
 							>
 								<ThemeText
 									style={{
@@ -299,7 +298,6 @@ const SharedGroupsScreen = () => {
 										fontSize: 30,
 										padding: 20,
 									}}
-									numberOfLines={1}
 								>
 									{item.title}
 								</ThemeText>

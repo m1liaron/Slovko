@@ -43,7 +43,7 @@ const sharedGroupSlice = createSlice({
 			);
 		},
 		filterMySharedGroups: (state, action) => {
-			state.sharedGroups = state.filteredGroups.filter(
+			state.sharedGroups = [...state.sharedGroups].filter(
 				(item) => item.userId === action.payload.userId,
 			);
 		},
