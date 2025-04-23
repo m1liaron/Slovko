@@ -1,8 +1,9 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Calendar } from "react-native-calendars";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
@@ -135,7 +136,7 @@ const StreakScreen = () => {
 				{user?.frozen && (
 					<View>
 						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
-						<ThemeText>Заморозку вже купленно</ThemeText>
+						<ThemeText>{i18n.t("streakScreen.frozenAlreadyBought")}</ThemeText>
 					</View>
 				)}
 
@@ -149,7 +150,7 @@ const StreakScreen = () => {
 					>
 						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
 						<PressableButton
-							text="Купити Заморозку"
+							text={i18n.t("streakScreen.buyFreeze")}
 							onPress={() => dispatch(buyFreeze({ froze: 100 }))}
 							buttonStyle={{
 								padding: 20,

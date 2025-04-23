@@ -12,15 +12,16 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 interface ThemeTextProps {
 	children: ReactNode;
 	style?: StyleProp<TextStyle>;
+	numberOfLines?: number
 }
 
-const ThemeText = ({ children, style }: ThemeTextProps) => {
+const ThemeText = ({ children, style, numberOfLines }: ThemeTextProps) => {
 	const {
 		theme: {
 			colors: { primary },
 		},
 	} = useAppTheme();
-	return <Text style={[style, { color: primary }]}>{children}</Text>;
+	return <Text style={[style, { color: primary }]} numberOfLines={numberOfLines}>{children}</Text>;
 };
 
 export default ThemeText;

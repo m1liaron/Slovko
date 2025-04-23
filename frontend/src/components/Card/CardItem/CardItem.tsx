@@ -1,6 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { ICard } from "@/common/enums/types/card.type";
 import { useAppDispatch } from "@/hooks/redux.hooks";
+import { pickImage } from "@/utils/utils";
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -17,7 +18,6 @@ import PressableButton from "../../../common/components/PressableButton/Pressabl
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { updateCard } from "../../../redux/cardReducer/cardSlice";
 import DefaultModal from "../../DefaultModal/DefaultModal";
-import { pickImage } from "@/utils/utils";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -131,7 +131,9 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 
 			{item.nextReviewAt && (
 				<View style={{ flexDirection: "row" }}>
-					<ThemeText style={{ fontWeight: "bold" }}>Наступний перегляд: </ThemeText>
+					<ThemeText style={{ fontWeight: "bold" }}>
+						Наступний перегляд:{" "}
+					</ThemeText>
 					<ThemeText>{formatReviewTime(item.nextReviewAt)}</ThemeText>
 				</View>
 			)}
@@ -145,19 +147,22 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 				</View>
 			) : null}
 
-
 			{item.example ? (
 				<ThemeText>
-						<Text style={{ fontWeight: "bold" }}>Приклад: </Text>
-						<Text>{item.example}</Text>
-					</ThemeText>
+					<Text style={{ fontWeight: "bold" }}>Приклад: </Text>
+					<Text>{item.example}</Text>
+				</ThemeText>
 			) : null}
 
 			<View style={{ marginTop: 10 }}>
 				{item.image?.url ? (
 					<Image
 						source={{ uri: item.image.url.toString() }}
-						style={{ width: item.definition ? 100 : 200, height: item.definition ? 100 : 200, borderRadius: 10 }}
+						style={{
+							width: item.definition ? 100 : 200,
+							height: item.definition ? 100 : 200,
+							borderRadius: 10,
+						}}
 					/>
 				) : null}
 			</View>

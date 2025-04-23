@@ -2,6 +2,7 @@ import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IGroup } from "@/common/enums/types/group.type";
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Feather, FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -13,6 +14,7 @@ import {
 	Platform,
 	Pressable,
 	TextInput,
+	useWindowDimensions,
 	View,
 } from "react-native";
 import AvatarImage from "../../../assets/images/avatar.png";
@@ -41,6 +43,7 @@ const SharedGroupsScreen = () => {
 		theme: { colors },
 	} = useAppTheme();
 	const dispatch = useAppDispatch();
+	const { width } = useWindowDimensions();
 	const navigation = useNavigation<StackNavigation>();
 	const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
 		(state) => state.sharedGroups,
@@ -113,6 +116,7 @@ const SharedGroupsScreen = () => {
 
 	const renderItem = ({ item }: { item: ISharedGroup }) => (
 		<View
+			key={item.id}
 			style={{
 				flexDirection: "row",
 				justifyContent: "center",
@@ -121,7 +125,7 @@ const SharedGroupsScreen = () => {
 			}}
 		>
 			<Pressable
-				style={[styles.container, { backgroundColor: colors.lightBackground }]}
+				style={[styles.container, { backgroundColor: colors.lightBackground, flexWrap: "wrap" }]}
 				onPress={() =>
 					navigation.navigate(AppPath.SharedGroupDetails, {
 						sharedGroupId: item.id,
@@ -146,13 +150,11 @@ const SharedGroupsScreen = () => {
 					</View>
 					<View
 						style={{
-							borderWidth: 2,
-							borderColor: colors.primary,
-							borderRadius: 10,
 							padding: 5,
+							maxWidth: width - 300
 						}}
 					>
-						<ThemeText style={{ fontSize: 30 }}>{item.title}</ThemeText>
+						<ThemeText style={{ fontSize: 30, overflow: "hidden" }} numberOfLines={1}>{item.title}</ThemeText>
 					</View>
 				</View>
 
@@ -190,7 +192,7 @@ const SharedGroupsScreen = () => {
 						2024
 					</ThemeText>
 					<PressableButton
-						text="Мої поширені групи"
+						text={i18n.t("sharedGroupsScreen.mySharedGroups")}
 						onPress={() => dispatch(filterMySharedGroups({ userId: user?.id }))}
 					/>
 					<Pressable onPress={() => setShowFilterInput(!showFilterInput)}>
@@ -216,7 +218,7 @@ const SharedGroupsScreen = () => {
 							alignSelf: "flex-end",
 							color: colors.primary,
 						}}
-						placeholder="Фільтр"
+						placeholder={i18n.t("sharedGroupsScreen.filter")}
 						placeholderTextColor={colors.primary}
 						value={filterValue}
 						onChangeText={setFilterValue}
@@ -231,7 +233,7 @@ const SharedGroupsScreen = () => {
 						}}
 						onPress={() => dispatch(filterSharedGroups(filterValue))}
 					>
-						<ThemeText>Фільтрувати</ThemeText>
+						<ThemeText>{i18n.t("sharedGroupsScreen.filterButton")}</ThemeText>
 					</Pressable>
 					<Pressable
 						style={{
@@ -256,13 +258,14 @@ const SharedGroupsScreen = () => {
 						gap: 20,
 						padding: 10,
 					}}
+					keyExtractor={(item) => `${item.id}-${item.user?.id}`}
 					renderItem={renderItem}
 					onEndReached={handleLoadMore}
 					onEndReachedThreshold={0.1}
 					ListFooterComponent={renderFooter}
 				/>
 			) : (
-				<ThemeText>Немає пошеренних груп</ThemeText>
+				<ThemeText>{i18n.t("sharedGroupsScreen.noGroups")}</ThemeText>
 			)}
 
 			<AddButton onPress={() => setShowModal(true)} />
@@ -273,13 +276,17 @@ const SharedGroupsScreen = () => {
 				<AddInput
 					value={sharedGroupTitle}
 					onChangeText={setSharedGroupTitle}
-					placeholder="Назва групи"
+					placeholder={i18n.t("sharedGroupsScreen.placeholder")}
 				/>
 				{groups.length ? (
 					<FlatList
 						data={groups}
+						keyExtractor={(item) => item.id}
 						renderItem={({ item }: { item: IGroup }) => (
-							<Pressable onPress={() => addRemoveSelectedGroup(item)}>
+							<Pressable
+								key={item.id}
+								onPress={() => addRemoveSelectedGroup(item)}
+							>
 								<ThemeText
 									style={{
 										borderColor:
@@ -296,6 +303,7 @@ const SharedGroupsScreen = () => {
 								</ThemeText>
 							</Pressable>
 						)}
+						style={{ height: 400 }}
 					/>
 				) : (
 					<View>
@@ -304,16 +312,19 @@ const SharedGroupsScreen = () => {
 								fontSize: 30,
 							}}
 						>
-							Немає груп
+							{i18n.t("sharedGroupsScreen.noUserGroups")}
 						</ThemeText>
 						<PressableButton
-							text="Створити групу"
+							text={i18n.t("sharedGroupsScreen.createGroup")}
 							onPress={() => navigation.navigate(AppPath.Home)}
 							buttonStyle={{ padding: 20 }}
 						/>
 					</View>
 				)}
-				<PressableButton text="Поширити" onPress={shareGroup} />
+				<PressableButton
+					text={i18n.t("sharedGroupsScreen.share")}
+					onPress={shareGroup}
+				/>
 			</DefaultModal>
 		</ThemeBackground>
 	);

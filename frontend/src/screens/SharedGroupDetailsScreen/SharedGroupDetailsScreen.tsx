@@ -1,9 +1,9 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import formatDMTDate from "@/utils/formatDMTDate";
-import { formatTime } from "@/utils/formatTime";
+import { formatDMTDate } from "@/utils/utils";
 import type { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
@@ -85,7 +85,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 						>
 							<ThemeText>{item.word}</ThemeText>
 							<ThemeText>
-								Переклад:{" "}
+								{i18n.t("sharedGroup.translation")}
 								<Text style={{ fontWeight: "bold" }}>{item.translateWord}</Text>
 							</ThemeText>
 						</View>
@@ -94,13 +94,13 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 			) : (
 				<View>
 					<Text style={{ color: colors.primary, fontSize: 40 }}>
-						Немає карток тут
+						{i18n.t("sharedGroup.noCards")}
 					</Text>
 				</View>
 			)}
 			{/*  !TODO function to copy shared group */}
 			<PressableButton
-				text="Скопіювати групу"
+				text={i18n.t("sharedGroup.copyGroupButton")}
 				onPress={() => dispatch(copySharedGroup(sharedGroupId))}
 			/>
 		</ThemeBackground>

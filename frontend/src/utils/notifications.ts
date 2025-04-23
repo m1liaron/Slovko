@@ -32,5 +32,4 @@ const scheduleNotification = async (
 	});
 };
 
-
 export { requestNotificationPermission, scheduleNotification };

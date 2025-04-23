@@ -1,5 +1,6 @@
 import appLogo from "@/assets/images/favicon.png";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -24,7 +25,7 @@ import {
 	getRepeatedCards,
 	getRepeatedCardsFromIds,
 } from "../../redux/cardReducer/cardSlice";
-import { getUser, logout, selectUser } from "../../redux/userReducer/userSlice";
+import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import {
 	requestNotificationPermission,
 	scheduleNotification,
@@ -59,15 +60,18 @@ const MainScreen = () => {
 	}, []);
 
 	useEffect(() => {
-		const notificationText = `У вас є ${repeatedGroupsIds.length} для повторення.`;
 		if (Platform.OS === "android" || Platform.OS === "ios") {
 			if (repeatedGroupsIds.length > 0) {
-				scheduleNotification("Час для повторення!", notificationText, null);
+				scheduleNotification(
+					i18n.t("mainScreen.notificationTitle"),
+					i18n.t("mainScreen.notificationBody", { count: repeatedCardsLength }),
+					null,
+				);
 			}
 		} else {
 			sendNotification();
 		}
-	}, [repeatedGroupsIds]);
+	}, [repeatedGroupsIds, repeatedCardsLength]);
 
 	const sendNotification = () => {
 		if (!("Notification" in window)) {
@@ -80,12 +84,17 @@ const MainScreen = () => {
 					if (permission === "granted") {
 						const appLogoUri = Image.resolveAssetSource(appLogo).uri;
 						const notificationOptions = {
-							body: `У вас є ${repeatedCardsLength} слова для повторення.`,
+							body: i18n.t("mainScreen.notificationBody", {
+								count: repeatedCardsLength,
+							}),
 							icon: appLogoUri,
 						};
-						new Notification("Push Notification", notificationOptions);
+						new Notification(
+							i18n.t("mainScreen.notificationTitle"),
+							notificationOptions,
+						);
 					} else {
-						alert("Дозвольте надсилати повідомлення про слова для повторення");
+						alert(i18n.t("mainScreen.notificationPermissionDenied"));
 						console.log("Повідомлення заблоковані користувачем.");
 					}
 				}
@@ -100,9 +109,8 @@ const MainScreen = () => {
 	const daysSince = useCallback((dateString: string) => {
 		const targetDate = new Date(dateString).getTime();
 		const now = new Date().getTime();
-
 		const totalDays = Math.floor((now - targetDate) / (1000 * 3600 * 24));
-		return `${totalDays} днів`;
+		return `${totalDays}`;
 	}, []);
 
 	useEffect(() => {
@@ -164,8 +172,10 @@ const MainScreen = () => {
 				<FontAwesome6 name="fire-flame-simple" size={30} color={streakColor} />
 				<Text style={{ color: streakColor, fontSize: 35 }}>{user?.streak}</Text>
 			</Pressable>
+
 			<Text style={styles.timePassedText}>
-				Вже минуло {daysPassed} з початку війни.
+				{i18n.t("mainScreen.alreadyPassed")} {daysPassed}{" "}
+				{i18n.t("mainScreen.daysPassed")}
 			</Text>
 
 			{repeatedGroupsIds.length ? (
@@ -174,15 +184,16 @@ const MainScreen = () => {
 					onPress={() => setShowRepeatedModal(true)}
 				>
 					<Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-						Повторити слова - {repeatedCardsLength}
+						{i18n.t("mainScreen.repeatWords")} - {repeatedCardsLength}
 					</Text>
 				</Pressable>
 			) : null}
 
 			<GroupList />
+
 			<View style={styles.anouncement}>
 				<Pressable onPress={openLink}>
-					<Text style={styles.title}>Save Ukraine!</Text>
+					<Text style={styles.title}>{i18n.t("mainScreen.saveUkraine")}</Text>
 				</Pressable>
 			</View>
 
@@ -212,10 +223,12 @@ const MainScreen = () => {
 						</Pressable>
 					)}
 				/>
-				<PressableButton text="Повторити усі" onPress={learnAllRepeatedCards} />
+				<PressableButton
+					text={i18n.t("mainScreen.repeatAll")}
+					onPress={learnAllRepeatedCards}
+				/>
 			</DefaultModal>
 		</ThemeBackground>
 	);
 };
-
 export default MainScreen;
