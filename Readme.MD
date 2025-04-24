@@ -1,8 +1,44 @@
-# 📚 FlashCards – Learn Foreign Words with Smart Repetition and Fun Game Modes
+# 📚 Slovko – Learn Foreign Words with Smart Repetition and Fun Game Modes
 
 FlashCards is a modern mobile app built to help you master foreign words—or any kind of facts—efficiently and enjoyably. Whether you're learning English, German, or any subject matter, FlashCards offers a customizable and interactive experience to boost your memory using scientifically-backed methods.
 
-## ✨ Key Features
+## How to start with app
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (recommended: latest LTS version)
+- [Expo CLI](https://docs.expo.dev/workflow/expo-cli/):  
+  ```bash
+  npm install -g expo-cli
+  Git
+  A smartphone with the Expo Go app (iOS/Android) or an emulator/simulator.
+
+## 🚀 Getting Started
+1. **Install dependencies:**
+
+   ```bash
+   cd frontend
+   
+   npm install
+   # or
+   yarn
+
+   cd server
+   npm i
+   ```
+   
+2. **Start the development server:**
+
+   ```bash
+   expo start
+   
+   # open other terminal for backend
+   cd server
+   npm run dev
+   ```
+
+   This will open the Expo Developer Tools in your browser. You can scan the QR code with Expo Go or run the app in a simulator or in web.
+
+# ✨ Key Features
 
 ### 🗂️ Grouped Learning
 - **Custom Groups & Cards**: Organize words into thematic groups.
