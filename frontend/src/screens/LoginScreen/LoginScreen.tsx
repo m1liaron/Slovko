@@ -4,12 +4,13 @@ import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import Toast from "react-native-toast-message";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import ThemeText from "../../common/components/ThemeText/ThemeText";
 import { AppPath } from "../../common/enums/app/app";
 import { login } from "../../redux/userReducer/userSlice";
+import styles from "./LoginScreen.styles";
 
 const LoginScreen = () => {
 	const navigation = useNavigation<StackNavigation>();
@@ -89,62 +90,5 @@ const LoginScreen = () => {
 		</ThemeBackground>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		justifyContent: "center",
-		alignItems: "center",
-		paddingHorizontal: 20,
-		width: "100%",
-	},
-	title: {
-		fontSize: 28,
-		fontWeight: "bold",
-		marginBottom: 30,
-	},
-	input: {
-		width: "100%",
-		maxWidth: 400,
-		height: 50,
-		borderColor: "#ddd",
-		borderWidth: 1,
-		borderRadius: 8,
-		paddingHorizontal: 15,
-		marginBottom: 20,
-		backgroundColor: "#fff",
-		fontSize: 16,
-	},
-	passwordContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		width: "100%",
-		maxWidth: 400,
-		marginBottom: 20,
-	},
-	iconContainer: {
-		paddingHorizontal: 10,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	button: {
-		width: "100%",
-		maxWidth: 400,
-		height: 50,
-		backgroundColor: "#3498db",
-		borderRadius: 8,
-		justifyContent: "center",
-		alignItems: "center",
-		marginBottom: 15,
-	},
-	buttonText: {
-		color: "#fff",
-		fontSize: 18,
-		fontWeight: "bold",
-	},
-	switchText: {
-		color: "#3498db",
-		fontSize: 14,
-	},
-});
 
 export default LoginScreen;
