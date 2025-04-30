@@ -2,7 +2,7 @@ import type { ICard } from "@/common/enums/types/card.type";
 import { useAppSelector } from "@/hooks/redux.hooks";
 import * as Speech from "expo-speech";
 import React, { useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, useWindowDimensions, View } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import Animated, {
 	interpolate,
@@ -33,6 +33,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 	const [isHorizontalSwipe, setIsHorizontalSwipe] = useState<boolean>(false);
 
 	const rotation = useSharedValue(0);
+	const { width } = useWindowDimensions();
 
 	const handleFlipCard = (index: number) => {
 		setFlippedCards((prevFlippedCards) => {
@@ -123,7 +124,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 					{card.image?.url ? (
 						<Image
 							source={{ uri: card.image.url.toString() }}
-							style={{ width: "50%", height: "50%", borderRadius: 10 }}
+							style={{ width: width < 800 ? 200 : 400, height: "50%", borderRadius: 10, margin: "auto" }}
 						/>
 					) : null}
 				</View>
@@ -144,11 +145,11 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 					backAnimatedStyle,
 				]}
 			>
-				<View style={{ marginTop: 10 }}>
+				<View style={{ marginTop: 10}}>
 					{card.image?.url ? (
 						<Image
 							source={{ uri: card.image.url.toString() }}
-							style={{ width: 300, height: 300, borderRadius: 10 }}
+							style={{ width: width < 800 ? 200 : 400, height: 300, borderRadius: 10, margin: "auto" }}
 						/>
 					) : null}
 				</View>
