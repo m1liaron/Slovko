@@ -1,7 +1,7 @@
 import type { ICard } from "@/common/enums/types/card.type";
 import { useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { Animated, FlatList, Pressable, View } from "react-native";
+import { Animated, FlatList, Pressable, useWindowDimensions, View } from "react-native";
 import ThemeText from "../../../common/components/ThemeText/ThemeText";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { selectCard } from "../../../redux/cardReducer/cardSlice";
@@ -17,6 +17,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const cards = useAppSelector(selectCard);
+	const { width } = useWindowDimensions();
 
 	useEffect(() => {
 		if (cards.length <= 4) {
@@ -142,14 +143,13 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 					style={[
 						styles.optionItem,
 						{
-							width: maxWordWidth * 20,
 							backgroundColor:
 								selectedWord === item ? "#38809b" : colors.lightBackground,
 							opacity: isAllCardsLearned && learnedWords.includes(item) ? 0 : 1,
 						},
 					]}
 				>
-					<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
+					<ThemeText style={{ fontSize: width < 800 ? 15 : 30 }}>{item}</ThemeText>
 				</Pressable>
 			</Animated.View>
 		);
@@ -167,7 +167,6 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 					style={[
 						styles.optionItem,
 						{
-							width: maxWordWidth * 20,
 							backgroundColor:
 								wrongAnswer === item ? "red" : colors.lightBackground,
 							opacity: isAllCardsLearned && isTranslateDisappear(item) ? 0 : 1,
@@ -175,7 +174,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 					]}
 					onPress={() => checkSelectedWordCorrect(item)}
 				>
-					<ThemeText style={{ fontSize: 30 }}>{item}</ThemeText>
+					<ThemeText style={{ fontSize: width < 800 ? 15 : 30 }}>{item}</ThemeText>
 				</Pressable>
 			</Animated.View>
 		);

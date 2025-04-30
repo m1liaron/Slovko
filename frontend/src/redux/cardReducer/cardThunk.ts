@@ -67,9 +67,8 @@ export const updateCardsAfterLearn = createAsyncThunk(
 	"card/learnCards",
 	async (data: string[]) => {
 		try {
-			// !TODO Update api to update only learned cards, not all from group
 			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.put("/cards", data || {});
+			const response = await axiosInstance.put("/cards/learn", data || {});
 			return response.data;
 		} catch (error) {
 			console.error("Error fetching cards:", error);
