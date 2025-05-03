@@ -24,7 +24,7 @@ import {
 	resetFilter,
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
-import { getGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
+import { getGroup, removeGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -115,20 +115,25 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 				style={{
 					display: "flex",
 					flexDirection: "row",
-					justifyContent: "flex-start",
+					justifyContent: "space-between",
 					alignItems: "center",
 				}}
 			>
-				<BackButton />
-				<ThemeText style={{ fontSize: 30, fontWeight: "bold" }}>
-					{group?.title}
-				</ThemeText>
-				<Entypo
-					name="pencil"
-					onPress={() => setShowEditModal(true)}
-					size={24}
-					color={colors.iconColor}
-				/>
+				<View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+					<BackButton />
+					<ThemeText style={{ fontSize: 30, fontWeight: "bold" }}>
+						{group?.title}
+					</ThemeText>
+					<Entypo
+						name="pencil"
+						onPress={() => setShowEditModal(true)}
+						size={24}
+						color={colors.iconColor}
+					/>
+				</View>
+				<Pressable onPress={() => dispatch(removeGroup(groupId))}>
+					<Entypo name="trash" size={30} color={colors.iconColor} />
+				</Pressable>
 			</View>
 			<View
 				style={{

@@ -38,7 +38,7 @@ const sharedGroupSlice = createSlice({
 	initialState,
 	reducers: {
 		filterSharedGroups: (state, action) => {
-			state.sharedGroups = state.filteredGroups.filter((item) =>
+			state.sharedGroups = state.sharedGroups.filter((item) =>
 				item.title.startsWith(action.payload),
 			);
 		},
@@ -59,11 +59,11 @@ const sharedGroupSlice = createSlice({
 			})
 			.addCase(getAllSharedGroups.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
-				state.sharedGroups = [
+				state.filteredGroups = [
 					...state.sharedGroups,
 					...action.payload.sharedGroups,
 				];
-				state.filteredGroups = [
+				state.sharedGroups = [
 					...state.sharedGroups,
 					...action.payload.sharedGroups,
 				];
