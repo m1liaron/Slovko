@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
 		margin: 10,
 	},
 	optionItem: {
+		width: "100%",
 		padding: 10,
 		borderRadius: 20,
 	},

@@ -10,6 +10,7 @@ import {
 	updateUser,
 	updateUserStreak,
 } from "./userThunk";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface InitialState {
 	user: IUser | null;
@@ -32,7 +33,7 @@ const userSlice = createSlice({
 		logout: (state) => {
 			state.isAuthenticated = false;
 			state.user = null;
-			localStorage.removeItem("token");
+			AsyncStorage.removeItem("token");
 		},
 	},
 	extraReducers: (builder) => {

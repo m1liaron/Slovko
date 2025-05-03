@@ -11,6 +11,7 @@ import Loading from "../../components/Loading";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
+import { LoginScreen, RegisterScreen } from "@/screens";
 
 export type RootStackParamList = {
 	[AppPath.Main]: undefined;
@@ -24,6 +25,8 @@ export type RootStackParamList = {
 	[AppPath.Profile]: undefined;
 	[AppPath.Results]: undefined;
 	[AppPath.SharedGroup]: undefined;
+	[AppPath.Login]: undefined;
+	[AppPath.Register]: undefined;
 };
 export type StackNavigation = NavigationProp<RootStackParamList>;
 
@@ -58,7 +61,10 @@ const ProtectedRoute = () => {
 						<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
 					</>
 				) : (
-					<Stack.Screen name="auth" component={AuthNavigator} />
+					<>
+						<Stack.Screen name={AppPath.Login} component={LoginScreen} />
+						<Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+					</>
 				)}
 			</Stack.Navigator>
 		</NavigationContainer>

@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/hooks/redux.hooks";
 import { Entypo } from "@expo/vector-icons";
 import { Link } from "@react-navigation/native";
-import { Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { removeGroup } from "../../../redux/groupReducer/groupSlice";
 import styles from "./Group.styles";
@@ -38,9 +38,11 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 			>
 				<Text style={{ fontSize: 30, color: colors.primary }}>{title}</Text>
 			</Link>
+			{Platform.OS === "web" ? (
 			<Pressable onPress={handleRemoveGroup}>
 				<Entypo name="trash" size={30} color={colors.iconColor} />
 			</Pressable>
+			) : null}
 		</View>
 	);
 };

@@ -27,7 +27,7 @@ const ExitModal = ({ modalVisible, handleClose, text }: ExitModalProps) => {
 	return (
 		<DefaultModal isVisible={modalVisible} handleClose={handleClose}>
 			<View>
-				<ThemeText style={{ fontWeight: "bold", fontSize: 40 }}>
+				<ThemeText style={{ fontWeight: "bold", fontSize: 30, marginBottom: 20 }}>
 					{text}
 				</ThemeText>
 			</View>
