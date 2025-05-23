@@ -15,12 +15,13 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import { GroupItem } from "../GroupItem/GroupItem";
 import styles from "./GroupList.styles";
+import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 
 export const GroupList = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const groups = useAppSelector(selectGroup);
+	const {groups, isLoading} = useAppSelector(state => state.groups);
 	const dispatch = useAppDispatch();
 	const [title, setTitle] = useState<string>("");
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);
@@ -44,7 +45,13 @@ export const GroupList = () => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.groupListContainer}>
-				{!groups.length ? (
+				{isLoading ? (
+					<FlatList
+						data={Array(5).fill(null)}
+						keyExtractor={(_, index) => `skeleton-${index}`}
+						renderItem={() => <SkeletonGroupItem />}
+					/>
+				) : !groups.length ? (
 					<View style={styles.noGroupsContainer}>
 						<Image source={noGroupsImage} />
 					</View>
