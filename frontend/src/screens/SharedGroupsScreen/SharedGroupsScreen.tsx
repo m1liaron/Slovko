@@ -36,6 +36,7 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
+import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -250,7 +251,13 @@ const SharedGroupsScreen = () => {
 				</View>
 			)}
 
-			{sharedGroups?.length ? (
+			{isLoading ? (
+				<FlatList
+					data={Array(5).fill(null)}
+					keyExtractor={(_, index) => `skeleton-${index}`}
+					renderItem={() => <SkeletonGroupItem />}
+				/>
+			) : sharedGroups?.length ? (
 				<FlatList
 					data={sharedGroups}
 					contentContainerStyle={{

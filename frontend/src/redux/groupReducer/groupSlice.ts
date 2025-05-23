@@ -1,5 +1,5 @@
 import type { IGroup } from "@/common/enums/types/group.type";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit";
 import {
 	DataStatus,
 	type IDataStatus,
@@ -19,6 +19,7 @@ interface InitialState {
 	group: IGroup | null;
 	status: IDataStatus;
 	error: string | null;
+	isLoading: boolean;
 }
 
 const initialState: InitialState = {
@@ -26,6 +27,7 @@ const initialState: InitialState = {
 	group: null,
 	status: DataStatus.IDLE,
 	error: null,
+	isLoading: false
 };
 
 const groupSlice = createSlice({
@@ -34,55 +36,22 @@ const groupSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(getAllGroups.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(getAllGroups.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.groups = action.payload;
 			})
-			.addCase(getAllGroups.rejected, (state) => {
-				state.status = DataStatus.ERROR;
-			})
-
-			.addCase(addGroup.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(addGroup.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.groups.push(action.payload);
 			})
-			.addCase(addGroup.rejected, (state) => {
-				state.status = DataStatus.ERROR;
-			})
-			.addCase(getGroup.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(getGroup.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.group = action.payload;
 			})
-			.addCase(getGroup.rejected, (state) => {
-				state.status = DataStatus.ERROR;
-			})
-			.addCase(removeGroup.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(removeGroup.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.groups = state.groups.filter(
 					(group) => group.id !== action.payload.id,
 				);
 			})
-			.addCase(removeGroup.rejected, (state) => {
-				state.status = DataStatus.ERROR;
-			})
 			// update
-			.addCase(updateGroup.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(updateGroup.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.error = null;
 				const updatedGroup = action.payload;
 				const index = state.groups.findIndex(
@@ -94,12 +63,19 @@ const groupSlice = createSlice({
 					state.groups = [...state.groups];
 				}
 			})
-			.addCase(updateGroup.rejected, (state) => {
-				state.status = DataStatus.ERROR;
+			.addMatcher(isPending, (state) => {
+				state.status = DataStatus.PENDING;
+				state.isLoading = true;
 			})
-			.addCase(copySharedGroup.fulfilled, (state, action) => {
-				state.groups = [...state.groups, action.payload];
-			});
+			.addMatcher(isFulfilled, (state) => {
+				state.status = DataStatus.SUCCESS;
+				state.isLoading = false;
+			})
+			.addMatcher(isRejected, (state) => {
+				state.status = DataStatus.ERROR;
+				state.isLoading = false;
+			})
+
 	},
 });
 

@@ -156,19 +156,25 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 						/>
 					</Pressable>
 				</View>
-				<RenderStatusButtons />
-				<Pressable
-					style={{
-						padding: 5,
-						borderRadius: 10,
-						borderWidth: 2,
-						borderColor: "#bcbcbc",
-						marginHorizontal: 10,
-					}}
-					onPress={() => dispatch(resetFilter())}
-				>
-					<Entypo name="back-in-time" size={30} color="#bcbcbc" />
-				</Pressable>
+
+				{group?.knowCardsAmount && (
+					<>
+					<RenderStatusButtons />
+					<Pressable
+						style={{
+							padding: 5,
+							borderRadius: 10,
+							borderWidth: 2,
+							borderColor: "#bcbcbc",
+							marginHorizontal: 10,
+						}}
+						onPress={() => dispatch(resetFilter())}
+					>
+						<Entypo name="back-in-time" size={30} color="#bcbcbc" />
+					</Pressable>
+					</>
+				)}
+
 			</View>
 			<CardList groupId={groupId} />
 			<DefaultModal
