@@ -39,15 +39,3 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
-
-
-subprojects { subproject ->
-  afterEvaluate {
-    if (subproject.plugins.hasPlugin('com.android.library')) {
-      subproject.android.publishing {
-        // expose the release variant for consumers (like your :app)
-        singleVariant("release")
-      }
-    }
-  }
-}
