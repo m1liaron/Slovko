@@ -63,7 +63,8 @@
     "typescript": "^5.3.3",
     "unsplash-js": "^7.0.19",
     "uuidv4": "^6.2.13",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "@expo/config-plugins": "~9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
