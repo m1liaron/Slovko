@@ -64,7 +64,8 @@
     "unsplash-js": "^7.0.19",
     "uuidv4": "^6.2.13",
     "xlsx": "^0.18.5",
-    "@expo/config-plugins": "~9.0.0"
+    "@expo/config-plugins": "~9.0.0",
+    "undefined": "\\"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
