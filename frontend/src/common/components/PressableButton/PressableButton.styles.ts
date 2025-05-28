@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
 		elevation: 5,
 	},
 	buttonText: {
-		color: "#FFF",
 		fontSize: 16,
 		fontWeight: "bold",
 	},

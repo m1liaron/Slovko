@@ -1,6 +1,7 @@
 import React from "react";
-import { GestureResponderEvent, Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 import styles from "./PressableButton.styles";
+import ThemeText from "../ThemeText/ThemeText";
 
 /**
  * @param text {string}
@@ -30,7 +31,7 @@ const PressableButton = ({
 			style={[styles.button, { ...buttonStyle }]}
 			disabled={disabled}
 		>
-			<Text style={styles.buttonText}>{text}</Text>
+			<ThemeText style={styles.buttonText}>{text}</ThemeText>
 		</Pressable>
 	);
 };
