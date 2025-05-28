@@ -15,7 +15,10 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
+    "@expo/config-plugins": "~9.0.0",
+    "@expo/metro-config": "~0.19.0",
     "@expo/metro-runtime": "~4.0.1",
+    "@expo/prebuild-config": "^8.0.0",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/slider": "4.5.5",
@@ -61,11 +64,10 @@
     "sharp": "^0.33.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
+    "undefined": "\\",
     "unsplash-js": "^7.0.19",
     "uuidv4": "^6.2.13",
-    "xlsx": "^0.18.5",
-    "@expo/config-plugins": "~9.0.0",
-    "undefined": "\\"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

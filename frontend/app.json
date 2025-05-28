@@ -12,14 +12,6 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain"
     },
-    "build": {
-      "production": {
-        "android": {
-          "buildType": "apk",
-          "gradleCommand": ":app:assembleRelease"
-        }
-      }
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
