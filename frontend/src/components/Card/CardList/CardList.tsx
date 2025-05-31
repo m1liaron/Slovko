@@ -88,11 +88,6 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
 		cards.length || 2,
 	);
-	const [front, setFront] = useState("");
-  	const [back, setBack] = useState("");
-
-	const isConnected = useAppSelector((state: RootState) => state.network.isConnected);
-	const queuedCount = useAppSelector((state: RootState) => state.offlineQueue.queue.length);
 
 	useEffect(() => {
 		setWordsRangeNumber(cards.length);
@@ -310,7 +305,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	useEffect(() => {
 		if (group?.id !== groupId) {
-			dispatch(getCards({ groupId }));
+			dispatch(enqueueOrDispatch(getCards, { groupId }));
 		}
 	}, [dispatch, groupId, group?.id]);
 
@@ -384,8 +379,6 @@ const CardList = ({ groupId }: CardListProps) => {
 						console.log(err);
 					}
 				})
-			setFront("");
-			setBack("");
 
 			setValue("");
 			setAnswerWord("");
