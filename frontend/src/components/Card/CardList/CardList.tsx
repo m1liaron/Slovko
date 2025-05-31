@@ -379,13 +379,6 @@ const CardList = ({ groupId }: CardListProps) => {
 			};
 
 			dispatch(enqueueOrDispatch(addCard, cardData))
-				.then((result: any) => {
-					if (result.queued) {
-						alert("You are offline. This card has been queued and will sync once you’re back online.");
-					} else {
-						alert("Card saved to server successfully!");
-					}
-				})
 				.catch((err: any) => {
 					if (err instanceof Error) {
 						console.log(err);
