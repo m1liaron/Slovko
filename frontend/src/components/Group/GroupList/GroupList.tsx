@@ -1,4 +1,5 @@
 import noGroupsImage from "@/assets/images/no_groups.png";
+import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
@@ -15,13 +16,12 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import { GroupItem } from "../GroupItem/GroupItem";
 import styles from "./GroupList.styles";
-import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 
 export const GroupList = () => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	const {groups, isLoading} = useAppSelector(state => state.groups);
+	const { groups, isLoading } = useAppSelector((state) => state.groups);
 	const dispatch = useAppDispatch();
 	const [title, setTitle] = useState<string>("");
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);

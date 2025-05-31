@@ -39,9 +39,9 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 				<Text style={{ fontSize: 30, color: colors.primary }}>{title}</Text>
 			</Link>
 			{Platform.OS === "web" ? (
-			<Pressable onPress={handleRemoveGroup}>
-				<Entypo name="trash" size={30} color={colors.iconColor} />
-			</Pressable>
+				<Pressable onPress={handleRemoveGroup}>
+					<Entypo name="trash" size={30} color={colors.iconColor} />
+				</Pressable>
 			) : null}
 		</View>
 	);

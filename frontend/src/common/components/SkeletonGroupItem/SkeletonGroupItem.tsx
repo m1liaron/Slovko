@@ -1,6 +1,6 @@
+import { MotiView } from "moti";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { MotiView } from "moti";
 
 const SkeletonGroupItem = () => {
 	return (

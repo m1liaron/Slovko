@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable } from "react-native";
-import styles from "./PressableButton.styles";
 import ThemeText from "../ThemeText/ThemeText";
+import styles from "./PressableButton.styles";
 
 /**
  * @param text {string}

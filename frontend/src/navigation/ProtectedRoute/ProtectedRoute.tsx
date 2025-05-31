@@ -1,4 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { LoginScreen, RegisterScreen } from "@/screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	NavigationContainer,
@@ -11,7 +12,6 @@ import Loading from "../../components/Loading";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import AuthNavigator from "../AuthNavigator/AuthNavigator";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
-import { LoginScreen, RegisterScreen } from "@/screens";
 
 export type RootStackParamList = {
 	[AppPath.Main]: undefined;

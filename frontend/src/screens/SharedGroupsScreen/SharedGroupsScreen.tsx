@@ -1,3 +1,4 @@
+import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IGroup } from "@/common/enums/types/group.type";
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
@@ -14,8 +15,8 @@ import {
 	Platform,
 	Pressable,
 	TextInput,
-	useWindowDimensions,
 	View,
+	useWindowDimensions,
 } from "react-native";
 import AvatarImage from "../../../assets/images/avatar.png";
 import AddButton from "../../common/components/AddButton/AddButton";
@@ -36,7 +37,6 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
-import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -126,7 +126,10 @@ const SharedGroupsScreen = () => {
 			}}
 		>
 			<Pressable
-				style={[styles.container, { backgroundColor: colors.lightBackground, flexWrap: "wrap" }]}
+				style={[
+					styles.container,
+					{ backgroundColor: colors.lightBackground, flexWrap: "wrap" },
+				]}
 				onPress={() =>
 					navigation.navigate(AppPath.SharedGroupDetails, {
 						sharedGroupId: item.id,
@@ -152,10 +155,15 @@ const SharedGroupsScreen = () => {
 					<View
 						style={{
 							padding: 5,
-							maxWidth: width - 300
+							maxWidth: width - 300,
 						}}
 					>
-						<ThemeText style={{ fontSize: 30, overflow: "hidden" }} numberOfLines={1}>{item.title}</ThemeText>
+						<ThemeText
+							style={{ fontSize: 30, overflow: "hidden" }}
+							numberOfLines={1}
+						>
+							{item.title}
+						</ThemeText>
 					</View>
 				</View>
 

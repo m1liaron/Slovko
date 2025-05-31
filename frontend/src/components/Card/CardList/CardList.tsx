@@ -21,7 +21,15 @@ import React, {
 	useEffect,
 	useState,
 } from "react";
-import { ActivityIndicator, FlatList, Image, Platform, Pressable, Text, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	Image,
+	Platform,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import * as XLSX from "xlsx";
@@ -396,8 +404,8 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	return (
 		<View style={styles.container}>
-			{ status === DataStatus.PENDING ? (
-				<ActivityIndicator color={colors.primary}/>
+			{status === DataStatus.PENDING ? (
+				<ActivityIndicator color={colors.primary} />
 			) : !cards.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
@@ -419,7 +427,7 @@ const CardList = ({ groupId }: CardListProps) => {
 					/>
 				</View>
 			)}
-			
+
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
 					<View
