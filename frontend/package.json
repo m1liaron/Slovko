@@ -61,6 +61,7 @@
     "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.6",
     "react-redux": "^9.1.0",
+    "redux-persist": "^6.0.0",
     "sharp": "^0.33.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
