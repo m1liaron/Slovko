@@ -29,6 +29,7 @@ import {
 	removeGroup,
 	updateGroup,
 } from "../../redux/groupReducer/groupSlice";
+import { RootState } from "@/redux/store";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -46,6 +47,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 	const [nextReviewSort, setNextReviewSort] = useState<"asc" | "desc">("asc"); // asc || desc
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
+	const isConnected = useAppSelector((state: RootState) => state.network.isConnected);
 
 	if (!group && status === DataStatus.ERROR) {
 		navigation.goBack();
@@ -115,6 +117,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	return (
 		<ThemeBackground>
+			<Text>Network: {isConnected ? "Online" : "Offline"}</Text>
 			<View
 				style={{
 					display: "flex",

@@ -49,6 +49,8 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
+import { RootState } from "@/redux/store";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 const MemoCardItem = memo(CardItem);
 
@@ -71,7 +73,8 @@ const CardList = ({ groupId }: CardListProps) => {
 		(state) => state.cards,
 	);
 	const dispatch = useAppDispatch();
-
+	const navigation = useNavigation<StackNavigation>();
+	
 	const [addCardMode, setAddCardMode] = useState<number>(0);
 	const [valueWords, setValueWords] = useState<Record<string, string>>({});
 	const [value, setValue] = useState<string>("");
@@ -85,7 +88,11 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
 		cards.length || 2,
 	);
-	const navigation = useNavigation<StackNavigation>();
+	const [front, setFront] = useState("");
+  	const [back, setBack] = useState("");
+
+	const isConnected = useAppSelector((state: RootState) => state.network.isConnected);
+	const queuedCount = useAppSelector((state: RootState) => state.offlineQueue.queue.length);
 
 	useEffect(() => {
 		setWordsRangeNumber(cards.length);
@@ -371,8 +378,22 @@ const CardList = ({ groupId }: CardListProps) => {
 				groupId,
 			};
 
-			console.log(validatedAnswer);
-			dispatch(addCard(cardData));
+			dispatch(enqueueOrDispatch(addCard, cardData))
+				.then((result: any) => {
+					if (result.queued) {
+						alert("You are offline. This card has been queued and will sync once you’re back online.");
+					} else {
+						alert("Card saved to server successfully!");
+					}
+				})
+				.catch((err: any) => {
+					if (err instanceof Error) {
+						console.log(err);
+					}
+				})
+			setFront("");
+			setBack("");
+
 			setValue("");
 			setAnswerWord("");
 			setImageUri("");
