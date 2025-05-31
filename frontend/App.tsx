@@ -8,23 +8,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ProtectedRoute from "./src/navigation/ProtectedRoute/ProtectedRoute";
 import { ThemeProvider } from "./src/contexts/ThemeProvider";
 import { LanguageProvider } from "./src/contexts/LanguageProvider";
-import { setIsConnected } from "./src/redux/networkReducer/networkSlice";
-import NetInfo from "@react-native-community/netinfo";
 import { PersistGate } from "redux-persist/integration/react";
+import { ConnectivityListener } from "./src/components/ConnectivityListener/ConnectivityListener.tsx";
 import Loading from "./src/components/Loading";
-
-const ConnectivityListener = () => {
-	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		const unsubscribe = NetInfo.addEventListener((state) => {
-		  dispatch(setIsConnected(Boolean(state.isConnected)));
-		});
-		return () => unsubscribe();
-	  }, [dispatch]);
-	
-	  return null;
-}
 
 export default function App() {
 	return (
