@@ -15,9 +15,6 @@ interface ExitModalProps {
 
 const ExitModal = ({ modalVisible, handleClose, text }: ExitModalProps) => {
 	const navigation = useNavigation();
-	const {
-		theme: { colors },
-	} = useAppTheme();
 
 	const exitModal = () => {
 		handleClose();
