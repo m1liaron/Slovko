@@ -33,6 +33,7 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -108,7 +109,7 @@ export default function ProfileScreen() {
 			email: userEmail,
 		};
 		if (user) {
-			dispatch(updateUser({ data, id: user.id }));
+			enqueueOrDispatch(updateUser, { data, id: user.id });
 			setIsEditing(false);
 		}
 	};
