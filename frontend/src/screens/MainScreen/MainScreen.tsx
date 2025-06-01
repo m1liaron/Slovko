@@ -31,6 +31,7 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 const MainScreen = () => {
 	const dispatch = useAppDispatch();
@@ -103,8 +104,8 @@ const MainScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getRepeatedCards());
-	}, [dispatch]);
+		enqueueOrDispatch(getRepeatedCards);
+	}, [enqueueOrDispatch]);
 
 	const daysSince = useCallback((dateString: string) => {
 		const targetDate = new Date(dateString).getTime();
@@ -119,8 +120,8 @@ const MainScreen = () => {
 	}, [daysSince]);
 
 	useEffect(() => {
-		dispatch(getUser());
-	}, [dispatch]);
+		enqueueOrDispatch(getUser);
+	}, [enqueueOrDispatch]);
 
 	const openLink = () => {
 		Linking.openURL("https://savelife.in.ua/en/");
@@ -136,12 +137,12 @@ const MainScreen = () => {
 			repeatedGroupsIds.length > 1
 				? repeatedGroupsIds.flatMap((group) => group.cards.map((id) => id))
 				: repeatedGroupsIds[0].cards;
-		dispatch(getRepeatedCardsFromIds(allIds));
+		enqueueOrDispatch(getRepeatedCardsFromIds, allIds);
 		navigateToLearn();
 	};
 
 	const learnGroupRepeatedCards = (cardsIds: string[]) => {
-		dispatch(getRepeatedCardsFromIds(cardsIds));
+		enqueueOrDispatch(getRepeatedCardsFromIds, cardsIds);
 		navigateToLearn();
 	};
 
