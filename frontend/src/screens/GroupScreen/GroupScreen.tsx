@@ -30,6 +30,7 @@ import {
 	updateGroup,
 } from "../../redux/groupReducer/groupSlice";
 import { RootState } from "@/redux/store";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -55,9 +56,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(getGroup(groupId));
+			enqueueOrDispatch(getGroup, groupId);
 		}
-	}, [dispatch, group, groupId]);
+	}, [enqueueOrDispatch, group, groupId]);
 
 	const statusCardsButtons = useMemo(() => {
 		if (!group) return [];
@@ -107,7 +108,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		if (!groupTitle) {
 			return console.error("Provide title");
 		}
-		dispatch(updateGroup({ id: groupId, title: groupTitle }));
+		enqueueOrDispatch(updateGroup, { id: groupId, title: groupTitle });
 	};
 
 	const sortByNextReview = () => {
@@ -138,7 +139,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 						color={colors.iconColor}
 					/>
 				</View>
-				<Pressable onPress={() => dispatch(removeGroup(groupId))}>
+				<Pressable onPress={() => enqueueOrDispatch(removeGroup, groupId)}>
 					<Entypo name="trash" size={30} color={colors.iconColor} />
 				</Pressable>
 			</View>
