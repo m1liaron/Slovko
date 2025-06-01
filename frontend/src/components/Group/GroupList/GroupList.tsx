@@ -16,6 +16,7 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import { GroupItem } from "../GroupItem/GroupItem";
 import styles from "./GroupList.styles";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 export const GroupList = () => {
 	const {
@@ -27,7 +28,7 @@ export const GroupList = () => {
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
 	useEffect(() => {
-		dispatch(getAllGroups());
+		enqueueOrDispatch(getAllGroups);
 	}, [dispatch]);
 
 	const handleAddGroup = () => {
@@ -37,7 +38,7 @@ export const GroupList = () => {
 				text1: "Please enter a title",
 			});
 		}
-		dispatch(addGroup({ title }));
+		enqueueOrDispatch(addGroup, { title });
 		setTitle("");
 		setShowAddModal(false);
 	};
