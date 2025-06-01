@@ -1,6 +1,6 @@
 import type { IStatistics, ModeName } from "@/common/enums/types/result.type";
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
-import { useAppSelector } from "@/hooks/redux.hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, View } from "react-native";
@@ -17,10 +17,11 @@ const StatisticsScreen = () => {
 	const [selectedWordsMode, setSelectedWordsMode] =
 		useState<string>("wordLength"); // Mistakes || wordLength;
 	const [selectedGraph, setSelectedGraph] = useState<string>("LineChart");
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		enqueueOrDispatch(getResultsStatistics);
-	}, []);
+		dispatch(enqueueOrDispatch(getResultsStatistics));
+	}, [dispatch]);
 
 	const modesOptions = [
 		{ label: i18n.t("statisticsScreen.quiz"), value: "quiz" },

@@ -153,7 +153,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
-		enqueueOrDispatch(saveResults, resultData);
+		dispatch(enqueueOrDispatch(saveResults, resultData));
 	};
 
 	const finishLesson = () => {
@@ -169,12 +169,12 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 		setElapsedTime(formatTime(totalLearnedTime));
 
 		const repeatedCardsIds = cards?.map((card) => card.id);
-		enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds);
+		dispatch(enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds));
 
-		enqueueOrDispatch(updateUserStreak);
+		dispatch(enqueueOrDispatch(updateUserStreak));
 		handleSaveResults();
 		if (repeatedCards.length) {
-			enqueueOrDispatch(getRepeatedCards);
+			dispatch(enqueueOrDispatch(getRepeatedCards));
 		}
 	};
 

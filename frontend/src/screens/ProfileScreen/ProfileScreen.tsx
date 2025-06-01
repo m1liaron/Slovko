@@ -109,7 +109,7 @@ export default function ProfileScreen() {
 			email: userEmail,
 		};
 		if (user) {
-			enqueueOrDispatch(updateUser, { data, id: user.id });
+			dispatch(enqueueOrDispatch(updateUser, { data, id: user.id }));
 			setIsEditing(false);
 		}
 	};

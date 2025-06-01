@@ -71,23 +71,23 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		enqueueOrDispatch(getResults, {
+		dispatch(enqueueOrDispatch(getResults, {
 			year: showResultsYear,
 			month: showResultsMonth + 1,
 			page: 1,
 			replace: true,
-		});
-	}, [enqueueOrDispatch, showResultsMonth, showResultsYear]);
+		}));
+	}, [dispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
 		if (haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			enqueueOrDispatch(getResults, {
+			dispatch(enqueueOrDispatch(getResults, {
 				year: showResultsYear,
 				month: showResultsMonth + 1,
 				page: nextPage,
 				replace: false,
-			});
+			}));
 			setPage(nextPage);
 		}
 	};

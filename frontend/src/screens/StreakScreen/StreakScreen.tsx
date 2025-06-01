@@ -1,6 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
-import { useAppSelector } from "@/hooks/redux.hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -40,13 +40,14 @@ const StreakScreen = () => {
 		year: new Date().getFullYear(),
 	});
 	const now = new Date();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (date?.month && date.year) {
 			const { month, year } = date;
-			enqueueOrDispatch(getUserStreakDates, { month, year });
+			dispatch(enqueueOrDispatch(getUserStreakDates, { month, year }));
 		}
-	}, [date]);
+	}, [date, dispatch]);
 
 	const validatedMarkedDates = streakDates?.length
 		? streakDates.reduce<{ [key: string]: MarkedDate }>((total, item) => {

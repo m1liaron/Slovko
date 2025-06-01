@@ -384,7 +384,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const onRemoveCard = async (courseId: string) => {
-		enqueueOrDispatch(removeCard, courseId);
+		dispatch(enqueueOrDispatch(removeCard, courseId));
 	};
 
 	const navigateToLearn = () => {

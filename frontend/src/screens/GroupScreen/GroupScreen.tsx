@@ -58,7 +58,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			enqueueOrDispatch(getGroup, groupId);
+			dispatch(enqueueOrDispatch(getGroup, groupId));
 		}
 	}, [group, groupId]);
 
@@ -110,7 +110,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		if (!groupTitle) {
 			return console.error("Provide title");
 		}
-		enqueueOrDispatch(updateGroup, { id: groupId, title: groupTitle });
+		dispatch(enqueueOrDispatch(updateGroup, { id: groupId, title: groupTitle }));
 	};
 
 	const sortByNextReview = () => {
@@ -141,7 +141,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 						color={colors.iconColor}
 					/>
 				</View>
-				<Pressable onPress={() => enqueueOrDispatch(removeGroup, groupId)}>
+				<Pressable onPress={() => dispatch(enqueueOrDispatch(removeGroup, groupId))}>
 					<Entypo name="trash" size={30} color={colors.iconColor} />
 				</Pressable>
 			</View>

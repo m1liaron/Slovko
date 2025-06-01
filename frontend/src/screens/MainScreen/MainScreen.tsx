@@ -104,7 +104,7 @@ const MainScreen = () => {
 	};
 
 	useEffect(() => {
-		enqueueOrDispatch(getRepeatedCards);
+		dispatch(enqueueOrDispatch(getRepeatedCards));
 	}, []);
 
 	const daysSince = useCallback((dateString: string) => {
@@ -120,7 +120,7 @@ const MainScreen = () => {
 	}, [daysSince]);
 
 	useEffect(() => {
-		enqueueOrDispatch(getUser);
+		dispatch(enqueueOrDispatch(getUser));
 	}, []);
 
 	const openLink = () => {
@@ -137,12 +137,12 @@ const MainScreen = () => {
 			repeatedGroupsIds.length > 1
 				? repeatedGroupsIds.flatMap((group) => group.cards.map((id) => id))
 				: repeatedGroupsIds[0].cards;
-		enqueueOrDispatch(getRepeatedCardsFromIds, allIds);
+		dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, allIds));
 		navigateToLearn();
 	};
 
 	const learnGroupRepeatedCards = (cardsIds: string[]) => {
-		enqueueOrDispatch(getRepeatedCardsFromIds, cardsIds);
+		dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, cardsIds));
 		navigateToLearn();
 	};
 

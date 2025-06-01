@@ -1,7 +1,7 @@
 import noGroupsImage from "@/assets/images/no_groups.png";
 import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
-import { useAppSelector } from "@/hooks/redux.hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
@@ -25,9 +25,10 @@ export const GroupList = () => {
 	const { groups, isLoading } = useAppSelector((state) => state.groups);
 	const [title, setTitle] = useState<string>("");
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		enqueueOrDispatch(getAllGroups);
+		dispatch(enqueueOrDispatch(getAllGroups));
 	}, []);
 
 	const handleAddGroup = () => {
@@ -37,7 +38,7 @@ export const GroupList = () => {
 				text1: "Please enter a title",
 			});
 		}
-		enqueueOrDispatch(addGroup, { title });
+		dispatch(enqueueOrDispatch(addGroup, { title }));
 		setTitle("");
 		setShowAddModal(false);
 	};

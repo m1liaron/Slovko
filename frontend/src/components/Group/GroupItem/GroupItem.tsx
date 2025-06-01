@@ -5,6 +5,7 @@ import { Platform, Pressable, Text, View } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { removeGroup } from "../../../redux/groupReducer/groupSlice";
 import styles from "./Group.styles";
+import { useAppDispatch } from "@/hooks/redux.hooks";
 
 interface GroupItemProps {
 	item: {
@@ -17,9 +18,10 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
+	const dispatch = useAppDispatch();
 
 	const handleRemoveGroup = () => {
-		enqueueOrDispatch(removeGroup, id);
+		dispatch(enqueueOrDispatch(removeGroup, id));
 	};
 
 	return (

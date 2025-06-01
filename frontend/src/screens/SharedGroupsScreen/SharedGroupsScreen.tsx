@@ -62,13 +62,13 @@ const SharedGroupsScreen = () => {
 	const [page, setPage] = useState(1);
 
 	useEffect(() => {
-		enqueueOrDispatch(getAllSharedGroups, { page });
+		dispatch(enqueueOrDispatch(getAllSharedGroups, { page }));
 	}, [page]);
 
 	const handleLoadMore = () => {
 		if (haveMoreSharedGroups && !isLoading) {
 			const nextPage = page + 1;
-			enqueueOrDispatch(getAllSharedGroups, { page: nextPage });
+			dispatch(enqueueOrDispatch(getAllSharedGroups, { page: nextPage }));
 			setPage(nextPage);
 		}
 	};
@@ -112,7 +112,7 @@ const SharedGroupsScreen = () => {
 				groupId: selectedGroup.id,
 				title: sharedGroupTitle || "Shared Group Title",
 			};
-			enqueueOrDispatch(saveSharedGroup, sharedGroupData);
+			dispatch(enqueueOrDispatch(saveSharedGroup, sharedGroupData));
 		}
 	};
 

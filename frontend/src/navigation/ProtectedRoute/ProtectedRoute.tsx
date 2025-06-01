@@ -1,5 +1,5 @@
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
-import { useAppSelector } from "@/hooks/redux.hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { LoginScreen, RegisterScreen } from "@/screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -34,13 +34,14 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
 	const [isLoading, setIsLoading] = useState(true);
+	const dispatch = useAppDispatch();
 	const { isAuthenticated } = useAppSelector(selectUser);
 
 	useEffect(() => {
 		const checkAuth = async () => {
 			const token = await AsyncStorage.getItem("token");
 			if (token) {
-				enqueueOrDispatch(getUser);
+				dispatch(enqueueOrDispatch(getUser));
 			}
 			setIsLoading(false);
 		};
