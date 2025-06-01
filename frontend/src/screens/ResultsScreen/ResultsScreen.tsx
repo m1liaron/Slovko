@@ -24,6 +24,7 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type GroupedResults = {
 	[date: string]: IResult[];
@@ -70,26 +71,26 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		dispatch(
-			getResults({
+		enqueueOrDispatch(
+			getResults, {
 				year: showResultsYear,
 				month: showResultsMonth + 1,
 				page: 1,
 				replace: true,
-			}),
+			},
 		);
-	}, [dispatch, showResultsMonth, showResultsYear]);
+	}, [enqueueOrDispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
 		if (haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(
-				getResults({
+			enqueueOrDispatch(
+				getResults, {
 					year: showResultsYear,
 					month: showResultsMonth + 1,
 					page: nextPage,
 					replace: false,
-				}),
+				}
 			);
 			setPage(nextPage);
 		}
