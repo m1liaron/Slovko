@@ -34,6 +34,7 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type Section = "cards" | "quiz" | "word" | "check" | "finish";
 
@@ -152,7 +153,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
-		dispatch(saveResults(resultData));
+		enqueueOrDispatch(saveResults, resultData);
 	};
 
 	const finishLesson = () => {
@@ -168,12 +169,12 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 		setElapsedTime(formatTime(totalLearnedTime));
 
 		const repeatedCardsIds = cards?.map((card) => card.id);
-		dispatch(updateCardsAfterLearn(repeatedCardsIds));
+		enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds);
 
-		dispatch(updateUserStreak());
+		enqueueOrDispatch(updateUserStreak);
 		handleSaveResults();
 		if (repeatedCards.length) {
-			dispatch(getRepeatedCards());
+			enqueueOrDispatch(getRepeatedCards);
 		}
 	};
 
