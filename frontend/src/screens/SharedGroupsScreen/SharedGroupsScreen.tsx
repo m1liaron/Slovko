@@ -37,6 +37,7 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -61,13 +62,13 @@ const SharedGroupsScreen = () => {
 	const [page, setPage] = useState(1);
 
 	useEffect(() => {
-		dispatch(getAllSharedGroups({ page }));
-	}, [dispatch, page]);
+		enqueueOrDispatch(getAllSharedGroups, { page });
+	}, [enqueueOrDispatch, page]);
 
 	const handleLoadMore = () => {
 		if (haveMoreSharedGroups && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(getAllSharedGroups({ page: nextPage }));
+			enqueueOrDispatch(getAllSharedGroups, { page: nextPage });
 			setPage(nextPage);
 		}
 	};
@@ -111,7 +112,7 @@ const SharedGroupsScreen = () => {
 				groupId: selectedGroup.id,
 				title: sharedGroupTitle || "Shared Group Title",
 			};
-			dispatch(saveSharedGroup(sharedGroupData));
+			enqueueOrDispatch(saveSharedGroup, sharedGroupData);
 		}
 	};
 
@@ -174,7 +175,7 @@ const SharedGroupsScreen = () => {
 				)}
 			</Pressable>
 			{item?.user?.id === user?.id && (
-				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
+				<Pressable onPress={() => enqueueOrDispatch(removeSharedGroup, item.id)}>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
 			)}
