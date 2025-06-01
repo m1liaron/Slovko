@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -16,7 +17,6 @@ import {
 	getSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 /**
  * @param route { object: { params }}
@@ -38,7 +38,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 
 	useEffect(() => {
 		enqueueOrDispatch(getSharedGroup, sharedGroupId);
-	}, [enqueueOrDispatch, sharedGroupId]);
+	}, [sharedGroupId]);
 
 	return (
 		<ThemeBackground>

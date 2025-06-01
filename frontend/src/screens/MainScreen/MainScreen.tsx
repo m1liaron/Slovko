@@ -1,4 +1,5 @@
 import appLogo from "@/assets/images/favicon.png";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -31,7 +32,6 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 const MainScreen = () => {
 	const dispatch = useAppDispatch();
@@ -105,7 +105,7 @@ const MainScreen = () => {
 
 	useEffect(() => {
 		enqueueOrDispatch(getRepeatedCards);
-	}, [enqueueOrDispatch]);
+	}, []);
 
 	const daysSince = useCallback((dateString: string) => {
 		const targetDate = new Date(dateString).getTime();
@@ -121,7 +121,7 @@ const MainScreen = () => {
 
 	useEffect(() => {
 		enqueueOrDispatch(getUser);
-	}, [enqueueOrDispatch]);
+	}, []);
 
 	const openLink = () => {
 		Linking.openURL("https://savelife.in.ua/en/");

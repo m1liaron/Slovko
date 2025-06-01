@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
@@ -38,15 +39,14 @@ const StreakScreen = () => {
 		month: new Date().getMonth() + 1,
 		year: new Date().getFullYear(),
 	});
-	const dispatch = useAppDispatch();
 	const now = new Date();
 
 	useEffect(() => {
 		if (date?.month && date.year) {
 			const { month, year } = date;
-			dispatch(getUserStreakDates({ month, year }));
+			enqueueOrDispatch(getUserStreakDates, { month, year });
 		}
-	}, [date, dispatch]);
+	}, [date]);
 
 	const validatedMarkedDates = streakDates?.length
 		? streakDates.reduce<{ [key: string]: MarkedDate }>((total, item) => {
@@ -151,7 +151,7 @@ const StreakScreen = () => {
 						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
 						<PressableButton
 							text={i18n.t("streakScreen.buyFreeze")}
-							onPress={() => dispatch(buyFreeze({ froze: 100 }))}
+							onPress={() => enqueueOrDispatch(buyFreeze, { froze: 100 })}
 							buttonStyle={{
 								padding: 20,
 							}}

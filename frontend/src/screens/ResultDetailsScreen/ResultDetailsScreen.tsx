@@ -1,10 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
-import {
-	type IResultMode,
-	type IWord,
-	type ModeName,
-} from "@/common/enums/types/types";
+import type { IResultMode, IWord, ModeName } from "@/common/enums/types/types";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -26,7 +23,6 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { getResultDetails } from "../../redux/resultReducer/resultSlice";
 import { formatDMTDate, formatTime } from "../../utils/utils";
 import styles from "./ResultDetailsScreen.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type ResultDetailsScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -43,7 +39,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		enqueueOrDispatch(getResultDetails, resultId);
-	}, [enqueueOrDispatch, resultId]);
+	}, [resultId]);
 
 	const modesMap = useMemo((): Partial<Record<ModeName, IResultMode>> => {
 		if (!result?.mode) return {};

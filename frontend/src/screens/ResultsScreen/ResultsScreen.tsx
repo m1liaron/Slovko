@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -24,7 +25,6 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type GroupedResults = {
 	[date: string]: IResult[];
@@ -71,27 +71,23 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		enqueueOrDispatch(
-			getResults, {
-				year: showResultsYear,
-				month: showResultsMonth + 1,
-				page: 1,
-				replace: true,
-			},
-		);
+		enqueueOrDispatch(getResults, {
+			year: showResultsYear,
+			month: showResultsMonth + 1,
+			page: 1,
+			replace: true,
+		});
 	}, [enqueueOrDispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
 		if (haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			enqueueOrDispatch(
-				getResults, {
-					year: showResultsYear,
-					month: showResultsMonth + 1,
-					page: nextPage,
-					replace: false,
-				}
-			);
+			enqueueOrDispatch(getResults, {
+				year: showResultsYear,
+				month: showResultsMonth + 1,
+				page: nextPage,
+				replace: false,
+			});
 			setPage(nextPage);
 		}
 	};

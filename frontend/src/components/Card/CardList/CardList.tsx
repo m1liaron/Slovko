@@ -1,8 +1,10 @@
 import { getUnsplashPhotos } from "@/api/unsplash";
 import noCardsImage from "@/assets/images/no-cards.png";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { RootState } from "@/redux/store";
 import {
 	convertBlobToBase64,
 	convertImageToBase64,
@@ -49,8 +51,6 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
-import { RootState } from "@/redux/store";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 const MemoCardItem = memo(CardItem);
 
@@ -74,7 +74,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
-	
+
 	const [addCardMode, setAddCardMode] = useState<number>(0);
 	const [valueWords, setValueWords] = useState<Record<string, string>>({});
 	const [value, setValue] = useState<string>("");
@@ -350,14 +350,12 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
-				enqueueOrDispatch(
-					addCard, ({
-						word: validateWord(key),
-						translateWord: value,
-						imageUri: "",
-						groupId,
-					}),
-				);
+				enqueueOrDispatch(addCard, {
+					word: validateWord(key),
+					translateWord: value,
+					imageUri: "",
+					groupId,
+				});
 			}
 			setValueWords({});
 			setJsonOutput({});
@@ -373,12 +371,11 @@ const CardList = ({ groupId }: CardListProps) => {
 				groupId,
 			};
 
-			dispatch(enqueueOrDispatch(addCard, cardData))
-				.catch((err: any) => {
-					if (err instanceof Error) {
-						console.log(err);
-					}
-				})
+			dispatch(enqueueOrDispatch(addCard, cardData)).catch((err: any) => {
+				if (err instanceof Error) {
+					console.log(err);
+				}
+			});
 
 			setValue("");
 			setAnswerWord("");

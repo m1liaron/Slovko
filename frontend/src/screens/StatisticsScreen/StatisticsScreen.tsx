@@ -1,31 +1,26 @@
 import type { IStatistics, ModeName } from "@/common/enums/types/result.type";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, View } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 import RNPickerSelect from "react-native-picker-select";
-import { useDispatch, useSelector } from "react-redux";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
-import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectResult } from "../../redux/resultReducer/resultSlice";
 import { getResultsStatistics } from "../../redux/resultReducer/resultThunk";
 
 const StatisticsScreen = () => {
-	const {
-		theme: { colors },
-	} = useAppTheme();
 	const { statistics } = useAppSelector(selectResult);
-	const dispatch = useAppDispatch();
 	const [selectedMode, setSelectedMode] = useState<string>("flashCards");
 	const [selectedWordsMode, setSelectedWordsMode] =
 		useState<string>("wordLength"); // Mistakes || wordLength;
 	const [selectedGraph, setSelectedGraph] = useState<string>("LineChart");
 
 	useEffect(() => {
-		dispatch(getResultsStatistics());
-	}, [dispatch]);
+		enqueueOrDispatch(getResultsStatistics);
+	}, []);
 
 	const modesOptions = [
 		{ label: i18n.t("statisticsScreen.quiz"), value: "quiz" },

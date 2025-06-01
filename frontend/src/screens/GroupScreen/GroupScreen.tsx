@@ -1,10 +1,12 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type {
 	RootStackParamList,
 	StackNavigation,
 } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { RootState } from "@/redux/store";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import type { StackScreenProps } from "@react-navigation/stack";
@@ -29,8 +31,6 @@ import {
 	removeGroup,
 	updateGroup,
 } from "../../redux/groupReducer/groupSlice";
-import { RootState } from "@/redux/store";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -48,7 +48,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 	const [nextReviewSort, setNextReviewSort] = useState<"asc" | "desc">("asc"); // asc || desc
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
-	const isConnected = useAppSelector((state: RootState) => state.network.isConnected);
+	const isConnected = useAppSelector(
+		(state: RootState) => state.network.isConnected,
+	);
 
 	if (!group && status === DataStatus.ERROR) {
 		navigation.goBack();
@@ -58,7 +60,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		if (!group || group.id !== groupId) {
 			enqueueOrDispatch(getGroup, groupId);
 		}
-	}, [enqueueOrDispatch, group, groupId]);
+	}, [group, groupId]);
 
 	const statusCardsButtons = useMemo(() => {
 		if (!group) return [];

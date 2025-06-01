@@ -1,3 +1,4 @@
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppSelector } from "@/hooks/redux.hooks";
 import { LoginScreen, RegisterScreen } from "@/screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,7 +12,6 @@ import { AppPath } from "../../common/enums/app/app";
 import Loading from "../../components/Loading";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 export type RootStackParamList = {
 	[AppPath.Main]: undefined;
@@ -46,7 +46,7 @@ const ProtectedRoute = () => {
 		};
 
 		checkAuth();
-	}, [enqueueOrDispatch]);
+	}, []);
 
 	if (isLoading) {
 		return <Loading />;

@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { ICard } from "@/common/enums/types/card.type";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch } from "@/hooks/redux.hooks";
 import { pickImage } from "@/utils/utils";
 import { Entypo } from "@expo/vector-icons";
@@ -18,7 +19,6 @@ import PressableButton from "../../../common/components/PressableButton/Pressabl
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { updateCard } from "../../../redux/cardReducer/cardSlice";
 import DefaultModal from "../../DefaultModal/DefaultModal";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 /**
  * @param item {object: { id, word, translateWord, nextReviewAt, image}}
@@ -75,14 +75,13 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 	};
 
 	const handleUpdateCard = () => {
-		enqueueOrDispatch(updateCard, ({
-				id: item.id,
-				word: title,
-				translateWord: translate,
-				imageUri,
-				groupId,
-			}),
-		);
+		enqueueOrDispatch(updateCard, {
+			id: item.id,
+			word: title,
+			translateWord: translate,
+			imageUri,
+			groupId,
+		});
 		setTitle("");
 		setTranslate("");
 

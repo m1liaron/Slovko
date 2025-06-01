@@ -1,6 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import { AppPath } from "@/common/enums/app/AppPath";
 import { useLanguage } from "@/contexts/LanguageProvider";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -33,7 +34,6 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);

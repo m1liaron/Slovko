@@ -1,10 +1,10 @@
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { Entypo } from "@expo/vector-icons";
 import { Link } from "@react-navigation/native";
 import { Platform, Pressable, Text, View } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { removeGroup } from "../../../redux/groupReducer/groupSlice";
 import styles from "./Group.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 interface GroupItemProps {
 	item: {

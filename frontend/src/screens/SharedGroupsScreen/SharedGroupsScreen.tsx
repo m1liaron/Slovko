@@ -2,6 +2,7 @@ import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/Skeleto
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IGroup } from "@/common/enums/types/group.type";
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -37,7 +38,6 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -63,7 +63,7 @@ const SharedGroupsScreen = () => {
 
 	useEffect(() => {
 		enqueueOrDispatch(getAllSharedGroups, { page });
-	}, [enqueueOrDispatch, page]);
+	}, [page]);
 
 	const handleLoadMore = () => {
 		if (haveMoreSharedGroups && !isLoading) {
@@ -175,7 +175,9 @@ const SharedGroupsScreen = () => {
 				)}
 			</Pressable>
 			{item?.user?.id === user?.id && (
-				<Pressable onPress={() => enqueueOrDispatch(removeSharedGroup, item.id)}>
+				<Pressable
+					onPress={() => enqueueOrDispatch(removeSharedGroup, item.id)}
+				>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
 			)}

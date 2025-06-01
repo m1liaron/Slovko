@@ -5,6 +5,7 @@ import styles from "./LearnScreen.styles";
 import type { ResultsCard } from "@/common/enums/types/result.type";
 import type { ICard } from "@/common/enums/types/types";
 import LearnCheck from "@/components/Learn/LearnCheck/LearnCheck";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type {
@@ -34,7 +35,6 @@ import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import { saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 type Section = "cards" | "quiz" | "word" | "check" | "finish";
 
