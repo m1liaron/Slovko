@@ -350,8 +350,8 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
-				dispatch(
-					addCard({
+				enqueueOrDispatch(
+					addCard, ({
 						word: validateWord(key),
 						translateWord: value,
 						imageUri: "",
@@ -387,7 +387,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const onRemoveCard = async (courseId: string) => {
-		dispatch(removeCard(courseId));
+		enqueueOrDispatch(removeCard, (courseId));
 	};
 
 	const navigateToLearn = () => {
