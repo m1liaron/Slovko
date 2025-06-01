@@ -1,6 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { formatDMTDate } from "@/utils/utils";
@@ -16,6 +16,7 @@ import {
 	getSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 
 /**
  * @param route { object: { params }}
@@ -34,11 +35,10 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 	} = useAppTheme();
 	const { sharedGroupId } = route.params as { sharedGroupId: string };
 	const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
-	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch(getSharedGroup(sharedGroupId));
-	}, [dispatch, sharedGroupId]);
+		enqueueOrDispatch(getSharedGroup, sharedGroupId);
+	}, [enqueueOrDispatch, sharedGroupId]);
 
 	return (
 		<ThemeBackground>
@@ -101,7 +101,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 			{/*  !TODO function to copy shared group */}
 			<PressableButton
 				text={i18n.t("sharedGroup.copyGroupButton")}
-				onPress={() => dispatch(copySharedGroup(sharedGroupId))}
+				onPress={() => enqueueOrDispatch(copySharedGroup, sharedGroupId)}
 			/>
 		</ThemeBackground>
 	);
