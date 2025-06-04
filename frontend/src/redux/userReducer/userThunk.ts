@@ -27,10 +27,16 @@ const register = createAsyncThunk(
 	},
 );
 
-const getUser = createAsyncThunk("user/get", async () => {
-	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.get("/users");
-	return response.data.user;
+const getUser = createAsyncThunk("user/get", async (_, { rejectWithValue }) => {
+	try {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.get("/users");
+		return response.data.user;
+	} catch (error) {
+		if (error instanceof Error) {
+			return rejectWithValue(error.message)	
+		}
+	}
 });
 
 const updateUser = createAsyncThunk(

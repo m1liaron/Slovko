@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/hooks/redux.hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { Entypo } from "@expo/vector-icons";
@@ -15,6 +15,7 @@ import styles from "./LoginScreen.styles";
 const LoginScreen = () => {
 	const navigation = useNavigation<StackNavigation>();
 	const dispatch = useAppDispatch();
+	const isConnected = useAppSelector((state) => state.network.isConnected);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
