@@ -1,3 +1,4 @@
+import { SERVER_API_URL } from "@/common/enums/constants/server-api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { type AxiosInstance } from "axios";
 
@@ -5,13 +6,12 @@ import axios, { type AxiosInstance } from "axios";
  * Creates an authorized Axios instance with a Bearer token.
  * @returns {Promise<AxiosInstance>} A Promise that resolves to an Axios instance with auth headers.
  */
-
 export const createAuthorizedInstance = async (): Promise<AxiosInstance> => {
 	try {
 		const token = await AsyncStorage.getItem("token");
 
 		return axios.create({
-			baseURL: process.env.API_URL || "http://localhost:3000",
+			baseURL: SERVER_API_URL,
 			headers: {
 				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",

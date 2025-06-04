@@ -28,7 +28,7 @@ const start = async () => {
 		console.log("Database connected, attempting to sync models...");
 		await sequelize.sync({ alter: true });
 
-		app.listen(port, () => {
+		app.listen(port, "0.0.0.0", () => {
 			console.log(`Server running on http://localhost:${port}`);
 		});
 	} catch (error) {
