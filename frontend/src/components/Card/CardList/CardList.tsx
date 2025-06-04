@@ -1,8 +1,10 @@
 import { getUnsplashPhotos } from "@/api/unsplash";
 import noCardsImage from "@/assets/images/no-cards.png";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { RootState } from "@/redux/store";
 import {
 	convertBlobToBase64,
 	convertImageToBase64,
@@ -21,7 +23,15 @@ import React, {
 	useEffect,
 	useState,
 } from "react";
-import { ActivityIndicator, FlatList, Image, Platform, Pressable, Text, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	Image,
+	Platform,
+	Pressable,
+	Text,
+	View,
+} from "react-native";
 import Toast from "react-native-toast-message";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import * as XLSX from "xlsx";
@@ -63,6 +73,7 @@ const CardList = ({ groupId }: CardListProps) => {
 		(state) => state.cards,
 	);
 	const dispatch = useAppDispatch();
+	const navigation = useNavigation<StackNavigation>();
 
 	const [addCardMode, setAddCardMode] = useState<number>(0);
 	const [valueWords, setValueWords] = useState<Record<string, string>>({});
@@ -77,7 +88,6 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
 		cards.length || 2,
 	);
-	const navigation = useNavigation<StackNavigation>();
 
 	useEffect(() => {
 		setWordsRangeNumber(cards.length);
@@ -295,7 +305,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	useEffect(() => {
 		if (group?.id !== groupId) {
-			dispatch(getCards({ groupId }));
+			dispatch(enqueueOrDispatch(getCards, { groupId }));
 		}
 	}, [dispatch, groupId, group?.id]);
 
@@ -340,14 +350,12 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
-				dispatch(
-					addCard({
-						word: validateWord(key),
-						translateWord: value,
-						imageUri: "",
-						groupId,
-					}),
-				);
+				enqueueOrDispatch(addCard, {
+					word: validateWord(key),
+					translateWord: value,
+					imageUri: "",
+					groupId,
+				});
 			}
 			setValueWords({});
 			setJsonOutput({});
@@ -363,8 +371,12 @@ const CardList = ({ groupId }: CardListProps) => {
 				groupId,
 			};
 
-			console.log(validatedAnswer);
-			dispatch(addCard(cardData));
+			dispatch(enqueueOrDispatch(addCard, cardData)).catch((err: any) => {
+				if (err instanceof Error) {
+					console.log(err);
+				}
+			});
+
 			setValue("");
 			setAnswerWord("");
 			setImageUri("");
@@ -372,7 +384,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const onRemoveCard = async (courseId: string) => {
-		dispatch(removeCard(courseId));
+		dispatch(enqueueOrDispatch(removeCard, courseId));
 	};
 
 	const navigateToLearn = () => {
@@ -396,8 +408,8 @@ const CardList = ({ groupId }: CardListProps) => {
 
 	return (
 		<View style={styles.container}>
-			{ status === DataStatus.PENDING ? (
-				<ActivityIndicator color={colors.primary}/>
+			{status === DataStatus.PENDING ? (
+				<ActivityIndicator color={colors.primary} />
 			) : !cards.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
@@ -419,7 +431,7 @@ const CardList = ({ groupId }: CardListProps) => {
 					/>
 				</View>
 			)}
-			
+
 			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
 					<View

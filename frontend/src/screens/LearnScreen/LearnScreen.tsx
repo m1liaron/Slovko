@@ -5,6 +5,7 @@ import styles from "./LearnScreen.styles";
 import type { ResultsCard } from "@/common/enums/types/result.type";
 import type { ICard } from "@/common/enums/types/types";
 import LearnCheck from "@/components/Learn/LearnCheck/LearnCheck";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type {
@@ -152,7 +153,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
-		dispatch(saveResults(resultData));
+		dispatch(enqueueOrDispatch(saveResults, resultData));
 	};
 
 	const finishLesson = () => {
@@ -168,12 +169,12 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 		setElapsedTime(formatTime(totalLearnedTime));
 
 		const repeatedCardsIds = cards?.map((card) => card.id);
-		dispatch(updateCardsAfterLearn(repeatedCardsIds));
+		dispatch(enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds));
 
-		dispatch(updateUserStreak());
+		dispatch(enqueueOrDispatch(updateUserStreak));
 		handleSaveResults();
 		if (repeatedCards.length) {
-			dispatch(getRepeatedCards());
+			dispatch(enqueueOrDispatch(getRepeatedCards));
 		}
 	};
 

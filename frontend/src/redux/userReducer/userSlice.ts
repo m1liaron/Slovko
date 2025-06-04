@@ -1,4 +1,5 @@
 import type { IStreakDate, IUser } from "@/common/enums/types/user.type";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
 import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
 import {
@@ -10,7 +11,6 @@ import {
 	updateUser,
 	updateUserStreak,
 } from "./userThunk";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface InitialState {
 	user: IUser | null;

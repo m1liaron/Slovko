@@ -1,4 +1,5 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -38,13 +39,13 @@ const StreakScreen = () => {
 		month: new Date().getMonth() + 1,
 		year: new Date().getFullYear(),
 	});
-	const dispatch = useAppDispatch();
 	const now = new Date();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (date?.month && date.year) {
 			const { month, year } = date;
-			dispatch(getUserStreakDates({ month, year }));
+			dispatch(enqueueOrDispatch(getUserStreakDates, { month, year }));
 		}
 	}, [date, dispatch]);
 
@@ -151,7 +152,7 @@ const StreakScreen = () => {
 						<FontAwesome6 name="fire-flame-simple" size={60} color="#2aaef5" />
 						<PressableButton
 							text={i18n.t("streakScreen.buyFreeze")}
-							onPress={() => dispatch(buyFreeze({ froze: 100 }))}
+							onPress={() => enqueueOrDispatch(buyFreeze, { froze: 100 })}
 							buttonStyle={{
 								padding: 20,
 							}}

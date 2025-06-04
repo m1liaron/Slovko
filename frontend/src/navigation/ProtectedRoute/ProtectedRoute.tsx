@@ -1,4 +1,6 @@
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
+import { LoginScreen, RegisterScreen } from "@/screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	NavigationContainer,
@@ -9,9 +11,7 @@ import React, { useEffect, useState } from "react";
 import { AppPath } from "../../common/enums/app/app";
 import Loading from "../../components/Loading";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
-import AuthNavigator from "../AuthNavigator/AuthNavigator";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
-import { LoginScreen, RegisterScreen } from "@/screens";
 
 export type RootStackParamList = {
 	[AppPath.Main]: undefined;
@@ -34,20 +34,20 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
 	const [isLoading, setIsLoading] = useState(true);
-	const { isAuthenticated } = useAppSelector(selectUser);
 	const dispatch = useAppDispatch();
+	const { isAuthenticated } = useAppSelector(selectUser);
 
 	useEffect(() => {
 		const checkAuth = async () => {
 			const token = await AsyncStorage.getItem("token");
 			if (token) {
-				await dispatch(getUser());
+				dispatch(enqueueOrDispatch(getUser));
 			}
 			setIsLoading(false);
 		};
 
 		checkAuth();
-	}, [dispatch]);
+	}, []);
 
 	if (isLoading) {
 		return <Loading />;

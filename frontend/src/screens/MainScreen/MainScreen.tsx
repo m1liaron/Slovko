@@ -1,4 +1,5 @@
 import appLogo from "@/assets/images/favicon.png";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -103,8 +104,8 @@ const MainScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(getRepeatedCards());
-	}, [dispatch]);
+		dispatch(enqueueOrDispatch(getRepeatedCards));
+	}, []);
 
 	const daysSince = useCallback((dateString: string) => {
 		const targetDate = new Date(dateString).getTime();
@@ -119,8 +120,8 @@ const MainScreen = () => {
 	}, [daysSince]);
 
 	useEffect(() => {
-		dispatch(getUser());
-	}, [dispatch]);
+		dispatch(enqueueOrDispatch(getUser));
+	}, []);
 
 	const openLink = () => {
 		Linking.openURL("https://savelife.in.ua/en/");
@@ -136,12 +137,12 @@ const MainScreen = () => {
 			repeatedGroupsIds.length > 1
 				? repeatedGroupsIds.flatMap((group) => group.cards.map((id) => id))
 				: repeatedGroupsIds[0].cards;
-		dispatch(getRepeatedCardsFromIds(allIds));
+		dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, allIds));
 		navigateToLearn();
 	};
 
 	const learnGroupRepeatedCards = (cardsIds: string[]) => {
-		dispatch(getRepeatedCardsFromIds(cardsIds));
+		dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, cardsIds));
 		navigateToLearn();
 	};
 

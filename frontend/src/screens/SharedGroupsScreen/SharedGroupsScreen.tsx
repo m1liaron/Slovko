@@ -1,6 +1,8 @@
+import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IGroup } from "@/common/enums/types/group.type";
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -14,8 +16,8 @@ import {
 	Platform,
 	Pressable,
 	TextInput,
-	useWindowDimensions,
 	View,
+	useWindowDimensions,
 } from "react-native";
 import AvatarImage from "../../../assets/images/avatar.png";
 import AddButton from "../../common/components/AddButton/AddButton";
@@ -36,7 +38,6 @@ import {
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
-import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -61,13 +62,13 @@ const SharedGroupsScreen = () => {
 	const [page, setPage] = useState(1);
 
 	useEffect(() => {
-		dispatch(getAllSharedGroups({ page }));
-	}, [dispatch, page]);
+		dispatch(enqueueOrDispatch(getAllSharedGroups, { page }));
+	}, [page]);
 
 	const handleLoadMore = () => {
 		if (haveMoreSharedGroups && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(getAllSharedGroups({ page: nextPage }));
+			dispatch(enqueueOrDispatch(getAllSharedGroups, { page: nextPage }));
 			setPage(nextPage);
 		}
 	};
@@ -111,7 +112,7 @@ const SharedGroupsScreen = () => {
 				groupId: selectedGroup.id,
 				title: sharedGroupTitle || "Shared Group Title",
 			};
-			dispatch(saveSharedGroup(sharedGroupData));
+			dispatch(enqueueOrDispatch(saveSharedGroup, sharedGroupData));
 		}
 	};
 
@@ -126,7 +127,10 @@ const SharedGroupsScreen = () => {
 			}}
 		>
 			<Pressable
-				style={[styles.container, { backgroundColor: colors.lightBackground, flexWrap: "wrap" }]}
+				style={[
+					styles.container,
+					{ backgroundColor: colors.lightBackground, flexWrap: "wrap" },
+				]}
 				onPress={() =>
 					navigation.navigate(AppPath.SharedGroupDetails, {
 						sharedGroupId: item.id,
@@ -152,10 +156,15 @@ const SharedGroupsScreen = () => {
 					<View
 						style={{
 							padding: 5,
-							maxWidth: width - 300
+							maxWidth: width - 300,
 						}}
 					>
-						<ThemeText style={{ fontSize: 30, overflow: "hidden" }} numberOfLines={1}>{item.title}</ThemeText>
+						<ThemeText
+							style={{ fontSize: 30, overflow: "hidden" }}
+							numberOfLines={1}
+						>
+							{item.title}
+						</ThemeText>
 					</View>
 				</View>
 
@@ -166,7 +175,9 @@ const SharedGroupsScreen = () => {
 				)}
 			</Pressable>
 			{item?.user?.id === user?.id && (
-				<Pressable onPress={() => dispatch(removeSharedGroup(item.id))}>
+				<Pressable
+					onPress={() => enqueueOrDispatch(removeSharedGroup, item.id)}
+				>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
 			)}

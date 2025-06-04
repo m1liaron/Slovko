@@ -1,10 +1,12 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type {
 	RootStackParamList,
 	StackNavigation,
 } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import type { RootState } from "@/redux/store";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import type { StackScreenProps } from "@react-navigation/stack";
@@ -24,7 +26,11 @@ import {
 	resetFilter,
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
-import { getGroup, removeGroup, updateGroup } from "../../redux/groupReducer/groupSlice";
+import {
+	getGroup,
+	removeGroup,
+	updateGroup,
+} from "../../redux/groupReducer/groupSlice";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -42,6 +48,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 	const [nextReviewSort, setNextReviewSort] = useState<"asc" | "desc">("asc"); // asc || desc
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
+	const isConnected = useAppSelector(
+		(state: RootState) => state.network.isConnected,
+	);
 
 	if (!group && status === DataStatus.ERROR) {
 		navigation.goBack();
@@ -49,9 +58,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(getGroup(groupId));
+			dispatch(enqueueOrDispatch(getGroup, groupId));
 		}
-	}, [dispatch, group, groupId]);
+	}, [group, groupId]);
 
 	const statusCardsButtons = useMemo(() => {
 		if (!group) return [];
@@ -101,7 +110,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		if (!groupTitle) {
 			return console.error("Provide title");
 		}
-		dispatch(updateGroup({ id: groupId, title: groupTitle }));
+		dispatch(enqueueOrDispatch(updateGroup, { id: groupId, title: groupTitle }));
 	};
 
 	const sortByNextReview = () => {
@@ -111,6 +120,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	return (
 		<ThemeBackground>
+			<Text>Network: {isConnected ? "Online" : "Offline"}</Text>
 			<View
 				style={{
 					display: "flex",
@@ -131,7 +141,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 						color={colors.iconColor}
 					/>
 				</View>
-				<Pressable onPress={() => dispatch(removeGroup(groupId))}>
+				<Pressable onPress={() => dispatch(enqueueOrDispatch(removeGroup, groupId))}>
 					<Entypo name="trash" size={30} color={colors.iconColor} />
 				</Pressable>
 			</View>
@@ -159,22 +169,21 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 				{group?.knowCardsAmount && (
 					<>
-					<RenderStatusButtons />
-					<Pressable
-						style={{
-							padding: 5,
-							borderRadius: 10,
-							borderWidth: 2,
-							borderColor: "#bcbcbc",
-							marginHorizontal: 10,
-						}}
-						onPress={() => dispatch(resetFilter())}
-					>
-						<Entypo name="back-in-time" size={30} color="#bcbcbc" />
-					</Pressable>
+						<RenderStatusButtons />
+						<Pressable
+							style={{
+								padding: 5,
+								borderRadius: 10,
+								borderWidth: 2,
+								borderColor: "#bcbcbc",
+								marginHorizontal: 10,
+							}}
+							onPress={() => dispatch(resetFilter())}
+						>
+							<Entypo name="back-in-time" size={30} color="#bcbcbc" />
+						</Pressable>
 					</>
 				)}
-
 			</View>
 			<CardList groupId={groupId} />
 			<DefaultModal

@@ -29,6 +29,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 	try {
 		const { email, password: requestPassword } = req.body;
+		console.log(req.body)
 		if (!email || !requestPassword) {
 			return res
 				.status(StatusCodes.BAD_REQUEST)

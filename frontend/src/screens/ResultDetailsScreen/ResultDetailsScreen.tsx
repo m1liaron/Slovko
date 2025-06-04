@@ -1,11 +1,7 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { AppPath } from "@/common/enums/app/AppPath";
-import {
-	type IResultMode,
-	type IWord,
-	type ModeName,
-	Modes,
-} from "@/common/enums/types/types";
+import type { IResultMode, IWord, ModeName } from "@/common/enums/types/types";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { RootStackParamList } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -39,12 +35,12 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 	} = useAppTheme();
 	const { resultId } = route.params as { resultId: string };
 	const { result, isLoading } = useAppSelector((state) => state.results);
-	const dispatch = useAppDispatch();
 	const [selectedMode, setSelectedMode] = useState<ModeName>("flashCards"); // 0 - flashCards, 1 - quiz, 2 - guessWord
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch(getResultDetails(resultId));
-	}, [dispatch, resultId]);
+		dispatch(enqueueOrDispatch(getResultDetails, resultId));
+	}, [resultId]);
 
 	const modesMap = useMemo((): Partial<Record<ModeName, IResultMode>> => {
 		if (!result?.mode) return {};

@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:21
 
 WORKDIR /app
 
@@ -9,6 +9,7 @@ COPY . .
 
 # Install @expo/ngrok globally
 RUN npm install -g @expo/ngrok
+RUN npm install -g @expo-cli
 
 EXPOSE 8081
 

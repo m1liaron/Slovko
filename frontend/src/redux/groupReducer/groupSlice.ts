@@ -1,5 +1,10 @@
 import type { IGroup } from "@/common/enums/types/group.type";
-import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit";
+import {
+	createSlice,
+	isFulfilled,
+	isPending,
+	isRejected,
+} from "@reduxjs/toolkit";
 import {
 	DataStatus,
 	type IDataStatus,
@@ -27,7 +32,7 @@ const initialState: InitialState = {
 	group: null,
 	status: DataStatus.IDLE,
 	error: null,
-	isLoading: false
+	isLoading: false,
 };
 
 const groupSlice = createSlice({
@@ -74,8 +79,7 @@ const groupSlice = createSlice({
 			.addMatcher(isRejected, (state) => {
 				state.status = DataStatus.ERROR;
 				state.isLoading = false;
-			})
-
+			});
 	},
 });
 

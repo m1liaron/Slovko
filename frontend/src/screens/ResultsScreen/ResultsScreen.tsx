@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
+import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
@@ -70,27 +71,23 @@ const ResultsScreen = () => {
 
 	useEffect(() => {
 		setPage(1);
-		dispatch(
-			getResults({
-				year: showResultsYear,
-				month: showResultsMonth + 1,
-				page: 1,
-				replace: true,
-			}),
-		);
+		dispatch(enqueueOrDispatch(getResults, {
+			year: showResultsYear,
+			month: showResultsMonth + 1,
+			page: 1,
+			replace: true,
+		}));
 	}, [dispatch, showResultsMonth, showResultsYear]);
 
 	const handleLoadMore = () => {
 		if (haveMoreResults && !isLoading) {
 			const nextPage = page + 1;
-			dispatch(
-				getResults({
-					year: showResultsYear,
-					month: showResultsMonth + 1,
-					page: nextPage,
-					replace: false,
-				}),
-			);
+			dispatch(enqueueOrDispatch(getResults, {
+				year: showResultsYear,
+				month: showResultsMonth + 1,
+				page: nextPage,
+				replace: false,
+			}));
 			setPage(nextPage);
 		}
 	};
