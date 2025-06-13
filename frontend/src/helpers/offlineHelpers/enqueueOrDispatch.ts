@@ -33,7 +33,7 @@ const enqueueOrDispatch = <Args extends any[]>(
 		const isOffline = !network.isConnected;
 
 		// Skip queuing GET/fetch-like actions
-		const isFetchLike = /^get|^fetch/i.test(actionCreator.typePrefix);
+		const isFetchLike = actionCreator.typePrefix.toLocaleLowerCase().includes("get");
 
 		const queueAction = async () => {
 			dispatch(
@@ -46,7 +46,9 @@ const enqueueOrDispatch = <Args extends any[]>(
 		}
 
 		if (isOffline) {
-			if (isFetchLike) return { skipped: true };
+			if (isFetchLike) {
+				return { skipped: true };
+			}
 			await queueAction();
 			return { queued: true };
 		}
@@ -59,8 +61,8 @@ const enqueueOrDispatch = <Args extends any[]>(
 			}
 			return result;
 		} catch (error) {
-			if (/^get|^fetch/i.test(actionCreator.typePrefix)) {
-				return Promise.resolve({ skipped: true });
+			if (isFetchLike) {
+				return { skipped: true }
 			}
 			console.warn("Backend is off, save on device")
 			
