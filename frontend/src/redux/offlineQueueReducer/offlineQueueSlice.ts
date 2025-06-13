@@ -23,12 +23,15 @@ const offlineQueueSlice = createSlice({
 		dequeueAction(state) {
 			state.queue.shift();
 		},
+		setQueue(state, action: PayloadAction<QueuedAction[]>) {
+			state.queue = action.payload;
+		},
 		clearQueue(state) {
 			state.queue = [];
 		},
 	},
 });
 
-export const { enqueueAction, dequeueAction, clearQueue } =
+export const { enqueueAction, dequeueAction, setQueue, clearQueue } =
 	offlineQueueSlice.actions;
 export const offlineQueueReducer = offlineQueueSlice.reducer;
