@@ -17,6 +17,8 @@ import { offlineQueueReducer } from "./offlineQueueReducer/offlineQueueSlice";
 import { resultReducers } from "./resultReducer/resultSlice";
 import { sharedGroupReducers } from "./sharedGroupReducer/sharedGroupSlice";
 import { userReducers } from "./userReducer/userSlice";
+import { offlineMiddleware } from "./middlewares/offlineMiddleware";
+import { offlineStorageMiddleware } from "./middlewares/offlineStorageMiddleware";
 
 const rootReducer = combineReducers({
 	user: userReducers,
@@ -27,6 +29,8 @@ const rootReducer = combineReducers({
 	network: networkReducer,
 	offlineQueue: offlineQueueReducer,
 });
+
+export type RootState = ReturnType<typeof rootReducer>;
 
 const persisConfig = {
 	key: "root",
@@ -44,10 +48,11 @@ export const store = configureStore({
 			serializableCheck: {
 				ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
 			},
-		}),
+		})
+			.concat(offlineMiddleware)
+			.concat(offlineStorageMiddleware)
 });
 
 export const persistor = persistStore(store);
 export type AppStore = typeof store;
-export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];
