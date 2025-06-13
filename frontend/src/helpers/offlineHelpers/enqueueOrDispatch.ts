@@ -29,6 +29,10 @@ const enqueueOrDispatch = <Args extends any[]>(
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const { network } = getState();
 		if (!network.isConnected) {
+			if (/^get|^fetch/i.test(actionCreator.typePrefix)) {
+				return Promise.resolve({ skipped: true });
+			}
+
 			// Device is offline: enqueue { type, payload } for later replay
 			dispatch(
 				enqueueAction({
@@ -47,6 +51,10 @@ const enqueueOrDispatch = <Args extends any[]>(
 			}
 			return result;
 		} catch (error) {
+			if (/^get|^fetch/i.test(actionCreator.typePrefix)) {
+				return Promise.resolve({ skipped: true });
+			}
+			
 			dispatch(
 				enqueueAction({
 					type: actionCreator.typePrefix,
