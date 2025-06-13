@@ -26,7 +26,7 @@ const enqueueOrDispatch = <Args extends any[]>(
 	actionCreator: ActionCreatorWithType<Args>,
 	...args: Args
 ) => {
-	return (dispatch: AppDispatch, getState: () => RootState) => {
+	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const { network } = getState();
 		if (!network.isConnected) {
 			// Device is offline: enqueue { type, payload } for later replay
@@ -38,8 +38,24 @@ const enqueueOrDispatch = <Args extends any[]>(
 			);
 			return Promise.resolve({ queued: true } as { queued: boolean });
 		}
-		// Device is online: just dispatch the real asyncThunk
-		return dispatch(actionCreator(...args));
+
+		try {
+			const result = await dispatch(actionCreator(...args));
+
+			if ("error" in result && result.error) {
+				throw new Error(result.error.message || "Thunk failed");
+			}
+			return result;
+		} catch (error) {
+			dispatch(
+				enqueueAction({
+					type: actionCreator.typePrefix,
+					payload: args.length === 1 ? args[0] : args
+				})
+			);
+
+			return { queued: true, error: error instanceof Error ? error.message : String(error) };
+		}
 	};
 };
 
