@@ -1,6 +1,7 @@
 import { enqueueAction } from "@/redux/offlineQueueReducer/offlineQueueSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
 import type { AnyAction, ThunkAction } from "@reduxjs/toolkit";
+import { persistOfflineQueue } from "./persistOfflineQueue";
 
 /**
  * A “thunk creator” that:
@@ -28,19 +29,26 @@ const enqueueOrDispatch = <Args extends any[]>(
 ) => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const { network } = getState();
-		if (!network.isConnected) {
-			if (/^get|^fetch/i.test(actionCreator.typePrefix)) {
-				return Promise.resolve({ skipped: true });
-			}
 
-			// Device is offline: enqueue { type, payload } for later replay
+		const isOffline = !network.isConnected;
+
+		// Skip queuing GET/fetch-like actions
+		const isFetchLike = /^get|^fetch/i.test(actionCreator.typePrefix);
+
+		const queueAction = async () => {
 			dispatch(
 				enqueueAction({
 					type: actionCreator.typePrefix,
 					payload: args.length === 1 ? args[0] : args,
 				}),
 			);
-			return Promise.resolve({ queued: true } as { queued: boolean });
+			await persistOfflineQueue(getState);
+		}
+
+		if (isOffline) {
+			if (isFetchLike) return { skipped: true };
+			await queueAction();
+			return { queued: true };
 		}
 
 		try {
@@ -54,7 +62,9 @@ const enqueueOrDispatch = <Args extends any[]>(
 			if (/^get|^fetch/i.test(actionCreator.typePrefix)) {
 				return Promise.resolve({ skipped: true });
 			}
+			console.warn("Backend is off, save on device")
 			
+			await queueAction();
 			dispatch(
 				enqueueAction({
 					type: actionCreator.typePrefix,
