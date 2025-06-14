@@ -101,7 +101,9 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 			)}
 			<PressableButton
 				text={i18n.t("sharedGroup.copyGroupButton")}
-				onPress={() => dispatch(enqueueOrDispatch(copySharedGroup, sharedGroupId))}
+				onPress={() =>
+					dispatch(enqueueOrDispatch(copySharedGroup, sharedGroupId))
+				}
 			/>
 		</ThemeBackground>
 	);

@@ -1,6 +1,11 @@
 import { enqueueAction } from "@/redux/offlineQueueReducer/offlineQueueSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
-import type { AnyAction, ThunkAction } from "@reduxjs/toolkit";
+import type {
+	Action,
+	ActionCreatorWithPayload,
+	AnyAction,
+	ThunkAction,
+} from "@reduxjs/toolkit";
 import { persistOfflineQueue } from "./persistOfflineQueue";
 
 /**
@@ -14,6 +19,8 @@ type ActionCreatorWithType<Args extends any[]> = ((
 	...args: Args
 ) => ThunkAction<any, RootState, unknown, AnyAction>) & { typePrefix: string };
 
+type RegularActionCreator<T> = ActionCreatorWithPayload<T>;
+
 /**
  * @param actionCreator  — an RTK createAsyncThunk (has `typePrefix`).
  * @param args           — the arguments to pass into that thunk.
@@ -23,8 +30,12 @@ type ActionCreatorWithType<Args extends any[]> = ((
  * into the `offlineQueue` slice (which you’ve already persisted).
  * Otherwise, we just do `dispatch(actionCreator(...args))` as usual.
  */
-const enqueueOrDispatch = <Args extends any[]>(
+const enqueueOrDispatch = <
+	Args extends any[],
+	PayloadType = Args extends [infer T] ? T : Args,
+>(
 	actionCreator: ActionCreatorWithType<Args>,
+	actionStateCreator?: RegularActionCreator<PayloadType>,
 	...args: Args
 ) => {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -33,7 +44,9 @@ const enqueueOrDispatch = <Args extends any[]>(
 		const isOffline = !network.isConnected;
 
 		// Skip queuing GET/fetch-like actions
-		const isFetchLike = actionCreator.typePrefix.toLocaleLowerCase().includes("get");
+		const isFetchLike = actionCreator.typePrefix
+			.toLocaleLowerCase()
+			.includes("get");
 
 		const queueAction = async () => {
 			dispatch(
@@ -43,7 +56,11 @@ const enqueueOrDispatch = <Args extends any[]>(
 				}),
 			);
 			await persistOfflineQueue(getState);
-		}
+			if (actionStateCreator) {
+				const payload = (args.length === 1 ? args[0] : args) as PayloadType;
+				dispatch(actionStateCreator(payload));
+			}
+		};
 
 		if (isOffline) {
 			if (isFetchLike) {
@@ -62,19 +79,16 @@ const enqueueOrDispatch = <Args extends any[]>(
 			return result;
 		} catch (error) {
 			if (isFetchLike) {
-				return { skipped: true }
+				return { skipped: true };
 			}
-			console.warn("Backend is off, save on device")
-			
-			await queueAction();
-			dispatch(
-				enqueueAction({
-					type: actionCreator.typePrefix,
-					payload: args.length === 1 ? args[0] : args
-				})
-			);
+			console.warn("Backend is off, save on device");
 
-			return { queued: true, error: error instanceof Error ? error.message : String(error) };
+			await queueAction();
+
+			return {
+				queued: true,
+				error: error instanceof Error ? error.message : String(error),
+			};
 		}
 	};
 };

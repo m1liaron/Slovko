@@ -18,6 +18,9 @@ const offlineQueueSlice = createSlice({
 	initialState,
 	reducers: {
 		enqueueAction(state, action: PayloadAction<QueuedAction>) {
+			if (!state.queue) {
+				state.queue = [];
+			}
 			state.queue.push(action.payload);
 		},
 		dequeueAction(state) {

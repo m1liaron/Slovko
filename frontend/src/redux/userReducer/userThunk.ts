@@ -1,3 +1,4 @@
+import { SERVER_API_URL } from "@/common/enums/constants/server-api";
 import {
 	type IUpdateUser,
 	IUser,
@@ -7,7 +8,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
-import { SERVER_API_URL } from "@/common/enums/constants/server-api";
 
 const login = createAsyncThunk(
 	"user/login",
@@ -34,7 +34,7 @@ const getUser = createAsyncThunk("user/get", async (_, { rejectWithValue }) => {
 		return response.data.user;
 	} catch (error) {
 		if (error instanceof Error) {
-			return rejectWithValue(error.message)	
+			return rejectWithValue(error.message);
 		}
 	}
 });

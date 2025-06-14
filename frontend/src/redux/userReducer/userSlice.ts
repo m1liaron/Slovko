@@ -17,7 +17,7 @@ interface InitialState {
 	streakDates: IStreakDate[];
 	isAuthenticated: boolean;
 	status: IDataStatus;
-	message: string
+	message: string;
 }
 
 const initialState: InitialState = {
@@ -25,7 +25,7 @@ const initialState: InitialState = {
 	streakDates: [],
 	isAuthenticated: false,
 	status: DataStatus.IDLE,
-	message: ""
+	message: "",
 };
 
 const userSlice = createSlice({

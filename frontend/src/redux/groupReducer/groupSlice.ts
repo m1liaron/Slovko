@@ -1,5 +1,7 @@
 import type { IGroup } from "@/common/enums/types/group.type";
 import {
+	Action,
+	type PayloadAction,
 	createSlice,
 	isFulfilled,
 	isPending,
@@ -35,10 +37,32 @@ const initialState: InitialState = {
 	isLoading: false,
 };
 
+const handleUpdateGroup = (
+	state: InitialState,
+	action: PayloadAction<IGroup>,
+) => {
+	const updatedGroup: IGroup = action.payload;
+	const index = state.groups.findIndex((group) => group.id === updatedGroup.id);
+	if (index !== -1) {
+		state.groups[index] = updatedGroup;
+		state.groups = [...state.groups];
+	}
+};
+
 const groupSlice = createSlice({
 	name: "groups",
 	initialState,
-	reducers: {},
+	reducers: {
+		addStateGroup: (state, action) => {
+			state.groups.push(action.payload);
+		},
+		updateStateGroup: handleUpdateGroup,
+		removeStateGroup: (state, action) => {
+			state.groups = state.groups.filter(
+				(group) => group.id !== action.payload,
+			);
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(getAllGroups.fulfilled, (state, action) => {
@@ -83,6 +107,8 @@ const groupSlice = createSlice({
 	},
 });
 
+export const { addStateGroup, updateStateGroup, removeStateGroup } =
+	groupSlice.actions;
 export const selectGroup = (state: RootState) => state.groups.groups;
 export {
 	getAllGroups,

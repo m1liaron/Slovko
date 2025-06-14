@@ -69,28 +69,28 @@ const ProtectedRoute = () => {
 	if (!isConnected || backendOff || isAuthenticated) {
 		return (
 			<NavigationContainer>
-			  <Stack.Navigator screenOptions={{ headerShown: false }}>
-				<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
-			  </Stack.Navigator>
+				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
+				</Stack.Navigator>
 			</NavigationContainer>
-		  );
+		);
 	}
 
 	if (!hasToken) {
 		return (
 			<NavigationContainer>
-			  <Stack.Navigator screenOptions={{ headerShown: false }}>
-				<Stack.Screen name={AppPath.Login} component={LoginScreen} />
-				<Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-			  </Stack.Navigator>
+				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					<Stack.Screen name={AppPath.Login} component={LoginScreen} />
+					<Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+				</Stack.Navigator>
 			</NavigationContainer>
-		  );
+		);
 	}
-	
+
 	return (
 		<NavigationContainer>
 			<Stack.Navigator screenOptions={{ headerShown: false }}>
-			<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
+				<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);
