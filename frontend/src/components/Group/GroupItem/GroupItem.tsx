@@ -4,8 +4,9 @@ import { Entypo } from "@expo/vector-icons";
 import { Link } from "@react-navigation/native";
 import { Platform, Pressable, Text, View } from "react-native";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
-import { removeGroup } from "../../../redux/groupReducer/groupSlice";
+import { removeGroup, removeStateGroup } from "../../../redux/groupReducer/groupSlice";
 import styles from "./Group.styles";
+import { useCallback } from "react";
 
 interface GroupItemProps {
 	item: {
@@ -20,9 +21,18 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 	} = useAppTheme();
 	const dispatch = useAppDispatch();
 
-	const handleRemoveGroup = () => {
-		dispatch(enqueueOrDispatch(removeGroup, id));
-	};
+	const handleRemoveGroup = useCallback(() => {
+		// Don't call dispatch directly in render - wrap in async function
+		const performRemove = async () => {
+		  try {
+			await dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, id));
+		  } catch (error) {
+			console.error('Failed to remove group:', error);
+		  }
+		};
+		
+		performRemove();
+	  }, [dispatch, id]);
 
 	return (
 		<View

@@ -27,6 +27,7 @@ import {
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
 import {
+	addStateGroup,
 	getGroup,
 	removeGroup,
 	updateGroup,
@@ -52,13 +53,13 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		(state: RootState) => state.network.isConnected,
 	);
 
-	if (!group && status === DataStatus.ERROR) {
+	if (!groupId && status === DataStatus.ERROR) {
 		navigation.goBack();
 	}
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(enqueueOrDispatch(getGroup, groupId));
+			dispatch(enqueueOrDispatch(getGroup, addStateGroup, groupId));
 		}
 	}, [group, groupId]);
 

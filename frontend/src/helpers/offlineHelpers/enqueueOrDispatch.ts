@@ -22,13 +22,9 @@ type ActionCreatorWithType<Args extends any[]> = ((
 type RegularActionCreator<T> = ActionCreatorWithPayload<T>;
 
 /**
- * @param actionCreator  — an RTK createAsyncThunk (has `typePrefix`).
- * @param args           — the arguments to pass into that thunk.
- *
- * If disconnected, we push
- *   { type: actionCreator.typePrefix, payload: (args or args[0]) }
- * into the `offlineQueue` slice (which you’ve already persisted).
- * Otherwise, we just do `dispatch(actionCreator(...args))` as usual.
+ * @param actionCreator — an RTK createAsyncThunk (has `typePrefix`).
+ * @param actionStateCreator — optional state action creator for optimistic updates
+ * @param args — the arguments to pass into that thunk.
  */
 const enqueueOrDispatch = <
 	Args extends any[],
@@ -45,7 +41,7 @@ const enqueueOrDispatch = <
 
 		// Skip queuing GET/fetch-like actions
 		const isFetchLike = actionCreator.typePrefix
-			.toLocaleLowerCase()
+			.toLowerCase()
 			.includes("get");
 
 		const queueAction = async () => {
@@ -56,7 +52,7 @@ const enqueueOrDispatch = <
 				}),
 			);
 			await persistOfflineQueue(getState);
-			if (actionStateCreator) {
+			if (actionStateCreator && typeof actionStateCreator === 'function') {
 				const payload = (args.length === 1 ? args[0] : args) as PayloadType;
 				dispatch(actionStateCreator(payload));
 			}
@@ -73,8 +69,8 @@ const enqueueOrDispatch = <
 		try {
 			const result = await dispatch(actionCreator(...args));
 
-			if ("error" in result && result.error) {
-				throw new Error(result.error.message || "Thunk failed");
+			if (result.type.endsWith('/rejected')) {
+				throw new Error(result.payload?.message || "Thunk failed");
 			}
 			return result;
 		} catch (error) {
