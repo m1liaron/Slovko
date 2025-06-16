@@ -30,7 +30,9 @@ import {
 	addStateGroup,
 	getGroup,
 	removeGroup,
+	removeStateGroup,
 	updateGroup,
+	updateStateGroup,
 } from "../../redux/groupReducer/groupSlice";
 
 type GroupScreenProps = StackScreenProps<
@@ -112,7 +114,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 			return console.error("Provide title");
 		}
 		dispatch(
-			enqueueOrDispatch(updateGroup, { id: groupId, title: groupTitle }),
+			enqueueOrDispatch(updateGroup, updateStateGroup, { id: groupId, title: groupTitle }),
 		);
 	};
 
@@ -145,7 +147,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 					/>
 				</View>
 				<Pressable
-					onPress={() => dispatch(enqueueOrDispatch(removeGroup, groupId))}
+					onPress={() => dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId))}
 				>
 					<Entypo name="trash" size={30} color={colors.iconColor} />
 				</Pressable>

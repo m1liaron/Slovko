@@ -11,7 +11,6 @@ import {
 	DataStatus,
 	type IDataStatus,
 } from "../../common/enums/app/DataStatus";
-import { copySharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
 import type { RootState } from "../store";
 import {
 	addGroup,
@@ -46,6 +45,7 @@ const handleUpdateGroup = (
 	if (index !== -1) {
 		state.groups[index] = updatedGroup;
 		state.groups = [...state.groups];
+		state.group = updatedGroup;
 	}
 };
 
