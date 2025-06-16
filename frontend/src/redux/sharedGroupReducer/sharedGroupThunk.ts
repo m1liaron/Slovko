@@ -1,7 +1,7 @@
-import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
-export const getAllSharedGroups = createAppAsyncThunk(
+export const getAllSharedGroups = createAsyncThunk(
 	"sharedGroup/getAll",
 	async (data: { page: number }) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -10,7 +10,7 @@ export const getAllSharedGroups = createAppAsyncThunk(
 	},
 );
 
-export const saveSharedGroup = createAppAsyncThunk(
+export const saveSharedGroup = createAsyncThunk(
 	"sharedGroup/save",
 	async (data: { groupId: string; title: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -19,7 +19,7 @@ export const saveSharedGroup = createAppAsyncThunk(
 	},
 );
 
-export const getSharedGroup = createAppAsyncThunk(
+export const getSharedGroup = createAsyncThunk(
 	"sharedGroup/get",
 	async (id: string) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -28,7 +28,7 @@ export const getSharedGroup = createAppAsyncThunk(
 	},
 );
 
-export const copySharedGroup = createAppAsyncThunk(
+export const copySharedGroup = createAsyncThunk(
 	"sharedGroup/copy",
 	async (sharedGroupId: string) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -37,7 +37,7 @@ export const copySharedGroup = createAppAsyncThunk(
 	},
 );
 
-export const removeSharedGroup = createAppAsyncThunk(
+export const removeSharedGroup = createAsyncThunk(
 	"sharedGroup/remove",
 	async (sharedGroupId: string) => {
 		const axiosInstance = await createAuthorizedInstance();

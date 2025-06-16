@@ -2,10 +2,10 @@ import type {
 	AddCardRequest,
 	UpdateCardRequst,
 } from "@/common/enums/types/types";
-import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
-export const getCards = createAppAsyncThunk(
+export const getCards = createAsyncThunk(
 	"card/get-cards",
 	async ({ groupId }: { groupId: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -14,7 +14,7 @@ export const getCards = createAppAsyncThunk(
 	},
 );
 
-export const addCard = createAppAsyncThunk(
+export const addCard = createAsyncThunk(
 	"card/add-card",
 	async (data: AddCardRequest) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -23,7 +23,7 @@ export const addCard = createAppAsyncThunk(
 	},
 );
 
-export const removeCard = createAppAsyncThunk(
+export const removeCard = createAsyncThunk(
 	"card/remove",
 	async (cardId: string) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -32,7 +32,7 @@ export const removeCard = createAppAsyncThunk(
 	},
 );
 
-export const updateCard = createAppAsyncThunk(
+export const updateCard = createAsyncThunk(
 	"card/update",
 	async (data: UpdateCardRequst) => {
 		try {
@@ -46,7 +46,7 @@ export const updateCard = createAppAsyncThunk(
 	},
 );
 
-export const updateCardsAfterLearn = createAppAsyncThunk(
+export const updateCardsAfterLearn = createAsyncThunk(
 	"card/learnCards",
 	async (data: string[]) => {
 		try {
@@ -60,7 +60,7 @@ export const updateCardsAfterLearn = createAppAsyncThunk(
 	},
 );
 
-export const getRepeatedCards = createAppAsyncThunk(
+export const getRepeatedCards = createAsyncThunk(
 	"card/getRepeatedCards",
 	async () => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -69,7 +69,7 @@ export const getRepeatedCards = createAppAsyncThunk(
 	},
 );
 
-export const getRepeatedCardsFromIds = createAppAsyncThunk(
+export const getRepeatedCardsFromIds = createAsyncThunk(
 	"card/getRepeatedCardsFromIds",
 	async (data: string[]) => {
 		const axiosInstance = await createAuthorizedInstance();

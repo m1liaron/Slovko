@@ -1,8 +1,8 @@
 import type { SaveResultsRequest } from "@/common/enums/types/result.type";
-import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
-export const saveResults = createAppAsyncThunk(
+export const saveResults = createAsyncThunk(
 	"results/save",
 	async (data: SaveResultsRequest) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -11,7 +11,7 @@ export const saveResults = createAppAsyncThunk(
 	},
 );
 
-export const getResults = createAppAsyncThunk(
+export const getResults = createAsyncThunk(
 	"results/get",
 	async (data: {
 		month: number;
@@ -27,7 +27,7 @@ export const getResults = createAppAsyncThunk(
 	},
 );
 
-export const getResultDetails = createAppAsyncThunk(
+export const getResultDetails = createAsyncThunk(
 	"resultDetails/get",
 	async (id: string) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -36,7 +36,7 @@ export const getResultDetails = createAppAsyncThunk(
 	},
 );
 
-export const getResultsStatistics = createAppAsyncThunk(
+export const getResultsStatistics = createAsyncThunk(
 	"resultsDetails/get",
 	async () => {
 		const axiosInstance = await createAuthorizedInstance();

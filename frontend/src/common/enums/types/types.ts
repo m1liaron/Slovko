@@ -17,4 +17,3 @@ export {
 	IWord,
 } from "./result.type";
 export { ISharedGroup } from "./sharedGroup";
-export { type AsyncThunkConfig } from "./AsyncThunkConfig";
