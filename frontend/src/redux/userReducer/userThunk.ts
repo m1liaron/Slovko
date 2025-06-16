@@ -5,11 +5,11 @@ import {
 	type RegisterUser,
 } from "@/common/enums/types/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 import axios from "axios";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
-const login = createAsyncThunk(
+const login = createAppAsyncThunk(
 	"user/login",
 	async (data: { email: string; password: string }) => {
 		const response = await axios.post(`${SERVER_API_URL}/users/login`, data);
@@ -18,7 +18,7 @@ const login = createAsyncThunk(
 	},
 );
 
-const register = createAsyncThunk(
+const register = createAppAsyncThunk(
 	"user/register",
 	async (data: RegisterUser) => {
 		const response = await axios.post(`${SERVER_API_URL}/users/register`, data);
@@ -27,19 +27,13 @@ const register = createAsyncThunk(
 	},
 );
 
-const getUser = createAsyncThunk("user/get", async (_, { rejectWithValue }) => {
-	try {
-		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.get("/users");
-		return response.data.user;
-	} catch (error) {
-		if (error instanceof Error) {
-			return rejectWithValue(error.message);
-		}
-	}
+const getUser = createAppAsyncThunk("user/get", async () => {
+	const axiosInstance = await createAuthorizedInstance();
+	const response = await axiosInstance.get("/users");
+	return response.data.user;
 });
 
-const updateUser = createAsyncThunk(
+const updateUser = createAppAsyncThunk(
 	"user/update",
 	async ({ id, data }: { id: string; data: IUpdateUser }) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -48,13 +42,13 @@ const updateUser = createAsyncThunk(
 	},
 );
 
-const updateUserStreak = createAsyncThunk("user/updateUserStreak", async () => {
+const updateUserStreak = createAppAsyncThunk("user/updateUserStreak", async () => {
 	const axiosInstance = await createAuthorizedInstance();
 	const response = await axiosInstance.patch("/users/streak");
 	return response.data;
 });
 
-const buyFreeze = createAsyncThunk(
+const buyFreeze = createAppAsyncThunk(
 	"user/buyFreeze",
 	async ({ froze }: { froze: number }) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -63,7 +57,7 @@ const buyFreeze = createAsyncThunk(
 	},
 );
 
-const getUserStreakDates = createAsyncThunk(
+const getUserStreakDates = createAppAsyncThunk(
 	"user/getStreakDates",
 	async ({ month, year }: { month: number; year: number }) => {
 		const axiosInstance = await createAuthorizedInstance();
