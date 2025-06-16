@@ -4,7 +4,6 @@ import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { RootState } from "@/redux/store";
 import {
 	convertBlobToBase64,
 	convertImageToBase64,
@@ -43,9 +42,11 @@ import { AppPath, DataStatus } from "../../../common/enums/app/app";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import {
 	addCard,
+	addStateCard,
 	getCards,
 	rangeCards,
 	removeCard,
+	removeStateCard,
 	resetFilter,
 } from "../../../redux/cardReducer/cardSlice";
 import DefaultModal from "../../DefaultModal/DefaultModal";
@@ -68,6 +69,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
+	console.log(groupId)
 	const { group } = useAppSelector((state) => state.groups);
 	const { cards, filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
@@ -350,7 +352,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
-				enqueueOrDispatch(addCard, {
+				enqueueOrDispatch(addCard, addStateCard, {
 					word: validateWord(key),
 					translateWord: value,
 					imageUri: "",
@@ -371,7 +373,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				groupId,
 			};
 
-			dispatch(enqueueOrDispatch(addCard, cardData)).catch((err: any) => {
+			dispatch(enqueueOrDispatch(addCard, addStateCard, cardData)).catch((err: any) => {
 				if (err instanceof Error) {
 					console.log(err);
 				}
@@ -384,7 +386,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const onRemoveCard = async (courseId: string) => {
-		dispatch(enqueueOrDispatch(removeCard, courseId));
+		dispatch(enqueueOrDispatch(removeCard, removeStateCard, courseId));
 	};
 
 	const navigateToLearn = () => {

@@ -54,6 +54,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 	const isConnected = useAppSelector(
 		(state: RootState) => state.network.isConnected,
 	);
+	console.log(groupId)
 
 	if (!groupId && status === DataStatus.ERROR) {
 		navigation.goBack();

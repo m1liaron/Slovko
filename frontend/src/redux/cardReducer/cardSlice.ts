@@ -169,7 +169,7 @@ const cardSlice = createSlice({
 	},
 });
 
-export const { filterCardsByStatus, resetFilter, rangeCards, sortCards } =
+export const { addStateCard, updateStateCard, removeStateCard, filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
 export const selectCard = (state: RootState) => state.cards.cards;
 export {

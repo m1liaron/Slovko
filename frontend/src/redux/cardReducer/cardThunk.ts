@@ -1,13 +1,12 @@
 import type {
 	AddCardRequest,
-	ICard,
 	UpdateCardRequst,
 } from "@/common/enums/types/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
 export const getCards = createAsyncThunk(
-	"card/fetchCards",
+	"card/get-cards",
 	async ({ groupId }: { groupId: string }) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
@@ -21,7 +20,7 @@ export const getCards = createAsyncThunk(
 );
 
 export const addCard = createAsyncThunk(
-	"card/addCard",
+	"card/add-card",
 	async (data: AddCardRequest, thunkAPI) => {
 		try {
 			const axiosInstance = await createAuthorizedInstance();
