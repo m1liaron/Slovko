@@ -11,6 +11,7 @@ import {
 	updateCard,
 	updateCardsAfterLearn,
 } from "./cardThunk";
+import { handleUpdateState } from "../services/handleUpdateState";
 
 interface InitialState {
 	cards: ICard[];
@@ -32,6 +33,15 @@ const cardSlice = createSlice({
 	name: "cards",
 	initialState,
 	reducers: {
+		addStateCard: (state, action) => {
+			state.cards.push(action.payload);
+		},
+		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),
+		removeStateCard: (state, action) => {
+			state.cards = state.cards.filter(
+				(card) => card.id !== action.payload,
+			);
+		},
 		rangeCards: (state, action) => {
 			if (action.payload) {
 				state.cards = [...state.cards.slice(0, action.payload)];
