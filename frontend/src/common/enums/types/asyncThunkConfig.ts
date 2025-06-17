@@ -1,4 +1,5 @@
 import { AppDispatch, RootState } from "@/redux/store";
+import { PersistState } from "redux-persist";
 
 type RejectValue = {
     status: number;
@@ -6,7 +7,7 @@ type RejectValue = {
 };
 
 type AsyncThunkConfig = {
-    state: RootState;
+    state: RootState | PersistState;
     dispatch: AppDispatch;
     rejectWithValue: RejectValue;
 };

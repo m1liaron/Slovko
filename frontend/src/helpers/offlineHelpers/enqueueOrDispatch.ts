@@ -4,46 +4,56 @@ import type {
 	ActionCreatorWithPayload,
 	AnyAction,
 	ThunkAction,
+	AsyncThunk,
 } from "@reduxjs/toolkit";
 import { persistOfflineQueue } from "./persistOfflineQueue";
 
-type ActionCreatorWithType<Args extends any[]> = ((
-	...args: Args
-) => ThunkAction<any, RootState, unknown, AnyAction>) & { typePrefix: string };
+// Updated type to match AsyncThunk signature
+type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
+	Returned,
+	ThunkArg,
+	{
+		state: RootState;
+		dispatch: AppDispatch;
+		rejectValue: any;
+	}
+> & { typePrefix: string };
 
 type RegularActionCreator<T> = ActionCreatorWithPayload<T>;
 
 // 🔹 First overload: only asyncThunk + args
-function enqueueOrDispatch<Args extends any[]>(
-	actionCreator: ActionCreatorWithType<Args>,
-	...args: Args
+function enqueueOrDispatch<Returned, ThunkArg>(
+	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
+	args: ThunkArg
 ): ReturnType<typeof buildThunk>;
 
 // 🔹 Second overload: asyncThunk + stateAction + args
-function enqueueOrDispatch<Args extends any[], PayloadType>(
-	actionCreator: ActionCreatorWithType<Args>,
+function enqueueOrDispatch<Returned, ThunkArg extends PayloadType, PayloadType>(
+	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
 	stateAction: RegularActionCreator<PayloadType>,
-	...args: Args
+	args: ThunkArg
 ): ReturnType<typeof buildThunk>;
 
 // 🔸 Actual implementation
-function enqueueOrDispatch<Args extends any[], PayloadType>(
-	actionCreator: ActionCreatorWithType<Args>,
-	arg1: any,
-	...rest: any[]
+function enqueueOrDispatch<Returned, ThunkArg, PayloadType = ThunkArg>(
+	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
+	arg1: RegularActionCreator<PayloadType> | ThunkArg,
+	arg2?: ThunkArg
 ) {
 	const hasStateCreator = typeof arg1 === "function";
-	const actionStateCreator = hasStateCreator ? (arg1 as RegularActionCreator<PayloadType>) : undefined;
-	const args = hasStateCreator ? rest : [arg1, ...rest] as Args;
+	const actionStateCreator = hasStateCreator
+		? (arg1 as RegularActionCreator<PayloadType>)
+		: undefined;
+	const args = hasStateCreator ? arg2! : (arg1 as ThunkArg);
 
-	return buildThunk(actionCreator, actionStateCreator, args as Args);
+	return buildThunk(actionCreator, actionStateCreator, args);
 }
 
 // 🔹 Extracted core thunk builder
-function buildThunk<Args extends any[], PayloadType>(
-	actionCreator: ActionCreatorWithType<Args>,
+function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
+	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
 	actionStateCreator: RegularActionCreator<PayloadType> | undefined,
-	args: Args,
+	args: ThunkArg,
 ) {
 	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const { network } = getState();
@@ -54,14 +64,12 @@ function buildThunk<Args extends any[], PayloadType>(
 			dispatch(
 				enqueueAction({
 					type: actionCreator.typePrefix,
-					payload: args.length === 1 ? args[0] : args,
+					payload: args,
 				}),
 			);
 			await persistOfflineQueue(getState);
-
 			if (actionStateCreator) {
-				const payload = (args.length === 1 ? args[0] : args) as PayloadType;
-				dispatch(actionStateCreator(payload));
+				dispatch(actionStateCreator(args as unknown as PayloadType));
 			}
 		};
 
@@ -72,7 +80,8 @@ function buildThunk<Args extends any[], PayloadType>(
 		}
 
 		try {
-			const result = await dispatch(actionCreator(...args));
+			// TODO: Change type any for args on real type.
+			const result = await dispatch(actionCreator(args as any));
 			if (result.type.endsWith("/rejected")) {
 				throw new Error(result.payload?.message || "Thunk failed");
 			}
