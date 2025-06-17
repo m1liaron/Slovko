@@ -1,9 +1,12 @@
 import type {
 	AddCardRequest,
+	ICard,
 	UpdateCardRequst,
 } from "@/common/enums/types/types";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getCards = createAppAsyncThunk(
 	"card/get-cards",
@@ -13,6 +16,26 @@ export const getCards = createAppAsyncThunk(
 		return response.data;
 	},
 );
+
+export const getCardsStorage = createAppAsyncThunk(
+	"card/get-cards-storage",
+	async ({ groupId }: { groupId: string }) => {
+		const storage = await AsyncStorage.getItem("persist:root");
+		if (!storage) {
+			return null;
+		}
+		const root = JSON.parse(JSON.parse(storage));
+		console.log(root);
+		const cardsRaw = root.cards;
+		console.log(cardsRaw);
+
+		const cards = JSON.parse(cardsRaw); 
+		console.log(cards);
+		const filteredCards = cards.filter((card: ICard) => card.groupId === groupId);
+
+		return filteredCards;
+	}
+)
 
 export const addCard = createAppAsyncThunk(
 	"card/add-card",

@@ -52,6 +52,7 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
+import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
 
 const MemoCardItem = memo(CardItem);
 
@@ -69,7 +70,6 @@ const CardList = ({ groupId }: CardListProps) => {
 	const {
 		theme: { colors },
 	} = useAppTheme();
-	console.log(groupId)
 	const { group } = useAppSelector((state) => state.groups);
 	const { cards, filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
@@ -306,10 +306,9 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	useEffect(() => {
-		if (group?.id !== groupId) {
-			dispatch(enqueueOrDispatch(getCards, { groupId }));
-		}
-	}, [dispatch, groupId, group?.id]);
+		console.log("🔁 useEffect ran for getCardsStorage", { group, groupId });
+		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId} ));
+	}, [group, groupId]);
 
 	const onSaveCard = async () => {
 		let finalImageUri: string = imageUri;

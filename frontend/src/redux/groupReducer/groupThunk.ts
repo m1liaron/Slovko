@@ -1,6 +1,7 @@
 import type { IGroup } from "@/common/enums/types/group.type";
 import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getAllGroups = createAppAsyncThunk("group/getAll", async () => {
 	const axiosInstance = await createAuthorizedInstance();
@@ -17,10 +18,21 @@ export const addGroup = createAppAsyncThunk(
 	},
 );
 
-export const getGroup = createAppAsyncThunk("group/get", async (id: string) => {
+export const getGroup = createAppAsyncThunk("group/get", async ({ groupId }: { groupId: string }) => {
 	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.get(`/groups/${id}`);
+	const response = await axiosInstance.get(`/groups/${groupId}`);
 	return response.data;
+});
+
+export const getGroupStorage = createAppAsyncThunk("group/get-storage", async ({ groupId }: { groupId: string}) => {
+	const storage = await AsyncStorage.getItem("persist:root");
+	if (!storage) {
+		return null;
+	}
+	const parsedGroups = JSON.parse(JSON.parse(storage)).groups;
+	
+	const currentGroup = parsedGroups.find((group: IGroup) => group.id === groupId);
+	return currentGroup ??  { id: groupId, name: "Unknown" };;
 });
 
 export const removeGroup = createAppAsyncThunk(

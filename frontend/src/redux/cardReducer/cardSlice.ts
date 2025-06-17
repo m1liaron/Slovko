@@ -5,6 +5,7 @@ import type { RootState } from "../store";
 import {
 	addCard,
 	getCards,
+	getCardsStorage,
 	getRepeatedCards,
 	getRepeatedCardsFromIds,
 	removeCard,
@@ -12,8 +13,7 @@ import {
 	updateCardsAfterLearn,
 } from "./cardThunk";
 import { handleUpdateState } from "../services/handleUpdateState";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { v4 as uuid } from "uuid";
 interface InitialState {
 	cards: ICard[];
 	filteredCards: ICard[];
@@ -35,8 +35,11 @@ const cardSlice = createSlice({
 	initialState,
 	reducers: {
 		addStateCard: (state, action) => {
-			console.log("new card data", action.payload);
-			state.cards.push(action.payload);
+			const cardData = {
+				id: uuid(),
+				...action.payload
+			}
+			state.cards.push(cardData);
 		},
 		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),
 		removeStateCard: (state, action) => {
@@ -83,7 +86,13 @@ const cardSlice = createSlice({
 				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
 			})
-
+			.addCase(getCardsStorage.fulfilled, (state, action) => {
+				state.status = DataStatus.SUCCESS;
+				if (action.payload) {
+					state.cards = action.payload;
+					state.filteredCards = action.payload;
+				}
+			})
 			.addCase(updateCardsAfterLearn.pending, (state) => {
 				state.status = DataStatus.PENDING;
 			})

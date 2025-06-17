@@ -19,7 +19,7 @@ type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
 	}
 > & { typePrefix: string };
 
-type RegularActionCreator<T> = ActionCreatorWithPayload<T>;
+type RegularActionCreator<T> = ActionCreatorWithPayload<T> | AsyncThunkCreator<any, T>;;
 
 // 🔹 First overload: only asyncThunk + args
 function enqueueOrDispatch<Returned, ThunkArg>(
@@ -69,7 +69,8 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			);
 			await persistOfflineQueue(getState);
 			if (actionStateCreator) {
-				dispatch(actionStateCreator(args as unknown as PayloadType));
+				console.log("🚀 Running asyncThunk:", actionCreator.typePrefix, args);
+				dispatch(actionStateCreator(args as any));
 			}
 		};
 
@@ -80,16 +81,17 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 		}
 
 		try {
-			// TODO: Change type any for args on real type.
+			// TODO: Change type any for args on real type
+			console.log("🚀 Dispatching asyncThunk (online):", actionCreator.typePrefix, args);
 			const result = await dispatch(actionCreator(args as any));
 			if (result.type.endsWith("/rejected")) {
 				throw new Error(result.payload?.message || "Thunk failed");
 			}
 			return result;
 		} catch (error) {
+			await queueAction();
 			if (isFetchLike) return { skipped: true };
 			console.warn("Backend is off, save on device");
-			await queueAction();
 			return {
 				queued: true,
 				error: error instanceof Error ? error.message : String(error),

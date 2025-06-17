@@ -27,13 +27,13 @@ import {
 	sortCards,
 } from "../../redux/cardReducer/cardSlice";
 import {
-	addStateGroup,
 	getGroup,
 	removeGroup,
 	removeStateGroup,
 	updateGroup,
 	updateStateGroup,
 } from "../../redux/groupReducer/groupSlice";
+import { getGroupStorage } from "@/redux/groupReducer/groupThunk";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -54,7 +54,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 	const isConnected = useAppSelector(
 		(state: RootState) => state.network.isConnected,
 	);
-	console.log(groupId)
 
 	if (!groupId && status === DataStatus.ERROR) {
 		navigation.goBack();
@@ -62,7 +61,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(enqueueOrDispatch(getGroup, addStateGroup, groupId));
+			dispatch(enqueueOrDispatch(getGroup, getGroupStorage, { groupId} ));
 		}
 	}, [group, groupId]);
 

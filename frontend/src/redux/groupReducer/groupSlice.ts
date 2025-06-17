@@ -15,6 +15,7 @@ import {
 	addGroup,
 	getAllGroups,
 	getGroup,
+	getGroupStorage,
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
@@ -72,6 +73,11 @@ const groupSlice = createSlice({
 			})
 			.addCase(getGroup.fulfilled, (state, action) => {
 				state.group = action.payload;
+			})
+			.addCase(getGroupStorage.fulfilled, (state, action) => {
+				if (action.payload) {
+					state.group = action.payload;
+				}
 			})
 			.addCase(removeGroup.fulfilled, (state, action) => {
 				state.groups = state.groups.filter(
