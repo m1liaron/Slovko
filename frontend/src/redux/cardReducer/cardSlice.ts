@@ -12,6 +12,7 @@ import {
 	updateCardsAfterLearn,
 } from "./cardThunk";
 import { handleUpdateState } from "../services/handleUpdateState";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface InitialState {
 	cards: ICard[];
@@ -34,6 +35,7 @@ const cardSlice = createSlice({
 	initialState,
 	reducers: {
 		addStateCard: (state, action) => {
+			console.log("new card data", action.payload);
 			state.cards.push(action.payload);
 		},
 		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),

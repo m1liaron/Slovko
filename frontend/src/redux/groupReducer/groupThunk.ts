@@ -1,14 +1,14 @@
 import type { IGroup } from "@/common/enums/types/group.type";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 
-export const getAllGroups = createAsyncThunk("group/getAll", async () => {
+export const getAllGroups = createAppAsyncThunk("group/getAll", async () => {
 	const axiosInstance = await createAuthorizedInstance();
 	const response = await axiosInstance.get("/groups");
 	return response.data;
 });
 
-export const addGroup = createAsyncThunk(
+export const addGroup = createAppAsyncThunk(
 	"group/add",
 	async (data: { title: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -17,13 +17,13 @@ export const addGroup = createAsyncThunk(
 	},
 );
 
-export const getGroup = createAsyncThunk("group/get", async (id: string) => {
+export const getGroup = createAppAsyncThunk("group/get", async (id: string) => {
 	const axiosInstance = await createAuthorizedInstance();
 	const response = await axiosInstance.get(`/groups/${id}`);
 	return response.data;
 });
 
-export const removeGroup = createAsyncThunk(
+export const removeGroup = createAppAsyncThunk(
 	"group/remove",
 	async (id: string) => {
 		const axiosInstance = await createAuthorizedInstance();
@@ -32,7 +32,7 @@ export const removeGroup = createAsyncThunk(
 	},
 );
 
-export const updateGroup = createAsyncThunk(
+export const updateGroup = createAppAsyncThunk(
 	"group/update",
 	async (data: IGroup) => {
 		const axiosInstance = await createAuthorizedInstance();

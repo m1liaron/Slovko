@@ -1,5 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { type PayloadAction } from "@reduxjs/toolkit";
 
 
 const handleUpdateState = <T extends { id: string | number }>(

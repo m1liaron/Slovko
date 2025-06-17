@@ -1,6 +1,5 @@
 import type { IGroup } from "@/common/enums/types/group.type";
 import {
-	Action,
 	type PayloadAction,
 	createSlice,
 	isFulfilled,
