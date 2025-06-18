@@ -5,7 +5,6 @@ import type {
 } from "@/common/enums/types/types";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getCards = createAppAsyncThunk(
