@@ -61,12 +61,6 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 		const isFetchLike = actionCreator.typePrefix.toLowerCase().includes("get");
 
 		const queueAction = async () => {
-			dispatch(
-				enqueueAction({
-					type: actionCreator.typePrefix,
-					payload: args,
-				}),
-			);
 			await persistOfflineQueue(getState);
 			if (actionStateCreator) {
 				dispatch(actionStateCreator(args as any));
@@ -90,6 +84,12 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			await queueAction();
 			if (isFetchLike) return { skipped: true };
 			console.warn("Backend is off, save on device");
+			dispatch(
+				enqueueAction({
+					type: actionCreator.typePrefix,
+					payload: args,
+				}),
+			);
 			return {
 				queued: true,
 				error: error instanceof Error ? error.message : String(error),
