@@ -61,7 +61,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(enqueueOrDispatch(getGroup, getGroupStorage, { groupId} ));
+			dispatch(enqueueOrDispatch(getGroupStorage, getGroup, { groupId} ));
 		}
 	}, [group, groupId]);
 

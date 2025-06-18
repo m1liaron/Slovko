@@ -29,8 +29,8 @@ export const getGroupStorage = createAppAsyncThunk("group/get-storage", async ({
 	if (!storage) {
 		return null;
 	}
-	const parsedGroups = JSON.parse(JSON.parse(storage)).groups;
-	
+	const parsedGroups = JSON.parse(JSON.parse(storage).groups).groups;
+
 	const currentGroup = parsedGroups.find((group: IGroup) => group.id === groupId);
 	return currentGroup ??  { id: groupId, name: "Unknown" };;
 });

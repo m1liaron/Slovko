@@ -69,7 +69,6 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			);
 			await persistOfflineQueue(getState);
 			if (actionStateCreator) {
-				console.log("🚀 Running asyncThunk:", actionCreator.typePrefix, args);
 				dispatch(actionStateCreator(args as any));
 			}
 		};
@@ -82,7 +81,6 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 
 		try {
 			// TODO: Change type any for args on real type
-			console.log("🚀 Dispatching asyncThunk (online):", actionCreator.typePrefix, args);
 			const result = await dispatch(actionCreator(args as any));
 			if (result.type.endsWith("/rejected")) {
 				throw new Error(result.payload?.message || "Thunk failed");

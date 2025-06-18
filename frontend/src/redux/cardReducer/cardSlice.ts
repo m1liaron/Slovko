@@ -16,16 +16,20 @@ import { handleUpdateState } from "../services/handleUpdateState";
 import { v4 as uuid } from "uuid";
 interface InitialState {
 	cards: ICard[];
+	cardsStorage: ICard[];
 	filteredCards: ICard[];
 	repeatedCards: IRepeatedGroup[];
+	lastFetchedSuccessfully: boolean;
 	status: IDataStatus;
 	error: string | null;
 }
 
 const initialState: InitialState = {
 	cards: [],
+	cardsStorage: [],
 	filteredCards: [],
 	repeatedCards: [],
+	lastFetchedSuccessfully: false,
 	status: DataStatus.IDLE,
 	error: null,
 };
@@ -40,6 +44,7 @@ const cardSlice = createSlice({
 				...action.payload
 			}
 			state.cards.push(cardData);
+			state.cardsStorage.push(cardData);
 		},
 		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),
 		removeStateCard: (state, action) => {
@@ -81,16 +86,17 @@ const cardSlice = createSlice({
 				state.status = DataStatus.SUCCESS;
 				state.cards = action.payload;
 				state.filteredCards = action.payload;
+				state.lastFetchedSuccessfully = true;
 			})
 			.addCase(getCards.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
+				state.lastFetchedSuccessfully = false;
 			})
 			.addCase(getCardsStorage.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
 				if (action.payload) {
-					state.cards = action.payload;
-					state.filteredCards = action.payload;
+					state.cardsStorage = action.payload;
 				}
 			})
 			.addCase(updateCardsAfterLearn.pending, (state) => {

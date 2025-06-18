@@ -24,13 +24,7 @@ export const getCardsStorage = createAppAsyncThunk(
 		if (!storage) {
 			return null;
 		}
-		const root = JSON.parse(JSON.parse(storage));
-		console.log(root);
-		const cardsRaw = root.cards;
-		console.log(cardsRaw);
-
-		const cards = JSON.parse(cardsRaw); 
-		console.log(cards);
+		const cards = JSON.parse(JSON.parse(storage).cards).cards;
 		const filteredCards = cards.filter((card: ICard) => card.groupId === groupId);
 
 		return filteredCards;
