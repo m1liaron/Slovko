@@ -54,6 +54,10 @@ const groupSlice = createSlice({
 	initialState,
 	reducers: {
 		addStateGroup: (state, action) => {
+			const existinGroup = state.groups.find(group => group.title === action.payload.title);
+			if (existinGroup) {
+				throw new Error("Group with this name already exist")
+			}
 			state.groups.push(action.payload);
 		},
 		updateStateGroup: handleUpdateGroup,
@@ -67,12 +71,9 @@ const groupSlice = createSlice({
 		builder
 			.addCase(getAllGroups.fulfilled, (state, action) => {
 				state.groups = action.payload;
+				state.isLoading = true;
 			})
 			.addCase(addGroup.fulfilled, (state, action) => {
-				const existinGroup = state.groups.find(group => group.title === action.payload.title);
-				if (existinGroup) {
-					throw new Error("Group with this name already exist")
-				}
 				state.groups.push(action.payload);
 			})
 			.addCase(getGroup.fulfilled, (state, action) => {
@@ -81,6 +82,7 @@ const groupSlice = createSlice({
 			.addCase(getGroupStorage.fulfilled, (state, action) => {
 				if (action.payload) {
 					state.group = action.payload;
+					state.isLoading = true;
 				}
 			})
 			.addCase(removeGroup.fulfilled, (state, action) => {
@@ -103,7 +105,6 @@ const groupSlice = createSlice({
 			})
 			.addMatcher(isPending, (state) => {
 				state.status = DataStatus.PENDING;
-				state.isLoading = true;
 			})
 			.addMatcher(isFulfilled, (state) => {
 				state.status = DataStatus.SUCCESS;

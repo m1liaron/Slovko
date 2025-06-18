@@ -1,37 +1,52 @@
-import { addCard } from "../cardReducer/cardSlice";
-import { addGroup } from "../groupReducer/groupThunk";
+import { addCard, removeCard } from "../cardReducer/cardSlice";
+import { addGroup, removeGroup } from "../groupReducer/groupThunk";
 import { AppDispatch, RootState } from "../store";
 import { dequeueAction } from "./offlineQueueSlice";
 
 const thunkMap: Record<string, Function> = {
     "group/add": addGroup,
+    "group/remove": removeGroup,
     "card/add-card": addCard,
+    "card/remove": removeCard
 }
+
+let isProcessingQueue = false;
 
 const processOfflineQueue = () => {
     return async (dispatch: AppDispatch, getState: () => RootState) => {
-        const { queue } = getState().offlineQueue;
+        if (isProcessingQueue) return;
+        isProcessingQueue = true;
 
-        for (const action of queue) {
-            const thunk = thunkMap[action.type];
+        try {
+            let { queue } = getState().offlineQueue;
 
-            if (!thunk) {
-                console.warn(`No thunk found for type ${action.type}`);
-                continue;
+            for (let i = 0; i < queue.length;) {
+                const { type, payload } = queue[i];
+                const actionCreator = thunkMap[type];
+                if (!actionCreator) {
+                    i++;
+                    continue;
+                }
+
+                try {
+                    const result = await dispatch(actionCreator(payload));
+                    if (!result.type.endsWith("/rejected")) {
+                        const idToRemove = queue[i].id;
+                        dispatch(dequeueAction(idToRemove));
+                        queue = getState().offlineQueue.queue;
+                        continue;
+                    }
+                } catch (error) {
+                    console.error("Retry failed:", error);
+                    break;
+                }
+
+                i++;
             }
-
-
-            try {
-                await dispatch(thunk(action.payload));
-                dispatch(dequeueAction());
-            } catch (error) {
-                console.error("Retry failed: ", error);
-                break;
-            }
+        } finally {
+            isProcessingQueue = false;
         }
-    }
-}
-
-
+    };
+};
 
 export { processOfflineQueue };

@@ -39,6 +39,10 @@ const cardSlice = createSlice({
 	initialState,
 	reducers: {
 		addStateCard: (state, action) => {
+			const existinGroup = state.cards.find(card => card.word === action.payload.word);
+			if (existinGroup) {
+				throw new Error("Card with this name already exist");
+			}
 			const cardData = {
 				id: uuid(),
 				...action.payload
@@ -48,13 +52,15 @@ const cardSlice = createSlice({
 		},
 		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),
 		removeStateCard: (state, action) => {
-			state.cards = state.cards.filter(
-				(card) => card.id !== action.payload,
-			);
+			const id = action.payload;
+			state.cards = state.cards.filter((card) => card.id !== id);
+			state.filteredCards = state.filteredCards.filter((card) => card.id !== id);
+			state.cardsStorage = state.cardsStorage.filter((card) => card.id !== id);
 		},
 		rangeCards: (state, action) => {
 			if (action.payload) {
 				state.cards = [...state.cards.slice(0, action.payload)];
+				state.cardsStorage = [...state.cardsStorage.slice(0, action.payload)];
 			}
 		},
 		sortCards: (state, action: PayloadAction<"asc" | "desc">) => {
@@ -117,6 +123,7 @@ const cardSlice = createSlice({
 			})
 			.addCase(addCard.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
+				state.lastFetchedSuccessfully = true;
 				state.cards.push(action.payload);
 				state.filteredCards.push(action.payload);
 			})
@@ -130,6 +137,7 @@ const cardSlice = createSlice({
 			})
 			.addCase(removeCard.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
+				state.lastFetchedSuccessfully = true;
 				state.cards = state.cards.filter((card) => card.id !== action.payload);
 				state.filteredCards = state.filteredCards.filter(
 					(card) => card.id !== action.payload,
@@ -145,6 +153,7 @@ const cardSlice = createSlice({
 			.addCase(updateCard.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
 				state.error = null;
+				state.lastFetchedSuccessfully = true;
 				const updatedCard = action.payload;
 				const index = state.cards.findIndex(
 					(card) => card.id === updatedCard.id,

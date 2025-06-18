@@ -7,6 +7,7 @@ import type {
 	AsyncThunk,
 } from "@reduxjs/toolkit";
 import { persistOfflineQueue } from "./persistOfflineQueue";
+import { v4 as uuidv4 } from "uuid";
 
 // Updated type to match AsyncThunk signature
 type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
@@ -60,16 +61,22 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 		const isOffline = !network.isConnected;
 		const isFetchLike = actionCreator.typePrefix.toLowerCase().includes("get");
 
-		const queueAction = async () => {
-			await persistOfflineQueue(getState);
+		if (isOffline) {
 			if (actionStateCreator) {
 				dispatch(actionStateCreator(args as any));
 			}
-		};
 
-		if (isOffline) {
 			if (isFetchLike) return { skipped: true };
-			await queueAction();
+
+			await persistOfflineQueue(getState);
+			dispatch(
+				enqueueAction({
+					id: uuidv4(),
+					type: actionCreator.typePrefix,
+					payload: args,
+				})
+			);
+
 			return { queued: true };
 		}
 
@@ -79,17 +86,25 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			if (result.type.endsWith("/rejected")) {
 				throw new Error(result.payload?.message || "Thunk failed");
 			}
+			
 			return result;
 		} catch (error) {
-			await queueAction();
+			await persistOfflineQueue(getState);
 			if (isFetchLike) return { skipped: true };
 			console.warn("Backend is off, save on device");
+
+			if (actionStateCreator) {
+				dispatch(actionStateCreator(args as any));
+			}
+
 			dispatch(
 				enqueueAction({
+					id: uuidv4(),
 					type: actionCreator.typePrefix,
 					payload: args,
 				}),
 			);
+
 			return {
 				queued: true,
 				error: error instanceof Error ? error.message : String(error),

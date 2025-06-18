@@ -135,6 +135,7 @@ const removeGroup = async (req, res) => {
 		});
 		if (!card) {
 			res.status(404).send({ error: true, message: "Card not found" });
+			return;
 		}
 
 		await Card.destroy({ where: { groupId: id } });
