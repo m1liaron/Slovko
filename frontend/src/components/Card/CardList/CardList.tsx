@@ -355,13 +355,14 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
-				enqueueOrDispatch(addCard, addStateCard, {
+				dispatch(enqueueOrDispatch(addCard, addStateCard, {
 					word: validateWord(key),
 					translateWord: value,
 					imageUri: "",
 					groupId,
-				});
+				}));
 			}
+
 			setValueWords({});
 			setJsonOutput({});
 			alert("Cards added from file successfully!");

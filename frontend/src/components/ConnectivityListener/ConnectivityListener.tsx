@@ -16,7 +16,6 @@ const ConnectivityListener = () => {
 
 			if (!isFirst.current && isConnected) {
 				dispatch(processOfflineQueue());
-				dispatch(replaceCards([]));
 			}
 			isFirst.current = false;
 		});
