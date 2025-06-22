@@ -141,7 +141,6 @@ const cardSlice = createSlice({
 				state.lastFetchedSuccessfully = true;
 				const { tempId, card } = action.payload;
 				if (tempId) {
-					console.log("removing card with id: ", tempId);
 					state.cards = state.cards.filter(card => card.id !== tempId);
 					state.filteredCards = state.filteredCards.filter(card => card.id !== tempId);
 				}

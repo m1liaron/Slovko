@@ -40,7 +40,11 @@ export const GroupList = () => {
 				text1: "Please enter a title",
 			});
 		}
-		dispatch(enqueueOrDispatch(addGroup, addStateGroup, { title }));
+		const newGroup = {
+			id: uuid(),
+			title
+		}
+		dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
 		setTitle("");
 		setShowAddModal(false);
 	};

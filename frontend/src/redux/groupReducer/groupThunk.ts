@@ -11,7 +11,7 @@ export const getAllGroups = createAppAsyncThunk("group/getAll", async () => {
 
 export const addGroup = createAppAsyncThunk(
 	"group/add",
-	async (data: { title: string }) => {
+	async (data: { id: string; title: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.post("/groups", data);
 		return response.data;

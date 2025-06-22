@@ -60,7 +60,7 @@ const groupSlice = createSlice({
 				throw new Error("Group with this name already exist")
 			}
 			const newGroup = {
-				id: `local-${uuid()}`,
+				id: uuid(),
 				...action.payload
 			}
 			state.groups.push(newGroup);
