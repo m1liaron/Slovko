@@ -58,7 +58,7 @@ export const updateCard = createAppAsyncThunk(
 );
 
 export const updateCardsAfterLearn = createAppAsyncThunk(
-	"card/learnCards",
+	"card/update-cards-learn",
 	async (data: string[]) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.put("/cards/learn", data || {});

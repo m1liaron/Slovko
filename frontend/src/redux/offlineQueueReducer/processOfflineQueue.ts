@@ -1,13 +1,16 @@
-import { addCard, removeCard } from "../cardReducer/cardSlice";
-import { addGroup, removeGroup } from "../groupReducer/groupThunk";
+import { addCard, removeCard, updateCardsAfterLearn, updateCard } from "../cardReducer/cardSlice";
+import { addGroup, removeGroup, updateGroup } from "../groupReducer/groupThunk";
 import { AppDispatch, RootState } from "../store";
 import { dequeueAction } from "./offlineQueueSlice";
 
 const thunkMap: Record<string, Function> = {
     "group/add": addGroup,
     "group/remove": removeGroup,
+    "group/update": updateGroup,
     "card/add-card": addCard,
-    "card/remove": removeCard
+    "card/update": updateCard,
+    "card/remove": removeCard,
+    "card/update-cards-learn": updateCardsAfterLearn
 }
 
 let isProcessingQueue = false;

@@ -2,8 +2,6 @@ import { enqueueAction } from "@/redux/offlineQueueReducer/offlineQueueSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
 import type {
 	ActionCreatorWithPayload,
-	AnyAction,
-	ThunkAction,
 	AsyncThunk,
 } from "@reduxjs/toolkit";
 import { persistOfflineQueue } from "./persistOfflineQueue";
@@ -24,13 +22,12 @@ type RegularActionCreator<T> = ActionCreatorWithPayload<T> | AsyncThunkCreator<a
 
 // 🔹 First overload: only asyncThunk + args
 function enqueueOrDispatch<Returned, ThunkArg>(
-	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
+	actionCreator: AsyncThunkCreator<any, ThunkArg>,
 	args: ThunkArg
 ): ReturnType<typeof buildThunk>;
 
-// 🔹 Second overload: asyncThunk + stateAction + args
-function enqueueOrDispatch<Returned, ThunkArg extends PayloadType, PayloadType>(
-	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
+function enqueueOrDispatch<ThunkArg extends PayloadType, PayloadType>(
+	actionCreator: AsyncThunkCreator<any, ThunkArg>,
 	stateAction: RegularActionCreator<PayloadType>,
 	args: ThunkArg
 ): ReturnType<typeof buildThunk>;
