@@ -13,7 +13,6 @@ import {
 	updateCardsAfterLearn,
 } from "./cardThunk";
 import { handleUpdateState } from "../services/handleUpdateState";
-import { v4 as uuid } from "uuid";
 interface InitialState {
 	cards: ICard[];
 	cardsStorage: ICard[];
@@ -34,21 +33,26 @@ const initialState: InitialState = {
 	error: null,
 };
 
+type ReplaceCardProps = ICard & {
+	tempId: string;
+}
+
 const cardSlice = createSlice({
 	name: "cards",
 	initialState,
 	reducers: {
 		addStateCard: (state, action) => {
-			const existinGroup = state.cards.find(card => card.word === action.payload.word);
+			const { card: newCard , tempId } = action.payload;
+			const existinGroup = state.cards.find(card => card.word === newCard.word);
 			if (existinGroup) {
 				throw new Error("Card with this name already exist");
 			}
-			const cardData = {
-				id: uuid(),
-				...action.payload
+			const newCardData = {
+				id: tempId,
+				...newCard
 			}
-			state.cards.push(cardData);
-			state.cardsStorage.push(cardData);
+			state.cards.push(newCardData);
+			state.cardsStorage.push(newCardData);
 		},
 		replaceCards: (state, action: PayloadAction<ICard[]>) => {
 			state.cards = action.payload;
@@ -135,8 +139,14 @@ const cardSlice = createSlice({
 			.addCase(addCard.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
 				state.lastFetchedSuccessfully = true;
-				state.cards.push(action.payload);
-				state.filteredCards.push(action.payload);
+				const { tempId, card } = action.payload;
+				if (tempId) {
+					console.log("removing card with id: ", tempId);
+					state.cards = state.cards.filter(card => card.id !== tempId);
+					state.filteredCards = state.filteredCards.filter(card => card.id !== tempId);
+				}
+				state.cards.push(card);
+				state.filteredCards.push(card);
 			})
 			.addCase(addCard.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;

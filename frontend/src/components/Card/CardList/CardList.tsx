@@ -53,6 +53,7 @@ import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
 import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
+import { v4 } from "uuid";
 
 const MemoCardItem = memo(CardItem);
 
@@ -356,10 +357,13 @@ const CardList = ({ groupId }: CardListProps) => {
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
 				dispatch(enqueueOrDispatch(addCard, addStateCard, {
-					word: validateWord(key),
-					translateWord: value,
-					imageUri: "",
-					groupId,
+					tempId: `local-${v4()}`,
+					card: {
+						word: validateWord(key),
+						translateWord: value,
+						imageUri: "",
+						groupId,
+					}
 				}));
 			}
 
@@ -371,10 +375,13 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (value && answerWord) {
 			const cardData = {
-				word: validateWord(value),
-				translateWord: validatedAnswer,
-				imageUri: finalImageUri || "",
-				groupId,
+				tempId: `local-${v4()}`,
+				card: {
+					word: validateWord(value),
+					translateWord: validatedAnswer,
+					imageUri: finalImageUri || "",
+					groupId,
+				}
 			};
 
 			dispatch(enqueueOrDispatch(addCard, addStateCard, cardData)).catch((err: any) => {

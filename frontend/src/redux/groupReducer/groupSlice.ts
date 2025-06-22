@@ -19,6 +19,7 @@ import {
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
+import { v4 as uuid } from "uuid";
 
 interface InitialState {
 	groups: IGroup[];
@@ -58,7 +59,11 @@ const groupSlice = createSlice({
 			if (existinGroup) {
 				throw new Error("Group with this name already exist")
 			}
-			state.groups.push(action.payload);
+			const newGroup = {
+				id: `local-${uuid()}`,
+				...action.payload
+			}
+			state.groups.push(newGroup);
 		},
 		updateStateGroup: handleUpdateGroup,
 		removeStateGroup: (state, action) => {

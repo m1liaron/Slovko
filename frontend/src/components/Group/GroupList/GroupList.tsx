@@ -30,7 +30,7 @@ export const GroupList = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch(enqueueOrDispatch(getAllGroups));
+		dispatch(enqueueOrDispatch(getAllGroups, {}));
 	}, []);
 
 	const handleAddGroup = () => {
@@ -40,7 +40,7 @@ export const GroupList = () => {
 				text1: "Please enter a title",
 			});
 		}
-		dispatch(enqueueOrDispatch(addGroup, addStateGroup, { id: uuid(), title }));
+		dispatch(enqueueOrDispatch(addGroup, addStateGroup, { title }));
 		setTitle("");
 		setShowAddModal(false);
 	};
