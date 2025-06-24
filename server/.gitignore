@@ -6,5 +6,6 @@ package-lock.json
 
 
 # Local development certificates
-cert.pem
-key.pem
+cert.pem*
+key.pem*
+*.pem

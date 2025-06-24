@@ -24,8 +24,8 @@ app.use("/groups", authMiddleware, groupRoute);
 app.use("/results", authMiddleware, resultRoute);
 app.use("/sharedGroups", authMiddleware, sharedGroup);
 
-const key = fs.readFileSync(path.join(__dirname, "../key.pem"));
-const cert = fs.readFileSync(path.join(__dirname, "../cert.pem"));
+const key = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3-key.pem"));
+const cert = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3.pem"));
 
 const options = { key, cert };
 
