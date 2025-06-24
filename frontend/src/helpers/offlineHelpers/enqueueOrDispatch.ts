@@ -87,12 +87,13 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			return result;
 		} catch (error) {
 			await persistOfflineQueue(getState);
-			if (isFetchLike) return { skipped: true };
-			console.warn("Backend is off, save on device");
 
 			if (actionStateCreator) {
 				dispatch(actionStateCreator(args as any));
 			}
+			
+			if (isFetchLike) return { skipped: true };
+			console.warn("Backend is off, save on device");
 
 			dispatch(
 				enqueueAction({

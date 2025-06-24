@@ -312,7 +312,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	useEffect(() => {
-		dispatch(enqueueOrDispatch(getCardsStorage, getCards, { groupId} ));
+		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId} ));
 	}, [group, groupId]);
 
 	const onSaveCard = async () => {

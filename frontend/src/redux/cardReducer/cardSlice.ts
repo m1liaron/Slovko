@@ -100,7 +100,9 @@ const cardSlice = createSlice({
 				state.cards = fresh;
 				state.cardsStorage = fresh;
 				state.filteredCards = fresh;
-				state.globalCards = fresh;
+				if (fresh.length > 0) {
+					state.globalCards = fresh;
+				}
 			})
 			.addCase(getCardsStorage.fulfilled, (state, action) => {
 				if (action.payload) {
