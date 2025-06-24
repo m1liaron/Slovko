@@ -21,7 +21,7 @@ interface InitialState {
 	repeatedCards: IRepeatedGroup[];
 	lastFetchedSuccessfully: boolean;
 	status: IDataStatus;
-	error: string | null;
+	error: undefined | null | string;
 }
 
 const initialState: InitialState = {
@@ -99,11 +99,6 @@ const cardSlice = createSlice({
 				state.cardsStorage = fresh;
 				state.filteredCards = fresh;
 				state.globalCards = fresh;
-				state.lastFetchedSuccessfully = true;
-			})
-			.addCase(getCards.rejected, (state, action) => {
-				state.error = action.error.message || null;
-				state.lastFetchedSuccessfully = false;
 			})
 			.addCase(getCardsStorage.fulfilled, (state, action) => {
 				if (action.payload) {
@@ -114,11 +109,7 @@ const cardSlice = createSlice({
 				state.cards = action.payload;
 				state.filteredCards = action.payload;
 			})
-			.addCase(updateCardsAfterLearn.rejected, (state, action) => {
-				state.error = action.error.message || null;
-			})
 			.addCase(addCard.fulfilled, (state, action) => {
-				state.lastFetchedSuccessfully = true;
 				const { tempId, card } = action.payload;
 				if (tempId) {
 					state.cards = state.cards.filter(card => card.id !== tempId);
@@ -127,13 +118,8 @@ const cardSlice = createSlice({
 				state.cards.push(card);
 				state.filteredCards.push(card);
 			})
-			.addCase(addCard.rejected, (state, action) => {
-				state.error = action.error.message || null;
-			})
 			// remove card
 			.addCase(removeCard.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
-				state.lastFetchedSuccessfully = true;
 				state.cards = state.cards.filter((card) => card.id !== action.payload);
 				state.filteredCards = state.filteredCards.filter(
 					(card) => card.id !== action.payload,
@@ -141,8 +127,6 @@ const cardSlice = createSlice({
 			})
 			// update card
 			.addCase(updateCard.fulfilled, (state, action) => {
-				state.error = null;
-				state.lastFetchedSuccessfully = true;
 				const updatedCard = action.payload;
 				const index = state.cards.findIndex(
 					(card) => card.id === updatedCard.id,
@@ -158,15 +142,9 @@ const cardSlice = createSlice({
 			.addCase(getRepeatedCards.fulfilled, (state, action) => {
 				state.repeatedCards = action.payload;
 			})
-			.addCase(getRepeatedCards.rejected, (state, action) => {
-				state.error = action.error.message || null;
-			})
 			// get repeated cards
 			.addCase(getRepeatedCardsFromIds.fulfilled, (state, action) => {
 				state.cards = action.payload;
-			})
-			.addCase(getRepeatedCardsFromIds.rejected, (state, action) => {
-				state.error = action.error.message || null;
 			})
 		
 			.addMatcher(isPending, (state) => {
@@ -174,9 +152,14 @@ const cardSlice = createSlice({
 			})
 			.addMatcher(isFulfilled, (state) => {
 				state.status = DataStatus.SUCCESS;
+				state.error = null;
+				state.lastFetchedSuccessfully = true;
 			})
-			.addMatcher(isRejected, (state) => {
+			.addMatcher(isRejected, (state, action) => {
 				state.status = DataStatus.ERROR;
+				state.lastFetchedSuccessfully = false;
+				const payload = action.payload as { message?: string } | undefined;
+				state.error = payload?.message ?? action.error.message;
 			})
 	},
 });
