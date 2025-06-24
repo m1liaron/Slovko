@@ -168,6 +168,7 @@ const updateCardsAfterReview = async (req, res) => {
 };
 
 const addCard = async (req, res) => {
+	console.log(req.body)
 	const { imageUri, ...data } = req.body;
 	try {
 		const findCard = await Card.findOne({
@@ -184,18 +185,29 @@ const addCard = async (req, res) => {
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
 
-		const { definition, example } = await getDictionaryData(data.word);
+		let definition = "";
+		let example = "";
 
+		try {
+		const dictionaryData = await getDictionaryData(data.word);
+		definition = dictionaryData.definition || "";
+		example = dictionaryData.example || "";
+		} catch (dictionaryError) {
+			console.warn("Dictionary fetch failed:", dictionaryError.message);
+			// You could also log this to an error service
+		}
+
+		console.log("definition: ", definition)
 		const image = await Image.create({ url: imageUri });
 		const newCard = await Card.create({
 			imageId: image.id,
 			...data,
 			definition,
 			example,
-		});
+		});	
 
 		const card = await Card.findOne({
-			where: { id: newCard.id },
+			where: { id: newCard.id, groupId: data.groupId },
 			include: [{ model: Image, as: "image" }],
 		});
 
