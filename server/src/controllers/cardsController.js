@@ -189,6 +189,14 @@ const addCard = async (req, res) => {
 		let example = "";
 
 		try {
+			const dictionaryData = await getDictionaryData(data.word);
+			definition = dictionaryData.definition || "";
+			example = dictionaryData.example || "";
+		} catch (dictionaryError) {
+			console.warn("Dictionary fetch failed:", dictionaryError.message);
+		}
+
+		try {
 		const dictionaryData = await getDictionaryData(data.word);
 		definition = dictionaryData.definition || "";
 		example = dictionaryData.example || "";
