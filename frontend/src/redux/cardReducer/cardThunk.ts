@@ -3,104 +3,83 @@ import type {
 	ICard,
 	UpdateCardRequst,
 } from "@/common/enums/types/types";
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
+import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const getCards = createAsyncThunk(
-	"card/fetchCards",
+export const getCards = createAppAsyncThunk(
+	"card/get-cards",
 	async ({ groupId }: { groupId: string }) => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.get(`/cards/${groupId}`);
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching cards:", error);
-			throw error;
-		}
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.get(`/cards/${groupId}`);
+		return response.data;
 	},
 );
 
-export const addCard = createAsyncThunk(
-	"card/addCard",
-	async (data: AddCardRequest, thunkAPI) => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.post("/cards", data);
-			return response.data;
-		} catch (error) {
-			let message = "Unknown Error";
-			if (error instanceof Error) message = error.message;
-			return thunkAPI.rejectWithValue(message);
+export const getCardsStorage = createAppAsyncThunk(
+	"card/get-cards-storage",
+	async ({ groupId }: { groupId: string }) => {
+		const storage = await AsyncStorage.getItem("persist:root");
+		if (!storage) {
+			return null;
 		}
+		const cards = JSON.parse(JSON.parse(storage).cards).globalCards;
+		const filteredCards = cards.filter((card: ICard) => card.groupId === groupId);
+
+		return filteredCards;
+	}
+)
+
+export const addCard = createAppAsyncThunk(
+	"card/add-card",
+	async ({ tempId, card: newCard }: { tempId: string; card: AddCardRequest }) => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post("/cards", newCard);
+		return { card: response.data, tempId };
 	},
 );
 
-export const removeCard = createAsyncThunk(
+export const removeCard = createAppAsyncThunk(
 	"card/remove",
 	async (cardId: string) => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.delete(`/cards/${cardId}`);
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching cards:", error);
-			throw error;
-		}
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.delete(`/cards/${cardId}`);
+		return response.data;
 	},
 );
 
-export const updateCard = createAsyncThunk(
+export const updateCard = createAppAsyncThunk(
 	"card/update",
 	async (data: UpdateCardRequst) => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.patch(`/cards/${data.id}`, data);
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching cards:", error);
-			throw error;
-		}
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.patch(`/cards/${data.id}`, data);
+		return response.data;
 	},
 );
 
-export const updateCardsAfterLearn = createAsyncThunk(
-	"card/learnCards",
+export const updateCardsAfterLearn = createAppAsyncThunk(
+	"card/update-cards-learn",
 	async (data: string[]) => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.put("/cards/learn", data || {});
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching cards:", error);
-			throw error;
-		}
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.put("/cards/learn", data || {});
+		return response.data;
 	},
 );
 
-export const getRepeatedCards = createAsyncThunk(
+export const getRepeatedCards = createAppAsyncThunk(
 	"card/getRepeatedCards",
 	async () => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.get("/cards");
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching cards:", error);
-			throw error;
-		}
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.get("/cards");
+		return response.data;
 	},
 );
 
-export const getRepeatedCardsFromIds = createAsyncThunk(
+export const getRepeatedCardsFromIds = createAppAsyncThunk(
 	"card/getRepeatedCardsFromIds",
 	async (data: string[]) => {
-		try {
-			const axiosInstance = await createAuthorizedInstance();
-			const response = await axiosInstance.post("/cards/repeated", data);
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching cards:", error);
-			throw error;
-		}
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.post("/cards/repeated", data);
+		return response.data;
 	},
 );

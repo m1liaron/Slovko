@@ -7,8 +7,8 @@ import {
 	type NavigationProp,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
-import { AppPath } from "../../common/enums/app/app";
+import React, { useEffect, useRef, useState } from "react";
+import { AppPath, DataStatus } from "../../common/enums/app/app";
 import Loading from "../../components/Loading";
 import { getUser, selectUser } from "../../redux/userReducer/userSlice";
 import MainStackNavigator from "../MainStackNavigator/MainStackNavigator";
@@ -33,39 +33,64 @@ export type StackNavigation = NavigationProp<RootStackParamList>;
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
-	const [isLoading, setIsLoading] = useState(true);
 	const dispatch = useAppDispatch();
-	const { isAuthenticated } = useAppSelector(selectUser);
+	const { isAuthenticated, status, message } = useAppSelector(selectUser);
+	const isConnected = useAppSelector((state) => state.network.isConnected);
+
+	const [isLoading, setIsLoading] = useState(true);
+	const [hasToken, setHasToken] = useState(false);
+	const triedGetUserRef = useRef(false);
 
 	useEffect(() => {
-		const checkAuth = async () => {
+		const checkToken = async () => {
 			const token = await AsyncStorage.getItem("token");
 			if (token) {
-				dispatch(enqueueOrDispatch(getUser));
+				setHasToken(true);
 			}
 			setIsLoading(false);
 		};
 
-		checkAuth();
+		checkToken();
 	}, []);
+
+	useEffect(() => {
+		if (hasToken && isConnected && !triedGetUserRef.current) {
+			triedGetUserRef.current = true;
+			dispatch(enqueueOrDispatch(getUser));
+		}
+	}, [hasToken, isConnected, dispatch]);
 
 	if (isLoading) {
 		return <Loading />;
 	}
 
+	const backendOff = status === DataStatus.ERROR && message === "Network Error";
+
+	if (!isConnected || backendOff || isAuthenticated) {
+		return (
+			<NavigationContainer>
+				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		);
+	}
+
+	if (!hasToken) {
+		return (
+			<NavigationContainer>
+				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					<Stack.Screen name={AppPath.Login} component={LoginScreen} />
+					<Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		);
+	}
+
 	return (
 		<NavigationContainer>
 			<Stack.Navigator screenOptions={{ headerShown: false }}>
-				{isAuthenticated ? (
-					<>
-						<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
-					</>
-				) : (
-					<>
-						<Stack.Screen name={AppPath.Login} component={LoginScreen} />
-						<Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-					</>
-				)}
+				<Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

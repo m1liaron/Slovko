@@ -1,46 +1,114 @@
 import { enqueueAction } from "@/redux/offlineQueueReducer/offlineQueueSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
-import type { AnyAction, ThunkAction } from "@reduxjs/toolkit";
+import type {
+	ActionCreatorWithPayload,
+	AsyncThunk,
+} from "@reduxjs/toolkit";
+import { persistOfflineQueue } from "./persistOfflineQueue";
+import { v4 as uuidv4 } from "uuid";
 
-/**
- * A “thunk creator” that:
- *  • If offline: enqueues itself (by storing `{ type: <typePrefix>, payload: <args> }`).
- *  • If online: dispatches the real asyncThunk immediately.
- *
- * To make `.typePrefix` available, we declare “any function returning a ThunkAction <…> + has a `typePrefix` string.”
- */
-type ActionCreatorWithType<Args extends any[]> = ((
-	...args: Args
-) => ThunkAction<any, RootState, unknown, AnyAction>) & { typePrefix: string };
+// Updated type to match AsyncThunk signature
+type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
+	Returned,
+	ThunkArg,
+	{
+		state: RootState;
+		dispatch: AppDispatch;
+		rejectValue: any;
+	}
+> & { typePrefix: string };
 
-/**
- * @param actionCreator  — an RTK createAsyncThunk (has `typePrefix`).
- * @param args           — the arguments to pass into that thunk.
- *
- * If disconnected, we push
- *   { type: actionCreator.typePrefix, payload: (args or args[0]) }
- * into the `offlineQueue` slice (which you’ve already persisted).
- * Otherwise, we just do `dispatch(actionCreator(...args))` as usual.
- */
-const enqueueOrDispatch = <Args extends any[]>(
-	actionCreator: ActionCreatorWithType<Args>,
-	...args: Args
-) => {
-	return (dispatch: AppDispatch, getState: () => RootState) => {
+type RegularActionCreator<T> = ActionCreatorWithPayload<T> | AsyncThunkCreator<any, T>;;
+
+// 🔹 First overload: only asyncThunk + args
+function enqueueOrDispatch<Returned, ThunkArg>(
+	actionCreator: AsyncThunkCreator<any, ThunkArg>,
+	args: ThunkArg
+): ReturnType<typeof buildThunk>;
+
+function enqueueOrDispatch<ThunkArg extends PayloadType, PayloadType>(
+	actionCreator: AsyncThunkCreator<any, ThunkArg>,
+	stateAction: RegularActionCreator<PayloadType>,
+	args: ThunkArg
+): ReturnType<typeof buildThunk>;
+
+// 🔸 Actual implementation
+function enqueueOrDispatch<Returned, ThunkArg, PayloadType = ThunkArg>(
+	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
+	arg1: RegularActionCreator<PayloadType> | ThunkArg,
+	arg2?: ThunkArg
+) {
+	const hasStateCreator = typeof arg1 === "function";
+	const actionStateCreator = hasStateCreator
+		? (arg1 as RegularActionCreator<PayloadType>)
+		: undefined;
+	const args = hasStateCreator ? arg2! : (arg1 as ThunkArg);
+
+	return buildThunk(actionCreator, actionStateCreator, args);
+}
+
+// 🔹 Extracted core thunk builder
+function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
+	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
+	actionStateCreator: RegularActionCreator<PayloadType> | undefined,
+	args: ThunkArg,
+) {
+	return async (dispatch: AppDispatch, getState: () => RootState) => {
 		const { network } = getState();
-		if (!network.isConnected) {
-			// Device is offline: enqueue { type, payload } for later replay
+		const isOffline = !network.isConnected;
+		const isFetchLike = actionCreator.typePrefix.toLowerCase().includes("get");
+
+		if (isOffline) {
+			if (actionStateCreator) {
+				dispatch(actionStateCreator(args as any));
+			}
+
+			if (isFetchLike) return { skipped: true };
+
+			await persistOfflineQueue(getState);
 			dispatch(
 				enqueueAction({
+					id: uuidv4(),
 					type: actionCreator.typePrefix,
-					payload: args.length === 1 ? args[0] : args,
+					payload: args,
+				})
+			);
+
+			return { queued: true };
+		}
+
+		try {
+			// TODO: Change type any for args on real type
+			const result = await dispatch(actionCreator(args as any));
+			if (result.type.endsWith("/rejected")) {
+				throw new Error(result.payload?.message || "Thunk failed");
+			}
+			
+			return result;
+		} catch (error) {
+			await persistOfflineQueue(getState);
+
+			if (actionStateCreator) {
+				dispatch(actionStateCreator(args as any));
+			}
+			
+			if (isFetchLike) return { skipped: true };
+			console.warn("Backend is off, save on device");
+
+			dispatch(
+				enqueueAction({
+					id: uuidv4(),
+					type: actionCreator.typePrefix,
+					payload: args,
 				}),
 			);
-			return Promise.resolve({ queued: true } as { queued: boolean });
+
+			return {
+				queued: true,
+				error: error instanceof Error ? error.message : String(error),
+			};
 		}
-		// Device is online: just dispatch the real asyncThunk
-		return dispatch(actionCreator(...args));
 	};
-};
+}
 
 export { enqueueOrDispatch };

@@ -75,13 +75,15 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 	};
 
 	const handleUpdateCard = () => {
-		dispatch(enqueueOrDispatch(updateCard, {
-			id: item.id,
-			word: title,
-			translateWord: translate,
-			imageUri,
-			groupId,
-		}));
+		dispatch(
+			enqueueOrDispatch(updateCard, {
+				id: item.id,
+				word: title,
+				translateWord: translate,
+				imageUri,
+				groupId,
+			}),
+		);
 		setTitle("");
 		setTranslate("");
 

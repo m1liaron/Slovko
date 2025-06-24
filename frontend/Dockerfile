@@ -8,8 +8,8 @@ RUN npm install
 COPY . .
 
 # Install @expo/ngrok globally
-RUN npm install -g @expo/ngrok
-RUN npm install -g @expo-cli
+RUN npm install -g expo/ngrok
+RUN npm install -g expo-cli
 
 EXPOSE 8081
 
