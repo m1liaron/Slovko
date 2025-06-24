@@ -37,6 +37,9 @@ const resultSlice = createSlice({
 	name: "results",
 	initialState,
 	reducers: {
+		addStateResult: (state, action) => {
+			state.results.push(action.payload);
+		},
 		filterResults: (state, action) => {
 			state.results = state.filteredResults.filter((item) =>
 				item.title.startsWith(action.payload),
@@ -131,7 +134,7 @@ const resultSlice = createSlice({
 	},
 });
 
-export const { filterResults, sortResults, resetResults } = resultSlice.actions;
+export const { addStateResult, filterResults, sortResults, resetResults } = resultSlice.actions;
 export const selectResult = (state: RootState) => state.results;
 export {
 	saveResults,
