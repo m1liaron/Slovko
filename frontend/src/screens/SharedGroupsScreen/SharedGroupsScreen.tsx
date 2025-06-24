@@ -29,15 +29,17 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import {
+	addStateSharedGroup,
 	filterMySharedGroups,
 	filterSharedGroups,
 	getAllSharedGroups,
 	removeSharedGroup,
 	resetSharedGroups,
-	saveSharedGroup,
+	addSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
+import { v4 as uuid } from "uuid";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -109,10 +111,14 @@ const SharedGroupsScreen = () => {
 
 		if (selectedGroup) {
 			const sharedGroupData = {
-				groupId: selectedGroup.id,
-				title: sharedGroupTitle || "Shared Group Title",
+				tempId: uuid(),
+				group: {
+					groupId: selectedGroup.id,
+					title: sharedGroupTitle || "Shared Group Title",
+					createdAt: new Date()
+				},
 			};
-			dispatch(enqueueOrDispatch(saveSharedGroup, sharedGroupData));
+			dispatch(enqueueOrDispatch(addSharedGroup, addStateSharedGroup, sharedGroupData));
 		}
 	};
 
@@ -176,7 +182,7 @@ const SharedGroupsScreen = () => {
 			</Pressable>
 			{item?.user?.id === user?.id && (
 				<Pressable
-					onPress={() => enqueueOrDispatch(removeSharedGroup, item.id)}
+					onPress={() => dispatch(enqueueOrDispatch(removeSharedGroup, item.id))}
 				>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>
