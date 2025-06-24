@@ -4,7 +4,6 @@ import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import { RootState } from "@/redux/store";
 import {
 	convertBlobToBase64,
 	convertImageToBase64,
@@ -43,14 +42,18 @@ import { AppPath, DataStatus } from "../../../common/enums/app/app";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import {
 	addCard,
+	addStateCard,
 	getCards,
 	rangeCards,
 	removeCard,
+	removeStateCard,
 	resetFilter,
 } from "../../../redux/cardReducer/cardSlice";
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
+import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
+import { v4 } from "uuid";
 
 const MemoCardItem = memo(CardItem);
 
@@ -69,11 +72,15 @@ const CardList = ({ groupId }: CardListProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const { group } = useAppSelector((state) => state.groups);
-	const { cards, filteredCards, error, status } = useAppSelector(
+	const { cards, cardsStorage, lastFetchedSuccessfully, filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
 	);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
+	const { isConnected } = useAppSelector(state => state.network);
+
+	const cardsToShow =
+	lastFetchedSuccessfully && isConnected ? cards : cardsStorage;
 
 	const [addCardMode, setAddCardMode] = useState<number>(0);
 	const [valueWords, setValueWords] = useState<Record<string, string>>({});
@@ -86,12 +93,13 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [imageUri, setImageUri] = useState<string>("");
 	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
-		cards.length || 2,
+		cardsToShow.length || 2,
 	);
 
+
 	useEffect(() => {
-		setWordsRangeNumber(cards.length);
-	}, [cards.length]);
+		setWordsRangeNumber(cardsToShow.length);
+	}, [cardsToShow.length]);
 
 	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
@@ -104,7 +112,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const incWordsRange = () => {
-		if (wordsRangeNumber < cards.length) {
+		if (wordsRangeNumber < cardsToShow.length) {
 			setWordsRangeNumber(wordsRangeNumber + 1);
 		}
 	};
@@ -304,10 +312,8 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	useEffect(() => {
-		if (group?.id !== groupId) {
-			dispatch(enqueueOrDispatch(getCards, { groupId }));
-		}
-	}, [dispatch, groupId, group?.id]);
+		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId} ));
+	}, [group, groupId]);
 
 	const onSaveCard = async () => {
 		let finalImageUri: string = imageUri;
@@ -350,13 +356,17 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords).length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
-				enqueueOrDispatch(addCard, {
-					word: validateWord(key),
-					translateWord: value,
-					imageUri: "",
-					groupId,
-				});
+				dispatch(enqueueOrDispatch(addCard, addStateCard, {
+					tempId: `local-${v4()}`,
+					card: {
+						word: validateWord(key),
+						translateWord: value,
+						imageUri: "",
+						groupId,
+					}
+				}));
 			}
+
 			setValueWords({});
 			setJsonOutput({});
 			alert("Cards added from file successfully!");
@@ -365,13 +375,16 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (value && answerWord) {
 			const cardData = {
-				word: validateWord(value),
-				translateWord: validatedAnswer,
-				imageUri: finalImageUri || "",
-				groupId,
+				tempId: `local-${v4()}`,
+				card: {
+					word: validateWord(value),
+					translateWord: validatedAnswer,
+					imageUri: finalImageUri || "",
+					groupId,
+				}
 			};
 
-			dispatch(enqueueOrDispatch(addCard, cardData)).catch((err: any) => {
+			dispatch(enqueueOrDispatch(addCard, addStateCard, cardData)).catch((err: any) => {
 				if (err instanceof Error) {
 					console.log(err);
 				}
@@ -383,12 +396,12 @@ const CardList = ({ groupId }: CardListProps) => {
 		}
 	};
 
-	const onRemoveCard = async (courseId: string) => {
-		dispatch(enqueueOrDispatch(removeCard, courseId));
+	const onRemoveCard = async (cardId: string) => {
+		dispatch(enqueueOrDispatch(removeCard, removeStateCard, cardId));
 	};
 
 	const navigateToLearn = () => {
-		if (wordsRangeNumber !== cards.length) {
+		if (wordsRangeNumber !== cardsToShow.length) {
 			dispatch(rangeCards(wordsRangeNumber));
 		}
 		navigation.navigate(AppPath.Learn, { groupId });
@@ -410,14 +423,14 @@ const CardList = ({ groupId }: CardListProps) => {
 		<View style={styles.container}>
 			{status === DataStatus.PENDING ? (
 				<ActivityIndicator color={colors.primary} />
-			) : !cards.length ? (
+			) : !cardsToShow.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
 				</View>
 			) : (
 				<View style={{ marginVertical: 10 }}>
 					<FlatList
-						data={cards}
+						data={cardsToShow}
 						renderItem={({ item }) => (
 							<MemoCardItem
 								item={item}
@@ -432,7 +445,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				</View>
 			)}
 
-			{cards.length > 1 && (
+			{cardsToShow.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
 					<View
 						style={{
@@ -457,7 +470,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							<Slider
 								style={{ width: 200, height: 40 }}
 								minimumValue={2}
-								maximumValue={cards.length}
+								maximumValue={cardsToShow.length}
 								value={wordsRangeNumber}
 								onSlidingComplete={onChangeCardsRange}
 								minimumTrackTintColor="#FFFFFF"
@@ -468,7 +481,7 @@ const CardList = ({ groupId }: CardListProps) => {
 						<Pressable onPress={incWordsRange}>
 							<FontAwesome name="plus" color={colors.primary} size={40} />
 						</Pressable>
-						{filteredCards.length > cards.length && (
+						{filteredCards.length > cardsToShow.length && (
 							<Pressable
 								style={{
 									padding: 5,

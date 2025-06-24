@@ -104,7 +104,7 @@ const MainScreen = () => {
 	};
 
 	useEffect(() => {
-		dispatch(enqueueOrDispatch(getRepeatedCards));
+		dispatch(enqueueOrDispatch(getRepeatedCards, {}));
 	}, []);
 
 	const daysSince = useCallback((dateString: string) => {
@@ -120,7 +120,7 @@ const MainScreen = () => {
 	}, [daysSince]);
 
 	useEffect(() => {
-		dispatch(enqueueOrDispatch(getUser));
+		dispatch(enqueueOrDispatch(getUser, {}));
 	}, []);
 
 	const openLink = () => {

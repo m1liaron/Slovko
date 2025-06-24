@@ -28,6 +28,8 @@ const rootReducer = combineReducers({
 	offlineQueue: offlineQueueReducer,
 });
 
+export type RootState = ReturnType<typeof rootReducer>;
+
 const persisConfig = {
 	key: "root",
 	storage: AsyncStorage,
@@ -49,5 +51,4 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 export type AppStore = typeof store;
-export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = AppStore["dispatch"];

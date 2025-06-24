@@ -29,8 +29,11 @@ import {
 import {
 	getGroup,
 	removeGroup,
+	removeStateGroup,
 	updateGroup,
+	updateStateGroup,
 } from "../../redux/groupReducer/groupSlice";
+import { getGroupStorage } from "@/redux/groupReducer/groupThunk";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -52,13 +55,13 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		(state: RootState) => state.network.isConnected,
 	);
 
-	if (!group && status === DataStatus.ERROR) {
+	if (!groupId && status === DataStatus.ERROR) {
 		navigation.goBack();
 	}
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(enqueueOrDispatch(getGroup, groupId));
+			dispatch(enqueueOrDispatch(getGroupStorage, getGroup, { groupId} ));
 		}
 	}, [group, groupId]);
 
@@ -110,7 +113,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 		if (!groupTitle) {
 			return console.error("Provide title");
 		}
-		dispatch(enqueueOrDispatch(updateGroup, { id: groupId, title: groupTitle }));
+		dispatch(
+			enqueueOrDispatch(updateGroup, updateStateGroup, { id: groupId, title: groupTitle }),
+		);
 	};
 
 	const sortByNextReview = () => {
@@ -141,7 +146,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 						color={colors.iconColor}
 					/>
 				</View>
-				<Pressable onPress={() => dispatch(enqueueOrDispatch(removeGroup, groupId))}>
+				<Pressable
+					onPress={() => dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId))}
+				>
 					<Entypo name="trash" size={30} color={colors.iconColor} />
 				</Pressable>
 			</View>

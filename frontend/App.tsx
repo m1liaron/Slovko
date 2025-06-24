@@ -1,8 +1,6 @@
 import "react-native-gesture-handler";
 import "react-native-reanimated"
-import React, { useEffect } from "react";
 import { Provider } from "react-redux";
-import { useAppDispatch } from "./src/hooks/redux.hooks";
 import { persistor, store } from "./src/redux/store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ProtectedRoute from "./src/navigation/ProtectedRoute/ProtectedRoute";
