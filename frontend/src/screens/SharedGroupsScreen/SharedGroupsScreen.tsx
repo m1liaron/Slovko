@@ -36,6 +36,7 @@ import {
 	removeSharedGroup,
 	resetSharedGroups,
 	addSharedGroup,
+	removeStateSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
@@ -182,7 +183,7 @@ const SharedGroupsScreen = () => {
 			</Pressable>
 			{item?.user?.id === user?.id && (
 				<Pressable
-					onPress={() => dispatch(enqueueOrDispatch(removeSharedGroup, item.id))}
+					onPress={() => dispatch(enqueueOrDispatch(removeSharedGroup, removeStateSharedGroup, item.id))}
 				>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>

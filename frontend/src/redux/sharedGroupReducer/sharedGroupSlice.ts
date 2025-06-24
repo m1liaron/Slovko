@@ -11,7 +11,6 @@ import {
 	removeSharedGroup,
 	addSharedGroup,
 } from "./sharedGroupThunk";
-import { v4 as uuid } from "uuid";
 
 interface InitialState {
 	sharedGroups: ISharedGroup[];
@@ -43,6 +42,10 @@ const sharedGroupSlice = createSlice({
 				...action.payload.group
 			}
 			state.sharedGroups.push(newSharedGroup);	
+		},
+		removeStateSharedGroup: (state, action) => {
+			state.sharedGroups = state.sharedGroups.filter(group => group.id !== action.payload);
+			state.filteredGroups = state.sharedGroups.filter(group => group.id !== action.payload);
 		},
 		filterSharedGroups: (state, action) => {
 			state.sharedGroups = state.sharedGroups.filter((item) =>
@@ -115,7 +118,7 @@ const sharedGroupSlice = createSlice({
 	},
 });
 
-export const { addStateSharedGroup, filterSharedGroups, resetSharedGroups, filterMySharedGroups } =
+export const { addStateSharedGroup, removeStateSharedGroup, filterSharedGroups, resetSharedGroups, filterMySharedGroups } =
 	sharedGroupSlice.actions;
 export const selectSharedGroup = (state: RootState) =>
 	state.sharedGroups.sharedGroups;
