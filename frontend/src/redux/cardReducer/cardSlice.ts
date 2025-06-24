@@ -1,5 +1,5 @@
 import type { ICard, IRepeatedGroup } from "@/common/enums/types/types";
-import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { type PayloadAction, createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit";
 import { DataStatus, type IDataStatus } from "../../common/enums/app/app";
 import type { RootState } from "../store";
 import {
@@ -16,6 +16,7 @@ import { handleUpdateState } from "../services/handleUpdateState";
 interface InitialState {
 	cards: ICard[];
 	cardsStorage: ICard[];
+	globalCards: ICard[];
 	filteredCards: ICard[];
 	repeatedCards: IRepeatedGroup[];
 	lastFetchedSuccessfully: boolean;
@@ -26,16 +27,13 @@ interface InitialState {
 const initialState: InitialState = {
 	cards: [],
 	cardsStorage: [],
+	globalCards: [],
 	filteredCards: [],
 	repeatedCards: [],
 	lastFetchedSuccessfully: false,
 	status: DataStatus.IDLE,
 	error: null,
 };
-
-type ReplaceCardProps = ICard & {
-	tempId: string;
-}
 
 const cardSlice = createSlice({
 	name: "cards",
@@ -53,11 +51,7 @@ const cardSlice = createSlice({
 			}
 			state.cards.push(newCardData);
 			state.cardsStorage.push(newCardData);
-		},
-		replaceCards: (state, action: PayloadAction<ICard[]>) => {
-			state.cards = action.payload;
-			state.cardsStorage = action.payload;
-			state.filteredCards = action.payload;
+			state.globalCards.push(newCardData);
 		},
 		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),
 		removeStateCard: (state, action) => {
@@ -65,6 +59,7 @@ const cardSlice = createSlice({
 			state.cards = state.cards.filter((card) => card.id !== id);
 			state.filteredCards = state.filteredCards.filter((card) => card.id !== id);
 			state.cardsStorage = state.cardsStorage.filter((card) => card.id !== id);
+			state.globalCards = state.globalCards.filter((card) => card.id !== id);
 		},
 		rangeCards: (state, action) => {
 			if (action.payload) {
@@ -94,11 +89,7 @@ const cardSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(getCards.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(getCards.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.cards = [];
 				state.cardsStorage = [];
 				state.filteredCards = [];
@@ -107,37 +98,26 @@ const cardSlice = createSlice({
 				state.cards = fresh;
 				state.cardsStorage = fresh;
 				state.filteredCards = fresh;
+				state.globalCards = fresh;
 				state.lastFetchedSuccessfully = true;
 			})
 			.addCase(getCards.rejected, (state, action) => {
-				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
 				state.lastFetchedSuccessfully = false;
 			})
 			.addCase(getCardsStorage.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				if (action.payload) {
 					state.cardsStorage = action.payload;
 				}
 			})
-			.addCase(updateCardsAfterLearn.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.cards = action.payload;
 				state.filteredCards = action.payload;
 			})
 			.addCase(updateCardsAfterLearn.rejected, (state, action) => {
-				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
 			})
-
-			.addCase(addCard.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(addCard.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.lastFetchedSuccessfully = true;
 				const { tempId, card } = action.payload;
 				if (tempId) {
@@ -148,13 +128,9 @@ const cardSlice = createSlice({
 				state.filteredCards.push(card);
 			})
 			.addCase(addCard.rejected, (state, action) => {
-				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
 			})
 			// remove card
-			.addCase(removeCard.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(removeCard.fulfilled, (state, action) => {
 				state.status = DataStatus.SUCCESS;
 				state.lastFetchedSuccessfully = true;
@@ -163,15 +139,8 @@ const cardSlice = createSlice({
 					(card) => card.id !== action.payload,
 				);
 			})
-			.addCase(removeCard.rejected, (state) => {
-				state.status = DataStatus.ERROR;
-			})
 			// update card
-			.addCase(updateCard.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(updateCard.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.error = null;
 				state.lastFetchedSuccessfully = true;
 				const updatedCard = action.payload;
@@ -185,37 +154,34 @@ const cardSlice = createSlice({
 					state.filteredCards = [...state.filteredCards];
 				}
 			})
-			.addCase(updateCard.rejected, (state) => {
-				state.status = DataStatus.ERROR;
-			})
 			// get repeated cards
-			.addCase(getRepeatedCards.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(getRepeatedCards.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.repeatedCards = action.payload;
 			})
 			.addCase(getRepeatedCards.rejected, (state, action) => {
-				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
 			})
 			// get repeated cards
-			.addCase(getRepeatedCardsFromIds.pending, (state) => {
-				state.status = DataStatus.PENDING;
-			})
 			.addCase(getRepeatedCardsFromIds.fulfilled, (state, action) => {
-				state.status = DataStatus.SUCCESS;
 				state.cards = action.payload;
 			})
 			.addCase(getRepeatedCardsFromIds.rejected, (state, action) => {
-				state.status = DataStatus.ERROR;
 				state.error = action.error.message || null;
-			});
+			})
+		
+			.addMatcher(isPending, (state) => {
+				state.status = DataStatus.PENDING;
+			})
+			.addMatcher(isFulfilled, (state) => {
+				state.status = DataStatus.SUCCESS;
+			})
+			.addMatcher(isRejected, (state) => {
+				state.status = DataStatus.ERROR;
+			})
 	},
 });
 
-export const { addStateCard, replaceCards, updateStateCard, removeStateCard, filterCardsByStatus, resetFilter, rangeCards, sortCards } =
+export const { addStateCard, updateStateCard, removeStateCard, filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
 export const selectCard = (state: RootState) => state.cards.cards;
 export {
