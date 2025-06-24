@@ -1,5 +1,5 @@
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
-import { useAppDispatch } from "@/hooks/redux.hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { Entypo } from "@expo/vector-icons";
 import { Link } from "@react-navigation/native";
 import { Platform, Pressable, Text, View } from "react-native";
@@ -7,6 +7,7 @@ import { useAppTheme } from "../../../contexts/ThemeProvider";
 import { removeGroup, removeStateGroup } from "../../../redux/groupReducer/groupSlice";
 import styles from "./Group.styles";
 import { useCallback } from "react";
+import { removeCard, removeStateCard } from "@/redux/cardReducer/cardSlice";
 
 interface GroupItemProps {
 	item: {
@@ -20,12 +21,18 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const dispatch = useAppDispatch();
+	const { globalCards } = useAppSelector(state => state.cards);
 
 	const handleRemoveGroup = useCallback(() => {
 		// Don't call dispatch directly in render - wrap in async function
 		const performRemove = async () => {
 		  try {
-			await dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, id));
+			  await dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, id));
+			  const groupsCards = globalCards.filter(card => card.groupId === id);
+			  console.log(globalCards);
+			  for (const card of groupsCards) {
+				  dispatch(enqueueOrDispatch(removeCard, removeStateCard, card.id));
+			  }
 		  } catch (error) {
 			console.error('Failed to remove group:', error);
 		  }

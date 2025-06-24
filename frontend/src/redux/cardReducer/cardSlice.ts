@@ -41,8 +41,10 @@ const cardSlice = createSlice({
 	reducers: {
 		addStateCard: (state, action) => {
 			const { card: newCard , tempId } = action.payload;
-			const existinGroup = state.cards.find(card => card.word === newCard.word);
-			if (existinGroup) {
+			const existingGroup = state.cards.find(card =>
+				card.word === newCard.word && card.groupId === newCard.groupId
+			);
+			if (existingGroup) {
 				throw new Error("Card with this name already exist");
 			}
 			const newCardData = {
@@ -102,6 +104,7 @@ const cardSlice = createSlice({
 			})
 			.addCase(getCardsStorage.fulfilled, (state, action) => {
 				if (action.payload) {
+					state.cards = action.payload;
 					state.cardsStorage = action.payload;
 				}
 			})
@@ -114,14 +117,20 @@ const cardSlice = createSlice({
 				if (tempId) {
 					state.cards = state.cards.filter(card => card.id !== tempId);
 					state.filteredCards = state.filteredCards.filter(card => card.id !== tempId);
+					state.globalCards = state.globalCards.filter(card => String(card.id) !== String(tempId));
+
+					state.cards.push(card)
+					state.cardsStorage.push(card)
+					state.globalCards.push(card)
 				}
-				state.cards.push(card);
-				state.filteredCards.push(card);
 			})
 			// remove card
 			.addCase(removeCard.fulfilled, (state, action) => {
 				state.cards = state.cards.filter((card) => card.id !== action.payload);
 				state.filteredCards = state.filteredCards.filter(
+					(card) => card.id !== action.payload,
+				);
+				state.globalCards = state.globalCards.filter(
 					(card) => card.id !== action.payload,
 				);
 			})

@@ -23,7 +23,7 @@ export const getCardsStorage = createAppAsyncThunk(
 		if (!storage) {
 			return null;
 		}
-		const cards = JSON.parse(JSON.parse(storage).cards).cards;
+		const cards = JSON.parse(JSON.parse(storage).cards).globalCards;
 		const filteredCards = cards.filter((card: ICard) => card.groupId === groupId);
 
 		return filteredCards;
