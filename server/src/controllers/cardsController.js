@@ -184,7 +184,16 @@ const addCard = async (req, res) => {
 				.send({ error: true, message: "Картка з цим словом вже існує" });
 		}
 
-		const { definition, example } = await getDictionaryData(data.word);
+		let definition = "";
+		let example = "";
+
+		try {
+			const dictionaryData = await getDictionaryData(data.word);
+			definition = dictionaryData.definition || "";
+			example = dictionaryData.example || "";
+		} catch (dictionaryError) {
+			console.warn("Dictionary fetch failed:", dictionaryError.message);
+		}
 
 		const image = await Image.create({ url: imageUri });
 		const newCard = await Card.create({
