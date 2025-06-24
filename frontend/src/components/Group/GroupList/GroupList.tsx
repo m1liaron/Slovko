@@ -5,12 +5,14 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import React, { useEffect, useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
+import { v4 as uuid } from "uuid";
 import AddButton from "../../../common/components/AddButton/AddButton";
 import AddInput from "../../../common/components/AddInput/AddInput";
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import {
 	addGroup,
+	addStateGroup,
 	getAllGroups,
 	selectGroup,
 } from "../../../redux/groupReducer/groupSlice";
@@ -28,7 +30,7 @@ export const GroupList = () => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		dispatch(enqueueOrDispatch(getAllGroups));
+		dispatch(enqueueOrDispatch(getAllGroups, {}));
 	}, []);
 
 	const handleAddGroup = () => {
@@ -38,7 +40,11 @@ export const GroupList = () => {
 				text1: "Please enter a title",
 			});
 		}
-		dispatch(enqueueOrDispatch(addGroup, { title }));
+		const newGroup = {
+			id: uuid(),
+			title
+		}
+		dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
 		setTitle("");
 		setShowAddModal(false);
 	};

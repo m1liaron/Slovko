@@ -17,6 +17,7 @@ interface InitialState {
 	streakDates: IStreakDate[];
 	isAuthenticated: boolean;
 	status: IDataStatus;
+	message: string;
 }
 
 const initialState: InitialState = {
@@ -24,6 +25,7 @@ const initialState: InitialState = {
 	streakDates: [],
 	isAuthenticated: false,
 	status: DataStatus.IDLE,
+	message: "",
 };
 
 const userSlice = createSlice({
@@ -72,9 +74,12 @@ const userSlice = createSlice({
 				state.user = action.payload;
 				state.isAuthenticated = true;
 			})
-			.addCase(getUser.rejected, (state) => {
+			.addCase(getUser.rejected, (state, action) => {
 				state.status = DataStatus.ERROR;
 				state.isAuthenticated = false;
+				if (action.payload) {
+					state.message = action.payload.toString();
+				}
 			})
 
 			.addCase(updateUser.pending, (state) => {
