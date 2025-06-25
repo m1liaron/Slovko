@@ -167,8 +167,8 @@ const copySharedGroup = async (req, res) => {
 				.json({ error: true, message: "Shared group is not found" });
 		}
 
-		const existGroup = await SharedGroup.findOne({
-			where: { id: sharedGroupId, userId: req.user.id }
+		const existGroup = await Group.findOne({
+			where: { userId: req.user.id, title: sharedGroup.title }
 		});
 		if (existGroup) {
 			res
