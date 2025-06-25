@@ -24,7 +24,7 @@ import AddButton from "../../common/components/AddButton/AddButton";
 import AddInput from "../../common/components/AddInput/AddInput";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
-import { AppPath } from "../../common/enums/app/app";
+import { AppPath, DataStatus } from "../../common/enums/app/app";
 import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
@@ -41,6 +41,7 @@ import {
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
 import { v4 as uuid } from "uuid";
+import Toast from "react-native-toast-message";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -50,7 +51,7 @@ const SharedGroupsScreen = () => {
 	const dispatch = useAppDispatch();
 	const { width } = useWindowDimensions();
 	const navigation = useNavigation<StackNavigation>();
-	const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
+	const { sharedGroups, haveMoreSharedGroups, isLoading, status, error } = useAppSelector(
 		(state) => state.sharedGroups,
 	);
 	const groups = useAppSelector(selectGroup);
@@ -122,6 +123,17 @@ const SharedGroupsScreen = () => {
 			dispatch(enqueueOrDispatch(addSharedGroup, addStateSharedGroup, sharedGroupData));
 		}
 	};
+
+	useEffect(() => {
+		if (status === DataStatus.ERROR && error) {
+			Toast.show({
+				type: "error",
+				text1: "Failed",
+				text2: error,
+			});
+		}
+
+	}, [error, status]);
 
 	const renderItem = ({ item }: { item: ISharedGroup }) => (
 		<View
