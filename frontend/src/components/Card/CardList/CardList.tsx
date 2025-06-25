@@ -54,6 +54,7 @@ import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
 import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
 import { v4 } from "uuid";
+import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
 
 const MemoCardItem = memo(CardItem);
 
@@ -316,25 +317,8 @@ const CardList = ({ groupId }: CardListProps) => {
 	}, [group, groupId]);
 
 	const onSaveCard = async () => {
-		let finalImageUri: string = imageUri;
-
-		if (Platform.OS === "web" && imageUri.startsWith("blob:")) {
-			try {
-				finalImageUri = await convertBlobToBase64(imageUri);
-			} catch (error) {
-				console.error("Error converting blob to base64:", error);
-				return;
-			}
-		} else if (finalImageUri) {
-			try {
-				const base64Image = await convertImageToBase64(finalImageUri);
-				finalImageUri = base64Image;
-			} catch (error) {
-				console.error("Error converting image to base64:", error);
-				return;
-			}
-		}
-
+		const finalImageUri = await convertDeviceImage(imageUri);
+		
 		function validateWord(word: string) {
 			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
 			const formatWord = cleanedWord.length <= 0 ? word : cleanedWord;

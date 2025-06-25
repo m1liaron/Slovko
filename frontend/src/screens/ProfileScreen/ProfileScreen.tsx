@@ -34,6 +34,7 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
+import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -84,24 +85,7 @@ export default function ProfileScreen() {
 	};
 
 	const handleUpdateUser = async () => {
-		let finalImageUri: string = image;
-
-		if (Platform.OS === "web" && image.startsWith("blob:")) {
-			try {
-				finalImageUri = await convertBlobToBase64(image);
-			} catch (error) {
-				console.error("Error converting blob to base64:", error);
-				return;
-			}
-		} else if (finalImageUri) {
-			try {
-				const base64Image = await convertImageToBase64(finalImageUri);
-				finalImageUri = base64Image;
-			} catch (error) {
-				console.error("Error converting image to base64:", error);
-				return;
-			}
-		}
+		const finalImageUri = await convertDeviceImage(image);
 
 		const data = {
 			image: finalImageUri,
