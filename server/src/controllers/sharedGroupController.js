@@ -61,6 +61,11 @@ const createSharedGroup = async (req, res) => {
 
 		res.status(200).json(sharedGroupWithUser);
 	} catch (error) {
+		if (error.name === "SequelizeUniqueConstraintError") {
+			return res.status(400).json({
+				message: error.errors?.[0]?.message || "Duplicate value",
+			});
+		}
 		res.status(500).json({
 			error: true,
 			message: error.message || "Server Error. Try again later.",

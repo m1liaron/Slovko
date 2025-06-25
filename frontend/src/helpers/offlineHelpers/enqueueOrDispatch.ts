@@ -80,7 +80,7 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 		try {
 			// TODO: Change type any for args on real type
 			const result = await dispatch(actionCreator(args as any));
-			if (result.type.endsWith("/rejected")) {
+			if (result.type.endsWith("/rejected") && result.payload.status >= 500) {
 				throw new Error(result.payload?.message || "Thunk failed");
 			}
 			
