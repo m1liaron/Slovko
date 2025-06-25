@@ -6,8 +6,6 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import {
-	convertBlobToBase64,
-	convertImageToBase64,
 	pickImage,
 } from "@/utils/utils";
 import { Feather } from "@expo/vector-icons";
@@ -143,6 +141,8 @@ export default function ProfileScreen() {
 								style={{
 									flexDirection: "row",
 									justifyContent: "center",
+									alignItems: "center",
+									marginTop: 10, 
 									gap: 10,
 								}}
 							>
@@ -157,18 +157,18 @@ export default function ProfileScreen() {
 									<View
 										style={{
 											padding: 10,
-											backgroundColor: "#e8fc41",
+											backgroundColor: theme.colors.primary,
 											alignSelf: "center",
 											borderRadius: 10,
 										}}
 									>
-										<ThemeText>{user.points}</ThemeText>
+										<Text style={{ color: theme.colors.lightBackground }}>{user.points}</Text>
 									</View>
 									<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 								</View>
 							</View>
 						)}
-						<Pressable onPress={onEditInfo}>
+						<Pressable onPress={onEditInfo} style={{ alignSelf: "flex-end" 	}}>
 							<Text style={styles.editTitle}>
 								{i18n.t("profileScreen.edit")}
 							</Text>
