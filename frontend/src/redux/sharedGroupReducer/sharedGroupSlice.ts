@@ -18,7 +18,7 @@ interface InitialState {
 	filteredGroups: ISharedGroup[];
 	sharedGroup: ISharedGroup | null;
 	status: IDataStatus;
-	error: null;
+	error: undefined | null | string;
 	isLoading: boolean;
 }
 
@@ -111,9 +111,11 @@ const sharedGroupSlice = createSlice({
 				state.error = null;
 				state.isLoading = false;
 			})
-			.addMatcher(isRejected, (state) => {
+			.addMatcher(isRejected, (state, action) => {
 				state.status = DataStatus.ERROR;
 				state.isLoading = false;
+				const payload = action.payload as { message?: string } | undefined;
+				state.error = payload?.message ?? action.error.message;
 			})
 	},
 });

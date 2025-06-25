@@ -72,7 +72,7 @@ const CardList = ({ groupId }: CardListProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const { group } = useAppSelector((state) => state.groups);
-	const { cards, cardsStorage, lastFetchedSuccessfully, filteredCards, error, status } = useAppSelector(
+	const { cards = [], cardsStorage = [], lastFetchedSuccessfully, filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
 	);
 	const dispatch = useAppDispatch();
@@ -93,13 +93,13 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [imageUri, setImageUri] = useState<string>("");
 	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
-		cardsToShow.length || 2,
+		cardsToShow?.length || 2,
 	);
 
 
 	useEffect(() => {
-		setWordsRangeNumber(cardsToShow.length);
-	}, [cardsToShow.length]);
+		setWordsRangeNumber(cardsToShow?.length);
+	}, [cardsToShow?.length]);
 
 	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
@@ -112,7 +112,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const incWordsRange = () => {
-		if (wordsRangeNumber < cardsToShow.length) {
+		if (wordsRangeNumber < cardsToShow?.length) {
 			setWordsRangeNumber(wordsRangeNumber + 1);
 		}
 	};
@@ -354,7 +354,7 @@ const CardList = ({ groupId }: CardListProps) => {
 			? validateWord(answerWord)
 			: answerWord;
 
-		if (Object.keys(valueWords).length > 0) {
+		if (Object.keys(valueWords)?.length > 0) {
 			for (const [key, value] of Object.entries(valueWords)) {
 				dispatch(enqueueOrDispatch(addCard, addStateCard, {
 					tempId: `local-${v4()}`,
@@ -423,7 +423,7 @@ const CardList = ({ groupId }: CardListProps) => {
 		<View style={styles.container}>
 			{status === DataStatus.PENDING ? (
 				<ActivityIndicator color={colors.primary} />
-			) : !cardsToShow.length ? (
+			) : !cardsToShow?.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
 				</View>
