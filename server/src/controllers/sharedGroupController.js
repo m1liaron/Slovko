@@ -61,6 +61,11 @@ const createSharedGroup = async (req, res) => {
 
 		res.status(200).json(sharedGroupWithUser);
 	} catch (error) {
+		if (error.name === "SequelizeUniqueConstraintError") {
+			return res.status(400).json({
+				message: error.errors?.[0]?.message || "Duplicate value",
+			});
+		}
 		res.status(500).json({
 			error: true,
 			message: error.message || "Server Error. Try again later.",
@@ -161,6 +166,17 @@ const copySharedGroup = async (req, res) => {
 				.status(404)
 				.json({ error: true, message: "Shared group is not found" });
 		}
+
+		const existGroup = await Group.findOne({
+			where: { userId: req.user.id, title: sharedGroup.title }
+		});
+		if (existGroup) {
+			res
+				.status(400)
+				.json({ erorr: true, message: "You already have group with this name" });
+			return;
+    	}
+
 		const newGroup = await Group.create({
 			title: sharedGroup.title,
 			userId: req.user.id,

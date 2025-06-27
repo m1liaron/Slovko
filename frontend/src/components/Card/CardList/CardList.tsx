@@ -53,7 +53,16 @@ import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
 import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
+import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
+
+import { addManyCards } from "@/redux/cardReducer/cardThunk";
+import { addStateManyCards } from "@/redux/cardReducer/cardSlice";
+import { AddCardRequest, ICard } from "@/common/enums/types/card.type";
+import pLimit from "p-limit";
+
+const BATCH_SIZE = 10;
+const CONCURRENCY = 3;
 
 const MemoCardItem = memo(CardItem);
 
@@ -72,7 +81,7 @@ const CardList = ({ groupId }: CardListProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const { group } = useAppSelector((state) => state.groups);
-	const { cards, cardsStorage, lastFetchedSuccessfully, filteredCards, error, status } = useAppSelector(
+	const { cards = [], cardsStorage = [], lastFetchedSuccessfully, filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
 	);
 	const dispatch = useAppDispatch();
@@ -93,13 +102,13 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [imageUri, setImageUri] = useState<string>("");
 	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
-		cardsToShow.length || 2,
+		cardsToShow?.length || 2,
 	);
 
 
 	useEffect(() => {
-		setWordsRangeNumber(cardsToShow.length);
-	}, [cardsToShow.length]);
+		setWordsRangeNumber(cardsToShow?.length);
+	}, [cardsToShow?.length]);
 
 	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
@@ -112,7 +121,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const incWordsRange = () => {
-		if (wordsRangeNumber < cardsToShow.length) {
+		if (wordsRangeNumber < cardsToShow?.length) {
 			setWordsRangeNumber(wordsRangeNumber + 1);
 		}
 	};
@@ -315,26 +324,28 @@ const CardList = ({ groupId }: CardListProps) => {
 		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId} ));
 	}, [group, groupId]);
 
-	const onSaveCard = async () => {
-		let finalImageUri: string = imageUri;
-
-		if (Platform.OS === "web" && imageUri.startsWith("blob:")) {
-			try {
-				finalImageUri = await convertBlobToBase64(imageUri);
-			} catch (error) {
-				console.error("Error converting blob to base64:", error);
-				return;
-			}
-		} else if (finalImageUri) {
-			try {
-				const base64Image = await convertImageToBase64(finalImageUri);
-				finalImageUri = base64Image;
-			} catch (error) {
-				console.error("Error converting image to base64:", error);
-				return;
-			}
+	async function addCardsInBatches(cards: AddCardRequest[]) {
+		// break into batches of BATCH_SIZE
+		const batches: AddCardRequest[][] = [];
+		for (let i = 0; i < cards.length; i += BATCH_SIZE) {
+		  batches.push(cards.slice(i, i + BATCH_SIZE));
 		}
+	  
+		const limit = pLimit(CONCURRENCY);
+	  
+		// schedule each batch through the limiter
+		await Promise.all(
+		  batches.map(batch => limit(async () => {
+			// you could either POST to a new bulk endpoint (see below)
+			  // or send each item in the batch sequentially:
+			  await dispatch(enqueueOrDispatch(addManyCards, addStateManyCards, { cards: batch, tempId: uuid() }));
+		  }))
+		);
+	  }
 
+	const onSaveCard = async () => {
+		const finalImageUri = await convertDeviceImage(imageUri);
+		
 		function validateWord(word: string) {
 			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
 			const formatWord = cleanedWord.length <= 0 ? word : cleanedWord;
@@ -354,18 +365,11 @@ const CardList = ({ groupId }: CardListProps) => {
 			? validateWord(answerWord)
 			: answerWord;
 
-		if (Object.keys(valueWords).length > 0) {
-			for (const [key, value] of Object.entries(valueWords)) {
-				dispatch(enqueueOrDispatch(addCard, addStateCard, {
-					tempId: `local-${v4()}`,
-					card: {
-						word: validateWord(key),
-						translateWord: value,
-						imageUri: "",
-						groupId,
-					}
-				}));
-			}
+		if (Object.keys(valueWords)?.length > 0) {
+			const payloads = Object.entries(valueWords).map(([w, t]) => ({
+ 				word: validateWord(w), translateWord: t, imageUri: '', groupId 
+			}));
+			await addCardsInBatches(payloads);
 
 			setValueWords({});
 			setJsonOutput({});
@@ -375,7 +379,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (value && answerWord) {
 			const cardData = {
-				tempId: `local-${v4()}`,
+				tempId: `local-${uuid()}`,
 				card: {
 					word: validateWord(value),
 					translateWord: validatedAnswer,
@@ -423,7 +427,7 @@ const CardList = ({ groupId }: CardListProps) => {
 		<View style={styles.container}>
 			{status === DataStatus.PENDING ? (
 				<ActivityIndicator color={colors.primary} />
-			) : !cardsToShow.length ? (
+			) : !cardsToShow?.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
 				</View>

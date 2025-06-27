@@ -6,8 +6,6 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import {
-	convertBlobToBase64,
-	convertImageToBase64,
 	pickImage,
 } from "@/utils/utils";
 import { Feather } from "@expo/vector-icons";
@@ -34,6 +32,7 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
+import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -84,24 +83,7 @@ export default function ProfileScreen() {
 	};
 
 	const handleUpdateUser = async () => {
-		let finalImageUri: string = image;
-
-		if (Platform.OS === "web" && image.startsWith("blob:")) {
-			try {
-				finalImageUri = await convertBlobToBase64(image);
-			} catch (error) {
-				console.error("Error converting blob to base64:", error);
-				return;
-			}
-		} else if (finalImageUri) {
-			try {
-				const base64Image = await convertImageToBase64(finalImageUri);
-				finalImageUri = base64Image;
-			} catch (error) {
-				console.error("Error converting image to base64:", error);
-				return;
-			}
-		}
+		const finalImageUri = await convertDeviceImage(image);
 
 		const data = {
 			image: finalImageUri,
@@ -159,6 +141,8 @@ export default function ProfileScreen() {
 								style={{
 									flexDirection: "row",
 									justifyContent: "center",
+									alignItems: "center",
+									marginTop: 10, 
 									gap: 10,
 								}}
 							>
@@ -173,18 +157,18 @@ export default function ProfileScreen() {
 									<View
 										style={{
 											padding: 10,
-											backgroundColor: "#e8fc41",
+											backgroundColor: theme.colors.primary,
 											alignSelf: "center",
 											borderRadius: 10,
 										}}
 									>
-										<ThemeText>{user.points}</ThemeText>
+										<Text style={{ color: theme.colors.lightBackground }}>{user.points}</Text>
 									</View>
 									<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 								</View>
 							</View>
 						)}
-						<Pressable onPress={onEditInfo}>
+						<Pressable onPress={onEditInfo} style={{ alignSelf: "flex-end" 	}}>
 							<Text style={styles.editTitle}>
 								{i18n.t("profileScreen.edit")}
 							</Text>

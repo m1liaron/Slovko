@@ -11,6 +11,7 @@ import {
 	removeCard,
 	updateCard,
 	updateCardsAfterLearn,
+	addManyCards
 } from "./cardThunk";
 import { handleUpdateState } from "../services/handleUpdateState";
 interface InitialState {
@@ -39,8 +40,12 @@ const cardSlice = createSlice({
 	name: "cards",
 	initialState,
 	reducers: {
+		addStateManyCards: (state, action) => {
+			state.cards.push(...action.payload.cards);
+			state.cardsStorage.push(...action.payload.cards);
+		},
 		addStateCard: (state, action) => {
-			const { card: newCard , tempId } = action.payload;
+			const { card: newCard, tempId } = action.payload;
 			const existingGroup = state.cards.find(card =>
 				card.word === newCard.word && card.groupId === newCard.groupId
 			);
@@ -126,6 +131,9 @@ const cardSlice = createSlice({
 					state.globalCards.push(card)
 				}
 			})
+			.addCase(addManyCards.fulfilled, (state, action) => { 
+				state.cards.push(...action.payload.cards)
+			})
 			// remove card
 			.addCase(removeCard.fulfilled, (state, action) => {
 				state.cards = state.cards.filter((card) => card.id !== action.payload);
@@ -157,7 +165,7 @@ const cardSlice = createSlice({
 			.addCase(getRepeatedCardsFromIds.fulfilled, (state, action) => {
 				state.cards = action.payload;
 			})
-		
+
 			.addMatcher(isPending, (state) => {
 				state.status = DataStatus.PENDING;
 			})
@@ -175,7 +183,7 @@ const cardSlice = createSlice({
 	},
 });
 
-export const { addStateCard, updateStateCard, removeStateCard, filterCardsByStatus, resetFilter, rangeCards, sortCards } =
+export const { addStateCard, addStateManyCards, updateStateCard, removeStateCard, filterCardsByStatus, resetFilter, rangeCards, sortCards } =
 	cardSlice.actions;
 export const selectCard = (state: RootState) => state.cards.cards;
 export {

@@ -1,5 +1,4 @@
 import { useAppDispatch } from "@/hooks/redux.hooks";
-import { replaceCards } from "@/redux/cardReducer/cardSlice";
 import { setIsConnected } from "@/redux/networkReducer/networkSlice";
 import { processOfflineQueue } from "@/redux/offlineQueueReducer/processOfflineQueue";
 import NetInfo from "@react-native-community/netinfo";

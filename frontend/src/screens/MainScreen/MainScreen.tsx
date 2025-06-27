@@ -32,8 +32,10 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 const MainScreen = () => {
+	useLanguage();
 	const dispatch = useAppDispatch();
 	const navigate = useNavigation<StackNavigation>();
 	const { user } = useAppSelector(selectUser);

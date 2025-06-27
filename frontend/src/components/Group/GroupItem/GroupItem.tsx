@@ -29,7 +29,6 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
 		  try {
 			  await dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, id));
 			  const groupsCards = globalCards.filter(card => card.groupId === id);
-			  console.log(globalCards);
 			  for (const card of groupsCards) {
 				  dispatch(enqueueOrDispatch(removeCard, removeStateCard, card.id));
 			  }

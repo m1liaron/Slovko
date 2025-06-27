@@ -1,7 +1,7 @@
 import { addCard, removeCard, updateCardsAfterLearn, updateCard } from "../cardReducer/cardSlice";
 import { addGroup, removeGroup, updateGroup } from "../groupReducer/groupThunk";
 import { saveResults } from "../resultReducer/resultThunk";
-import { copySharedGroup, removeSharedGroup, saveSharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
+import { copySharedGroup, removeSharedGroup, addSharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
 import { AppDispatch, RootState } from "../store";
 import { buyFreeze, updateUser, updateUserStreak } from "../userReducer/userThunk";
 import { dequeueAction } from "./offlineQueueSlice";
@@ -23,7 +23,7 @@ const thunkMap: Record<string, Function> = {
     "user/updateUserStreak": updateUserStreak,
     "user/buyFreeze": buyFreeze,
     //shared group
-    "sharedGroup/save": saveSharedGroup,
+    "sharedGroup/save": addSharedGroup,
     "sharedGroup/copy": copySharedGroup,
     "sharedGroup/remove": removeSharedGroup
 }

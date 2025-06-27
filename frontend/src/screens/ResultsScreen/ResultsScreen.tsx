@@ -25,6 +25,7 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 type GroupedResults = {
 	[date: string]: IResult[];
@@ -38,6 +39,7 @@ const ResultsScreen = () => {
 	const { results, haveMoreResults, firstResult, isLoading } = useAppSelector(
 		(state) => state.results,
 	);
+	useLanguage();
 	const navigation = useNavigation<StackNavigation>();
 	const [filterValue, setFilterValue] = useState<string>("");
 	const [showFilterInput, setShowFilterInput] = useState(false);

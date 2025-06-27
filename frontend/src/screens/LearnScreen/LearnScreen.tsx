@@ -32,7 +32,7 @@ import {
 	updateCardsAfterLearn,
 } from "../../redux/cardReducer/cardSlice";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
-import { saveResults } from "../../redux/resultReducer/resultSlice";
+import { addStateResult, saveResults } from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
 
@@ -153,7 +153,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 			startedLearn: startLearnDate,
 			completionTime: new Date(),
 		};
-		dispatch(enqueueOrDispatch(saveResults, resultData));
+		dispatch(enqueueOrDispatch(saveResults, addStateResult, resultData));
 	};
 
 	const finishLesson = () => {
@@ -171,10 +171,10 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 		const repeatedCardsIds = cards?.map((card) => card.id);
 		dispatch(enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds));
 
-		dispatch(enqueueOrDispatch(updateUserStreak));
+		dispatch(enqueueOrDispatch(updateUserStreak, {}));
 		handleSaveResults();
 		if (repeatedCards.length) {
-			dispatch(enqueueOrDispatch(getRepeatedCards));
+			dispatch(enqueueOrDispatch(getRepeatedCards, {}));
 		}
 	};
 
