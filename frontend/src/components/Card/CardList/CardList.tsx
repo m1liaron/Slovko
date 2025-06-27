@@ -53,8 +53,16 @@ import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
 import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
-import { v4 } from "uuid";
+import { v4 as uuid } from "uuid";
 import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
+
+import { addManyCards } from "@/redux/cardReducer/cardThunk";
+import { addStateManyCards } from "@/redux/cardReducer/cardSlice";
+import { AddCardRequest, ICard } from "@/common/enums/types/card.type";
+import pLimit from "p-limit";
+
+const BATCH_SIZE = 10;
+const CONCURRENCY = 3;
 
 const MemoCardItem = memo(CardItem);
 
@@ -316,6 +324,25 @@ const CardList = ({ groupId }: CardListProps) => {
 		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId} ));
 	}, [group, groupId]);
 
+	async function addCardsInBatches(cards: AddCardRequest[]) {
+		// break into batches of BATCH_SIZE
+		const batches: AddCardRequest[][] = [];
+		for (let i = 0; i < cards.length; i += BATCH_SIZE) {
+		  batches.push(cards.slice(i, i + BATCH_SIZE));
+		}
+	  
+		const limit = pLimit(CONCURRENCY);
+	  
+		// schedule each batch through the limiter
+		await Promise.all(
+		  batches.map(batch => limit(async () => {
+			// you could either POST to a new bulk endpoint (see below)
+			  // or send each item in the batch sequentially:
+			  await dispatch(enqueueOrDispatch(addManyCards, addStateManyCards, { cards: batch, tempId: uuid() }));
+		  }))
+		);
+	  }
+
 	const onSaveCard = async () => {
 		const finalImageUri = await convertDeviceImage(imageUri);
 		
@@ -339,17 +366,10 @@ const CardList = ({ groupId }: CardListProps) => {
 			: answerWord;
 
 		if (Object.keys(valueWords)?.length > 0) {
-			for (const [key, value] of Object.entries(valueWords)) {
-				dispatch(enqueueOrDispatch(addCard, addStateCard, {
-					tempId: `local-${v4()}`,
-					card: {
-						word: validateWord(key),
-						translateWord: value,
-						imageUri: "",
-						groupId,
-					}
-				}));
-			}
+			const payloads = Object.entries(valueWords).map(([w, t]) => ({
+ 				word: validateWord(w), translateWord: t, imageUri: '', groupId 
+			}));
+			await addCardsInBatches(payloads);
 
 			setValueWords({});
 			setJsonOutput({});
@@ -359,7 +379,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (value && answerWord) {
 			const cardData = {
-				tempId: `local-${v4()}`,
+				tempId: `local-${uuid()}`,
 				card: {
 					word: validateWord(value),
 					translateWord: validatedAnswer,

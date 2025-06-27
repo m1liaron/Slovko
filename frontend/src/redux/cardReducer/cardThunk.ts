@@ -32,10 +32,20 @@ export const getCardsStorage = createAppAsyncThunk(
 
 export const addCard = createAppAsyncThunk(
 	"card/add-card",
-	async ({ tempId, card: newCard }: { tempId: string; card: AddCardRequest }) => {
+	async({ card, tempId }: { card: AddCardRequest; tempId: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.post("/cards", newCard);
+		const response = await axiosInstance.post("/cards", card);
 		return { card: response.data, tempId };
+	},
+);
+
+export const addManyCards = createAppAsyncThunk(
+	"card/add-many",
+	async (data: { cards: AddCardRequest[];  tempId: string }) => {
+		const axiosInstance = await createAuthorizedInstance();
+		console.log(data)
+		const response = await axiosInstance.post("/cards/many", {cards: data.cards });
+		return { cards: response.data, tempId: data };
 	},
 );
 

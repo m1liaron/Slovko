@@ -168,7 +168,6 @@ const updateCardsAfterReview = async (req, res) => {
 };
 
 const addCard = async (req, res) => {
-	console.log(req.body)
 	const { imageUri, ...data } = req.body;
 	try {
 		const findCard = await Card.findOne({
@@ -196,23 +195,13 @@ const addCard = async (req, res) => {
 			console.warn("Dictionary fetch failed:", dictionaryError.message);
 		}
 
-		try {
-		const dictionaryData = await getDictionaryData(data.word);
-		definition = dictionaryData.definition || "";
-		example = dictionaryData.example || "";
-		} catch (dictionaryError) {
-			console.warn("Dictionary fetch failed:", dictionaryError.message);
-			// You could also log this to an error service
-		}
-
-		console.log("definition: ", definition)
 		const image = await Image.create({ url: imageUri });
 		const newCard = await Card.create({
 			imageId: image.id,
 			...data,
 			definition,
 			example,
-		});	
+		});
 
 		const card = await Card.findOne({
 			where: { id: newCard.id, groupId: data.groupId },
@@ -220,12 +209,62 @@ const addCard = async (req, res) => {
 		});
 
 		return res.status(200).json(card);
-	} catch (error) {
+	} catch(error) {
 		res
 			.status(400)
-			.send({ error: true, message: error.message || "Error creating card" });
+			.send({ error: true, message: error.message || "Error during create a card" });
 	}
 };
+
+const addManyCards = async (req, res) => {
+	const { cards } = req.body; // [ { word, translateWord, imageUri, groupId }, … ]
+  if (!Array.isArray(cards) || !cards.length) {
+    return res.status(400).json({ error: "Must provide an array of cards" });
+  }
+
+  const sequelize = Card.sequelize;
+  const transaction = await sequelize.transaction();
+
+  try {
+    // 1) Prevent duplicates in the same group
+    const existing = await Card.findAll({
+      where: {
+        groupId: cards[0].groupId,
+        [Op.or]: cards.map((c) => ({
+          word: { [Op.iLike]: c.word },
+        })),
+      },
+      transaction,
+    });
+    const existingWords = new Set(existing.map((c) => c.word.toLowerCase()));
+
+    // 2) Filter out duplicates client-side
+    const toInsert = cards.filter(
+      (c) => !existingWords.has(c.word.toLowerCase())
+    );
+
+    // 3) Bulk‐create all Images if needed
+    const createdImages = await Promise.all(
+      toInsert.map((c) => Image.create({ url: c.imageUri }, { transaction }))
+    );
+
+    // 4) Bulk‐create Cards
+    const cardsData = toInsert.map((c, i) => ({
+      word: c.word,
+      translateWord: c.translateWord,
+      imageId: createdImages[i].id,
+      groupId: c.groupId,
+      // definition & example can be fetched client-side or omitted here
+    }));
+    const newCards = await Card.bulkCreate(cardsData, { transaction });
+
+    await transaction.commit();
+    res.status(201).json(newCards);
+  } catch (err) {
+    await transaction.rollback();
+    res.status(500).json({ error: `Failed to add many cards: ${err}` });
+  }
+}
 
 const updateCard = async (req, res) => {
 	try {
@@ -274,6 +313,7 @@ const removeCard = async (req, res) => {
 module.exports = {
 	getAllCards,
 	addCard,
+	addManyCards,
 	removeCard,
 	updateCard,
 	updateCardsAfterReview,
