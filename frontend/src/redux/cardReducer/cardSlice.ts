@@ -16,7 +16,6 @@ import {
 import { handleUpdateState } from "../services/handleUpdateState";
 interface InitialState {
 	cards: ICard[];
-	cardsStorage: ICard[];
 	globalCards: ICard[];
 	filteredCards: ICard[];
 	repeatedCards: IRepeatedGroup[];
@@ -27,7 +26,6 @@ interface InitialState {
 
 const initialState: InitialState = {
 	cards: [],
-	cardsStorage: [],
 	globalCards: [],
 	filteredCards: [],
 	repeatedCards: [],
@@ -42,7 +40,6 @@ const cardSlice = createSlice({
 	reducers: {
 		addStateManyCards: (state, action) => {
 			state.cards.push(...action.payload.cards);
-			state.cardsStorage.push(...action.payload.cards);
 		},
 		addStateCard: (state, action) => {
 			const { card: newCard, tempId } = action.payload;
@@ -57,7 +54,6 @@ const cardSlice = createSlice({
 				...newCard
 			}
 			state.cards.push(newCardData);
-			state.cardsStorage.push(newCardData);
 			state.globalCards.push(newCardData);
 		},
 		updateStateCard: (state, action) => handleUpdateState(state, action, "cards"),
@@ -65,13 +61,11 @@ const cardSlice = createSlice({
 			const id = action.payload;
 			state.cards = state.cards.filter((card) => card.id !== id);
 			state.filteredCards = state.filteredCards.filter((card) => card.id !== id);
-			state.cardsStorage = state.cardsStorage.filter((card) => card.id !== id);
 			state.globalCards = state.globalCards.filter((card) => card.id !== id);
 		},
 		rangeCards: (state, action) => {
 			if (action.payload) {
 				state.cards = [...state.cards.slice(0, action.payload)];
-				state.cardsStorage = [...state.cardsStorage.slice(0, action.payload)];
 			}
 		},
 		sortCards: (state, action: PayloadAction<"asc" | "desc">) => {
@@ -97,22 +91,18 @@ const cardSlice = createSlice({
 	extraReducers: (builder) => {
 		builder
 			.addCase(getCards.fulfilled, (state, action) => {
-				state.cards = [];
-				state.cardsStorage = [];
-				state.filteredCards = [];
-
 				const fresh = action.payload;
 				state.cards = fresh;
-				state.cardsStorage = fresh;
 				state.filteredCards = fresh;
-				if (fresh.length > 0) {
-					state.globalCards = fresh;
-				}
+
+				const existingIds = new Set(state.globalCards.map(c => c.id));
+				const newCards = fresh.filter((card: ICard) => !existingIds.has(card.id));
+
+				state.globalCards = [...state.globalCards, ...newCards];
 			})
 			.addCase(getCardsStorage.fulfilled, (state, action) => {
 				if (action.payload) {
-					state.cards = action.payload;
-					state.cardsStorage = action.payload;
+					state.cards = action.payload
 				}
 			})
 			.addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
@@ -127,12 +117,12 @@ const cardSlice = createSlice({
 					state.globalCards = state.globalCards.filter(card => String(card.id) !== String(tempId));
 
 					state.cards.push(card)
-					state.cardsStorage.push(card)
 					state.globalCards.push(card)
 				}
 			})
 			.addCase(addManyCards.fulfilled, (state, action) => { 
-				state.cards.push(...action.payload.cards)
+				state.cards.push(...action.payload.cards);
+				state.globalCards.push(...action.payload.cards)
 			})
 			// remove card
 			.addCase(removeCard.fulfilled, (state, action) => {

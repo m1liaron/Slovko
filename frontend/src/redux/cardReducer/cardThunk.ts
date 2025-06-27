@@ -43,7 +43,6 @@ export const addManyCards = createAppAsyncThunk(
 	"card/add-many",
 	async (data: { cards: AddCardRequest[];  tempId: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
-		console.log(data)
 		const response = await axiosInstance.post("/cards/many", {cards: data.cards });
 		return { cards: response.data, tempId: data };
 	},

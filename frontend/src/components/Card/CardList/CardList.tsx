@@ -5,8 +5,6 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import {
-	convertBlobToBase64,
-	convertImageToBase64,
 	pickImage,
 } from "@/utils/utils";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
@@ -81,15 +79,11 @@ const CardList = ({ groupId }: CardListProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const { group } = useAppSelector((state) => state.groups);
-	const { cards = [], cardsStorage = [], lastFetchedSuccessfully, filteredCards, error, status } = useAppSelector(
+	const { cards = [], filteredCards, error, status } = useAppSelector(
 		(state) => state.cards,
 	);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
-	const { isConnected } = useAppSelector(state => state.network);
-
-	const cardsToShow =
-	lastFetchedSuccessfully && isConnected ? cards : cardsStorage;
 
 	const [addCardMode, setAddCardMode] = useState<number>(0);
 	const [valueWords, setValueWords] = useState<Record<string, string>>({});
@@ -102,13 +96,13 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [imageUri, setImageUri] = useState<string>("");
 	const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
-		cardsToShow?.length || 2,
+		cards?.length || 2,
 	);
 
 
 	useEffect(() => {
-		setWordsRangeNumber(cardsToShow?.length);
-	}, [cardsToShow?.length]);
+		setWordsRangeNumber(cards?.length);
+	}, [cards?.length]);
 
 	const onChangeCardsRange = useCallback((value: number) => {
 		setWordsRangeNumber(value);
@@ -121,7 +115,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const incWordsRange = () => {
-		if (wordsRangeNumber < cardsToShow?.length) {
+		if (wordsRangeNumber < cards?.length) {
 			setWordsRangeNumber(wordsRangeNumber + 1);
 		}
 	};
@@ -405,7 +399,7 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	const navigateToLearn = () => {
-		if (wordsRangeNumber !== cardsToShow.length) {
+		if (wordsRangeNumber !== cards.length) {
 			dispatch(rangeCards(wordsRangeNumber));
 		}
 		navigation.navigate(AppPath.Learn, { groupId });
@@ -427,14 +421,14 @@ const CardList = ({ groupId }: CardListProps) => {
 		<View style={styles.container}>
 			{status === DataStatus.PENDING ? (
 				<ActivityIndicator color={colors.primary} />
-			) : !cardsToShow?.length ? (
+			) : !cards?.length ? (
 				<View style={{ justifyContent: "center", alignItems: "center" }}>
 					<Image source={noCardsImage} />
 				</View>
 			) : (
 				<View style={{ marginVertical: 10 }}>
 					<FlatList
-						data={cardsToShow}
+						data={cards}
 						renderItem={({ item }) => (
 							<MemoCardItem
 								item={item}
@@ -449,7 +443,7 @@ const CardList = ({ groupId }: CardListProps) => {
 				</View>
 			)}
 
-			{cardsToShow.length > 1 && (
+			{cards.length > 1 && (
 				<View style={{ marginHorizontal: 20 }}>
 					<View
 						style={{
@@ -474,7 +468,7 @@ const CardList = ({ groupId }: CardListProps) => {
 							<Slider
 								style={{ width: 200, height: 40 }}
 								minimumValue={2}
-								maximumValue={cardsToShow.length}
+								maximumValue={cards.length}
 								value={wordsRangeNumber}
 								onSlidingComplete={onChangeCardsRange}
 								minimumTrackTintColor="#FFFFFF"
@@ -485,7 +479,7 @@ const CardList = ({ groupId }: CardListProps) => {
 						<Pressable onPress={incWordsRange}>
 							<FontAwesome name="plus" color={colors.primary} size={40} />
 						</Pressable>
-						{filteredCards.length > cardsToShow.length && (
+						{filteredCards.length > cards.length && (
 							<Pressable
 								style={{
 									padding: 5,

@@ -1,4 +1,5 @@
 import { addCard, removeCard, updateCardsAfterLearn, updateCard } from "../cardReducer/cardSlice";
+import { addManyCards } from "../cardReducer/cardThunk";
 import { addGroup, removeGroup, updateGroup } from "../groupReducer/groupThunk";
 import { saveResults } from "../resultReducer/resultThunk";
 import { copySharedGroup, removeSharedGroup, addSharedGroup } from "../sharedGroupReducer/sharedGroupThunk";
@@ -13,6 +14,7 @@ const thunkMap: Record<string, Function> = {
     "group/update": updateGroup,
     // card
     "card/add-card": addCard,
+    "card/add-many": addManyCards,
     "card/update": updateCard,
     "card/remove": removeCard,
     "card/update-cards-learn": updateCardsAfterLearn,
