@@ -7,6 +7,7 @@ const translations = {
 			repeatAll: "Repeat all",
 			notificationTitle: "Time to review!",
 			notificationBody: "You have {{count}} words to review.",
+			notificationPermissionDenied: "Notificaitons are blocked by the user",
 			saveUkraine: "Save Ukraine!",
 		},
 		sharedGroupsScreen: {
@@ -161,6 +162,7 @@ const translations = {
 			repeatAll: "Повторити усі",
 			notificationTitle: "Час для повторення!",
 			notificationBody: "У вас є {{count}} слова для повторення.",
+			notificationPermissionDenied: "Повідомлення заблоковані користувачем.",
 			saveUkraine: "Save Ukraine!",
 		},
 		sharedGroupsScreen: {
