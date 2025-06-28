@@ -25,7 +25,7 @@ const offlineQueueSlice = createSlice({
 			state.queue.push(action.payload);
 		},
 		dequeueAction: (state, action: PayloadAction<string>) => {
-			state.queue = state.queue.filter(item => item.id !== action.payload);
+			state.queue = state.queue.filter((item) => item.id !== action.payload);
 		},
 		setQueue(state, action: PayloadAction<QueuedAction[]>) {
 			state.queue = action.payload;

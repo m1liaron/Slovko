@@ -1,15 +1,20 @@
 import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
-import { createSlice, isFulfilled, isPending, isRejected } from "@reduxjs/toolkit";
+import {
+	createSlice,
+	isFulfilled,
+	isPending,
+	isRejected,
+} from "@reduxjs/toolkit";
 import {
 	DataStatus,
 	type IDataStatus,
 } from "../../common/enums/app/DataStatus";
 import type { RootState } from "../store";
 import {
+	addSharedGroup,
 	getAllSharedGroups,
 	getSharedGroup,
 	removeSharedGroup,
-	addSharedGroup,
 } from "./sharedGroupThunk";
 
 interface InitialState {
@@ -39,13 +44,17 @@ const sharedGroupSlice = createSlice({
 		addStateSharedGroup: (state, action) => {
 			const newSharedGroup = {
 				id: action.payload.tempd,
-				...action.payload.group
-			}
-			state.sharedGroups.push(newSharedGroup);	
+				...action.payload.group,
+			};
+			state.sharedGroups.push(newSharedGroup);
 		},
 		removeStateSharedGroup: (state, action) => {
-			state.sharedGroups = state.sharedGroups.filter(group => group.id !== action.payload);
-			state.filteredGroups = state.sharedGroups.filter(group => group.id !== action.payload);
+			state.sharedGroups = state.sharedGroups.filter(
+				(group) => group.id !== action.payload,
+			);
+			state.filteredGroups = state.sharedGroups.filter(
+				(group) => group.id !== action.payload,
+			);
 		},
 		filterSharedGroups: (state, action) => {
 			state.sharedGroups = state.sharedGroups.filter((item) =>
@@ -89,8 +98,10 @@ const sharedGroupSlice = createSlice({
 			.addCase(addSharedGroup.fulfilled, (state, action) => {
 				const { tempId, group } = action.payload;
 				if (tempId) {
-					state.sharedGroups = state.sharedGroups.filter(group => group.id !== tempId);
-					state.sharedGroups.push(group)
+					state.sharedGroups = state.sharedGroups.filter(
+						(group) => group.id !== tempId,
+					);
+					state.sharedGroups.push(group);
 				}
 			})
 			.addCase(getSharedGroup.fulfilled, (state, action) => {
@@ -102,7 +113,7 @@ const sharedGroupSlice = createSlice({
 					(group) => group.id !== action.payload,
 				);
 			})
-		
+
 			.addMatcher(isPending, (state) => {
 				state.status = DataStatus.PENDING;
 			})
@@ -116,12 +127,17 @@ const sharedGroupSlice = createSlice({
 				state.isLoading = false;
 				const payload = action.payload as { message?: string } | undefined;
 				state.error = payload?.message ?? action.error.message;
-			})
+			});
 	},
 });
 
-export const { addStateSharedGroup, removeStateSharedGroup, filterSharedGroups, resetSharedGroups, filterMySharedGroups } =
-	sharedGroupSlice.actions;
+export const {
+	addStateSharedGroup,
+	removeStateSharedGroup,
+	filterSharedGroups,
+	resetSharedGroups,
+	filterMySharedGroups,
+} = sharedGroupSlice.actions;
 export const selectSharedGroup = (state: RootState) =>
 	state.sharedGroups.sharedGroups;
 export {

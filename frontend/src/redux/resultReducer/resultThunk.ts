@@ -1,6 +1,6 @@
 import type { SaveResultsRequest } from "@/common/enums/types/result.type";
-import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
+import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 
 export const saveResults = createAppAsyncThunk(
 	"results/save",

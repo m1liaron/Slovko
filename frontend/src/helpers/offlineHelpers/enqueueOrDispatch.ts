@@ -1,11 +1,8 @@
 import { enqueueAction } from "@/redux/offlineQueueReducer/offlineQueueSlice";
 import type { AppDispatch, RootState } from "@/redux/store";
-import type {
-	ActionCreatorWithPayload,
-	AsyncThunk,
-} from "@reduxjs/toolkit";
-import { persistOfflineQueue } from "./persistOfflineQueue";
+import type { ActionCreatorWithPayload, AsyncThunk } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import { persistOfflineQueue } from "./persistOfflineQueue";
 
 // Updated type to match AsyncThunk signature
 type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
@@ -18,25 +15,27 @@ type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
 	}
 > & { typePrefix: string };
 
-type RegularActionCreator<T> = ActionCreatorWithPayload<T> | AsyncThunkCreator<any, T>;;
+type RegularActionCreator<T> =
+	| ActionCreatorWithPayload<T>
+	| AsyncThunkCreator<any, T>;
 
 // 🔹 First overload: only asyncThunk + args
 function enqueueOrDispatch<Returned, ThunkArg>(
 	actionCreator: AsyncThunkCreator<any, ThunkArg>,
-	args: ThunkArg
+	args: ThunkArg,
 ): ReturnType<typeof buildThunk>;
 
 function enqueueOrDispatch<ThunkArg extends PayloadType, PayloadType>(
 	actionCreator: AsyncThunkCreator<any, ThunkArg>,
 	stateAction: RegularActionCreator<PayloadType>,
-	args: ThunkArg
+	args: ThunkArg,
 ): ReturnType<typeof buildThunk>;
 
 // 🔸 Actual implementation
 function enqueueOrDispatch<Returned, ThunkArg, PayloadType = ThunkArg>(
 	actionCreator: AsyncThunkCreator<Returned, ThunkArg>,
 	arg1: RegularActionCreator<PayloadType> | ThunkArg,
-	arg2?: ThunkArg
+	arg2?: ThunkArg,
 ) {
 	const hasStateCreator = typeof arg1 === "function";
 	const actionStateCreator = hasStateCreator
@@ -71,7 +70,7 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 					id: uuidv4(),
 					type: actionCreator.typePrefix,
 					payload: args,
-				})
+				}),
 			);
 
 			return { queued: true };
@@ -83,7 +82,7 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			if (result.type.endsWith("/rejected") && result.payload.status >= 500) {
 				throw new Error(result.payload?.message || "Thunk failed");
 			}
-			
+
 			return result;
 		} catch (error) {
 			await persistOfflineQueue(getState);
@@ -91,7 +90,7 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 			if (actionStateCreator) {
 				dispatch(actionStateCreator(args as any));
 			}
-			
+
 			if (isFetchLike) return { skipped: true };
 			console.warn("Backend is off, save on device");
 

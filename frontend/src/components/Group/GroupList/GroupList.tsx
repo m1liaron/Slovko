@@ -31,7 +31,7 @@ export const GroupList = () => {
 
 	useEffect(() => {
 		dispatch(enqueueOrDispatch(getAllGroups, {}));
-	}, []);
+	}, [dispatch]);
 
 	const handleAddGroup = () => {
 		if (!title.length) {
@@ -42,8 +42,8 @@ export const GroupList = () => {
 		}
 		const newGroup = {
 			id: uuid(),
-			title
-		}
+			title,
+		};
 		dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
 		setTitle("");
 		setShowAddModal(false);

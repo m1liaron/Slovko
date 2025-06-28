@@ -5,9 +5,8 @@ import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import {
-	pickImage,
-} from "@/utils/utils";
+import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
+import { pickImage } from "@/utils/utils";
 import { Feather } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -32,7 +31,6 @@ import { useAppTheme } from "../../contexts/ThemeProvider";
 import { logout, selectUser } from "../../redux/userReducer/userSlice";
 import { updateUser } from "../../redux/userReducer/userThunk";
 import styles from "./ProfileScreen.styles";
-import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
 
 export default function ProfileScreen() {
 	const { user } = useAppSelector(selectUser);
@@ -142,7 +140,7 @@ export default function ProfileScreen() {
 									flexDirection: "row",
 									justifyContent: "center",
 									alignItems: "center",
-									marginTop: 10, 
+									marginTop: 10,
 									gap: 10,
 								}}
 							>
@@ -162,13 +160,15 @@ export default function ProfileScreen() {
 											borderRadius: 10,
 										}}
 									>
-										<Text style={{ color: theme.colors.lightBackground }}>{user.points}</Text>
+										<Text style={{ color: theme.colors.lightBackground }}>
+											{user.points}
+										</Text>
 									</View>
 									<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 								</View>
 							</View>
 						)}
-						<Pressable onPress={onEditInfo} style={{ alignSelf: "flex-end" 	}}>
+						<Pressable onPress={onEditInfo} style={{ alignSelf: "flex-end" }}>
 							<Text style={styles.editTitle}>
 								{i18n.t("profileScreen.edit")}
 							</Text>

@@ -1,9 +1,9 @@
 import { SERVER_API_URL } from "@/common/enums/constants/server-api";
-import { type IUpdateUser, type RegisterUser } from "@/common/enums/types/types";
+import type { IUpdateUser, RegisterUser } from "@/common/enums/types/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 import axios from "axios";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
+import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 
 const login = createAppAsyncThunk(
 	"user/login",
@@ -38,11 +38,14 @@ const updateUser = createAppAsyncThunk(
 	},
 );
 
-const updateUserStreak = createAppAsyncThunk("user/updateUserStreak", async () => {
-	const axiosInstance = await createAuthorizedInstance();
-	const response = await axiosInstance.patch("/users/streak");
-	return response.data;
-});
+const updateUserStreak = createAppAsyncThunk(
+	"user/updateUserStreak",
+	async () => {
+		const axiosInstance = await createAuthorizedInstance();
+		const response = await axiosInstance.patch("/users/streak");
+		return response.data;
+	},
+);
 
 const buyFreeze = createAppAsyncThunk(
 	"user/buyFreeze",

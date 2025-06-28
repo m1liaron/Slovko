@@ -19,6 +19,8 @@ import {
 	View,
 	useWindowDimensions,
 } from "react-native";
+import Toast from "react-native-toast-message";
+import { v4 as uuid } from "uuid";
 import AvatarImage from "../../../assets/images/avatar.png";
 import AddButton from "../../common/components/AddButton/AddButton";
 import AddInput from "../../common/components/AddInput/AddInput";
@@ -29,19 +31,17 @@ import DefaultModal from "../../components/DefaultModal/DefaultModal";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
 import {
+	addSharedGroup,
 	addStateSharedGroup,
 	filterMySharedGroups,
 	filterSharedGroups,
 	getAllSharedGroups,
 	removeSharedGroup,
-	resetSharedGroups,
-	addSharedGroup,
 	removeStateSharedGroup,
+	resetSharedGroups,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import { selectUser } from "../../redux/userReducer/userSlice";
 import styles from "./SharedGroupsScreen.styles";
-import { v4 as uuid } from "uuid";
-import Toast from "react-native-toast-message";
 
 const SharedGroupsScreen = () => {
 	const { user } = useAppSelector(selectUser);
@@ -51,9 +51,8 @@ const SharedGroupsScreen = () => {
 	const dispatch = useAppDispatch();
 	const { width } = useWindowDimensions();
 	const navigation = useNavigation<StackNavigation>();
-	const { sharedGroups, haveMoreSharedGroups, isLoading, status, error } = useAppSelector(
-		(state) => state.sharedGroups,
-	);
+	const { sharedGroups, haveMoreSharedGroups, isLoading, status, error } =
+		useAppSelector((state) => state.sharedGroups);
 	const groups = useAppSelector(selectGroup);
 
 	const [showAddModal, setShowModal] = useState(false);
@@ -117,10 +116,12 @@ const SharedGroupsScreen = () => {
 				group: {
 					groupId: selectedGroup.id,
 					title: sharedGroupTitle || "Shared Group Title",
-					createdAt: new Date()
+					createdAt: new Date(),
 				},
 			};
-			dispatch(enqueueOrDispatch(addSharedGroup, addStateSharedGroup, sharedGroupData));
+			dispatch(
+				enqueueOrDispatch(addSharedGroup, addStateSharedGroup, sharedGroupData),
+			);
 		}
 	};
 
@@ -132,7 +133,6 @@ const SharedGroupsScreen = () => {
 				text2: error,
 			});
 		}
-
 	}, [error, status]);
 
 	const renderItem = ({ item }: { item: ISharedGroup }) => (
@@ -195,7 +195,15 @@ const SharedGroupsScreen = () => {
 			</Pressable>
 			{item?.user?.id === user?.id && (
 				<Pressable
-					onPress={() => dispatch(enqueueOrDispatch(removeSharedGroup, removeStateSharedGroup, item.id))}
+					onPress={() =>
+						dispatch(
+							enqueueOrDispatch(
+								removeSharedGroup,
+								removeStateSharedGroup,
+								item.id,
+							),
+						)
+					}
 				>
 					<Feather name="trash" color={colors.primary} size={30} />
 				</Pressable>

@@ -33,7 +33,15 @@ export type RootState = ReturnType<typeof rootReducer>;
 const persisConfig = {
 	key: "root",
 	storage: AsyncStorage,
-	whitelist: ["user", "groups", "cards", "results", "offlineQueue", "network", "sharedGroups"],
+	whitelist: [
+		"user",
+		"groups",
+		"cards",
+		"results",
+		"offlineQueue",
+		"network",
+		"sharedGroups",
+	],
 };
 
 const persistedReducer = persistReducer(persisConfig, rootReducer);

@@ -3,9 +3,9 @@ import type {
 	ICard,
 	UpdateCardRequst,
 } from "@/common/enums/types/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
 import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getCards = createAppAsyncThunk(
 	"card/get-cards",
@@ -24,15 +24,17 @@ export const getCardsStorage = createAppAsyncThunk(
 			return null;
 		}
 		const cards = JSON.parse(JSON.parse(storage).cards).globalCards;
-		const filteredCards = cards.filter((card: ICard) => card.groupId === groupId);
+		const filteredCards = cards.filter(
+			(card: ICard) => card.groupId === groupId,
+		);
 
 		return filteredCards;
-	}
-)
+	},
+);
 
 export const addCard = createAppAsyncThunk(
 	"card/add-card",
-	async({ card, tempId }: { card: AddCardRequest; tempId: string }) => {
+	async ({ card, tempId }: { card: AddCardRequest; tempId: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.post("/cards", card);
 		return { card: response.data, tempId };
@@ -41,9 +43,11 @@ export const addCard = createAppAsyncThunk(
 
 export const addManyCards = createAppAsyncThunk(
 	"card/add-many",
-	async (data: { cards: AddCardRequest[];  tempId: string }) => {
+	async (data: { cards: AddCardRequest[]; tempId: string }) => {
 		const axiosInstance = await createAuthorizedInstance();
-		const response = await axiosInstance.post("/cards/many", {cards: data.cards });
+		const response = await axiosInstance.post("/cards/many", {
+			cards: data.cards,
+		});
 		return { cards: response.data, tempId: data };
 	},
 );

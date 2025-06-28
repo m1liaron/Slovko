@@ -4,9 +4,9 @@ import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
 import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
-import {
-	pickImage,
-} from "@/utils/utils";
+import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
+import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
+import { pickImage } from "@/utils/utils";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/native";
@@ -31,6 +31,7 @@ import {
 } from "react-native";
 import Toast from "react-native-toast-message";
 import Fontisto from "react-native-vector-icons/Fontisto";
+import { v4 as uuid } from "uuid";
 import * as XLSX from "xlsx";
 import AddButton from "../../../common/components/AddButton/AddButton";
 import AddInput from "../../../common/components/AddInput/AddInput";
@@ -50,13 +51,10 @@ import {
 import DefaultModal from "../../DefaultModal/DefaultModal";
 import CardItem from "../CardItem/CardItem";
 import styles from "./CardList.styles";
-import { getCardsStorage } from "@/redux/cardReducer/cardThunk";
-import { v4 as uuid } from "uuid";
-import { convertDeviceImage } from "@/utils/images/convertDeviceImage";
 
-import { addManyCards } from "@/redux/cardReducer/cardThunk";
+import { type AddCardRequest, ICard } from "@/common/enums/types/card.type";
 import { addStateManyCards } from "@/redux/cardReducer/cardSlice";
-import { AddCardRequest, ICard } from "@/common/enums/types/card.type";
+import { addManyCards } from "@/redux/cardReducer/cardThunk";
 import pLimit from "p-limit";
 
 const BATCH_SIZE = 10;
@@ -79,9 +77,12 @@ const CardList = ({ groupId }: CardListProps) => {
 		theme: { colors },
 	} = useAppTheme();
 	const { group } = useAppSelector((state) => state.groups);
-	const { cards = [], filteredCards, error, status } = useAppSelector(
-		(state) => state.cards,
-	);
+	const {
+		cards = [],
+		filteredCards,
+		error,
+		status,
+	} = useAppSelector((state) => state.cards);
 	const dispatch = useAppDispatch();
 	const navigation = useNavigation<StackNavigation>();
 
@@ -98,7 +99,6 @@ const CardList = ({ groupId }: CardListProps) => {
 	const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
 		cards?.length || 2,
 	);
-
 
 	useEffect(() => {
 		setWordsRangeNumber(cards?.length);
@@ -315,31 +315,38 @@ const CardList = ({ groupId }: CardListProps) => {
 	};
 
 	useEffect(() => {
-		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId} ));
+		dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId }));
 	}, [group, groupId]);
 
 	async function addCardsInBatches(cards: AddCardRequest[]) {
 		// break into batches of BATCH_SIZE
 		const batches: AddCardRequest[][] = [];
 		for (let i = 0; i < cards.length; i += BATCH_SIZE) {
-		  batches.push(cards.slice(i, i + BATCH_SIZE));
+			batches.push(cards.slice(i, i + BATCH_SIZE));
 		}
-	  
+
 		const limit = pLimit(CONCURRENCY);
-	  
+
 		// schedule each batch through the limiter
 		await Promise.all(
-		  batches.map(batch => limit(async () => {
-			// you could either POST to a new bulk endpoint (see below)
-			  // or send each item in the batch sequentially:
-			  await dispatch(enqueueOrDispatch(addManyCards, addStateManyCards, { cards: batch, tempId: uuid() }));
-		  }))
+			batches.map((batch) =>
+				limit(async () => {
+					// you could either POST to a new bulk endpoint (see below)
+					// or send each item in the batch sequentially:
+					await dispatch(
+						enqueueOrDispatch(addManyCards, addStateManyCards, {
+							cards: batch,
+							tempId: uuid(),
+						}),
+					);
+				}),
+			),
 		);
-	  }
+	}
 
 	const onSaveCard = async () => {
 		const finalImageUri = await convertDeviceImage(imageUri);
-		
+
 		function validateWord(word: string) {
 			const cleanedWord = word.replace(/[^A-Za-z0-9\s]/g, "");
 			const formatWord = cleanedWord.length <= 0 ? word : cleanedWord;
@@ -361,7 +368,10 @@ const CardList = ({ groupId }: CardListProps) => {
 
 		if (Object.keys(valueWords)?.length > 0) {
 			const payloads = Object.entries(valueWords).map(([w, t]) => ({
- 				word: validateWord(w), translateWord: t, imageUri: '', groupId 
+				word: validateWord(w),
+				translateWord: t,
+				imageUri: "",
+				groupId,
 			}));
 			await addCardsInBatches(payloads);
 
@@ -379,14 +389,16 @@ const CardList = ({ groupId }: CardListProps) => {
 					translateWord: validatedAnswer,
 					imageUri: finalImageUri || "",
 					groupId,
-				}
+				},
 			};
 
-			dispatch(enqueueOrDispatch(addCard, addStateCard, cardData)).catch((err: any) => {
-				if (err instanceof Error) {
-					console.log(err);
-				}
-			});
+			dispatch(enqueueOrDispatch(addCard, addStateCard, cardData)).catch(
+				(err: any) => {
+					if (err instanceof Error) {
+						console.log(err);
+					}
+				},
+			);
 
 			setValue("");
 			setAnswerWord("");

@@ -1,15 +1,15 @@
-import { AppDispatch, RootState } from "@/redux/store";
-import { PersistState } from "redux-persist";
+import type { AppDispatch, RootState } from "@/redux/store";
+import type { PersistState } from "redux-persist";
 
 type RejectValue = {
-    status: number;
-    message?: string;
+	status: number;
+	message?: string;
 };
 
 type AsyncThunkConfig = {
-    state: RootState | PersistState;
-    dispatch: AppDispatch;
-    rejectWithValue: RejectValue;
+	state: RootState | PersistState;
+	dispatch: AppDispatch;
+	rejectWithValue: RejectValue;
 };
 
-export { type AsyncThunkConfig };
+export type { AsyncThunkConfig };

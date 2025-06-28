@@ -1,4 +1,5 @@
 import appLogo from "@/assets/images/favicon.png";
+import { useLanguage } from "@/contexts/LanguageProvider";
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
@@ -32,7 +33,6 @@ import {
 	scheduleNotification,
 } from "../../utils/notifications";
 import styles from "./MainScreen.styles";
-import { useLanguage } from "@/contexts/LanguageProvider";
 
 const MainScreen = () => {
 	useLanguage();
@@ -107,7 +107,7 @@ const MainScreen = () => {
 
 	useEffect(() => {
 		dispatch(enqueueOrDispatch(getRepeatedCards, {}));
-	}, []);
+	}, [dispatch]);
 
 	const daysSince = useCallback((dateString: string) => {
 		const targetDate = new Date(dateString).getTime();

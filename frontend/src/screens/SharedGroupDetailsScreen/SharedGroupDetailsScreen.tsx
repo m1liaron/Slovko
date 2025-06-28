@@ -8,6 +8,7 @@ import { formatDMTDate } from "@/utils/utils";
 import type { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect } from "react";
 import { FlatList, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 import PressableButton from "../../common/components/PressableButton/PressableButton";
 import ThemeBackground from "../../common/components/ThemeBackground/Themebackground";
 import BackButton from "../../components/BackButton/BackButton";
@@ -17,7 +18,6 @@ import {
 	getSharedGroup,
 } from "../../redux/sharedGroupReducer/sharedGroupSlice";
 import styles from "./SharedGroupDetailsScreen.styles";
-import Toast from "react-native-toast-message";
 
 /**
  * @param route { object: { params }}
@@ -41,25 +41,30 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 	useEffect(() => {
 		dispatch(enqueueOrDispatch(getSharedGroup, sharedGroupId));
 	}, [dispatch, sharedGroupId]);
-	
+
 	const handleCopySharedGroup = async () => {
-		const action = await dispatch(enqueueOrDispatch(copySharedGroup, sharedGroupId));
-	  
+		const action = await dispatch(
+			enqueueOrDispatch(copySharedGroup, sharedGroupId),
+		);
+
 		if (copySharedGroup.fulfilled.match(action)) {
-		  Toast.show({ type: "success", text1: "Copied!", text2: "Group copied ✓" });
-		}
-		else if (copySharedGroup.rejected.match(action)) {
+			Toast.show({
+				type: "success",
+				text1: "Copied!",
+				text2: "Group copied ✓",
+			});
+		} else if (copySharedGroup.rejected.match(action)) {
 			Toast.show({
 				type: "error",
 				text1: "Error",
 				text2: action.payload?.message ?? "Unknown error",
-			  });
+			});
 		}
-	  };
+	};
 
 	return (
 		<ThemeBackground>
-			<View style={{zIndex: 100 }}>
+			<View style={{ zIndex: 100 }}>
 				<Toast />
 			</View>
 

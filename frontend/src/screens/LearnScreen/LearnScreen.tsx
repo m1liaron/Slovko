@@ -32,7 +32,10 @@ import {
 	updateCardsAfterLearn,
 } from "../../redux/cardReducer/cardSlice";
 import { selectGroup } from "../../redux/groupReducer/groupSlice";
-import { addStateResult, saveResults } from "../../redux/resultReducer/resultSlice";
+import {
+	addStateResult,
+	saveResults,
+} from "../../redux/resultReducer/resultSlice";
 import { updateUserStreak } from "../../redux/userReducer/userSlice";
 import { formatTime } from "../../utils/formatTime";
 

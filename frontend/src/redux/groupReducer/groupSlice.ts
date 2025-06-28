@@ -6,6 +6,7 @@ import {
 	isPending,
 	isRejected,
 } from "@reduxjs/toolkit";
+import { v4 as uuid } from "uuid";
 import {
 	DataStatus,
 	type IDataStatus,
@@ -19,7 +20,6 @@ import {
 	removeGroup,
 	updateGroup,
 } from "./groupThunk";
-import { v4 as uuid } from "uuid";
 
 interface InitialState {
 	groups: IGroup[];
@@ -55,14 +55,16 @@ const groupSlice = createSlice({
 	initialState,
 	reducers: {
 		addStateGroup: (state, action) => {
-			const existinGroup = state.groups.find(group => group.title === action.payload.title);
+			const existinGroup = state.groups.find(
+				(group) => group.title === action.payload.title,
+			);
 			if (existinGroup) {
-				throw new Error("Group with this name already exist")
+				throw new Error("Group with this name already exist");
 			}
 			const newGroup = {
 				id: uuid(),
-				...action.payload
-			}
+				...action.payload,
+			};
 			state.groups.push(newGroup);
 		},
 		updateStateGroup: handleUpdateGroup,

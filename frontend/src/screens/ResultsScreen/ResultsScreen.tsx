@@ -1,5 +1,6 @@
 import ThemeText from "@/common/components/ThemeText/ThemeText";
 import type { IResult } from "@/common/enums/types/result.type";
+import { useLanguage } from "@/contexts/LanguageProvider";
 import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
 import { i18n } from "@/localization/i18n";
@@ -25,7 +26,6 @@ import {
 	sortResults,
 } from "../../redux/resultReducer/resultSlice";
 import styles from "./ResultsScreen.styles";
-import { useLanguage } from "@/contexts/LanguageProvider";
 
 type GroupedResults = {
 	[date: string]: IResult[];

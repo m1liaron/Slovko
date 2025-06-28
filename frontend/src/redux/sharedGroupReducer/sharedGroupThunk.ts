@@ -1,5 +1,5 @@
-import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 import { createAuthorizedInstance } from "../../utils/createAuthorizedInstance";
+import { createAppAsyncThunk } from "../services/createAppAsyncThunk";
 
 export const getAllSharedGroups = createAppAsyncThunk(
 	"sharedGroup/getAll",
@@ -12,7 +12,10 @@ export const getAllSharedGroups = createAppAsyncThunk(
 
 export const addSharedGroup = createAppAsyncThunk(
 	"sharedGroup/add",
-	async ({ tempId, group }: { tempId: string; group: { groupId: string; title: string } }) => {
+	async ({
+		tempId,
+		group,
+	}: { tempId: string; group: { groupId: string; title: string } }) => {
 		const axiosInstance = await createAuthorizedInstance();
 		const response = await axiosInstance.post("/sharedGroups", group);
 		return { tempId, group: response.data };

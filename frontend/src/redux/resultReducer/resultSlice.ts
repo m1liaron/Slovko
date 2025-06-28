@@ -134,7 +134,8 @@ const resultSlice = createSlice({
 	},
 });
 
-export const { addStateResult, filterResults, sortResults, resetResults } = resultSlice.actions;
+export const { addStateResult, filterResults, sortResults, resetResults } =
+	resultSlice.actions;
 export const selectResult = (state: RootState) => state.results;
 export {
 	saveResults,

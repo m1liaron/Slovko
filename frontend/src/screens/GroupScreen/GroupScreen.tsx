@@ -6,6 +6,7 @@ import type {
 	RootStackParamList,
 	StackNavigation,
 } from "@/navigation/ProtectedRoute/ProtectedRoute";
+import { getGroupStorage } from "@/redux/groupReducer/groupThunk";
 import type { RootState } from "@/redux/store";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import { RouteProp, useNavigation } from "@react-navigation/native";
@@ -33,7 +34,6 @@ import {
 	updateGroup,
 	updateStateGroup,
 } from "../../redux/groupReducer/groupSlice";
-import { getGroupStorage } from "@/redux/groupReducer/groupThunk";
 
 type GroupScreenProps = StackScreenProps<
 	RootStackParamList,
@@ -61,9 +61,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
 	useEffect(() => {
 		if (!group || group.id !== groupId) {
-			dispatch(enqueueOrDispatch(getGroupStorage, getGroup, { groupId} ));
+			dispatch(enqueueOrDispatch(getGroupStorage, getGroup, { groupId }));
 		}
-	}, [group, groupId]);
+	}, [group, groupId, dispatch]);
 
 	const statusCardsButtons = useMemo(() => {
 		if (!group) return [];
@@ -114,7 +114,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 			return console.error("Provide title");
 		}
 		dispatch(
-			enqueueOrDispatch(updateGroup, updateStateGroup, { id: groupId, title: groupTitle }),
+			enqueueOrDispatch(updateGroup, updateStateGroup, {
+				id: groupId,
+				title: groupTitle,
+			}),
 		);
 	};
 
@@ -147,7 +150,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 					/>
 				</View>
 				<Pressable
-					onPress={() => dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId))}
+					onPress={() =>
+						dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId))
+					}
 				>
 					<Entypo name="trash" size={30} color={colors.iconColor} />
 				</Pressable>
