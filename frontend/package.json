@@ -2,6 +2,15 @@
   "name": "flashcards",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -11,7 +20,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "check": "npx @biomejs/biome check --write ./src"
+    "check": "npx @biomejs/biome check --write ./src",
+    "prepare": "husky"
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
@@ -81,6 +91,7 @@
     "eslint": "^9.20.1",
     "eslint-plugin-react": "^7.37.4",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
     "prettier": "^3.5.0",
     "typescript": "^5.3.3"
   },
