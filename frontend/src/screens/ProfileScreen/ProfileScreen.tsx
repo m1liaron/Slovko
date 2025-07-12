@@ -114,8 +114,7 @@ export default function ProfileScreen() {
 			</ThemeText>
 
 			<View>
-				{user ? (
-					<View>
+				<View>
 						{!isEditing ? (
 							<View style={{ alignSelf: "center" }}>
 								<Image
@@ -134,253 +133,252 @@ export default function ProfileScreen() {
 								/>
 							</Pressable>
 						)}
-						{!isEditing && (
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "center",
-									alignItems: "center",
-									marginTop: 10,
-									gap: 10,
-								}}
-							>
-								<ThemeText style={styles.title}>{user.name}</ThemeText>
+					{user ? (
+						<View>
+							{!isEditing && (
 								<View
 									style={{
 										flexDirection: "row",
+										justifyContent: "center",
 										alignItems: "center",
-										gap: 5,
+										marginTop: 10,
+										gap: 10,
 									}}
 								>
+									<ThemeText style={styles.title}>{user.name}</ThemeText>
 									<View
 										style={{
-											padding: 10,
-											backgroundColor: theme.colors.primary,
-											alignSelf: "center",
-											borderRadius: 10,
+											flexDirection: "row",
+											alignItems: "center",
+											gap: 5,
 										}}
 									>
-										<Text style={{ color: theme.colors.lightBackground }}>
-											{user.points}
-										</Text>
+										<View
+											style={{
+												padding: 10,
+												backgroundColor: theme.colors.primary,
+												alignSelf: "center",
+												borderRadius: 10,
+											}}
+										>
+											<Text style={{ color: theme.colors.lightBackground }}>
+												{user.points}
+											</Text>
+										</View>
+										<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 									</View>
-									<ThemeText>{i18n.t("profileScreen.points")}</ThemeText>
 								</View>
-							</View>
-						)}
-						<Pressable onPress={onEditInfo} style={{ alignSelf: "flex-end" }}>
-							<Text style={styles.editTitle}>
-								{i18n.t("profileScreen.edit")}
-							</Text>
-						</Pressable>
-						{!isEditing && (
-							<ThemeText style={styles.textInfo}>
-								{i18n.t("profileScreen.personalInfo")}
-							</ThemeText>
-						)}
-						{isEditing && (
-							<View>
-								<Text style={styles.keyName}>
-									{i18n.t("profileScreen.name")}
+							)}
+							<Pressable onPress={onEditInfo} style={{ alignSelf: "flex-end" }}>
+								<Text style={styles.editTitle}>
+									{i18n.t("profileScreen.edit")}
 								</Text>
-								<View
-									style={[
-										styles.editInputContainer,
-										{ backgroundColor: colors.lightBackground },
-									]}
-								>
-									<MaterialIcons
-										name="supervised-user-circle"
-										size={35}
-										color={colors.iconColor}
-									/>
-									<TextInput
+							</Pressable>
+							{!isEditing && (
+								<ThemeText style={styles.textInfo}>
+									{i18n.t("profileScreen.personalInfo")}
+								</ThemeText>
+							)}
+							{isEditing && (
+								<View>
+									<Text style={styles.keyName}>
+										{i18n.t("profileScreen.name")}
+									</Text>
+									<View
 										style={[
-											styles.textInputStyle,
-											{
-												color: colors.primary,
-											},
+											styles.editInputContainer,
+											{ backgroundColor: colors.lightBackground },
 										]}
-										value={userName}
-										onChangeText={(text) => setUserName(text)}
-									/>
+									>
+										<MaterialIcons
+											name="supervised-user-circle"
+											size={35}
+											color={colors.iconColor}
+										/>
+										<TextInput
+											style={[
+												styles.textInputStyle,
+												{
+													color: colors.primary,
+												},
+											]}
+											value={userName}
+											onChangeText={(text) => setUserName(text)}
+										/>
+									</View>
 								</View>
-							</View>
-						)}
+							)}
 
-						{!isEditing ? (
-							<>
-								<View
-									style={[
-										styles.infoItem,
-										{ backgroundColor: colors.lightBackground },
-									]}
-								>
-									<View style={styles.flex}>
+							{!isEditing ? (
+								<>
+									<View
+										style={[
+											styles.infoItem,
+											{ backgroundColor: colors.lightBackground },
+										]}
+									>
+										<View style={styles.flex}>
+											<MaterialIcons
+												name="email"
+												size={35}
+												color={colors.iconColor}
+											/>
+											<ThemeText style={styles.keyName}>
+												{i18n.t("profileScreen.email")}
+											</ThemeText>
+										</View>
+										<ThemeText style={styles.userInfoText}>
+											{user.email}
+										</ThemeText>
+									</View>
+								</>
+							) : (
+								<>
+									<Text style={styles.keyName}>
+										{i18n.t("profileScreen.email")}
+									</Text>
+									<View
+										style={[
+											styles.editInputContainer,
+											{ backgroundColor: colors.lightBackground },
+										]}
+									>
 										<MaterialIcons
 											name="email"
 											size={35}
 											color={colors.iconColor}
 										/>
-										<ThemeText style={styles.keyName}>
-											{i18n.t("profileScreen.email")}
-										</ThemeText>
+										<TextInput
+											style={[styles.textInputStyle, { color: colors.primary }]}
+											value={userEmail}
+											onChangeText={(text) => setUserEmail(text)}
+										/>
 									</View>
-									<ThemeText style={styles.userInfoText}>
-										{user.email}
-									</ThemeText>
-								</View>
-							</>
-						) : (
-							<>
-								<Text style={styles.keyName}>
-									{i18n.t("profileScreen.email")}
-								</Text>
+								</>
+							)}
+						</View>
+					) : <></>}
+						
+					{!isEditing ? (
+						<View>
+							<ThemeText style={styles.textInfo}>
+								{i18n.t("profileScreen.interaction")}
+							</ThemeText>
+							<Pressable
+								style={[
+									styles.infoItem,
+									{ backgroundColor: colors.lightBackground },
+								]}
+								onPress={handleLogout}
+							>
 								<View
-									style={[
-										styles.editInputContainer,
-										{ backgroundColor: colors.lightBackground },
-									]}
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										gap: 10,
+									}}
 								>
 									<MaterialIcons
-										name="email"
+										name="exit-to-app"
 										size={35}
 										color={colors.iconColor}
 									/>
-									<TextInput
-										style={[styles.textInputStyle, { color: colors.primary }]}
-										value={userEmail}
-										onChangeText={(text) => setUserEmail(text)}
-									/>
+									<ThemeText style={styles.keyName}>
+										{i18n.t("profileScreen.logout")}
+									</ThemeText>
 								</View>
-							</>
-						)}
+								<AntDesign
+									name="arrowright"
+									size={35}
+									color={colors.iconColor}
+								/>
+							</Pressable>
 
-						{!isEditing ? (
-							<View>
-								<ThemeText style={styles.textInfo}>
-									{i18n.t("profileScreen.interaction")}
-								</ThemeText>
-								<Pressable
-									style={[
-										styles.infoItem,
-										{ backgroundColor: colors.lightBackground },
-									]}
-									onPress={handleLogout}
-								>
-									<View
-										style={{
-											flexDirection: "row",
-											alignItems: "center",
-											gap: 10,
-										}}
-									>
-										<MaterialIcons
-											name="exit-to-app"
-											size={35}
-											color={colors.iconColor}
-										/>
-										<ThemeText style={styles.keyName}>
-											{i18n.t("profileScreen.logout")}
-										</ThemeText>
-									</View>
-									<AntDesign
-										name="arrowright"
-										size={35}
-										color={colors.iconColor}
-									/>
-								</Pressable>
-
+							<View
+								style={[
+									styles.infoItem,
+									{ backgroundColor: colors.lightBackground },
+								]}
+							>
 								<View
-									style={[
-										styles.infoItem,
-										{ backgroundColor: colors.lightBackground },
-									]}
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										gap: 10,
+									}}
 								>
-									<View
-										style={{
-											flexDirection: "row",
-											alignItems: "center",
-											gap: 10,
-										}}
-									>
-										{isThemeDark ? (
-											<Feather name="moon" size={35} color={colors.iconColor} />
-										) : (
-											<Feather name="sun" size={35} color={colors.iconColor} />
-										)}
-										<ThemeText style={styles.keyName}>
-											{i18n.t("profileScreen.changeTheme")}
-										</ThemeText>
-									</View>
-									<Switch
-										value={isThemeDark}
-										onValueChange={changeTheme}
-										trackColor={{
-											false: colors.background,
-											true: colors.primary,
-										}}
-										thumbColor={
-											isThemeDark ? colors.primary : colors.lightBackground
-										}
-										ios_backgroundColor={colors.lightBackground}
-										style={{
-											transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
-										}}
-									/>
+									{isThemeDark ? (
+										<Feather name="moon" size={35} color={colors.iconColor} />
+									) : (
+										<Feather name="sun" size={35} color={colors.iconColor} />
+									)}
+									<ThemeText style={styles.keyName}>
+										{i18n.t("profileScreen.changeTheme")}
+									</ThemeText>
 								</View>
-
-								<View
-									style={[
-										styles.infoItem,
-										{ backgroundColor: colors.lightBackground },
-									]}
-								>
-									<View
-										style={{
-											flexDirection: "row",
-											alignItems: "center",
-											gap: 10,
-										}}
-									>
-										<ThemeText>
-											{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}
-										</ThemeText>
-										<ThemeText style={styles.keyName}>
-											{i18n.t("profileScreen.changeLanguage")}
-										</ThemeText>
-									</View>
-									<Switch
-										value={language === "uk"}
-										onValueChange={toggleLanguage}
-										trackColor={{
-											false: colors.background,
-											true: colors.primary,
-										}}
-										thumbColor={
-											language === "uk"
-												? colors.primary
-												: colors.lightBackground
-										}
-										ios_backgroundColor={colors.lightBackground}
-										style={{
-											transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
-										}}
-									/>
-								</View>
+								<Switch
+									value={isThemeDark}
+									onValueChange={changeTheme}
+									trackColor={{
+										false: colors.background,
+										true: colors.primary,
+									}}
+									thumbColor={
+										isThemeDark ? colors.primary : colors.lightBackground
+									}
+									ios_backgroundColor={colors.lightBackground}
+									style={{
+										transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+									}}
+								/>
 							</View>
-						) : (
-							<PressableButton
-								text={i18n.t("profileScreen.saveChanges")}
-								onPress={handleUpdateUser}
-							/>
-						)}
-					</View>
-				) : (
-					<View>
-						<ThemeText>{i18n.t("profileScreen.noUserInfo")}</ThemeText>
-					</View>
-				)}
+
+							<View
+								style={[
+									styles.infoItem,
+									{ backgroundColor: colors.lightBackground },
+								]}
+							>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										gap: 10,
+									}}
+								>
+									<ThemeText>
+										{language === "en" ? "🇬🇧 EN" : "🇺🇦 UK"}
+									</ThemeText>
+									<ThemeText style={styles.keyName}>
+										{i18n.t("profileScreen.changeLanguage")}
+									</ThemeText>
+								</View>
+								<Switch
+									value={language === "uk"}
+									onValueChange={toggleLanguage}
+									trackColor={{
+										false: colors.background,
+										true: colors.primary,
+									}}
+									thumbColor={
+										language === "uk"
+											? colors.primary
+											: colors.lightBackground
+									}
+									ios_backgroundColor={colors.lightBackground}
+									style={{
+										transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+									}}
+								/>
+							</View>
+						</View>
+					) : (
+						<PressableButton
+							text={i18n.t("profileScreen.saveChanges")}
+							onPress={handleUpdateUser}
+						/>
+					)}
+				</View>
 			</View>
 		</ThemeBackground>
 	);
