@@ -4,6 +4,7 @@ import type { ActionCreatorWithPayload, AsyncThunk } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { persistOfflineQueue } from "./persistOfflineQueue";
 
+
 // Updated type to match AsyncThunk signature
 type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
 	Returned,
