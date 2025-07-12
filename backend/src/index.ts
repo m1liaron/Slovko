@@ -14,6 +14,7 @@ import {
 } from "./routes/routes";
 import { authMiddleware } from "./middlewares/authenticationMiddleware";
 import { initializeLogger } from "./middlewares/initializeLogger";
+import { validateEnvVariables } from "./helpers/db";
 
 const app: Application = express();
 
@@ -27,6 +28,7 @@ app.use("/groups", authMiddleware, groupRoute);
 app.use("/results", authMiddleware, resultRoute);
 app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
 
+
 const key = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3-key.pem"));
 const cert = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3.pem"));
 
@@ -36,6 +38,7 @@ const port = process.env.PORT || 3000;
 
 const start = async () => {
 	try {
+		validateEnvVariables();
 		await connectDB();
 		console.log("Database connected, attempting to sync models...");
 		await sequelize.sync({ alter: true });
