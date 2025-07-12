@@ -1,10 +1,10 @@
-const User = require("../models/User");
-const { Streak } = require("../models/models");
-const { StatusCodes } = require("http-status-codes");
-const bcrypt = require("bcrypt");
-const { Op } = require("sequelize");
+import User from "../models/User";
+import { Streak } from "../models/models";
+import { StatusCodes } from "http-status-codes";
+import bcrypt from "bcrypt";
+import { Op } from "sequelize";
 
-const register = async (req, res) => {
+const register = async (req: Request, res: Response) => {
 	try {
 		const { email } = req.body;
 		const findUser = await User.findOne({ where: { email } });
@@ -26,7 +26,7 @@ const register = async (req, res) => {
 	}
 };
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response) => {
 	try {
 		const { email, password: requestPassword } = req.body;
 		console.log(req.body)
@@ -66,7 +66,7 @@ const login = async (req, res) => {
 	}
 };
 
-const getUser = async (req, res) => {
+const getUser = async (req: Request, res: Response) => {
 	try {
 		const userId = req.user.id;
 		const user = await User.findOne({
@@ -93,12 +93,12 @@ const getUser = async (req, res) => {
 
 
 			if (timeGone && !user.frozen || goneTwoOrMoreDays) {
-					user.streak = 1;
-					await Streak.create({
-						date: new Date(),
-						frozen: false,
-						userId: userId,
-					});
+				user.streak = 1;
+				await Streak.create({
+					date: new Date(),
+					frozen: false,
+					userId: userId,
+				});
 			} else if (timeGone && user.frozen) {
 				const yesterday = new Date();
 				yesterday.setDate(yesterday.getDate() - 1);
@@ -124,7 +124,7 @@ const getUser = async (req, res) => {
 	}
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req: Request, res: Response) => {
 	const {
 		params: { userId },
 		body,
@@ -156,7 +156,7 @@ const updateUser = async (req, res) => {
 	}
 };
 
-const updateUserStreak = async (req, res) => {
+const updateUserStreak = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.user;
 		const user = await User.findByPk(id);
@@ -214,7 +214,7 @@ const updateUserStreak = async (req, res) => {
 	}
 };
 
-const getUserStreakDates = async (req, res) => {
+const getUserStreakDates = async (req: Request, res: Response) => {
 	const { month, year } = req.query;
 	try {
 		if (!month || !year) {
@@ -253,7 +253,7 @@ const getUserStreakDates = async (req, res) => {
 	}
 };
 
-const buyFreeze = async (req, res) => {
+const buyFreeze = async (req: Request, res: Response) => {
 	// body scheme { froze: 100 }, 100 is points cost
 	try {
 		const {
@@ -291,7 +291,7 @@ const buyFreeze = async (req, res) => {
 	}
 };
 
-module.exports = {
+export {
 	register,
 	getUser,
 	login,

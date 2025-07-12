@@ -5,7 +5,7 @@ const {
 const { Result, ResultMode, WordResult, User } = require("../models/models");
 const { StatusCodes } = require("http-status-codes");
 
-const getResultsDetails = async (req, res) => {
+const getResultsDetails = async (req: Request, res: Response) => {
 	try {
 		const results = await Result.findAll({
 			where: { userId: req.user.id },
@@ -31,7 +31,7 @@ const getResultsDetails = async (req, res) => {
 	}
 };
 
-const getResultsStatistics = async (req, res) => {
+const getResultsStatistics = async (req: Request, res: Response) => {
 	try {
 		const results = await Result.findAll({
 			where: { userId: req.user.id },
@@ -113,7 +113,7 @@ const getResultsStatistics = async (req, res) => {
 	}
 };
 
-const getResults = async (req, res) => {
+const getResults = async (req: Request, res: Response) => {
 	const { year } = req.query;
 
 	try {
@@ -162,7 +162,7 @@ const getResults = async (req, res) => {
 	}
 };
 
-const getResultDetails = async (req, res) => {
+const getResultDetails = async (req: Request, res: Response) => {
 	const { resultId } = req.params;
 	try {
 		const result = await Result.findOne({
@@ -191,7 +191,7 @@ const getResultDetails = async (req, res) => {
 	}
 };
 
-const saveResults = async (req, res) => {
+const saveResults = async (req: Request, res: Response) => {
 	const {
 		body: { title, startedLearn, completionTime, ...data },
 		user: { id },

@@ -9,7 +9,7 @@ import {
 	buyFreeze,
 	getUserStreakDates,
 }  from "../controllers/userController";
-import authMiddleware from "../middlewares/authenticationMiddleware";
+import { authMiddleware } from "../middlewares/authenticationMiddleware";
 
 router.route("/register").post(register);
 router.route("/login").post(login);

@@ -1,12 +1,14 @@
-const Card = require("../models/Card");
-const Image = require("../models/Image");
-const calculateNextReviewDate = require("../helpers/calculateNextReviewDate");
-const { Op } = require("sequelize");
-const { Group } = require("../models/models");
-const { StatusCodes } = require("http-status-codes");
-const { getDictionaryData } = require("../helpers/getDictionaryData");
+import { Request, Response } from "express";
+import { Op } from "sequelize";
+import { StatusCodes } from "http-status-codes";
 
-const getRepeatedCards = async (req, res) => {
+import Card from "../models/Card";
+import Image from "../models/Image";
+import calculateNextReviewDate from "../helpers/calculateNextReviewDate";
+import { Group } from "../models/models";
+import { getDictionaryData } from "../helpers/getDictionaryData";
+
+const getRepeatedCards = async (req: Request, res: Response) => {
 	try {
 		const groups = await Group.findAll({
 			where: {
@@ -46,7 +48,7 @@ const getRepeatedCards = async (req, res) => {
 	}
 };
 
-const getCardsFromIds = async (req, res) => {
+const getCardsFromIds = async (req: Request, res: Response) => {
 	try {
 		const cardsIds = req.body;
 		if (!Array.isArray(cardsIds) || cardsIds.length === 0) {
@@ -72,7 +74,7 @@ const getCardsFromIds = async (req, res) => {
 	}
 };
 
-const getAllCards = async (req, res) => {
+const getAllCards = async (req: Request, res: Response) => {
 	const { groupId } = req.params;
 	try {
 		const cards = await Card.findAll({
@@ -103,7 +105,7 @@ const getAllCards = async (req, res) => {
 	}
 };
 
-const getAllStatusCards = async (req, res) => {
+const getAllStatusCards = async (req: Request, res: Response) => {
 	const { status, groupId } = req.params;
 	try {
 		const cards = await Card.findAll({
@@ -118,7 +120,7 @@ const getAllStatusCards = async (req, res) => {
 	}
 };
 
-const updateCardsAfterReview = async (req, res) => {
+const updateCardsAfterReview = async (req: Request, res: Response) => {
 	try {
 		const cardsIds = req.body;
 		if (!Array.isArray(cardsIds) && cardsIds.length <= 0) {
@@ -167,7 +169,7 @@ const updateCardsAfterReview = async (req, res) => {
 	}
 };
 
-const addCard = async (req, res) => {
+const addCard = async (req: Request, res: Response) => {
 	const { imageUri, ...data } = req.body;
 	try {
 		const findCard = await Card.findOne({
@@ -216,7 +218,7 @@ const addCard = async (req, res) => {
 	}
 };
 
-const addManyCards = async (req, res) => {
+const addManyCards = async (req: Request, res: Response) => {
 	const { cards } = req.body; // [ { word, translateWord, imageUri, groupId }, … ]
   if (!Array.isArray(cards) || !cards.length) {
     return res.status(400).json({ error: "Must provide an array of cards" });
@@ -266,7 +268,7 @@ const addManyCards = async (req, res) => {
   }
 }
 
-const updateCard = async (req, res) => {
+const updateCard = async (req: Request, res: Response) => {
 	try {
 		const cardId = req.params.id;
 		const { groupId } = req.body;
@@ -291,7 +293,7 @@ const updateCard = async (req, res) => {
 	}
 };
 
-const removeCard = async (req, res) => {
+const removeCard = async (req: Request, res: Response) => {
 	try {
 		const cardId = req.params.id;
 		const card = await Card.findOne({
@@ -310,7 +312,7 @@ const removeCard = async (req, res) => {
 	}
 };
 
-module.exports = {
+export {
 	getAllCards,
 	addCard,
 	addManyCards,

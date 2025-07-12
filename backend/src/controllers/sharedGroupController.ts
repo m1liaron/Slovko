@@ -7,7 +7,7 @@ const {
 } = require("../models/models");
 const { StatusCodes } = require('http-status-codes');
 
-const createSharedGroup = async (req, res) => {
+const createSharedGroup = async (req: Request, res: Response) => {
 	const {
 		body: { groupId, title, isAnonymous },
 		user: { id },
@@ -73,7 +73,7 @@ const createSharedGroup = async (req, res) => {
 	}
 };
 
-const getAllSharedGroups = async (req, res) => {
+const getAllSharedGroups = async (req: Request, res: Response) => {
 	try {
 		const {
 			page,
@@ -89,7 +89,7 @@ const getAllSharedGroups = async (req, res) => {
 
 		const pageNumber = Number.parseInt(page, 10) || 1;
 		const itemsPerPage = Number.parseInt(limit, 10) || 5;
-		const skip = (pageNumber - 1 ) * itemsPerPage;
+		const skip = (pageNumber - 1) * itemsPerPage;
 		const filteredSharedGroups = allSharedGroups.slice(skip, skip + itemsPerPage);
 		const haveMoreSharedGroups = skip + itemsPerPage < allSharedGroups.length;
 
@@ -102,7 +102,7 @@ const getAllSharedGroups = async (req, res) => {
 	}
 };
 
-const getSharedGroup = async (req, res) => {
+const getSharedGroup = async (req: Request, res: Response) => {
 	try {
 		const sharedGroup = await SharedGroup.findOne({
 			where: { id: req.params.sharedGroupId },
@@ -127,7 +127,7 @@ const getSharedGroup = async (req, res) => {
 	}
 };
 
-const removeSharedGroup = async (req, res) => {
+const removeSharedGroup = async (req: Request, res: Response) => {
 	try {
 		const sharedId = req.params.sharedGroupId;
 		const sharedGroup = await SharedGroup.findOne({
@@ -154,7 +154,7 @@ const removeSharedGroup = async (req, res) => {
 	}
 };
 
-const copySharedGroup = async (req, res) => {
+const copySharedGroup = async (req: Request, res: Response) => {
 	const { sharedGroupId } = req.params;
 	try {
 		const sharedGroup = await SharedGroup.findOne({
@@ -175,7 +175,7 @@ const copySharedGroup = async (req, res) => {
 				.status(400)
 				.json({ erorr: true, message: "You already have group with this name" });
 			return;
-    	}
+		}
 
 		const newGroup = await Group.create({
 			title: sharedGroup.title,
