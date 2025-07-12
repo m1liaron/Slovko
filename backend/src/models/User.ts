@@ -1,21 +1,50 @@
+import Model, {
+  DataTypes,
+  Optional,
+} from "sequelize";
+
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sequelize } from "../db/sequelize";
-import { DataTypes, Model } from "sequelize";
-require("dotenv").config();
+import dotenv from "dotenv"
+dotenv.config();
 
-class User extends Model {
-  static async hashPassword(password: string) {
+interface UserAttributes {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  image?: string;
+  streak: number;
+  lastReviewAt: Date;
+  points: number;
+  frozen: boolean;
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, "id" | "image" | "streak" | "lastReviewAt" | "points" | "frozen"> { }
+
+class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+  public id!: string;
+  public name!: string;
+  public email!: string;
+  public password!: string;
+  public image?: string;
+  public streak!: number;
+  public lastReviewAt!: Date;
+  public points!: number;
+  public frozen!: boolean;
+
+  async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   }
 
-  async comparePassword(candidatePassword: string) {
+  async comparePassword(candidatePassword: string): Promise<boolean> {
     return await bcrypt.compare(candidatePassword, this.password);
   }
 
-  createJWT() {
+  createJWT(): string {
     return jwt.sign(
       { userId: this.id, name: this.name },
       process.env.JWT_SECRET,
@@ -67,7 +96,7 @@ User.init(
     lastReviewAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Date.now(),
+      defaultValue: () => Date.now(),
     },
     points: {
       type: DataTypes.INTEGER,
@@ -88,7 +117,7 @@ User.init(
   }
 );
 
-User.beforeCreate(async (user) => {
+User.beforeCreate(async (user: User) => {
   if (user.password) {
     user.password = await User.hashPassword(user.password);
   }
