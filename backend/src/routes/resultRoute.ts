@@ -1,15 +1,14 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
 	saveResults,
 	getResults,
 	getResultDetails,
-	getResultsDetails,
 	getResultsStatistics,
-} = require("../controllers/resultsController");
+} from "../controllers/resultsController";
 
 router.route("/statistics").get(getResultsStatistics);
 router.route("/").get(getResults).post(saveResults);
 router.route("/:resultId").get(getResultDetails);
 
-module.exports = router;
+export { router as resultRoute }

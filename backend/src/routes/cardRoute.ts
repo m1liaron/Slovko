@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
 	getAllCards,
 	addCard,
 	removeCard,
@@ -10,7 +10,7 @@ const {
 	getRepeatedCards,
 	getCardsFromIds,
 	addManyCards,
-} = require("../controllers/cardsController");
+} from "../controllers/cardsController";
 
 router.route("/repeated").post(getCardsFromIds);
 router
@@ -23,4 +23,4 @@ router.route("/:groupId?").get(getAllCards);
 router.route("/:groupId/:status").get(getAllStatusCards);
 router.route("/:id").delete(removeCard).patch(updateCard);
 
-module.exports = router;
+export { router as cardRoute }

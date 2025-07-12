@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
 	register,
 	login,
 	getUser,
@@ -8,8 +8,8 @@ const {
 	updateUserStreak,
 	buyFreeze,
 	getUserStreakDates,
-} = require("../controllers/userController");
-const authMiddleware = require("../middlewares/authenticationMiddleware");
+}  from "../controllers/userController";
+import authMiddleware from "../middlewares/authenticationMiddleware";
 
 router.route("/register").post(register);
 router.route("/login").post(login);
@@ -19,4 +19,4 @@ router.get("/streak", authMiddleware, getUserStreakDates);
 router.patch("/streak", authMiddleware, updateUserStreak);
 router.put("/streak/froze", authMiddleware, buyFreeze);
 
-module.exports = router;
+export { router as userRoute }

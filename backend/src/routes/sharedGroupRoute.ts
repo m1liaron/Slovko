@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
 	createSharedGroup,
 	getAllSharedGroups,
 	getSharedGroup,
 	copySharedGroup,
 	removeSharedGroup,
-} = require("../controllers/sharedGroupController");
+} from "../controllers/sharedGroupController";
 
 router.route("/").get(getAllSharedGroups).post(createSharedGroup);
 router
@@ -15,4 +15,4 @@ router
 	.post(copySharedGroup)
 	.delete(removeSharedGroup);
 
-module.exports = router;
+export { router as sharedGroupRoute };
