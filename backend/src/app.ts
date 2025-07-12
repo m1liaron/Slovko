@@ -10,9 +10,9 @@ import {
 	cardRoute,
 	groupRoute,
 	resultRoute,
-	sharedGroup,
+	sharedGroupRoute,
 } from "./routes/routes";
-import authMiddleware from "./middlewares/authenticationMiddleware";
+import { authMiddleware } from "./middlewares/authenticationMiddleware";
 import { initializeLogger } from "./middlewares/initializeLogger";
 
 const app: Application = express();
@@ -25,7 +25,7 @@ app.use("/users", userRoute);
 app.use("/cards", authMiddleware, cardRoute);
 app.use("/groups", authMiddleware, groupRoute);
 app.use("/results", authMiddleware, resultRoute);
-app.use("/sharedGroups", authMiddleware, sharedGroup);
+app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
 
 const key = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3-key.pem"));
 const cert = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3.pem"));

@@ -1,4 +1,4 @@
-const calculateNextReviewDate = (reviewCount) => {
+const calculateNextReviewDate = (reviewCount: number) => {
 	// Define intervals in milliseconds
 	const intervals = [
 		30 * 60 * 1000, // 30 minutes
