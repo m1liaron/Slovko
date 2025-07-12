@@ -1,7 +1,7 @@
-const { sequelize } = require("../db/sequelize");
-const { DataTypes } = require("sequelize");
-const { v4: uuidv4 } = require("uuid");
-const User = require("./User");
+import { sequelize } from "../db/sequelize";
+import { DataTypes } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
+import { User } from "./User";
 
 const Streak = sequelize.define("Streak", {
 	id: {
@@ -28,4 +28,4 @@ const Streak = sequelize.define("Streak", {
 	},
 });
 
-module.exports = Streak;
+export { Streak }

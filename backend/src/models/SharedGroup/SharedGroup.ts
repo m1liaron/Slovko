@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../../db/sequelize");
-const { v4: uuidv4 } = require("uuid");
-const User = require("../User");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../../db/sequelize";
+import { v4 as uuidv4 } from "uuid";
+import { User } from "../User";
 
 const SharedGroup = sequelize.define(
 	"SharedGroup",
@@ -56,4 +56,4 @@ SharedGroup.prototype.toJSON = function () {
 	return values;
 };
 
-module.exports = SharedGroup;
+export { SharedGroup };

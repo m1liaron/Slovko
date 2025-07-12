@@ -1,7 +1,7 @@
-const { sequelize } = require("../../db/sequelize");
-const { DataTypes } = require("sequelize");
-const { v4: uuidv4 } = require("uuid");
-const { Result } = require("../models");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../../db/sequelize";
+import { v4 as uuidv4 } from "uuid";
+import { Result } from "../models";
 
 const ResultMode = sequelize.define(
 	"ResultMode",
@@ -29,4 +29,4 @@ const ResultMode = sequelize.define(
 	},
 );
 
-module.exports = ResultMode;
+export { ResultMode };

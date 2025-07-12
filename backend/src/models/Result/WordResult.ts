@@ -1,7 +1,7 @@
-const { sequelize } = require("../../db/sequelize");
-const { DataTypes } = require("sequelize");
-const { v4: uuidv4 } = require("uuid");
-const { ResultMode } = require("../models");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../../db/sequelize";
+import { v4 as uuidv4 } from "uuid";
+import { ResultMode } from "../models";
 
 const WordResult = sequelize.define(
 	"WordResult",
@@ -38,4 +38,4 @@ const WordResult = sequelize.define(
 	},
 );
 
-module.exports = WordResult;
+export { WordResult };

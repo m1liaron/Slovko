@@ -1,6 +1,6 @@
-const { sequelize } = require("../db/sequelize");
-const { DataTypes } = require("sequelize");
-const { v4: uuidv4 } = require("uuid");
+import { sequelize } from "../db/sequelize";
+import { DataTypes } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
 
 const Image = sequelize.define("Image", {
 	id: {
@@ -14,4 +14,4 @@ const Image = sequelize.define("Image", {
 	},
 });
 
-module.exports = Image;
+export { Image };

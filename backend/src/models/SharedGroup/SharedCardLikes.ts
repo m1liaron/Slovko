@@ -1,7 +1,6 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../../db/sequelize");
-const { v4: uuidv4 } = require("uuid");
-const { User, SharedGroup } = require("../models");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../../db/sequelize";
+import { v4 as uuidv4 } from "uuid";
 
 const SharedCardLikes = sequelize.define(
 	"SharedCardLike",
@@ -34,4 +33,4 @@ const SharedCardLikes = sequelize.define(
 	},
 );
 
-module.exports = SharedCardLikes;
+export { SharedCardLikes };

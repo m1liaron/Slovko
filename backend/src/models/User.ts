@@ -1,17 +1,17 @@
-const { v4: uuidv4 } = require("uuid");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { sequelize } = require("../db/sequelize");
-const { DataTypes, Model } = require("sequelize");
+import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { sequelize } from "../db/sequelize";
+import { DataTypes, Model } from "sequelize";
 require("dotenv").config();
 
 class User extends Model {
-  static async hashPassword(password) {
+  static async hashPassword(password: string) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   }
 
-  async comparePassword(candidatePassword) {
+  async comparePassword(candidatePassword: string) {
     return await bcrypt.compare(candidatePassword, this.password);
   }
 
@@ -94,4 +94,4 @@ User.beforeCreate(async (user) => {
   }
 });
 
-module.exports = User;
+export { User };

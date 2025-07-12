@@ -1,13 +1,13 @@
-const Card = require("./Card");
-const Group = require("./Group");
-const User = require("./User");
-const Streak = require("./Streak");
-const Result = require("./Result/Result");
-const ResultMode = require("./Result/ResultMode");
-const WordResult = require("./Result/WordResult");
-const SharedGroup = require("./SharedGroup/SharedGroup");
-const SharedCard = require("./SharedGroup/SharedCard");
-const SharedCardLikes = require("./SharedGroup/SharedCardLikes");
+import { Card } from "./Card";
+import { Group } from "./Group";
+import { User } from "./User";
+import { Streak } from "./Streak";
+import { Result } from "./Result/Result";
+import { ResultMode } from "./Result/ResultMode";
+import { WordResult } from "./Result/WordResult";
+import { SharedGroup } from "./SharedGroup/SharedGroup";
+import { SharedCard } from "./SharedGroup/SharedCard";
+import { SharedCardLikes } from "./SharedGroup/SharedCardLikes";
 
 // User - Group
 User.hasMany(Group, { foreignKey: "userId", as: "groups" });
@@ -40,7 +40,7 @@ WordResult.belongsTo(ResultMode, {
 	as: "resultMode",
 });
 
-// // SharedGroup - SharedCard
+// SharedGroup - SharedCard
 SharedGroup.hasMany(SharedCard, {
 	foreignKey: "sharedGroupId",
 	as: "sharedCards",
@@ -60,7 +60,7 @@ SharedCardLikes.belongsTo(SharedCard, {
 	as: "sharedCard",
 });
 
-module.exports = {
+export {
 	Card,
 	User,
 	Streak,

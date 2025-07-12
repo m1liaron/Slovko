@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
-const { sequelize } = require("../db/sequelize");
-const Group = require("./Group");
-const Image = require("./Image");
+import { DataTypes } from "sequelize";
+import { sequelize } from "../db/sequelize";
+import { Group } from "./Group";
+import { Image } from "./Image";
 
 const Card = sequelize.define(
 	"Card",
@@ -90,4 +90,4 @@ const Card = sequelize.define(
 Card.belongsTo(Image, { foreignKey: "imageId", as: "image" });
 Image.hasMany(Card, { foreignKey: "imageId" });
 
-module.exports = Card;
+export { Card };
