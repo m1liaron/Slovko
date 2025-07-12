@@ -54,6 +54,13 @@ const ProtectedRoute = () => {
 	}, []);
 
 	useEffect(() => {
+		if (isAuthenticated === false) {
+			setHasToken(false);
+			setIsLoading(false);
+		}
+	}, [isAuthenticated])
+
+	useEffect(() => {
 		if (hasToken && isConnected && !triedGetUserRef.current) {
 			triedGetUserRef.current = true;
 			dispatch(enqueueOrDispatch(getUser));

@@ -35,6 +35,9 @@ const userSlice = createSlice({
 		logout: (state) => {
 			state.isAuthenticated = false;
 			state.user = null;
+			state.streakDates = [];
+			state.message = "";
+			state.status = DataStatus.IDLE;
 			AsyncStorage.removeItem("token");
 		},
 	},
