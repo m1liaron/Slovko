@@ -14,9 +14,11 @@ const {
 } = require("./routes/routes");
 const authMiddleware = require("./middlewares/authenticationMiddleware");
 const path = require("path");
+const { initializeLogger } = require("./middlewares/initializeLogger");
 
 app.use(express.json());
 app.use(cors());
+app.use(initializeLogger);
 
 app.use("/users", userRoute);
 app.use("/cards", authMiddleware, cardRoute);
