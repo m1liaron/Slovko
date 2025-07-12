@@ -50,6 +50,8 @@ const MainScreen = () => {
     0,
   );
 
+  console.log("hello world")
+	
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
       const setupNotifications = async () => {

@@ -1,1 +1,1 @@
-npm run format
+npx run lint-staged
