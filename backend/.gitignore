@@ -1,0 +1,11 @@
+.env
+.env*
+node_modules
+package-lock.json
+.env*.local
+
+
+# Local development certificates
+cert.pem*
+key.pem*
+*.pem
