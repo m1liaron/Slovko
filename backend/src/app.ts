@@ -1,20 +1,21 @@
-const express = require("express");
-const app = express();
-const fs = require("fs");
-const https = require("https");
-const cors = require("cors");
+import express, { Application } from "express";
+import fs from "fs";
+import https from"https";
+import cors from "cors";
+import path from "path";
 
-const { connectDB, sequelize } = require("./db/sequelize");
-const {
+import { connectDB, sequelize } from "./db/sequelize";
+import {
 	userRoute,
 	cardRoute,
 	groupRoute,
 	resultRoute,
 	sharedGroup,
-} = require("./routes/routes");
-const authMiddleware = require("./middlewares/authenticationMiddleware");
-const path = require("path");
-const { initializeLogger } = require("./middlewares/initializeLogger");
+} from "./routes/routes";
+import authMiddleware from "./middlewares/authenticationMiddleware";
+import { initializeLogger } from "./middlewares/initializeLogger";
+
+const app: Application = express();
 
 app.use(express.json());
 app.use(cors());
