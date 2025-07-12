@@ -1,7 +1,7 @@
-const Group = require("../models/Group");
-const { Card } = require("../models/models");
-const { sequelize } = require("../db/sequelize");
-const { StatusCodes } = require('http-status-codes');
+import Group from "../models/Group";
+import { Card } from "../models/models";
+import { sequelize } from "../db/sequelize";
+import { StatusCodes } from 'http-status-codes';
 
 const getAllGroups = async (req: Request, res: Response) => {
 	const userId = req.user.id;
@@ -152,7 +152,7 @@ const removeGroup = async (req: Request, res: Response) => {
 	}
 };
 
-module.exports = {
+export {
 	getAllGroups,
 	getGroup,
 	addGroup,

@@ -1,11 +1,11 @@
-const {
+import {
 	SharedGroup,
 	SharedCard,
 	Group,
 	Card,
 	User,
-} = require("../models/models");
-const { StatusCodes } = require('http-status-codes');
+} from "../models/models";
+import { StatusCodes } from 'http-status-codes';
 
 const createSharedGroup = async (req: Request, res: Response) => {
 	const {
@@ -202,7 +202,7 @@ const copySharedGroup = async (req: Request, res: Response) => {
 	}
 };
 
-module.exports = {
+export {
 	createSharedGroup,
 	getAllSharedGroups,
 	getSharedGroup,

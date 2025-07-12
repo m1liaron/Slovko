@@ -1,9 +1,9 @@
-const { Op } = require("sequelize");
-const {
+import { Op } from "sequelize";
+import {
 	calculateCurMonthAndYearDate,
-} = require("../helpers/calculateCurMonthAndYearDate");
-const { Result, ResultMode, WordResult, User } = require("../models/models");
-const { StatusCodes } = require("http-status-codes");
+} from "../helpers/calculateCurMonthAndYearDate";
+import { Result, ResultMode, WordResult, User } from "../models/models";
+import { StatusCodes } from "http-status-codes";
 
 const getResultsDetails = async (req: Request, res: Response) => {
 	try {
@@ -261,7 +261,7 @@ const saveResults = async (req: Request, res: Response) => {
 	}
 };
 
-module.exports = {
+export {
 	saveResults,
 	getResults,
 	getResultDetails,
