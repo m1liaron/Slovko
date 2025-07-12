@@ -33,6 +33,7 @@ import {
 } from '../../utils/notifications';
 import styles from './MainScreen.styles';
 
+
 const MainScreen = () => {
   useLanguage();
   const dispatch = useAppDispatch();
