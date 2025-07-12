@@ -157,6 +157,7 @@ const MainScreen = () => {
 			? "#2aaef5"
 			: theme.colors.iconColor;
 
+
 	return (
 		<ThemeBackground>
 			<Pressable
