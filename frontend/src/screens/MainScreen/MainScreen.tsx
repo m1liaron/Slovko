@@ -148,16 +148,12 @@ const MainScreen = () => {
 		navigateToLearn();
 	};
 
-	if (!user) {
-		return <ActivityIndicator />;
-	}
-
 	const isStreakFire =
-		new Date(user.lastReviewAt).toDateString() === new Date().toDateString() &&
-		user.streak > 0;
+		new Date(user?.lastReviewAt).toDateString() === new Date().toDateString() &&
+		user?.streak > 0;
 	const streakColor = isStreakFire
 		? "#F5712A"
-		: user.frozen
+		: user?.frozen
 			? "#2aaef5"
 			: theme.colors.iconColor;
 

@@ -34,7 +34,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
 	const dispatch = useAppDispatch();
-	const { isAuthenticated, status, message } = useAppSelector(selectUser);
+	const { isAuthenticated, status, user, message } = useAppSelector(selectUser);
 	const isConnected = useAppSelector((state) => state.network.isConnected);
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -54,16 +54,25 @@ const ProtectedRoute = () => {
 	}, []);
 
 	useEffect(() => {
-		if (isAuthenticated === false) {
+		if (!isAuthenticated || backendOff && !user) {
 			setHasToken(false);
 			setIsLoading(false);
 		}
 	}, [isAuthenticated])
 
 	useEffect(() => {
-		if (hasToken && isConnected && !triedGetUserRef.current) {
+		if (hasToken && isConnected && user && !triedGetUserRef.current) {
 			triedGetUserRef.current = true;
-			dispatch(enqueueOrDispatch(getUser));
+
+			(async () => {
+				try {
+					dispatch(enqueueOrDispatch(getUser));
+				} catch (error) {
+					console.warn("getUser failed or backend offline:", error);
+				} finally {
+					setIsLoading(false);
+				}
+			})()
 		}
 	}, [hasToken, isConnected, dispatch]);
 
@@ -71,9 +80,9 @@ const ProtectedRoute = () => {
 		return <Loading />;
 	}
 
-	const backendOff = status === DataStatus.ERROR && message === "Network Error";
+	const backendOff = status === DataStatus.ERROR;
 
-	if (!isConnected || backendOff || isAuthenticated) {
+	if (!isConnected || backendOff || !user || isAuthenticated) {
 		return (
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
