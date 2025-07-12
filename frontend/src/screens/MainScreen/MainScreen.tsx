@@ -8,7 +8,6 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useCallback } from "react";
 import {
-	ActivityIndicator,
 	FlatList,
 	Image,
 	Linking,
@@ -149,6 +148,7 @@ const MainScreen = () => {
 	};
 
 	const isStreakFire =
+		!user ? false :
 		new Date(user?.lastReviewAt).toDateString() === new Date().toDateString() &&
 		user?.streak > 0;
 	const streakColor = isStreakFire
@@ -169,7 +169,7 @@ const MainScreen = () => {
 				onPress={() => navigate.navigate(AppPath.Streak)}
 			>
 				<FontAwesome6 name="fire-flame-simple" size={30} color={streakColor} />
-				<Text style={{ color: streakColor, fontSize: 35 }}>{user?.streak}</Text>
+				<Text style={{ color: streakColor, fontSize: 35 }}>{user?.streak || 0}</Text>
 			</Pressable>
 
 			<Text style={styles.timePassedText}>

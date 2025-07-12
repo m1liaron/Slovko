@@ -66,7 +66,7 @@ const ProtectedRoute = () => {
 
 			(async () => {
 				try {
-					dispatch(enqueueOrDispatch(getUser));
+					dispatch(enqueueOrDispatch(getUser, () => {}));
 				} catch (error) {
 					console.warn("getUser failed or backend offline:", error);
 				} finally {
