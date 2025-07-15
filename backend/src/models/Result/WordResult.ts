@@ -2,9 +2,25 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { ResultMode } from "../models";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
 
-const WordResult = sequelize.define(
-	"WordResult",
+interface WordResultAttributes extends BaseAttributes {
+	resultModeId: string;
+	word: string;
+	translate: string;
+	mistakesAmount: number;
+}
+
+interface WordResultCreationAttributes extends BaseCreationAttributes<WordResultAttributes> { }
+
+class WordResult extends CustomModal<WordResultAttributes, WordResultCreationAttributes> implements WordResultAttributes {
+	public resultModeId!: string;
+	public word!: string;
+	public translate!: string;
+	public mistakesAmount!: number;
+}
+
+WordResult.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -33,6 +49,8 @@ const WordResult = sequelize.define(
 		},
 	},
 	{
+		sequelize,
+		modelName: "WordResult",
 		tableName: "WordsResult",
 		timestamps: true,
 	},
