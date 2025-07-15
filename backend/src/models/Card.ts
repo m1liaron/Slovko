@@ -12,8 +12,8 @@ interface CardAttributes extends BaseAttributes {
 	status: "To Learn" | "Repeated" | "Know" | "Learned";
 	definition: string;
 	example: string;
-	learnedAt: string;
-	nextReviewAt: string;
+	learnedAt: Date;
+	nextReviewAt: Date;
 	reviewCount: number;
 }
 
@@ -27,8 +27,8 @@ class Card extends CustomModal<CardAttributes, CardCreationAttributes> implement
 	public status!: "To Learn" | "Repeated" | "Know" | "Learned";
 	public definition!: string;
 	public example!: string;
-	public learnedAt!: string;
-	public nextReviewAt!: string;
+	public learnedAt!: Date;
+	public nextReviewAt!: Date;
 	public reviewCount!: number;
 }
 
