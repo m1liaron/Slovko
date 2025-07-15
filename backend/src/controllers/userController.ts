@@ -5,6 +5,7 @@ import { Op } from "sequelize";
 import {User} from "../models/User";
 import { Streak } from "../models/models";
 import { AuthRequest } from "../common/types/AuthRequest";
+import { sendError } from "../helpers";
 
 const register = async (req: Request, res: Response) => {
 	try {
@@ -21,12 +22,7 @@ const register = async (req: Request, res: Response) => {
 		const { password: uselessPassword, ...mainUserData } = user.dataValues;
 		res.status(StatusCodes.CREATED).json({ user: mainUserData, token });
 	} catch (error) {
-		if (error instanceof Error) {
-			res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-				error: true,
-				message: error.message || "Registration failed. Please try again later.",
-			});
-		}
+		sendError(res, error);
 	}
 };
 
@@ -63,12 +59,7 @@ const login = async (req: Request, res: Response) => {
 		const { password: uselessPassword, ...mainUserData } = user;
 		res.status(StatusCodes.OK).json({ user: mainUserData, token });
 	} catch (error) {
-		if (error instanceof Error) {
-			res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-				error: true,
-				message: error.message || "Login failed. Please try again later.",
-			});
-		}
+		sendError(res, error);
 	}
 };
 
@@ -124,11 +115,7 @@ const getUser = async (req: AuthRequest, res: Response) => {
 		const { password, ...mainUserData } = user.dataValues;
 		res.status(200).json({ user: mainUserData });
 	} catch (error) {
-		if (error instanceof Error) {
-			res
-				.status(StatusCodes.INTERNAL_SERVER_ERROR)
-				.json({ error: true, message: error.message || "Internal Server Error" });
-		}
+		sendError(res, error);
 	}
 };
 
@@ -158,11 +145,7 @@ const updateUser = async (req: Request, res: Response) => {
 		const { password, ...userWithoutPassword } = userObject;
 		res.status(200).json(userWithoutPassword);
 	} catch (error) {
-		if (error instanceof Error) {
-			res
-				.status(StatusCodes.INTERNAL_SERVER_ERROR)
-				.json({ error: true, message: error.message || "Internal Server Error" });
-		}
+		sendError(res, error);
 	}
 };
 
@@ -224,11 +207,7 @@ const updateUserStreak = async (req: AuthRequest, res: Response) => {
 		const { password: uselessPassword, ...mainUserData } = findUser.dataValues;
 		res.status(200).json(mainUserData);
 	} catch (error) {
-		if (error instanceof Error) {
-			res
-				.status(StatusCodes.INTERNAL_SERVER_ERROR)
-				.json({ error: true, message: error.message || "Internal Server Error" });
-		}
+		sendError(res, error);
 	}
 };
 
@@ -265,11 +244,7 @@ const getUserStreakDates = async (req: AuthRequest, res: Response) => {
 		});
 		res.status(StatusCodes.OK).json(streakDates);
 	} catch (error) {
-		if (error instanceof Error) {
-			res
-				.status(StatusCodes.INTERNAL_SERVER_ERROR)
-				.json({ error: true, message: error.message || "Internal Server Error" });
-		}
+		sendError(res, error);
 	}
 };
 
@@ -305,11 +280,7 @@ const buyFreeze = async (req: AuthRequest, res: Response) => {
 
 		res.status(StatusCodes.OK).json(user);
 	} catch (error) {
-		if (error instanceof Error) {
-			res
-				.status(StatusCodes.BAD_REQUEST)
-				.send({ error: true, message: error.message || "Error buying froze" });
-		}
+		sendError(res, error);
 	}
 };
 
