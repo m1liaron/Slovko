@@ -3,8 +3,21 @@ import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../models";
 
-const Result = sequelize.define(
-	"Result",
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
+
+interface ResultAttributes extends BaseAttributes {
+	title: string;
+	userId: string;
+}
+
+interface ResultCreationAttributes extends BaseCreationAttributes<ResultAttributes> { }
+
+class Result extends CustomModal<ResultAttributes, ResultCreationAttributes> implements ResultAttributes {
+	public title!: string;
+	public userId!: string;
+}
+
+Result.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -33,6 +46,8 @@ const Result = sequelize.define(
 		},
 	},
 	{
+		sequelize,
+		modelName: "Result",
 		tableName: "Results",
 		timestamps: true,
 	},
