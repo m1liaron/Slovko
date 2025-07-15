@@ -2,9 +2,23 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { SharedGroup } from "./SharedGroup";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
 
-const SharedCard = sequelize.define(
-	"SharedCard",
+interface SharedCardAttributes extends BaseAttributes {
+	word: string;
+	translateWord: string;
+	sharedGroupId: string;
+}
+
+interface SharedCardCreationAttributes extends BaseCreationAttributes<SharedCardAttributes> { }
+
+class SharedCard extends CustomModal<SharedCardAttributes, SharedCardCreationAttributes> implements SharedCardAttributes {
+	public word!: string;
+	public translateWord!: string;
+	public sharedGroupId!: string;
+}
+
+SharedCard.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -45,7 +59,8 @@ const SharedCard = sequelize.define(
 			},
 		},
 	},
-	{
+	{ 
+		sequelize,
 		modelName: "SharedCards",
 	},
 );
