@@ -7,7 +7,7 @@ const EnvVariables = {
     DATABASE_HOST: process.env.DB_HOST  as string || "host",
     DB_PORT: process.env.DB_PORT  as string || "5434",
     JWT_SECRET: process.env.JWT_SECRET  as string || "",
-    JWT_LIFETIME: process.env.JWT_LIFETIME  as string || "",
+    JWT_LIFETIME: process.env.JWT_LIFETIME  as string || "30d",
     UNSPLASH_KEY: process.env.UNSPLASH_KEY  as string || ""
 } as const
 

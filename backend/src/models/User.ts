@@ -1,4 +1,5 @@
-import Model, {
+import { 
+  Model,
   DataTypes,
   Optional,
 } from "sequelize";
@@ -36,7 +37,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public points!: number;
   public frozen!: boolean;
 
-  async hashPassword(password: string): Promise<string> {
+  static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
   }
@@ -48,10 +49,8 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   createJWT(): string {
     return jwt.sign(
       { userId: this.id, name: this.name },
-      EnvVariables.JWT_SECRET,
-      {
-        expiresIn: EnvVariables.JWT_LIFETIME,
-      }
+      EnvVariables.JWT_SECRET!,
+      { expiresIn: "30d"}
     );
   }
 }
@@ -82,7 +81,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [6],
+        len: [4,30],
       },
     },
     image: {
