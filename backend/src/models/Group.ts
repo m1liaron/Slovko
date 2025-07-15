@@ -2,9 +2,21 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "./User";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel";
 
-const Group = sequelize.define(
-  "Group",
+interface GroupAttributes extends BaseAttributes {
+  title: string;
+  userId: string;
+}
+
+interface GroupCreationAttributes extends BaseCreationAttributes<GroupAttributes> { }
+
+class Group extends CustomModal<GroupAttributes, GroupCreationAttributes> implements GroupAttributes {
+  public title!: string;
+  public userId!: string;
+}
+  
+Group.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -34,6 +46,8 @@ const Group = sequelize.define(
     },
   },
   {
+    sequelize,
+    modelName: "Group",
     tableName: "Groups",
     timestamps: true,
   }
