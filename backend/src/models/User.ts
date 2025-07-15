@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sequelize } from "../db/sequelize";
 import dotenv from "dotenv"
+import { EnvVariables } from "../common/enums";
 dotenv.config();
 
 interface UserAttributes {
@@ -47,9 +48,9 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   createJWT(): string {
     return jwt.sign(
       { userId: this.id, name: this.name },
-      process.env.JWT_SECRET,
+      EnvVariables.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_LIFETIME,
+        expiresIn: EnvVariables.JWT_LIFETIME,
       }
     );
   }

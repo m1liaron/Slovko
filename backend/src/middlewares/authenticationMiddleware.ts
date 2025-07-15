@@ -1,8 +1,21 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../models/User";
-import jwt from "jsonwebtoken";
+import { User } from "../models/User";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { EnvVariables } from "../common/enums";
 
-const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+interface AuthRequest extends Request {
+	user: {
+		id: string;
+		name: string;
+	}
+}
+
+interface DecodedUserPayload extends JwtPayload {
+	userId: string;
+	name: string;
+}
+
+const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
 	const authHeader = req.headers.authorization;
 
 	if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -13,9 +26,9 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 	const token = authHeader.split(" ")[1];
 
 	try {
-		const payload = jwt.verify(token, process.env.JWT_SECRET);
+		const decoded = jwt.verify(token, EnvVariables.JWT_SECRET!) as DecodedUserPayload;
 
-		const user = User.findByPk(payload.id, {
+		const user = User.findByPk(decoded.id, {
 			attributes: { exclude: ["password"] },
 		});
 		if (!user) {
@@ -23,7 +36,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
 				.status(401)
 				.json({ error: true, message: "Authentication invalid" });
 		}
-		req.user = { id: payload.userId, name: payload.name };
+		req.user = { id: decoded.userId, name: decoded.name };
 
 		next();
 	} catch (error) {

@@ -1,3 +1,3 @@
 const dictionaryAPi = `https://api.dictionaryapi.dev/api/v2/entries/en/`;
 
-module.exports = dictionaryAPi;
+export { dictionaryAPi };

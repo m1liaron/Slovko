@@ -15,6 +15,7 @@ import {
 import { authMiddleware } from "./middlewares/authenticationMiddleware";
 import { initializeLogger } from "./middlewares/initializeLogger";
 import { validateEnvVariables } from "./helpers/db";
+import { EnvVariables } from "./common/enums";
 
 const app: Application = express();
 
@@ -34,7 +35,7 @@ const cert = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3.pem"));
 
 const options = { key, cert };
 
-const port = process.env.PORT || 3000;
+const port = EnvVariables.PORT || 3000;
 
 const start = async () => {
 	try {

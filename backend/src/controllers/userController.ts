@@ -1,8 +1,9 @@
-import User from "../models/User";
-import { Streak } from "../models/models";
+import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
 import { Op } from "sequelize";
+import User from "../models/User";
+import { Streak } from "../models/models";
 
 const register = async (req: Request, res: Response) => {
 	try {

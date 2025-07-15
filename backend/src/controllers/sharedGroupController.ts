@@ -6,6 +6,7 @@ import {
 	User,
 } from "../models/models";
 import { StatusCodes } from 'http-status-codes';
+import { Request, Response } from "express";
 
 const createSharedGroup = async (req: Request, res: Response) => {
 	const {
