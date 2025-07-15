@@ -2,9 +2,21 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { Result } from "../models";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
 
-const ResultMode = sequelize.define(
-	"ResultMode",
+interface ResultModeAttributes extends BaseAttributes {
+	mode: "flashCards" | "quiz" | "guessWord" | "check";
+	resultId: string;
+}
+
+interface ResultModeCreationAttributes extends BaseCreationAttributes<ResultModeAttributes> { }
+
+class ResultMode extends CustomModal<ResultModeAttributes, ResultModeCreationAttributes> implements ResultModeAttributes {
+	public mode!: "flashCards" | "quiz" | "guessWord" | "check";
+	public resultId!: string;
+}
+
+ResultMode.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -24,6 +36,8 @@ const ResultMode = sequelize.define(
 		},
 	},
 	{
+		sequelize,
+		modelName: "ResultMode",
 		tableName: "ResultsMode",
 		timestamps: true,
 	},

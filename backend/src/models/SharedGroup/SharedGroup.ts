@@ -5,15 +5,17 @@ import { User } from "../User";
 import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
 
 interface SharedGroupAttributes extends BaseAttributes {
-	sharedGroupId: string;
+	title: string;
 	userId: string;
+	isAnonymous: boolean;
 }
 
 interface SharedGroupCreationAttributes extends BaseCreationAttributes<SharedGroupAttributes> { }
 
 class SharedGroup extends CustomModal<SharedGroupAttributes, SharedGroupCreationAttributes> implements SharedGroupAttributes {
-	public sharedGroupId!: string;
+	public title!: string;
 	public userId!: string;
+	public isAnonymous!: boolean;
 }
 
 SharedGroup.init(

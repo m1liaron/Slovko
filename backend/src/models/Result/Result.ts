@@ -8,6 +8,8 @@ import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomMo
 interface ResultAttributes extends BaseAttributes {
 	title: string;
 	userId: string;
+	startedLearn: Date;
+	completionTime: Date;
 }
 
 interface ResultCreationAttributes extends BaseCreationAttributes<ResultAttributes> { }
@@ -15,6 +17,8 @@ interface ResultCreationAttributes extends BaseCreationAttributes<ResultAttribut
 class Result extends CustomModal<ResultAttributes, ResultCreationAttributes> implements ResultAttributes {
 	public title!: string;
 	public userId!: string;
+	public startedLearn!: Date;
+	public completionTime!: Date;
 }
 
 Result.init(
