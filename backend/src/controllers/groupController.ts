@@ -1,24 +1,24 @@
-import Group from "../models/Group";
-import { Card } from "../models/models";
+import { Card, Group } from "../models/models";
 import { sequelize } from "../db/sequelize";
 import { StatusCodes } from 'http-status-codes';
+import { AuthRequest } from "../common/types/AuthRequest";
+import { Response } from "express";
+import { sendError } from "../helpers";
 
-const getAllGroups = async (req: Request, res: Response) => {
+const getAllGroups = async (req: AuthRequest, res: Response) => {
 	const userId = req.user.id;
 	try {
 		const cards = await Group.findAll({
 			where: { userId },
 		});
 
-		res.status(200).json(cards);
+		res.status(StatusCodes.OK).json(cards);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 
-const getGroup = async (req: Request, res: Response) => {
+const getGroup = async (req: AuthRequest, res: Response) => {
 	const { id } = req.params;
 	const userId = req.user.id;
 	try {
@@ -72,13 +72,11 @@ const getGroup = async (req: Request, res: Response) => {
 
 		res.status(200).json(group);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 
-const addGroup = async (req: Request, res: Response) => {
+const addGroup = async (req: AuthRequest, res: Response) => {
 	const data = req.body;
 	const userId = req.user.id;
 	try {
@@ -95,13 +93,11 @@ const addGroup = async (req: Request, res: Response) => {
 		const newGroup = await Group.create({ ...data, userId });
 		return res.status(200).json(newGroup);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 
-const updateGroup = async (req: Request, res: Response) => {
+const updateGroup = async (req: AuthRequest, res: Response) => {
 	try {
 		const {
 			params: { id: groupId },
@@ -120,15 +116,13 @@ const updateGroup = async (req: Request, res: Response) => {
 			where: { id: groupId },
 		});
 
-		res.status(200).json(group);
+		res.status(StatusCodes.OK).json(group);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 
-const removeGroup = async (req: Request, res: Response) => {
+const removeGroup = async (req: AuthRequest, res: Response) => {
 	try {
 		const {
 			user: { id: userId },
@@ -146,9 +140,7 @@ const removeGroup = async (req: Request, res: Response) => {
 		await card.destroy();
 		res.status(200).json(card);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 

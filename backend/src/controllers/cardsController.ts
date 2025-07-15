@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import { StatusCodes } from "http-status-codes";
 
 import { Card, Image, Group } from "../models/models";
-import { calculateNextReviewDate, getDictionaryData } from "../helpers";
+import { calculateNextReviewDate, getDictionaryData, sendError } from "../helpers";
 import { AuthRequest } from "../common/types/AuthRequest";
 
 const getRepeatedCards = async (req: AuthRequest, res: Response) => {
@@ -39,10 +39,7 @@ const getRepeatedCards = async (req: AuthRequest, res: Response) => {
 
 		res.status(200).json(filteredData);
 	} catch (error) {
-		res.status(400).send({
-			error: true,
-			message: error.message || "Error get repeated cards",
-		});
+		sendError(res, error);
 	}
 };
 
@@ -65,10 +62,7 @@ const getCardsFromIds = async (req: Request, res: Response) => {
 
 		res.status(200).json(cards);
 	} catch (error) {
-		res.status(400).send({
-			error: true,
-			message: error.message || "Error get cards from ids",
-		});
+		sendError(res, error);
 	}
 };
 
@@ -87,7 +81,7 @@ const getAllCards = async (req: Request, res: Response) => {
 
 		const updatedCards = await Promise.all(
 			cards.map(async (card) => {
-				if (new Date(card.nextReviewAt) - new Date() < 0) {
+				if (new Date(card.nextReviewAt).getTime() - new Date().getTime() < 0) {
 					card.status = "To Learn";
 					await card.save();
 				}
@@ -97,9 +91,7 @@ const getAllCards = async (req: Request, res: Response) => {
 
 		res.status(200).json(updatedCards);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error get all cards" });
+		sendError(res, error);
 	}
 };
 
@@ -112,9 +104,7 @@ const getAllStatusCards = async (req: Request, res: Response) => {
 
 		res.status(200).json(cards);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Getting cards" });
+		sendError(res, error);
 	}
 };
 
@@ -159,11 +149,9 @@ const updateCardsAfterReview = async (req: Request, res: Response) => {
 			await card.save();
 		}
 
-		res.status(200).json(cardsToUpdate);
+		res.status(StatusCodes.OK).json(cardsToUpdate);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error update card" });
+		sendError(res, error);
 	}
 };
 
@@ -192,7 +180,9 @@ const addCard = async (req: Request, res: Response) => {
 			definition = dictionaryData.definition || "";
 			example = dictionaryData.example || "";
 		} catch (dictionaryError) {
-			console.warn("Dictionary fetch failed:", dictionaryError.message);
+			if (dictionaryError instanceof Error) {
+				console.warn("Dictionary fetch failed:", dictionaryError.message);
+			}
 		}
 
 		const image = await Image.create({ url: imageUri });
@@ -208,11 +198,9 @@ const addCard = async (req: Request, res: Response) => {
 			include: [{ model: Image, as: "image" }],
 		});
 
-		return res.status(200).json(card);
+		return res.status(StatusCodes.OK).json(card);
 	} catch(error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error during create a card" });
+		sendError(res, error);
 	}
 };
 
@@ -223,8 +211,9 @@ const addManyCards = async (req: Request, res: Response) => {
   }
 
   const sequelize = Card.sequelize;
+  if (!sequelize) return;
   const transaction = await sequelize.transaction();
-
+	
   try {
     // 1) Prevent duplicates in the same group
     const existing = await Card.findAll({
@@ -260,9 +249,9 @@ const addManyCards = async (req: Request, res: Response) => {
 
     await transaction.commit();
     res.status(201).json(newCards);
-  } catch (err) {
+  } catch (error) {
     await transaction.rollback();
-    res.status(500).json({ error: `Failed to add many cards: ${err}` });
+	sendError(res, error);
   }
 }
 
@@ -285,9 +274,7 @@ const updateCard = async (req: Request, res: Response) => {
 
 		res.status(200).json(card);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 
@@ -304,9 +291,7 @@ const removeCard = async (req: Request, res: Response) => {
 		await card.destroy();
 		res.status(200).json(cardId);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error login" });
+		sendError(res, error);
 	}
 };
 
