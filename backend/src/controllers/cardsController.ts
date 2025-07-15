@@ -2,11 +2,8 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 import { StatusCodes } from "http-status-codes";
 
-import Card from "../models/Card";
-import Image from "../models/Image";
-import calculateNextReviewDate from "../helpers/calculateNextReviewDate";
-import { Group } from "../models/models";
-import { getDictionaryData } from "../helpers/getDictionaryData";
+import { Card, Image, Group } from "../models/models";
+import { calculateNextReviewDate, getDictionaryData } from "../helpers";
 
 const getRepeatedCards = async (req: Request, res: Response) => {
 	try {

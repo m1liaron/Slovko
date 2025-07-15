@@ -1,7 +1,7 @@
-const dictionaryAPi = require("../api/dictionaryAPi");
-const axios = require("axios");
+import { dictionaryAPi } from "../api/dictionaryAPi";
+import axios from "axios";
 
-const getDictionaryData = async (word) => {
+const getDictionaryData = async (word: string) => {
 	const dictionaryApiResponse = await axios.get(`${dictionaryAPi}${word}`);
 	let definition = "";
 	let example = "";
@@ -15,4 +15,4 @@ const getDictionaryData = async (word) => {
 	return { definition, example };
 };
 
-module.exports = { getDictionaryData };
+export { getDictionaryData };

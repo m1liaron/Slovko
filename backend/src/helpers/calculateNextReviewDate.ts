@@ -23,4 +23,4 @@ const calculateNextReviewDate = (reviewCount: number) => {
 	return nextReviewDate;
 };
 
-module.exports = calculateNextReviewDate;
+export { calculateNextReviewDate }

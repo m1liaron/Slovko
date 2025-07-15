@@ -8,6 +8,7 @@ import { WordResult } from "./Result/WordResult";
 import { SharedGroup } from "./SharedGroup/SharedGroup";
 import { SharedCard } from "./SharedGroup/SharedCard";
 import { SharedCardLikes } from "./SharedGroup/SharedCardLikes";
+import { Image } from "./Image";
 
 // User - Group
 User.hasMany(Group, { foreignKey: "userId", as: "groups" });
@@ -71,4 +72,5 @@ export {
 	SharedGroup,
 	SharedCard,
 	SharedCardLikes,
+	Image
 };

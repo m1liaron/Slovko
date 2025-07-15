@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+import { Sequelize } from "sequelize";
 import { EnvVariables } from "../common/enums";
 require("dotenv").config();
 

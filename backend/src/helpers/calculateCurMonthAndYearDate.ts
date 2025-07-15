@@ -1,6 +1,7 @@
-const { StatusCodes } = require("http-status-codes");
+import { StatusCodes } from "http-status-codes";
+import { Response } from "express";
 
-function calculateCurMonthAndYearDate(month, year, res) {
+function calculateCurMonthAndYearDate(month: string, year: string, res: Response) {
 	const intMonth = Number.parseInt(month, 10);
 	const intYear = Number.parseInt(year, 10);
 	if (
@@ -20,4 +21,4 @@ function calculateCurMonthAndYearDate(month, year, res) {
 	return { startDate, endDate };
 }
 
-module.exports = { calculateCurMonthAndYearDate };
+export { calculateCurMonthAndYearDate };
