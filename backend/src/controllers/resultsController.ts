@@ -4,8 +4,11 @@ import {
 } from "../helpers/calculateCurMonthAndYearDate";
 import { Result, ResultMode, WordResult, User } from "../models/models";
 import { StatusCodes } from "http-status-codes";
+import { AuthRequest } from "../common/types/AuthRequest";
+import { Response } from "express";
+import { sendError } from "../helpers";
 
-const getResultsDetails = async (req: Request, res: Response) => {
+const getResultsDetails = async (req: AuthRequest, res: Response) => {
 	try {
 		const results = await Result.findAll({
 			where: { userId: req.user.id },
@@ -25,13 +28,11 @@ const getResultsDetails = async (req: Request, res: Response) => {
 
 		res.status(200).json(results);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error saving results" });
+		sendError(res, error);
 	}
 };
 
-const getResultsStatistics = async (req: Request, res: Response) => {
+const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 	try {
 		const results = await Result.findAll({
 			where: { userId: req.user.id },
@@ -107,13 +108,11 @@ const getResultsStatistics = async (req: Request, res: Response) => {
 		const amountMistakesCards = getAllWordsMode(results);
 		res.status(200).json({ resultsMonths, amountMistakesCards });
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error saving results" });
+		sendError(res, error);
 	}
 };
 
-const getResults = async (req: Request, res: Response) => {
+const getResults = async (req: AuthRequest, res: Response) => {
 	const { year } = req.query;
 
 	try {
@@ -158,11 +157,11 @@ const getResults = async (req: Request, res: Response) => {
 
 		res.status(200).json({ results: rows, haveMoreResults, firstResult: findResultDate });
 	} catch (error) {
-		res.status(400).json({ error: true, message: error.message || "Error fetching results" });
+		sendError(res, error);
 	}
 };
 
-const getResultDetails = async (req: Request, res: Response) => {
+const getResultDetails = async (req: AuthRequest, res: Response) => {
 	const { resultId } = req.params;
 	try {
 		const result = await Result.findOne({
@@ -185,13 +184,11 @@ const getResultDetails = async (req: Request, res: Response) => {
 		}
 		res.status(200).json(result);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error saving results" });
+		sendError(res, error);
 	}
 };
 
-const saveResults = async (req: Request, res: Response) => {
+const saveResults = async (req: AuthRequest, res: Response) => {
 	const {
 		body: { title, startedLearn, completionTime, ...data },
 		user: { id },
@@ -255,9 +252,7 @@ const saveResults = async (req: Request, res: Response) => {
 		// Return the result as a response
 		res.status(200).json(result);
 	} catch (error) {
-		res
-			.status(400)
-			.send({ error: true, message: error.message || "Error saving results" });
+		sendError(res, error);
 	}
 };
 

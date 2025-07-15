@@ -7,8 +7,10 @@ import {
 } from "../models/models";
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from "express";
+import { AuthRequest } from "../common/types/AuthRequest";
+import { sendError } from "../helpers";
 
-const createSharedGroup = async (req: Request, res: Response) => {
+const createSharedGroup = async (req: AuthRequest, res: Response) => {
 	const {
 		body: { groupId, title, isAnonymous },
 		user: { id },
@@ -62,15 +64,7 @@ const createSharedGroup = async (req: Request, res: Response) => {
 
 		res.status(200).json(sharedGroupWithUser);
 	} catch (error) {
-		if (error.name === "SequelizeUniqueConstraintError") {
-			return res.status(400).json({
-				message: error.errors?.[0]?.message || "Duplicate value",
-			});
-		}
-		res.status(500).json({
-			error: true,
-			message: error.message || "Server Error. Try again later.",
-		});
+		sendError(res, error);
 	}
 };
 
@@ -96,10 +90,7 @@ const getAllSharedGroups = async (req: Request, res: Response) => {
 
 		res.status(200).json({ sharedGroups: filteredSharedGroups, haveMoreSharedGroups });
 	} catch (error) {
-		res.status(500).json({
-			error: true,
-			message: error.message || "Server Error. Try again later.",
-		});
+		sendError(res, error);
 	}
 };
 
@@ -121,14 +112,11 @@ const getSharedGroup = async (req: Request, res: Response) => {
 		});
 		res.status(200).json(sharedGroup);
 	} catch (error) {
-		res.status(500).json({
-			error: true,
-			message: error.message || "Server Error. Try again later.",
-		});
+		sendError(res, error);
 	}
 };
 
-const removeSharedGroup = async (req: Request, res: Response) => {
+const removeSharedGroup = async (req: AuthRequest, res: Response) => {
 	try {
 		const sharedId = req.params.sharedGroupId;
 		const sharedGroup = await SharedGroup.findOne({
@@ -148,14 +136,11 @@ const removeSharedGroup = async (req: Request, res: Response) => {
 
 		res.status(200).json(sharedGroupId);
 	} catch (error) {
-		res.status(500).json({
-			error: true,
-			message: error.message || "Server Error. Try again later.",
-		});
+		sendError(res, error);
 	}
 };
 
-const copySharedGroup = async (req: Request, res: Response) => {
+const copySharedGroup = async (req: AuthRequest, res: Response) => {
 	const { sharedGroupId } = req.params;
 	try {
 		const sharedGroup = await SharedGroup.findOne({
@@ -194,12 +179,9 @@ const copySharedGroup = async (req: Request, res: Response) => {
 			);
 		}
 
-		res.status(200).json(newGroup);
+		res.status(StatusCodes.OK).json(newGroup);
 	} catch (error) {
-		res.status(500).json({
-			error: true,
-			message: error.message || "Server Error. Try again later.",
-		});
+		sendError(res, error);
 	}
 };
 
