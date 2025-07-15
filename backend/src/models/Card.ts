@@ -2,9 +2,37 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../db/sequelize";
 import { Group } from "./Group";
 import { Image } from "./Image";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel";
 
-const Card = sequelize.define(
-	"Card",
+interface CardAttributes extends BaseAttributes {
+	word: string;
+	translateWord: string;
+	groupId: string;
+	imageId: string;
+	status: "To Learn" | "Repeated" | "Know" | "Learned";
+	definition: string;
+	example: string;
+	learnedAt: string;
+	nextReviewAt: string;
+	reviewCount: number;
+}
+
+interface CardCreationAttributes extends BaseCreationAttributes<CardAttributes> { }
+
+class Card extends CustomModal<CardAttributes, CardCreationAttributes> implements CardAttributes {
+	public word!: string;
+	public translateWord!: string;
+	public groupId!: string;
+	public imageId!: string;
+	public status!: "To Learn" | "Repeated" | "Know" | "Learned";
+	public definition!: string;
+	public example!: string;
+	public learnedAt!: string;
+	public nextReviewAt!: string;
+	public reviewCount!: number;
+}
+
+Card.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -82,6 +110,8 @@ const Card = sequelize.define(
 		},
 	},
 	{
+		sequelize,
+		modelName: "Card",
 		tableName: "Cards",
 		timestamps: true,
 	},
