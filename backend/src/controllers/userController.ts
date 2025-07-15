@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
 import { Op } from "sequelize";
-import User from "../models/User";
+import {User} from "../models/User";
 import { Streak } from "../models/models";
+import { AuthRequest } from "../common/types/AuthRequest";
 
 const register = async (req: Request, res: Response) => {
 	try {
@@ -20,10 +21,12 @@ const register = async (req: Request, res: Response) => {
 		const { password: uselessPassword, ...mainUserData } = user.dataValues;
 		res.status(StatusCodes.CREATED).json({ user: mainUserData, token });
 	} catch (error) {
-		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: error.message || "Registration failed. Please try again later.",
-		});
+		if (error instanceof Error) {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+				error: true,
+				message: error.message || "Registration failed. Please try again later.",
+			});
+		}
 	}
 };
 
@@ -60,14 +63,16 @@ const login = async (req: Request, res: Response) => {
 		const { password: uselessPassword, ...mainUserData } = user;
 		res.status(StatusCodes.OK).json({ user: mainUserData, token });
 	} catch (error) {
-		res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-			error: true,
-			message: error.message || "Login failed. Please try again later.",
-		});
+		if (error instanceof Error) {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+				error: true,
+				message: error.message || "Login failed. Please try again later.",
+			});
+		}
 	}
 };
 
-const getUser = async (req: Request, res: Response) => {
+const getUser = async (req: AuthRequest, res: Response) => {
 	try {
 		const userId = req.user.id;
 		const user = await User.findOne({
@@ -80,7 +85,7 @@ const getUser = async (req: Request, res: Response) => {
 				.json({ error: true, message: "User does not exist" });
 		}
 
-		if (user.lastReviewAt && user.nextReviewAt) {
+		if (user.lastReviewAt) {
 			// If user is existed, check his streak
 			const lastReviewDate = user.lastReviewAt
 				? new Date(user.lastReviewAt)
@@ -90,7 +95,7 @@ const getUser = async (req: Request, res: Response) => {
 
 			const timeGone =
 				!lastReviewDate || lastReviewDate.getTime() !== today.getTime();
-			const goneTwoOrMoreDays = new Date(lastReviewDate).getDate() <= (new Date().getDate() - 2)
+			const goneTwoOrMoreDays = lastReviewDate ? new Date(lastReviewDate).getDate() <= (new Date().getDate() - 2) : null;
 
 
 			if (timeGone && !user.frozen || goneTwoOrMoreDays) {
@@ -119,9 +124,11 @@ const getUser = async (req: Request, res: Response) => {
 		const { password, ...mainUserData } = user.dataValues;
 		res.status(200).json({ user: mainUserData });
 	} catch (error) {
-		res
-			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json({ error: true, message: error.message || "Internal Server Error" });
+		if (error instanceof Error) {
+			res
+				.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({ error: true, message: error.message || "Internal Server Error" });
+		}
 	}
 };
 
@@ -135,29 +142,31 @@ const updateUser = async (req: Request, res: Response) => {
 			body.image = "";
 		}
 
-		const updatedUser = await User.update(body, {
+		const [count, users] = await User.update(body, {
 			where: { id: userId },
 			returning: true,
-			plain: true,
 		});
 
-		if (!updatedUser) {
+
+		if (!users.length) {
 			return res
 				.status(StatusCodes.NOT_FOUND)
 				.json({ error: true, message: "User does not found" });
 		}
 
-		const userObject = updatedUser[1].get();
+		const userObject = users[0].get();
 		const { password, ...userWithoutPassword } = userObject;
 		res.status(200).json(userWithoutPassword);
 	} catch (error) {
-		res
-			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json({ error: true, message: error.message || "Internal Server Error" });
+		if (error instanceof Error) {
+			res
+				.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({ error: true, message: error.message || "Internal Server Error" });
+		}
 	}
 };
 
-const updateUserStreak = async (req: Request, res: Response) => {
+const updateUserStreak = async (req: AuthRequest, res: Response) => {
 	try {
 		const { id } = req.user;
 		const user = await User.findByPk(id);
@@ -206,16 +215,24 @@ const updateUserStreak = async (req: Request, res: Response) => {
 				},
 			],
 		});
+
+		if (!findUser) {
+			res.status(StatusCodes.NOT_FOUND).json({ error: true, message: "User not found" });
+			return;
+		}
+
 		const { password: uselessPassword, ...mainUserData } = findUser.dataValues;
 		res.status(200).json(mainUserData);
 	} catch (error) {
-		res
-			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json({ error: true, message: error.message || "Internal Server Error" });
+		if (error instanceof Error) {
+			res
+				.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({ error: true, message: error.message || "Internal Server Error" });
+		}
 	}
 };
 
-const getUserStreakDates = async (req: Request, res: Response) => {
+const getUserStreakDates = async (req: AuthRequest, res: Response) => {
 	const { month, year } = req.query;
 	try {
 		if (!month || !year) {
@@ -224,8 +241,8 @@ const getUserStreakDates = async (req: Request, res: Response) => {
 				.json({ error: true, message: "Month and year are required." });
 		}
 
-		const intMonth = Number.parseInt(month, 10);
-		const intYear = Number.parseInt(year, 10);
+		const intMonth = Number.parseInt(String(month), 10);
+		const intYear = Number.parseInt(String(year), 10);
 		if (
 			Number.isNaN(intMonth) ||
 			Number.isNaN(intYear) ||
@@ -248,13 +265,15 @@ const getUserStreakDates = async (req: Request, res: Response) => {
 		});
 		res.status(StatusCodes.OK).json(streakDates);
 	} catch (error) {
-		res
-			.status(StatusCodes.INTERNAL_SERVER_ERROR)
-			.json({ error: true, message: error.message || "Internal Server Error" });
+		if (error instanceof Error) {
+			res
+				.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({ error: true, message: error.message || "Internal Server Error" });
+		}
 	}
 };
 
-const buyFreeze = async (req: Request, res: Response) => {
+const buyFreeze = async (req: AuthRequest, res: Response) => {
 	// body scheme { froze: 100 }, 100 is points cost
 	try {
 		const {
@@ -286,9 +305,11 @@ const buyFreeze = async (req: Request, res: Response) => {
 
 		res.status(StatusCodes.OK).json(user);
 	} catch (error) {
-		res
-			.status(StatusCodes.BAD_REQUEST)
-			.send({ error: true, message: error.message || "Error buying froze" });
+		if (error instanceof Error) {
+			res
+				.status(StatusCodes.BAD_REQUEST)
+				.send({ error: true, message: error.message || "Error buying froze" });
+		}
 	}
 };
 
