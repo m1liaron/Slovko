@@ -2,9 +2,21 @@ import { DataTypes } from "sequelize";
 import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../User";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
 
-const SharedGroup = sequelize.define(
-	"SharedGroup",
+interface SharedGroupAttributes extends BaseAttributes {
+	sharedGroupId: string;
+	userId: string;
+}
+
+interface SharedGroupCreationAttributes extends BaseCreationAttributes<SharedGroupAttributes> { }
+
+class SharedGroup extends CustomModal<SharedGroupAttributes, SharedGroupCreationAttributes> implements SharedGroupAttributes {
+	public sharedGroupId!: string;
+	public userId!: string;
+}
+
+SharedGroup.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -15,6 +27,7 @@ const SharedGroup = sequelize.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: {
+				name: "Unique Group",
 				msg: "Shared group with this title already exists!",
 			},
 			validate: {
@@ -42,6 +55,7 @@ const SharedGroup = sequelize.define(
 		}
 	},
 	{
+		sequelize,
 		tableName: "SharedGroups",
 		timestamps: true,
 	},
