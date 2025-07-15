@@ -1,9 +1,21 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
 
-const SharedCardLikes = sequelize.define(
-	"SharedCardLike",
+interface SharedCardLikesAttributes extends BaseAttributes {
+	sharedGroupId: string;
+	userId: string;
+}
+
+interface SharedCardLikesCreationAttributes extends BaseCreationAttributes<SharedCardLikesAttributes> { }
+
+class SharedCardLikes extends CustomModal<SharedCardLikesAttributes, SharedCardLikesCreationAttributes> implements SharedCardLikesAttributes {
+	public sharedGroupId!: string;
+	public userId!: string;
+}
+
+SharedCardLikes.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -28,6 +40,7 @@ const SharedCardLikes = sequelize.define(
 		},
 	},
 	{
+		sequelize,
 		tableName: "SharedCardLikes",
 		timestamps: true,
 	},
