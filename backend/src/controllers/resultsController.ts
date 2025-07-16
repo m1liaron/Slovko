@@ -107,7 +107,12 @@ const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 		});
 
 		function getAllWordsMode(results: ResultAttributes[]) {
-			const modeMonthSum = {};
+			const modeMonthSum: {
+				[mode: string]: {
+					mistakes: number[];
+					wordLength: number[]
+				}
+			} = {};
 
 			for (const result of results) {
 				const month = months[new Date(result.createdAt).getMonth()];
