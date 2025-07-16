@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();
+import { authRouter } from "./authRouter";
+const { router, get, post } = authRouter();
 import {
 	getAllCards,
 	addCard,
@@ -13,10 +13,8 @@ import {
 } from "../controllers/cardsController";
 
 router.route("/repeated").post(getCardsFromIds);
-router
-	.route("/")
-	.get(getRepeatedCards)
-	.post(addCard)
+get("/", getRepeatedCards)
+post("/", addCard)
 router.route("/many").post(addManyCards)
 router.route("/learn").put(updateCardsAfterReview);
 router.route("/:groupId?").get(getAllCards);
