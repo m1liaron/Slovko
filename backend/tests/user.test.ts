@@ -89,4 +89,17 @@ describe("USER_ROUTES", () => {
     expect(res.body).toHaveProperty("id", userId);
     expect(res.body).toHaveProperty("streak");
   });
+
+  it("GET_STREAK_DATES should return streak dates", async () => {
+    const now = new Date();
+    const res = await request(app)
+      .get(
+        `/users/streak?month=${now.getMonth() + 1}&year=${now.getFullYear()}`,
+      )
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body[0]).toHaveProperty("date");
+  });
 });
