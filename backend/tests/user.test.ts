@@ -5,14 +5,15 @@ import { sequelize } from "../src/db/sequelize.js";
 const testUser = {
   email: "lani@gmail.com",
   name: "lani",
-  password: "rty1245"
-}
+  password: "rty1245",
+  points: 200,
+};
 
 let token: string;
 let userId: string;
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true }); 
+  await sequelize.sync({ force: true });
 });
 
 afterAll(async () => {
@@ -60,20 +61,32 @@ describe("USER_ROUTES", () => {
   });
 
   it("GET_USER should return user by token", async () => {
-    const res = await request(app).get("/users").set("Authorization", `Bearer ${token}`);
+    const res = await request(app)
+      .get("/users")
+      .set("Authorization", `Bearer ${token}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.user.email).toBe(testUser.email)
+    expect(res.body.user.email).toBe(testUser.email);
   });
 
   it("PUT_USER should update user data", async () => {
-      const res = await request(app)
-        .patch(`/users/${userId}`)
-        .set("Authorization", `Bearer ${token}`)
-        .send({ email: "updatedEmail@gmail.com" });
-  
-      expect(res.statusCode).toBe(200);
-      expect(res.body.email).toBe("updatedEmail@gmail.com");
-      expect(res.body.name).toBe(testUser.name);
+    const res = await request(app)
+      .patch(`/users/${userId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ email: "updatedEmail@gmail.com" });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.email).toBe("updatedEmail@gmail.com");
+    expect(res.body.name).toBe(testUser.name);
+  });
+
+  it("UPDATE_USER_STREAK should update user's streak", async () => {
+    const res = await request(app)
+      .post("/users/streak")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("id", userId);
+    expect(res.body).toHaveProperty("streak");
   });
 });
