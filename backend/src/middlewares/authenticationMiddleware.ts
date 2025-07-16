@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { User } from "../models/User.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { EnvVariables } from "../common/enums/index.js";
-import { sendError } from "../helpers/sendError.js";
 
 interface AuthRequest extends Request {
 	user?: {

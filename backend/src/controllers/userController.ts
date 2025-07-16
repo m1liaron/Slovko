@@ -134,10 +134,6 @@ const updateUser = async (req: Request, res: Response) => {
 		body,
 	} = req;
 	try {
-		if (body.image === "") {
-			body.image = "";
-		}
-
 		const [count, users] = await User.update(body, {
 			where: { id: userId },
 			returning: true,

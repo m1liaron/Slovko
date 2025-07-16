@@ -9,6 +9,7 @@ const testUser = {
 }
 
 let token: string;
+let userId: string;
 
 beforeAll(async () => {
   await sequelize.sync({ force: true }); 
@@ -45,6 +46,7 @@ describe("USER_ROUTES", () => {
     expect(res.body.token).toBeDefined();
 
     token = res.body.token;
+    userId = res.body.user.id;
   });
 
   it("USER_LOGIN should not login with wrong password", async () => {
@@ -63,5 +65,15 @@ describe("USER_ROUTES", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.user.email).toBe(testUser.email)
   });
+
+  it("PUT_USER should update user data", async () => {
+      const res = await request(app)
+        .patch(`/users/${userId}`)
+        .set("Authorization", `Bearer ${token}`)
+        .send({ email: "updatedEmail@gmail.com" });
+  
+      expect(res.statusCode).toBe(200);
+      expect(res.body.email).toBe("updatedEmail@gmail.com");
+      expect(res.body.name).toBe(testUser.name);
+  });
 });
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwNWM3ZDQyOC1iNTg3LTQ1MzYtOWNhOS01ZTg5ZjJlYTM3MGIiLCJuYW1lIjoiYmliYSIsImlhdCI6MTc1MjY5MDQzMywiZXhwIjoxNzU1MjgyNDMzfQ.87Cr5Lt - yRWh1KV38A41urIFge7nBNDHXZ5XlVO6ViY
