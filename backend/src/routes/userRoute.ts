@@ -1,5 +1,5 @@
 import { authRouter } from "./authRouter";
-const { router, get, post, patch, remove } = authRouter();
+const { router, get, put, patch } = authRouter();
 import {
 	register,
 	login,
@@ -13,10 +13,11 @@ import { authMiddleware } from "../middlewares/authenticationMiddleware";
 
 router.route("/register").post(register);
 router.route("/login").post(login);
-router.get("/", authMiddleware, getUser);
-router.put("/:userId", authMiddleware, updateUser);
-router.get("/streak", authMiddleware, getUserStreakDates);
-router.patch("/streak", authMiddleware, updateUserStreak);
-router.put("/streak/froze", authMiddleware, buyFreeze);
+
+get("/", authMiddleware, getUser);
+patch("/:userId", authMiddleware, updateUser);
+get("/streak", authMiddleware, getUserStreakDates);
+patch("/streak", authMiddleware, updateUserStreak);
+put("/streak/froze", authMiddleware, buyFreeze);
 
 export { router as userRoute }
