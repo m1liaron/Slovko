@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();
+import { authRouter } from "./authRouter";
+const { router, get, post, patch, remove } = authRouter();
 import {
 	getAllGroups,
 	addGroup,
@@ -8,7 +8,11 @@ import {
 	updateGroup,
 } from "../controllers/groupController";
 
-router.route("/").get(getAllGroups).post(addGroup);
-router.route("/:id").delete(removeGroup).get(getGroup).patch(updateGroup);
+get("/", getAllGroups)
+post("/", addGroup);
+
+remove("/:id", removeGroup)
+get("/:id", getGroup)
+patch("/:id", updateGroup)
 
 export { router as groupRoute };

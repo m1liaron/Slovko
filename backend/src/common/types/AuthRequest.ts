@@ -1,4 +1,4 @@
-import { Request } from "express";
+import { NextFunction, Request, Response } from "express";
 
 interface AuthRequest<T = any> extends Request<any, any, any, T> {
     user: {
@@ -7,4 +7,10 @@ interface AuthRequest<T = any> extends Request<any, any, any, T> {
     }
 }
 
-export { AuthRequest };
+type AuthRequestHandler<T = any> = (
+    req: AuthRequest<T>,
+    res: Response,
+    next: NextFunction
+) => any;
+
+export type { AuthRequest, AuthRequestHandler };

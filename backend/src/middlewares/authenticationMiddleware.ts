@@ -4,7 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { EnvVariables } from "../common/enums";
 
 interface AuthRequest extends Request {
-	user: {
+	user?: {
 		id: string;
 		name: string;
 	}
@@ -28,7 +28,7 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
 	try {
 		const decoded = jwt.verify(token, EnvVariables.JWT_SECRET!) as DecodedUserPayload;
 
-		const user = User.findByPk(decoded.id, {
+		const user = await User.findByPk(decoded.id, {
 			attributes: { exclude: ["password"] },
 		});
 		if (!user) {

@@ -1,3 +1,4 @@
+export { authRouter } from "./authRouter";
 export { userRoute } from "./userRoute";
 export { cardRoute } from "./cardRoute";
 export { groupRoute } from "./groupRoute";

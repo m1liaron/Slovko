@@ -1,11 +1,11 @@
 import { Card, Group } from "../models/models";
 import { sequelize } from "../db/sequelize";
 import { StatusCodes } from 'http-status-codes';
-import { AuthRequest } from "../common/types/AuthRequest";
+import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest";
 import { Response } from "express";
 import { sendError } from "../helpers";
 
-const getAllGroups = async (req: AuthRequest, res: Response) => {
+const getAllGroups: AuthRequestHandler = async (req, res) => {
 	const userId = req.user.id;
 	try {
 		const cards = await Group.findAll({

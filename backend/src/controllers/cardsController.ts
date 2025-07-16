@@ -4,9 +4,9 @@ import { StatusCodes } from "http-status-codes";
 
 import { Card, Image, Group } from "../models/models";
 import { calculateNextReviewDate, getDictionaryData, sendError } from "../helpers";
-import { AuthRequest } from "../common/types/AuthRequest";
+import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest";
 
-const getRepeatedCards = async (req: AuthRequest, res: Response) => {
+const getRepeatedCards: AuthRequestHandler = async (req, res) => {
 	try {
 		const groups = await Group.findAll({
 			where: {
