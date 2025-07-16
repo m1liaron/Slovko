@@ -10,6 +10,13 @@ import { Request, Response } from "express";
 import { AuthRequest } from "../common/types/AuthRequest";
 import { sendError } from "../helpers";
 
+interface SharedGroupsQuery {
+	month: string;
+	year: string;
+	page?: string;
+	limit?: string;
+}
+
 const createSharedGroup = async (req: AuthRequest, res: Response) => {
 	const {
 		body: { groupId, title, isAnonymous },
@@ -31,7 +38,7 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
 				},
 			],
 		});
-		if (!group) {
+		if (!group || !group.cards) {
 			return res.status(404).json({ error: true, message: "Group is not defined" });
 		}
 		const sharedGroup = await SharedGroup.create({
@@ -39,7 +46,7 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
 			userId: id,
 			isAnonymous
 		});
-		if (group.cards.length) {
+		if (group.cards.length > 0) {
 			await Promise.all(
 				group.cards.map(async (card) => {
 					await SharedCard.create({
@@ -68,12 +75,12 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
 	}
 };
 
-const getAllSharedGroups = async (req: Request, res: Response) => {
+const getAllSharedGroups = async (req: AuthRequest<SharedGroupsQuery>, res: Response) => {
 	try {
 		const {
-			page,
-			limit,
-		} = req.query;
+			page = "0",
+			limit = "10",
+		} = req.query as SharedGroupsQuery;
 		const allSharedGroups = await SharedGroup.findAll({
 			include: {
 				model: User,
@@ -151,6 +158,8 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
 			return res
 				.status(404)
 				.json({ error: true, message: "Shared group is not found" });
+		} else if (!sharedGroup.sharedCards) {
+			return res.status(StatusCodes.BAD_REQUEST).json({ error: true, message: "No cards to share"})
 		}
 
 		const existGroup = await Group.findOne({
@@ -167,7 +176,7 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
 			title: sharedGroup.title,
 			userId: req.user.id,
 		});
-		if (sharedGroup.sharedCards.length) {
+		if (sharedGroup.sharedCards.length > 0) {
 			await Promise.all(
 				sharedGroup.sharedCards.map(async (card) => {
 					Card.create({

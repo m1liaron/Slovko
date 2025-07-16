@@ -3,6 +3,7 @@ import { sequelize } from "../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "./User";
 import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel";
+import { Card } from "./Card";
 
 interface GroupAttributes extends BaseAttributes {
   title: string;
@@ -14,6 +15,9 @@ interface GroupCreationAttributes extends BaseCreationAttributes<GroupAttributes
 class Group extends CustomModal<GroupAttributes, GroupCreationAttributes> implements GroupAttributes {
   public title!: string;
   public userId!: string;
+
+  cards?: Card[]
+  user?: User
 }
   
 Group.init(

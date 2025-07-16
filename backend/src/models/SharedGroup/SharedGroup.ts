@@ -3,6 +3,7 @@ import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../User";
 import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
+import { SharedCard } from "./SharedCard";
 
 interface SharedGroupAttributes extends BaseAttributes {
 	title: string;
@@ -16,6 +17,8 @@ class SharedGroup extends CustomModal<SharedGroupAttributes, SharedGroupCreation
 	public title!: string;
 	public userId!: string;
 	public isAnonymous!: boolean;
+
+	sharedCards?: SharedCard[]
 }
 
 SharedGroup.init(
