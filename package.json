@@ -1,0 +1,36 @@
+{
+  "name": "slovko",
+  "version": "1.0.0",
+  "description": "FlashCards is a modern mobile app built to help you master foreign words—or any kind of facts—efficiently and enjoyably. Whether you're learning English, German, or any subject matter, FlashCards offers a customizable and interactive experience to boost your memory using scientifically-backed methods.",
+  "main": "index.js",
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "eslint"
+    ],
+    "*.html": [
+      "eslint",
+      "prettier --write"
+    ],
+    "*.scss": "prettier --write"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m1liaron/FlashCards.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m1liaron/FlashCards/issues"
+  },
+  "homepage": "https://github.com/m1liaron/FlashCards#readme",
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^16.1.2"
+  }
+}
