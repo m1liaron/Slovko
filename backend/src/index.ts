@@ -1,17 +1,17 @@
 import express, { Application } from "express";
 import fs from "fs";
-import https from"https";
+import https from "https";
 import cors from "cors";
-import path, { dirname} from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import { connectDB, sequelize } from "./db/sequelize.js";
 import {
-	userRoute,
-	cardRoute,
-	groupRoute,
-	resultRoute,
-	sharedGroupRoute,
+  userRoute,
+  cardRoute,
+  groupRoute,
+  resultRoute,
+  sharedGroupRoute,
 } from "./routes/routes.js";
 import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
 import { initializeLogger } from "./middlewares/initializeLogger.js";
@@ -40,18 +40,21 @@ const options = { key, cert };
 const port = EnvVariables.PORT || 3000;
 
 const start = async () => {
-	try {
-		validateEnvVariables();
-		await connectDB();
-		console.log("Database connected, attempting to sync models...");
-		await sequelize.sync({ alter: true });
+  try {
+    validateEnvVariables();
+    await connectDB();
+    console.log("Database connected, attempting to sync models...");
+    await sequelize.sync({ alter: true });
 
-		https.createServer(options, app).listen(port, () => {
-			console.log(`HTTPS server running on port https://localhost:${port}`);
-			console.log(`Protected HTTPS server running on port https://127.0.0.1:${port}`);
-		})
-	} catch (error) {
-		console.error("Error starting server: ", error);
-	}
+    https.createServer(options, app).listen(port, () => {
+      console.log(`HTTPS server running on port https://localhost:${port}`);
+      console.log(
+        `Protected HTTPS server running on port https://127.0.0.1:${port}`,
+      );
+    });
+  } catch (error) {
+    console.error("Error starting server: ", error);
+  }
 };
+
 start();
