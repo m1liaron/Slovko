@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();
+import { authRouter } from "./authRouter";
+const { router, get, post, delete: remove } = authRouter();
 import {
 	createSharedGroup,
 	getAllSharedGroups,
@@ -8,11 +8,11 @@ import {
 	removeSharedGroup,
 } from "../controllers/sharedGroupController";
 
-router.route("/").get(getAllSharedGroups).post(createSharedGroup);
-router
-	.route("/:sharedGroupId")
-	.get(getSharedGroup)
-	.post(copySharedGroup)
-	.delete(removeSharedGroup);
+get("/", getAllSharedGroups);
+post("/", createSharedGroup);
+
+get("/:sharedGroupId", getSharedGroup);
+post("/:sharedGroupId", copySharedGroup);
+remove("/:sharedGroupId", removeSharedGroup);
 
 export { router as sharedGroupRoute };

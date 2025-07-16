@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();
+import { authRouter } from "./authRouter";
+const { router, get, post } = authRouter();
 import {
 	saveResults,
 	getResults,
@@ -7,8 +7,9 @@ import {
 	getResultsStatistics,
 } from "../controllers/resultsController";
 
-router.route("/statistics").get(getResultsStatistics);
-router.route("/").get(getResults).post(saveResults);
-router.route("/:resultId").get(getResultDetails);
+get("/", getResults)
+post("/", saveResults)
+get("/statistics", getResultsStatistics)
+get("/:resultId", getResultDetails)
 
 export { router as resultRoute }
