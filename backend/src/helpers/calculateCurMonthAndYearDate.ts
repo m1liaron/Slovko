@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { Response } from "express";
 
-function calculateCurMonthAndYearDate(month: string, year: string, res: Response) {
-	const intMonth = Number.parseInt(month, 10);
-	const intYear = Number.parseInt(year, 10);
+function calculateCurMonthAndYearDate(month: number | string, year: number | string, res: Response): { startDate: Date;  endDate: Date } | any {
+	const intMonth = Number.parseInt(String(month), 10);
+	const intYear = Number.parseInt(String(year), 10);
 	if (
 		Number.isNaN(intMonth) ||
 		Number.isNaN(intYear) ||

@@ -7,6 +7,39 @@ import { StatusCodes } from "http-status-codes";
 import { AuthRequest } from "../common/types/AuthRequest";
 import { Response } from "express";
 import { sendError } from "../helpers";
+import { ResultAttributes } from "../common/types/Request.type";
+
+interface ResultsQuery {
+	month: string;
+	year: string;
+	page?: string;
+	limit?: string;
+}
+
+type ResultsCard = {
+	wordId: string;
+	word: string;
+	translateWord: string;
+	mistakesAmount: number;
+};
+
+type SaveResultsRequest = {
+	title: string | Date;
+	flashCards: ResultsCard[];
+	quiz: ResultsCard[];
+	guessWord: ResultsCard[];
+	startedLearn: Date;
+	completionTime: Date;
+};
+
+interface SaveResultsBody {
+	title: string;
+	startedLearn: Date;
+	completionTime: Date;
+	data: {
+
+	}
+}
 
 const getResultsDetails = async (req: AuthRequest, res: Response) => {
 	try {
@@ -26,7 +59,7 @@ const getResultsDetails = async (req: AuthRequest, res: Response) => {
 			],
 		});
 
-		res.status(200).json(results);
+		res.status(StatusCodes.OK).json(results);
 	} catch (error) {
 		sendError(res, error);
 	}
@@ -64,7 +97,7 @@ const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 			"November",
 			"December",
 		];
-		const resultsMonths = [];
+		const resultsMonths: Partial<typeof months> = [];
 
 		results.map((result) => {
 			const month = months[new Date(result.createdAt).getMonth()];
@@ -73,7 +106,7 @@ const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 			}
 		});
 
-		function getAllWordsMode(results) {
+		function getAllWordsMode(results: ResultAttributes[]) {
 			const modeMonthSum = {};
 
 			for (const result of results) {
@@ -112,16 +145,10 @@ const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 	}
 };
 
-const getResults = async (req: AuthRequest, res: Response) => {
-	const { year } = req.query;
-
+const getResults = async (req: AuthRequest<ResultsQuery>, res: Response) => {
 	try {
-		const {
-			month = new Date().getMonth() + 1,
-			year = new Date().getFullYear(),
-			page,
-			limit,
-		} = req.query;
+		const { month, year, page = "0", limit = "10" } = req.query as ResultsQuery;
+
 		const { startDate, endDate } = calculateCurMonthAndYearDate(
 			month,
 			year,
@@ -188,9 +215,9 @@ const getResultDetails = async (req: AuthRequest, res: Response) => {
 	}
 };
 
-const saveResults = async (req: AuthRequest, res: Response) => {
+const saveResults = async (req: AuthRequest<SaveResultsBody>, res: Response) => {
+	const { title, startedLearn, completionTime, ...data } = req.body as SaveResultsRequest;
 	const {
-		body: { title, startedLearn, completionTime, ...data },
 		user: { id },
 	} = req;
 
@@ -207,12 +234,14 @@ const saveResults = async (req: AuthRequest, res: Response) => {
 				return total + key.filter((item) => item.mistakesAmount === 0).length;
 			}, 0);
 		const user = await User.findByPk(id);
-		await User.update(
-			{ points: user.points + correctAnswersAmount * 10 },
-			{
-				where: { id },
-			},
-		);
+		if (user) {
+			await User.update(
+				{ points: user.points + correctAnswersAmount * 10 },
+				{
+					where: { id },
+				},
+			);
+		}
 
 		const resultModes = await Promise.all(
 			Object.keys(data).map((mode) =>
@@ -232,16 +261,18 @@ const saveResults = async (req: AuthRequest, res: Response) => {
 		await Promise.all(
 			Object.entries(data).map(([mode, words]) => {
 				const resultMode = resultModes.find((rm) => rm.mode === mode);
-				return Promise.all(
-					words.map((word) =>
-						WordResult.create({
-							word: word.word,
-							translate: word.translateWord,
-							mistakesAmount: word.mistakesAmount,
-							resultModeId: resultMode.id,
-						}),
-					),
-				);
+				if (resultMode) {
+					return Promise.all(
+						words.map((word) =>
+							WordResult.create({
+								word: word.word,
+								translate: word.translateWord,
+								mistakesAmount: word.mistakesAmount,
+								resultModeId: resultMode.id,
+							}),
+						),
+					);
+				}
 			}),
 		);
 
