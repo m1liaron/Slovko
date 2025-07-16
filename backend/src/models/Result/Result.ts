@@ -1,9 +1,10 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../../db/sequelize";
 import { v4 as uuidv4 } from "uuid";
-import { User } from "../models";
+import { sequelize } from "../../db/sequelize.js";
+import { User } from "../models.js";
 
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel.js";
+import { ResultMode } from "./ResultMode.js";
 
 interface ResultAttributes extends BaseAttributes {
 	title: string;
@@ -19,6 +20,8 @@ class Result extends CustomModal<ResultAttributes, ResultCreationAttributes> imp
 	public userId!: string;
 	public startedLearn!: Date;
 	public completionTime!: Date;
+
+	public mode?: ResultMode
 }
 
 Result.init(

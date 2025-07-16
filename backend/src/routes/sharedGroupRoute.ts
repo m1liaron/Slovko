@@ -1,4 +1,4 @@
-import { authRouter } from "./authRouter";
+import { authRouter } from "./authRouter.js";
 const { router, get, post, delete: remove } = authRouter();
 import {
 	createSharedGroup,
@@ -6,7 +6,7 @@ import {
 	getSharedGroup,
 	copySharedGroup,
 	removeSharedGroup,
-} from "../controllers/sharedGroupController";
+} from "../controllers/sharedGroupController.js";
 
 get("/", getAllSharedGroups);
 post("/", createSharedGroup);

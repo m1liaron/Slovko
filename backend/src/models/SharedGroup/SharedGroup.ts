@@ -1,9 +1,9 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../../db/sequelize";
+import { sequelize } from "../../db/sequelize.js";
 import { v4 as uuidv4 } from "uuid";
-import { User } from "../User";
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel";
-import { SharedCard } from "./SharedCard";
+import { User } from "../User.js";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel.js";
+import { SharedCard } from "./SharedCard.js";
 
 interface SharedGroupAttributes extends BaseAttributes {
 	title: string;

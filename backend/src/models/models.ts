@@ -1,14 +1,14 @@
-import { Card } from "./Card";
-import { Group } from "./Group";
-import { User } from "./User";
-import { Streak } from "./Streak";
-import { Result } from "./Result/Result";
-import { ResultMode } from "./Result/ResultMode";
-import { WordResult } from "./Result/WordResult";
-import { SharedGroup } from "./SharedGroup/SharedGroup";
-import { SharedCard } from "./SharedGroup/SharedCard";
-import { SharedCardLikes } from "./SharedGroup/SharedCardLikes";
-import { Image } from "./Image";
+import { Card } from "./Card.js";
+import { Group } from "./Group.js";
+import { User } from "./User.js";
+import { Streak } from "./Streak.js";
+import { Result } from "./Result/Result.js";
+import { ResultMode } from "./Result/ResultMode.js";
+import { WordResult } from "./Result/WordResult.js";
+import { SharedGroup } from "./SharedGroup/SharedGroup.js";
+import { SharedCard } from "./SharedGroup/SharedCard.js";
+import { SharedCardLikes } from "./SharedGroup/SharedCardLikes.js";
+import { Image } from "./Image.js";
 
 // User - Group
 User.hasMany(Group, { foreignKey: "userId", as: "groups" });

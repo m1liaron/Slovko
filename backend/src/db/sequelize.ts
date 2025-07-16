@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
-import { EnvVariables } from "../common/enums";
-require("dotenv").config();
+import { EnvVariables } from "../common/enums/index.js";
+import { config } from "dotenv";
+config();
 
 const sequelize = new Sequelize(
 	EnvVariables.DATABASE_NAME, // database name

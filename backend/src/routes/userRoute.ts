@@ -1,4 +1,4 @@
-import { authRouter } from "./authRouter";
+import { authRouter } from "./authRouter.js";
 const { router, get, put, patch } = authRouter();
 import {
 	register,
@@ -8,8 +8,8 @@ import {
 	updateUserStreak,
 	buyFreeze,
 	getUserStreakDates,
-}  from "../controllers/userController";
-import { authMiddleware } from "../middlewares/authenticationMiddleware";
+} from "../controllers/userController.js";
+import { authMiddleware } from "../middlewares/authenticationMiddleware.js";
 
 router.route("/register").post(register);
 router.route("/login").post(login);

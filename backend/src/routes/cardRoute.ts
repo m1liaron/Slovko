@@ -1,4 +1,4 @@
-import { authRouter } from "./authRouter";
+import { authRouter } from "./authRouter.js";
 const { router, get, post } = authRouter();
 import {
 	getAllCards,
@@ -10,7 +10,7 @@ import {
 	getRepeatedCards,
 	getCardsFromIds,
 	addManyCards,
-} from "../controllers/cardsController";
+} from "../controllers/cardsController.js";
 
 router.route("/repeated").post(getCardsFromIds);
 get("/", getRepeatedCards)

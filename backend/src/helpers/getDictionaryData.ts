@@ -1,4 +1,4 @@
-import { dictionaryAPi } from "../api/dictionaryAPi";
+import { dictionaryAPi } from "../api/dictionaryAPi.js";
 import axios from "axios";
 
 const getDictionaryData = async (word: string) => {

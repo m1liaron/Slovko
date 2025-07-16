@@ -1,4 +1,4 @@
-import { authRouter } from "./authRouter";
+import { authRouter } from "./authRouter.js";
 const { router, get, post, patch, delete: remove } = authRouter();
 import {
 	getAllGroups,
@@ -6,7 +6,7 @@ import {
 	removeGroup,
 	getGroup,
 	updateGroup,
-} from "../controllers/groupController";
+} from "../controllers/groupController.js";
 
 get("/", getAllGroups)
 post("/", addGroup);

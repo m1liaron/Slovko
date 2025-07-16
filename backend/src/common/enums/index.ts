@@ -1,1 +1,1 @@
-export { EnvVariables } from "./envVariables";
+export { EnvVariables } from "./envVariables.js";

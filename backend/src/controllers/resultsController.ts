@@ -1,13 +1,13 @@
 import { Op } from "sequelize";
 import {
 	calculateCurMonthAndYearDate,
-} from "../helpers/calculateCurMonthAndYearDate";
-import { Result, ResultMode, WordResult, User } from "../models/models";
+} from "../helpers/calculateCurMonthAndYearDate.js";
+import { Result, ResultMode, WordResult, User } from "../models/models.js";
 import { StatusCodes } from "http-status-codes";
-import { AuthRequest } from "../common/types/AuthRequest";
+import { AuthRequest } from "../common/types/AuthRequest.type.js";
 import { Response } from "express";
-import { sendError } from "../helpers";
-import { ResultAttributes } from "../common/types/Request.type";
+import { sendError } from "../helpers/index.js";
+import { ResultAttributes } from "../common/types/Request.type.js";
 
 interface ResultsQuery {
 	month: string;
@@ -31,15 +31,6 @@ type SaveResultsRequest = {
 	startedLearn: Date;
 	completionTime: Date;
 };
-
-interface SaveResultsBody {
-	title: string;
-	startedLearn: Date;
-	completionTime: Date;
-	data: {
-
-	}
-}
 
 const getResultsDetails = async (req: AuthRequest, res: Response) => {
 	try {
@@ -81,7 +72,7 @@ const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 					],
 				},
 			],
-		});
+		}) as (Result & { mode: (ResultMode & { words: WordResult[] })[] })[];
 
 		const months = [
 			"January",
@@ -89,8 +80,8 @@ const getResultsStatistics = async (req: AuthRequest, res: Response) => {
 			"March",
 			"April",
 			"May",
-			"Jule",
 			"June",
+			"July",
 			"August",
 			"September",
 			"October",
@@ -220,7 +211,7 @@ const getResultDetails = async (req: AuthRequest, res: Response) => {
 	}
 };
 
-const saveResults = async (req: AuthRequest<SaveResultsBody>, res: Response) => {
+const saveResults = async (req: AuthRequest<SaveResultsRequest>, res: Response) => {
 	const { title, startedLearn, completionTime, ...data } = req.body as SaveResultsRequest;
 	const {
 		user: { id },

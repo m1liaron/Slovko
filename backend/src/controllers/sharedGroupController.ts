@@ -4,11 +4,11 @@ import {
 	Group,
 	Card,
 	User,
-} from "../models/models";
+} from "../models/models.js";
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from "express";
-import { AuthRequest } from "../common/types/AuthRequest";
-import { sendError } from "../helpers";
+import { AuthRequest } from "../common/types/AuthRequest.type.js";
+import { sendError } from "../helpers/index.js";
 
 interface SharedGroupsQuery {
 	month: string;

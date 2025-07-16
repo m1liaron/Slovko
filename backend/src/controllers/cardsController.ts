@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 import { StatusCodes } from "http-status-codes";
 
-import { Card, Image, Group } from "../models/models";
-import { calculateNextReviewDate, getDictionaryData, sendError } from "../helpers";
-import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest";
+import { Card, Image, Group } from "../models/models.js";
+import { calculateNextReviewDate, getDictionaryData, sendError } from "../helpers/index.js";
+import { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
 	try {

@@ -1,4 +1,4 @@
-export { calculateCurMonthAndYearDate } from "./calculateCurMonthAndYearDate";
-export { calculateNextReviewDate } from "./calculateNextReviewDate";
-export { getDictionaryData } from "./getDictionaryData";
-export { sendError } from "./sendError";
+export { calculateCurMonthAndYearDate } from "./calculateCurMonthAndYearDate.js";
+export { calculateNextReviewDate } from "./calculateNextReviewDate.js";
+export { getDictionaryData } from "./getDictionaryData.js";
+export { sendError } from "./sendError.js";

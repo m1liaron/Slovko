@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel";
-import { sequelize } from "../db/sequelize";
+import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel.js";
+import { sequelize } from "../db/sequelize.js";
 
 interface ImageAttributes extends BaseAttributes {
 	url: string;

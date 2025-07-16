@@ -1,9 +1,9 @@
-import { Card, Group } from "../models/models";
-import { sequelize } from "../db/sequelize";
+import { Card, Group } from "../models/models.js";
+import { sequelize } from "../db/sequelize.js";
 import { StatusCodes } from 'http-status-codes';
-import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest";
+import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 import { Response } from "express";
-import { sendError } from "../helpers";
+import { sendError } from "../helpers/index.js";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
 	const userId = req.user.id;

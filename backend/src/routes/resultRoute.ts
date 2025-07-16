@@ -1,11 +1,11 @@
-import { authRouter } from "./authRouter";
+import { authRouter } from "./authRouter.js";
 const { router, get, post } = authRouter();
 import {
 	saveResults,
 	getResults,
 	getResultDetails,
 	getResultsStatistics,
-} from "../controllers/resultsController";
+} from "../controllers/resultsController.js";
 
 get("/", getResults)
 post("/", saveResults)

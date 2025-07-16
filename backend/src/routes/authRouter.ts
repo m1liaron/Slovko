@@ -1,11 +1,11 @@
 import { NextFunction, Router, Response, RequestHandler } from "express"
-import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest";
+import { AuthRequest, AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 
 type AuthRoute = <T = any> (
     path: string,
     handler: (req: AuthRequest<T>, res: Response, next: NextFunction) => any
 ) => Router;
- 
+
 const authRouter = () => {
     const router = Router();
 

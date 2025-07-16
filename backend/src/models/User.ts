@@ -7,9 +7,9 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sequelize } from "../db/sequelize";
+import { sequelize } from "../db/sequelize.js";
 import dotenv from "dotenv"
-import { EnvVariables } from "../common/enums";
+import { EnvVariables } from "../common/enums/index.js";
 dotenv.config();
 
 interface UserAttributes {

@@ -2,20 +2,21 @@ import express, { Application } from "express";
 import fs from "fs";
 import https from"https";
 import cors from "cors";
-import path from "path";
+import path, { dirname} from "path";
+import { fileURLToPath } from "url";
 
-import { connectDB, sequelize } from "./db/sequelize";
+import { connectDB, sequelize } from "./db/sequelize.js";
 import {
 	userRoute,
 	cardRoute,
 	groupRoute,
 	resultRoute,
 	sharedGroupRoute,
-} from "./routes/routes";
-import { authMiddleware } from "./middlewares/authenticationMiddleware";
-import { initializeLogger } from "./middlewares/initializeLogger";
-import { validateEnvVariables } from "./helpers/db";
-import { EnvVariables } from "./common/enums";
+} from "./routes/routes.js";
+import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
+import { initializeLogger } from "./middlewares/initializeLogger.js";
+import { validateEnvVariables } from "./helpers/db/index.js";
+import { EnvVariables } from "./common/enums/index.js";
 
 const app: Application = express();
 
@@ -29,7 +30,8 @@ app.use("/groups", authMiddleware, groupRoute);
 app.use("/results", authMiddleware, resultRoute);
 app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
 
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const key = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3-key.pem"));
 const cert = fs.readFileSync(path.join(__dirname, "../127.0.0.1+3.pem"));
 
