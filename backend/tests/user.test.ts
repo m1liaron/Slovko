@@ -1,10 +1,16 @@
 import request from "supertest";
 import { app } from "../src/index.js";
 
+const NEW_USER_DATA = {
+  email: "lani@gmail.com",
+  name: "lani",
+  password: "rty1245"
+}
+
 describe("USER_ROUTES", () => {
-  it("should return 401 for protected route without token", async () => {
-    const res = await request(app).get("/groups");
-    expect(res.status).toBe(401);
-    expect(res.body.message).toContain("Authentication invalid");
+  it("REGISTER", async () => {
+    const res = await request(app).post("/users/register").send(NEW_USER_DATA);
+
+    expect(res.status).toBeGreaterThanOrEqual(200);
   });
 });

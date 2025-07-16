@@ -8,7 +8,14 @@ import { sendError } from "../helpers/index.js";
 
 const register = async (req: Request, res: Response) => {
 	try {
-		const { email } = req.body;
+		const { email, password, name } = req.body;
+		if (!email || !password || !name) {
+			return res.status(StatusCodes.BAD_REQUEST).json({
+				error: true,
+				message: "Please provide name, email, and password",
+			});
+		}
+
 		const findUser = await User.findOne({ where: { email } });
 		if (findUser) {
 			return res
@@ -16,9 +23,13 @@ const register = async (req: Request, res: Response) => {
 				.json({ error: true, message: "User already exist" });
 		}
 
-		const user = await User.create({ ...req.body });
+		const user = await User.create({
+			email,
+			password,
+			name,
+		});
 		const token = user.createJWT();
-		const { password: uselessPassword, ...mainUserData } = user.dataValues;
+		const { password: uselessPassword, ...mainUserData } = user.toJSON(); // or dataValues
 		res.status(StatusCodes.CREATED).json({ user: mainUserData, token });
 	} catch (error) {
 		sendError(res, error);
