@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();
+import { authRouter } from "./authRouter";
+const { router, get, post, patch, remove } = authRouter();
 import {
 	register,
 	login,

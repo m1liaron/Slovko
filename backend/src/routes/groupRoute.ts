@@ -1,5 +1,5 @@
 import { authRouter } from "./authRouter";
-const { router, get, post, patch, remove } = authRouter();
+const { router, get, post, patch, delete: remove } = authRouter();
 import {
 	getAllGroups,
 	addGroup,
