@@ -39,7 +39,6 @@ const register = async (req: Request, res: Response) => {
 const login = async (req: Request, res: Response) => {
 	try {
 		const { email, password: requestPassword } = req.body;
-		console.log(req.body)
 		if (!email || !requestPassword) {
 			return res
 				.status(StatusCodes.BAD_REQUEST)
@@ -66,7 +65,7 @@ const login = async (req: Request, res: Response) => {
 		}
 
 		const token = user.createJWT();
-		const { password: uselessPassword, ...mainUserData } = user;
+		const { password: uselessPassword, ...mainUserData } = user.toJSON();
 		res.status(StatusCodes.OK).json({ user: mainUserData, token });
 	} catch (error) {
 		sendError(res, error);

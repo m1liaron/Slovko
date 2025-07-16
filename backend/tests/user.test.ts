@@ -19,7 +19,7 @@ afterAll(async () => {
 });
 
 describe("USER_ROUTES", () => {
-  it("should register a new user", async () => {
+  it("USER_REGISTER should register a new user", async () => {
     const res = await request(app).post("/users/register").send(testUser);
 
     expect(res.statusCode).toBe(201);
@@ -27,14 +27,14 @@ describe("USER_ROUTES", () => {
     expect(res.body.token).toBeDefined();
   });
 
-  it("should not register an existing user", async () => {
+  it("USER_REGISTER should not register an existing user", async () => {
     const res = await request(app).post("/users/register").send(testUser);
 
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toContain("already exist");
   });
 
-  it("should login with valid credentials", async () => {
+  it("USER_LOGIN should login with valid credentials", async () => {
     const res = await request(app).post("/users/login").send({
       email: testUser.email,
       password: testUser.password,
@@ -47,7 +47,7 @@ describe("USER_ROUTES", () => {
     token = res.body.token;
   });
 
-  it("should not login with wrong password", async () => {
+  it("USER_LOGIN should not login with wrong password", async () => {
     const res = await request(app).post("/users/login").send({
       email: testUser.email,
       password: "wrongpassword",
@@ -56,4 +56,12 @@ describe("USER_ROUTES", () => {
     expect(res.statusCode).toBe(401);
     expect(res.body.message).toContain("Invalid credentials");
   });
+
+  it("GET_USER should return user by token", async () => {
+    const res = await request(app).get("/users").set("Authorization", `Bearer ${token}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.user.email).toBe(testUser.email)
+  });
 });
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwNWM3ZDQyOC1iNTg3LTQ1MzYtOWNhOS01ZTg5ZjJlYTM3MGIiLCJuYW1lIjoiYmliYSIsImlhdCI6MTc1MjY5MDQzMywiZXhwIjoxNzU1MjgyNDMzfQ.87Cr5Lt - yRWh1KV38A41urIFge7nBNDHXZ5XlVO6ViY
