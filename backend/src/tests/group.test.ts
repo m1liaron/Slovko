@@ -32,6 +32,7 @@ describe("GROUP_ROUTES", () => {
     expect(res.status).toBe(200);
     expect(res.body.title).toBe("Updated Group Title");
   });
+
   it("DELETE_GROUP", async () => {
     const res = await authRequest("delete", `/groups/${testData.testGroup.id}`);
 
