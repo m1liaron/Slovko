@@ -8,6 +8,7 @@ const testData = {
     name: "lani",
     password: "rty1245",
     points: 200,
+    froze: 0
   },
   token: "",
   userId: "",
@@ -34,4 +35,14 @@ afterAll(async () => {
   await sequelize.close();
 });
 
-export { testData, changeTestData };
+const authRequest = async (
+  method: "get" | "post" | "put" | "patch" | "delete",
+  path: string,
+  data?: any
+) => {
+  let req = request(app)[method](path).set("Authorization", `Bearer ${testData.token}`);
+  if (data) req = req.send(data);
+  return req;
+};
+
+export { testData, changeTestData, authRequest };

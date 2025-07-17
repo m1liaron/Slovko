@@ -1,7 +1,7 @@
 import request from "supertest";
 import { app } from "../index.js";
 import { sequelize } from "../db/sequelize.js";
-import { testData, changeTestData } from "./testSetup.js";
+import { testData, changeTestData, authRequest } from "./testSetup.js";
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
@@ -56,19 +56,14 @@ describe("USER_ROUTES", () => {
   });
 
   it("GET_USER should return user by token", async () => {
-    const res = await request(app)
-      .get("/users")
-      .set("Authorization", `Bearer ${testData.token}`);
+    const res = await authRequest("get", "/users");
 
     expect(res.statusCode).toBe(200);
     expect(res.body.user.email).toBe(testData.testUser.email);
   });
 
   it("PUT_USER should update user data", async () => {
-    const res = await request(app)
-      .patch(`/users/${testData.userId}`)
-      .set("Authorization", `Bearer ${testData.token}`)
-      .send({ email: "updatedEmail@gmail.com" });
+    const res = await authRequest("patch", `/users/${testData.userId}`, { email: "updatedEmail@gmail.com" });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.email).toBe("updatedEmail@gmail.com");
@@ -76,9 +71,7 @@ describe("USER_ROUTES", () => {
   });
 
   it("UPDATE_USER_STREAK should update user's streak", async () => {
-    const res = await request(app)
-      .post("/users/streak")
-      .set("Authorization", `Bearer ${testData.token}`);
+    const res = await authRequest("post", "/users/streak");
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("id", testData.userId);
@@ -87,11 +80,7 @@ describe("USER_ROUTES", () => {
 
   it("GET_STREAK_DATES should return streak dates", async () => {
     const now = new Date();
-    const res = await request(app)
-      .get(
-        `/users/streak?month=${now.getMonth() + 1}&year=${now.getFullYear()}`,
-      )
-      .set("Authorization", `Bearer ${testData.token}`);
+    const res = await authRequest("get", `/users/streak?month=${now.getMonth() + 1}&year=${now.getFullYear()}`);
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -99,20 +88,14 @@ describe("USER_ROUTES", () => {
   });
 
   it("POST_USER_FREEZE should buy freeze", async () => {
-    const res = await request(app)
-      .put("/users/streak/froze")
-      .set("Authorization", `Bearer ${testData.token}`)
-      .send({ froze: 50 });
+    const res = await authRequest("put", "/users/streak/froze", { froze: 50 });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.frozen).toBe(true);
   });
 
   it("POST_USER_FREEZE should already have freeze", async () => {
-    const res = await request(app)
-      .put("/users/streak/froze")
-      .set("Authorization", `Bearer ${testData.token}`)
-      .send({ froze: 100 });
+    const res = await authRequest("put", "/users/streak/froze", { froze: 50 });
 
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toBe("You already have freeze");
