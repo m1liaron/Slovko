@@ -2,13 +2,29 @@ import request from "supertest";
 import { app } from "../index.js";
 import { sequelize } from "../db/sequelize.js";
 
-const testData = {
+interface ITestData {
+  testUser: {
+    email: string;
+    name: string;
+    password: string;
+    points: number;
+    froze: number;
+  };
+  testGroup: {
+    id?: string;
+    title: string;
+  };
+  token: string;
+  userId: string;
+}
+
+const testData: ITestData = {
   testUser: {
     email: "lani@gmail.com",
     name: "lani",
     password: "rty1245",
     points: 200,
-    froze: 0
+    froze: 0,
   },
   testGroup: {
     title: "New Group",
@@ -38,12 +54,15 @@ afterAll(async () => {
   await sequelize.close();
 });
 
+type ITestDataField = ITestData[keyof ITestData];
+
 const authRequest = async (
   method: "get" | "post" | "put" | "patch" | "delete",
   path: string,
-  data?: any
+  data?: Partial<ITestDataField>,
 ) => {
-  let req = request(app)[method](path).set("Authorization", `Bearer ${testData.token}`);
+  const reqFn = request(app)[method];
+  let req = reqFn(path).set("Authorization", `Bearer ${testData.token}`);
   if (data) req = req.send(data);
   return req;
 };
