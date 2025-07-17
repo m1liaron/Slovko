@@ -2,6 +2,15 @@ import request from "supertest";
 import { app } from "../index.js";
 import { sequelize } from "../db/sequelize.js";
 
+type Card = {
+  word: string;
+  translateWord: string;
+  groupId?: string;
+  imageUri: string;
+  learnedAt?: Date;
+  nextReviewAt?: Date;
+}
+
 interface ITestData {
   testUser: {
     email: string;
@@ -10,14 +19,8 @@ interface ITestData {
     points: number;
     froze: number;
   };
-  testCard: {
-    word: string;
-    translateWord: string;
-    groupId?: string;
-    imageUri: string;
-    learnedAt?: Date;
-    nextReviewAt?: Date;
-  };
+  testCard: Card;
+  cards: Card[];
   testGroup: {
     id?: string;
     title: string;
@@ -37,6 +40,7 @@ const testData: ITestData = {
   testGroup: {
     title: "New Group",
   },
+  cards: [],
   testCard: {
     word: "Consequences",
     translateWord: "Наслідки",
@@ -72,7 +76,7 @@ type ITestDataField = ITestData[keyof ITestData];
 const authRequest = async (
   method: "get" | "post" | "put" | "patch" | "delete",
   path: string,
-  data?: Partial<ITestDataField>,
+  data?: Partial<ITestDataField> | any,
 ) => {
   const reqFn = request(app)[method];
   let req = reqFn(path).set("Authorization", `Bearer ${testData.token}`);
