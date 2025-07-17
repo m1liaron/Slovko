@@ -8,11 +8,11 @@ import { sendError } from "../helpers/index.js";
 const getAllGroups: AuthRequestHandler = async (req, res) => {
 	const userId = req.user.id;
 	try {
-		const cards = await Group.findAll({
+		const groups = await Group.findAll({
 			where: { userId },
 		});
 
-		res.status(StatusCodes.OK).json(cards);
+		res.status(StatusCodes.OK).json(groups);
 	} catch (error) {
 		sendError(res, error);
 	}

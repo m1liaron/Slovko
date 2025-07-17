@@ -10,6 +10,9 @@ const testData = {
     points: 200,
     froze: 0
   },
+  testGroup: {
+    title: "New Group",
+  },
   token: "",
   userId: "",
 };
