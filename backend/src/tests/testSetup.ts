@@ -10,6 +10,17 @@ interface ITestData {
     points: number;
     froze: number;
   };
+  testCard: {
+    word: string;
+    translateWord: string;
+    groupId: string;
+    imageUri: string;
+    definition?: string;
+    example?: string;
+    learnedAt?: Date;
+    nextReviewAt?: Date;
+    reviewCount: number;
+  };
   testGroup: {
     id?: string;
     title: string;
@@ -28,6 +39,15 @@ const testData: ITestData = {
   },
   testGroup: {
     title: "New Group",
+  },
+  testCard: {
+    word: "Consequences",
+    translateWord: "Наслідки",
+    groupId: "",
+    imageUri: "https://static.thenounproject.com/png/4592843-200.png",
+    definition: "It's a result of action",
+    example: "There are going to be consequences to you actions.",
+    reviewCount: 0,
   },
   token: "",
   userId: "",
