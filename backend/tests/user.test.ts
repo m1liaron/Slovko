@@ -102,4 +102,24 @@ describe("USER_ROUTES", () => {
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body[0]).toHaveProperty("date");
   });
+
+  it("POST_USER_FREEZE should buy freeze", async () => {
+    const res = await request(app)
+      .put("/users/streak/froze")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ froze: 50 });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.frozen).toBe(true);
+  });
+
+  it("POST_USER_FREEZE should already have freeze", async () => {
+    const res = await request(app)
+      .put("/users/streak/froze")
+      .set("Authorization", `Bearer ${token}`)
+      .send({ froze: 100 });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe("You already have freeze");
+  });
 });

@@ -1,14 +1,10 @@
-import { 
-  Model,
-  DataTypes,
-  Optional,
-} from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sequelize } from "../db/sequelize.js";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import { EnvVariables } from "../common/enums/index.js";
 dotenv.config();
 
@@ -24,9 +20,23 @@ interface UserAttributes {
   frozen: boolean;
 }
 
-interface UserCreationAttributes extends Optional<UserAttributes, "id" | "image" | "streak" | "lastReviewAt" | "points" | "frozen"> { }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+interface UserCreationAttributes
+  extends Optional<
+    UserAttributes,
+    | "id"
+    | "image"
+    | "streak"
+    | "lastReviewAt"
+    | "points"
+    | "frozen"
+    | "password"
+  > {}
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
   public id!: string;
   public name!: string;
   public email!: string;
@@ -36,6 +46,12 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
   public lastReviewAt!: Date;
   public points!: number;
   public frozen!: boolean;
+
+  public toJSON(): object {
+    const values = this.get() as Partial<UserAttributes>;
+    delete values.password;
+    return values;
+  }
 
   static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(10);
@@ -50,7 +66,7 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     return jwt.sign(
       { userId: this.id, name: this.name },
       EnvVariables.JWT_SECRET!,
-      { expiresIn: "30d"}
+      { expiresIn: "30d" },
     );
   }
 }
@@ -81,7 +97,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4,30],
+        len: [4, 30],
       },
     },
     image: {
@@ -114,7 +130,7 @@ User.init(
     modelName: "User",
     timestamps: true,
     tableName: "Users",
-  }
+  },
 );
 
 User.beforeCreate(async (user: User) => {
