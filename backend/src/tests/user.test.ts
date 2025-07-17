@@ -1,16 +1,7 @@
 import request from "supertest";
-import { app } from "../src/index.js";
-import { sequelize } from "../src/db/sequelize.js";
-
-const testUser = {
-  email: "lani@gmail.com",
-  name: "lani",
-  password: "rty1245",
-  points: 200,
-};
-
-let token: string;
-let userId: string;
+import { app } from "../index.js";
+import { sequelize } from "../db/sequelize.js";
+import { testData, changeTestData } from "./testSetup.js";
 
 beforeAll(async () => {
   await sequelize.sync({ force: true });
@@ -22,7 +13,9 @@ afterAll(async () => {
 
 describe("USER_ROUTES", () => {
   it("USER_REGISTER should register a new user", async () => {
-    const res = await request(app).post("/users/register").send(testUser);
+    const res = await request(app)
+      .post("/users/register")
+      .send(testData.testUser);
 
     expect(res.statusCode).toBe(201);
     expect(res.body.user).toBeDefined();
@@ -30,7 +23,9 @@ describe("USER_ROUTES", () => {
   });
 
   it("USER_REGISTER should not register an existing user", async () => {
-    const res = await request(app).post("/users/register").send(testUser);
+    const res = await request(app)
+      .post("/users/register")
+      .send(testData.testUser);
 
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toContain("already exist");
@@ -38,21 +33,21 @@ describe("USER_ROUTES", () => {
 
   it("USER_LOGIN should login with valid credentials", async () => {
     const res = await request(app).post("/users/login").send({
-      email: testUser.email,
-      password: testUser.password,
+      email: testData.testUser.email,
+      password: testData.testUser.password,
     });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.user).toBeDefined();
     expect(res.body.token).toBeDefined();
 
-    token = res.body.token;
-    userId = res.body.user.id;
+    changeTestData({ token: res.body.token });
+    changeTestData({ userId: res.body.user.id });
   });
 
   it("USER_LOGIN should not login with wrong password", async () => {
     const res = await request(app).post("/users/login").send({
-      email: testUser.email,
+      email: testData.testUser.email,
       password: "wrongpassword",
     });
 
@@ -63,30 +58,30 @@ describe("USER_ROUTES", () => {
   it("GET_USER should return user by token", async () => {
     const res = await request(app)
       .get("/users")
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${testData.token}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.user.email).toBe(testUser.email);
+    expect(res.body.user.email).toBe(testData.testUser.email);
   });
 
   it("PUT_USER should update user data", async () => {
     const res = await request(app)
-      .patch(`/users/${userId}`)
-      .set("Authorization", `Bearer ${token}`)
+      .patch(`/users/${testData.userId}`)
+      .set("Authorization", `Bearer ${testData.token}`)
       .send({ email: "updatedEmail@gmail.com" });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.email).toBe("updatedEmail@gmail.com");
-    expect(res.body.name).toBe(testUser.name);
+    expect(res.body.name).toBe(testData.testUser.name);
   });
 
   it("UPDATE_USER_STREAK should update user's streak", async () => {
     const res = await request(app)
       .post("/users/streak")
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${testData.token}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty("id", userId);
+    expect(res.body).toHaveProperty("id", testData.userId);
     expect(res.body).toHaveProperty("streak");
   });
 
@@ -96,7 +91,7 @@ describe("USER_ROUTES", () => {
       .get(
         `/users/streak?month=${now.getMonth() + 1}&year=${now.getFullYear()}`,
       )
-      .set("Authorization", `Bearer ${token}`);
+      .set("Authorization", `Bearer ${testData.token}`);
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
@@ -106,7 +101,7 @@ describe("USER_ROUTES", () => {
   it("POST_USER_FREEZE should buy freeze", async () => {
     const res = await request(app)
       .put("/users/streak/froze")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${testData.token}`)
       .send({ froze: 50 });
 
     expect(res.statusCode).toBe(200);
@@ -116,7 +111,7 @@ describe("USER_ROUTES", () => {
   it("POST_USER_FREEZE should already have freeze", async () => {
     const res = await request(app)
       .put("/users/streak/froze")
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${testData.token}`)
       .send({ froze: 100 });
 
     expect(res.statusCode).toBe(400);
