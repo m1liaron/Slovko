@@ -16,6 +16,7 @@ describe("CARD_ROUTES", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.word).toBe(testData.testCard.word);
     expect(res.body.groupId).toBe(testData.testGroup.id);
+    changeTestData({ testCard: res.body });
   });
 
   it("POST_MANY_CARDS", async () => {
@@ -40,4 +41,21 @@ describe("CARD_ROUTES", () => {
     expect(res.body.length).toBe(2);
     expect(res.body[0]).toHaveProperty("word", "Apple");
   });
+    
+    it("PATCH_CARD", async () => {
+        const res = await authRequest("patch", `/cards/${testData.testCard.id}`, {
+            word: "Updated word",
+            groupId: testData.testGroup.id
+        });
+
+        expect(res.status).toBe(200);
+        expect(res.body.word).toBe("Updated word");
+    });
+
+    it("DELETE_CARD", async () => {
+        const res = await authRequest("delete", `/cards/${testData.testCard.id}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body).toBe(testData.testCard.id);
+    });
 });

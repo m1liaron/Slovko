@@ -3,6 +3,7 @@ import { app } from "../index.js";
 import { sequelize } from "../db/sequelize.js";
 
 type Card = {
+  id?: string;
   word: string;
   translateWord: string;
   groupId?: string;
