@@ -17,4 +17,27 @@ describe("CARD_ROUTES", () => {
     expect(res.body.word).toBe(testData.testCard.word);
     expect(res.body.groupId).toBe(testData.testGroup.id);
   });
+
+  it("POST_MANY_CARDS", async () => {
+    const cards = [
+      {
+        word: "Apple",
+        translateWord: "Яблуко",
+        imageUri: "https://cdn.com/apple.png",
+        groupId: testData.testGroup.id,
+      },
+      {
+        word: "Banana",
+        translateWord: "Банан",
+        imageUri: "https://cdn.com/banana.png",
+        groupId: testData.testGroup.id,
+      },
+    ];
+
+    const res = await authRequest("post", "/cards/many", { cards });
+
+    expect(res.status).toBe(201);
+    expect(res.body.length).toBe(2);
+    expect(res.body[0]).toHaveProperty("word", "Apple");
+  });
 });
