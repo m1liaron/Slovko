@@ -35,7 +35,7 @@ const TEST_RESULT = {
   ],
 };
 
-describe("CARD_ROUTES", async () => {
+describe("RESULT_ROUTES", async () => {
   it("POST_RESULT", async () => {
     const res = await authRequest("post", "/results", TEST_RESULT);
 

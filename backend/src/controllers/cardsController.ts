@@ -170,7 +170,6 @@ const addCard = async (req: Request, res: Response) => {
         },
       },
     });
-    console.log("REQ BODY: ", req.body);
     if (findCard) {
       return res
         .status(StatusCodes.BAD_REQUEST)
