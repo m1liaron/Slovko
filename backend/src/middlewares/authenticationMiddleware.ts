@@ -21,28 +21,29 @@ const authMiddleware = async (req: AuthRequest, res: Response, next: NextFunctio
 	if (!authHeader || !authHeader.startsWith("Bearer ")) {
 		return res
 			.status(401)
-			.json({ error: true, message: "Authentication invalid" });
+			.json({ error: true, message: "Authentication invalid, token not found" });
 	}
 	const token = authHeader.split(" ")[1];
 
 	try {
 		const decoded = jwt.verify(token, EnvVariables.JWT_SECRET!) as DecodedUserPayload;
-
-		const user = await User.findByPk(decoded.id, {
+		const user = await User.findByPk(decoded.userId, {
 			attributes: { exclude: ["password"] },
 		});
 		if (!user) {
 			return res
 				.status(401)
-				.json({ error: true, message: "Authentication invalid" });
+				.json({ error: true, message: "Authentication invalid, user not found" });
 		}
 		req.user = { id: decoded.userId, name: decoded.name };
 
 		next();
 	} catch (error) {
-		return res
-			.status(401)
-			.json({ error: true, message: "Authentication invalid" });
+		if (error instanceof Error) {
+			return res
+				.status(401)
+				.json({ error: true, message: "Authentication invalid: " + error.message });
+		}
 	}
 };
 

@@ -3,7 +3,7 @@ import { sequelize } from "../db/sequelize.js";
 import { Group } from "./Group.js";
 import { Image } from "./Image.js";
 import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel.js";
-
+import { v4 as uuidv4 } from "uuid";
 interface CardAttributes extends BaseAttributes {
 	word: string;
 	translateWord: string;
@@ -36,7 +36,7 @@ Card.init(
 	{
 		id: {
 			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			defaultValue: uuidv4,
 			primaryKey: true,
 		},
 		word: {
