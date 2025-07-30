@@ -46,11 +46,14 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
   return (
     <Link
       key={id}
-      style={[styles.item, { borderColor: colors.lightBackground }]}
+      style={[
+        styles.item,
+        { borderColor: colors.lightBackground, shadowColor: colors.primary },
+      ]}
       to={{ screen: 'group', params: { groupId: id } }}
     >
       <Text style={{ fontSize: 30, color: colors.primary }}>{title}</Text>
-      <SimpleLineIcons name="arrow-right" size={30} />
+      <SimpleLineIcons name="arrow-right" size={30} color={colors.primary} />
     </Link>
   );
 };
