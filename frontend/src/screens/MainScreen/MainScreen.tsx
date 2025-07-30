@@ -33,7 +33,6 @@ import {
 } from '../../utils/notifications';
 import styles from './MainScreen.styles';
 
-
 const MainScreen = () => {
   useLanguage();
   const dispatch = useAppDispatch();
@@ -50,8 +49,6 @@ const MainScreen = () => {
     0,
   );
 
-  console.log("hello world")
-	
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
       const setupNotifications = async () => {
@@ -184,10 +181,13 @@ const MainScreen = () => {
 
       {repeatedGroupsIds.length ? (
         <Pressable
-          style={styles.repeatButton}
+          style={[
+            styles.repeatButton,
+            { backgroundColor: theme.colors.primary },
+          ]}
           onPress={() => setShowRepeatedModal(true)}
         >
-          <Text style={{ color: theme.colors.primary, fontSize: 30 }}>
+          <Text style={{ color: theme.colors.background, fontSize: 30 }}>
             {i18n.t('mainScreen.repeatWords')} - {repeatedCardsLength}
           </Text>
         </Pressable>
