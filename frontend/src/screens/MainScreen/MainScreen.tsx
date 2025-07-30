@@ -183,7 +183,7 @@ const MainScreen = () => {
         <Pressable
           style={[
             styles.repeatButton,
-            { backgroundColor: theme.colors.primary },
+            { backgroundColor: theme.colors.highlightColor },
           ]}
           onPress={() => setShowRepeatedModal(true)}
         >

@@ -1,10 +1,10 @@
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { removeCard, removeStateCard } from '@/redux/cardReducer/cardSlice';
-import { Entypo, SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
 import { Link } from '@react-navigation/native';
 import { useCallback } from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Text } from 'react-native';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   removeGroup,

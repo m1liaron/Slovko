@@ -10,7 +10,6 @@ import {
   PixelRatio,
   Platform,
   Pressable,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -152,11 +151,13 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
               </ThemeText>
 
               {item.translateWord && (
-                <View style={{ flexDirection: 'row' }}>
-                  <ThemeText style={{ fontWeight: 'bold' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <ThemeText
+                    style={{ fontWeight: 'bold', fontSize: fontSize - 10 }}
+                  >
                     Переклад:{' '}
                   </ThemeText>
-                  <ThemeText style={{ fontSize: fontSize - 10 }}>
+                  <ThemeText style={{ fontSize: fontSize - 15 }}>
                     {item.translateWord}
                   </ThemeText>
                 </View>
