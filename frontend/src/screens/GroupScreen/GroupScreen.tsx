@@ -8,7 +8,7 @@ import type {
 } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { getGroupStorage } from '@/redux/groupReducer/groupThunk';
 import type { RootState } from '@/redux/store';
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
@@ -137,55 +137,24 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           <BackButton />
           <ThemeText style={{ fontSize: 30 }}>{group?.title}</ThemeText>
         </View>
-        <Pressable>
-          <Entypo
-            name="dots-three-vertical"
-            size={30}
-            color={colors.iconColor}
-          />
-        </Pressable>
-      </View>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View>
-          <Pressable onPress={sortByNextReview}>
-            <MaterialCommunityIcons
-              name={
-                nextReviewSort === 'asc'
-                  ? 'sort-clock-ascending-outline'
-                  : 'sort-clock-descending-outline'
-              }
-              color={colors.primary}
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable>
+            <Feather name="filter" size={30} color={colors.iconColor} />
+          </Pressable>
+
+          <Pressable>
+            <Entypo
+              name="dots-three-vertical"
               size={30}
+              color={colors.iconColor}
             />
           </Pressable>
         </View>
-
-        {group?.knowCardsAmount && (
-          <>
-            <RenderStatusButtons />
-            <Pressable
-              style={{
-                padding: 5,
-                borderRadius: 10,
-                borderWidth: 2,
-                borderColor: '#bcbcbc',
-                marginHorizontal: 10,
-              }}
-              onPress={() => dispatch(resetFilter())}
-            >
-              <Entypo name="back-in-time" size={30} color="#bcbcbc" />
-            </Pressable>
-          </>
-        )}
       </View>
+
       <CardList groupId={groupId} />
+
       <DefaultModal
         isVisible={showEditModal}
         handleClose={() => setShowEditModal(false)}

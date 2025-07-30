@@ -1,6 +1,5 @@
 import React from 'react';
-import { Pressable } from 'react-native';
-import ThemeText from '../ThemeText/ThemeText';
+import { Pressable, Text } from 'react-native';
 import styles from './PressableButton.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 
@@ -45,9 +44,7 @@ const PressableButton = ({
       ]}
       disabled={disabled}
     >
-      <ThemeText style={[styles.buttonText, { color: background }]}>
-        {text}
-      </ThemeText>
+      <Text style={[styles.buttonText, { color: background }]}>{text}</Text>
     </Pressable>
   );
 };
