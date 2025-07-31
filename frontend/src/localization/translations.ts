@@ -93,6 +93,8 @@ const translations = {
       },
     },
     sharedGroup: {
+      sharedOn: 'Shared On',
+      sharedWords: 'Shared Words',
       noCards: 'No cards here',
       copyGroupButton: 'Copy group',
       translation: 'Translation: ',
@@ -256,6 +258,8 @@ const translations = {
       },
     },
     sharedGroup: {
+      sharedOn: 'Поширено',
+      sharedWords: 'Поширені Слова',
       noCards: 'Немає карток тут',
       copyGroupButton: 'Скопіювати групу',
       translation: 'Переклад: ',
