@@ -27,6 +27,10 @@ const translations = {
       sortDate: 'sort date',
       sortName: 'sort name',
       sortWordsAmount: 'sort words amount',
+      filterDifficulty: 'Difficulty',
+      easy: 'Easy',
+      medium: 'Medium',
+      hard: 'Hard',
     },
     resultsScreen: {
       filterPlaceholder: 'Filter',
@@ -186,6 +190,10 @@ const translations = {
       sortDate: 'Сортувати по даті',
       sortName: 'Сортувати по імені',
       sortWordsAmount: 'Сортувати по кількості слів',
+      filterDifficulty: 'Складність',
+      easy: 'Легка',
+      medium: 'Середня',
+      hard: 'Складна',
     },
     resultsScreen: {
       filterPlaceholder: 'Фільтр',

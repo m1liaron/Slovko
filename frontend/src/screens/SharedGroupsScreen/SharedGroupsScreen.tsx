@@ -6,7 +6,7 @@ import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { Ionicons } from '@expo/vector-icons';
+import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
@@ -14,6 +14,7 @@ import {
   FlatList,
   Image,
   Pressable,
+  Text,
   TextInput,
   View,
   useWindowDimensions,
@@ -49,7 +50,6 @@ const SharedGroupsScreen = () => {
     theme: { colors },
   } = useAppTheme();
   const dispatch = useAppDispatch();
-  const { width } = useWindowDimensions();
   const navigation = useNavigation<StackNavigation>();
   const { sharedGroups, haveMoreSharedGroups, isLoading, status, error } =
     useAppSelector((state) => state.sharedGroups);
@@ -60,8 +60,12 @@ const SharedGroupsScreen = () => {
   const [sharedGroupTitle, setSharedGroupTitle] = useState(
     selectedGroup?.title,
   );
-  const [showFilterInput, setShowFilterInput] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [filterValue, setFilterValue] = useState('');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<
+    'easy' | 'medium' | 'hard' | string
+  >('');
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -163,13 +167,12 @@ const SharedGroupsScreen = () => {
 
   const renderFooter = () =>
     isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: 10 }}>
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     ) : null;
 
   const sortOptions = [
-    { label: i18n.t('sharedGroupsScreen.sort'), value: 'sort' },
     { label: i18n.t('sharedGroupsScreen.sortDate'), value: 'sortDate' },
     { label: i18n.t('sharedGroupsScreen.sortName'), value: 'sortName' },
     {
@@ -183,6 +186,12 @@ const SharedGroupsScreen = () => {
     backgroundColor: colors.lightBackground,
     ...styles.sortSelect,
   };
+
+  const difficulties = [
+    `${i18n.t('sharedGroupsScreen.easy')}`,
+    `${i18n.t('sharedGroupsScreen.medium')}`,
+    `${i18n.t('sharedGroupsScreen.hard')}`,
+  ];
 
   return (
     <ThemeBackground>
@@ -202,21 +211,97 @@ const SharedGroupsScreen = () => {
         />
       </View>
 
-      <View style={{ margin: 5 }}>
-        <RNPickerSelect
-          placeholder={{
-            label: i18n.t('sharedGroupsScreen.sort'),
-            value: 'sort',
-          }}
-          onValueChange={() => {}}
-          items={sortOptions}
+      <Pressable
+        style={{ margin: 10, alignSelf: 'flex-start', alignItems: 'center' }}
+        onPress={() => setShowFilter((prev) => !prev)}
+      >
+        {showFilter ? (
+          <FontAwesome name="filter" size={21} color={colors.primary} />
+        ) : (
+          <Feather name="filter" size={20} color={colors.primary} />
+        )}
+        <ThemeText>{i18n.t('sharedGroupsScreen.filter')}</ThemeText>
+      </Pressable>
+
+      {showFilter ? (
+        <View
           style={{
-            inputWeb: sortSelectStyle,
-            inputIOS: sortSelectStyle,
-            inputAndroid: sortSelectStyle,
+            position: 'absolute',
+            backgroundColor: colors.background,
+            top: 100,
+            left: 10,
+            borderRadius: 20,
+            padding: 20,
+            zIndex: 2,
+            borderColor: colors.lightText,
           }}
-        />
-      </View>
+        >
+          <View>
+            <ThemeText style={{ fontSize: 20, fontWeight: 'bold' }}>
+              {i18n.t('sharedGroupsScreen.filterDifficulty')}
+            </ThemeText>
+            <View style={{ flexDirection: 'row', gap: 5, padding: 10 }}>
+              {difficulties.map((diff) => (
+                <Pressable
+                  onPress={() => setSelectedDifficulty(diff)}
+                  style={[
+                    styles.difficultyBtn,
+                    {
+                      borderColor: colors.highlightColor,
+                      backgroundColor:
+                        selectedDifficulty === diff
+                          ? colors.highlightColor
+                          : '',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color:
+                        selectedDifficulty === diff
+                          ? colors.background
+                          : colors.primary,
+                    }}
+                  >
+                    {diff}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 20,
+              alignItems: 'center',
+            }}
+          >
+            <RNPickerSelect
+              placeholder={{
+                label: i18n.t('sharedGroupsScreen.sort'),
+                value: 'sort',
+              }}
+              onValueChange={() => {}}
+              items={sortOptions}
+              style={{
+                inputWeb: sortSelectStyle,
+                inputIOS: sortSelectStyle,
+                inputAndroid: sortSelectStyle,
+              }}
+            />
+            <FontAwesome
+              onPress={() =>
+                setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+              }
+              size={30}
+              color={colors.primary}
+              name={sortOrder == 'asc' ? 'sort-asc' : 'sort-desc'}
+            />
+          </View>
+        </View>
+      ) : null}
 
       {isLoading ? (
         <FlatList
@@ -270,7 +355,7 @@ const SharedGroupsScreen = () => {
                     borderWidth: 2,
                     borderRadius: 10,
                     fontSize: 30,
-                    padding: 20,
+                    padding: 10,
                   }}
                 >
                   {item.title}
@@ -291,7 +376,7 @@ const SharedGroupsScreen = () => {
             <PressableButton
               text={i18n.t('sharedGroupsScreen.createGroup')}
               onPress={() => navigation.navigate(AppPath.Home)}
-              buttonStyle={{ padding: 20 }}
+              buttonStyle={{ padding: 10 }}
             />
           </View>
         )}

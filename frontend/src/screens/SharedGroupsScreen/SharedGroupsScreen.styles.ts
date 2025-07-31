@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   sharedGroup: {
-    padding: 20,
+    padding: 10,
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
@@ -55,6 +55,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     maxWidth: 450,
     borderWidth: 0,
+  },
+  difficultyBtn: {
+    padding: 5,
+    borderRadius: 20,
+    borderWidth: 2,
   },
 });
 

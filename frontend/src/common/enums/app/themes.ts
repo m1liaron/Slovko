@@ -16,7 +16,7 @@ const lightTheme: Theme = {
   colors: {
     primary: '#12171D',
     background: '#fff',
-    lightBackground: '#d5d5d5',
+    lightBackground: '#f5f5f5',
     lightText: '#626471ff',
     iconColor: '#12171D',
     text: '#12171D',
