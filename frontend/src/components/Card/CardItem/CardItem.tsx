@@ -2,7 +2,7 @@ import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { ICard } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch } from '@/hooks/redux.hooks';
-import { pickImage } from '@/utils/utils';
+import { pickImage } from '@/utils';
 import { Entypo } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {

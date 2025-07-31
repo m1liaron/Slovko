@@ -14,6 +14,7 @@ import {
   FlatList,
   Platform,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
@@ -22,10 +23,16 @@ import BackButton from '../../components/BackButton/BackButton';
 import Loading from '../../components/Loading';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import { getResultDetails } from '../../redux/resultReducer/resultSlice';
-import { formatDMTDate, formatTime } from '../../utils/utils';
+import {
+  formatDMTDate,
+  formatDurationHHMMSS,
+  formatMDYTime,
+  formatTime,
+} from '../../utils';
 import styles from './ResultDetailsScreen.styles';
 import { PieChart, ProgressChart } from 'react-native-chart-kit';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
+import { Entypo } from '@expo/vector-icons';
 
 type ResultDetailsScreenProps = StackScreenProps<
   RootStackParamList,
@@ -36,6 +43,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { width } = useWindowDimensions();
   const { resultId } = route.params as { resultId: string };
   const { result, isLoading } = useAppSelector((state) => state.results);
   const [selectedMode, setSelectedMode] = useState<ModeName>('flashCards'); // 0 - flashCards, 1 - quiz, 2 - guessWord
@@ -97,7 +105,9 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
           text={modeOption.label}
           buttonStyle={{
             backgroundColor:
-              selectedMode === modeOption.key ? '#004da4' : '#007AFF',
+              selectedMode === modeOption.key
+                ? '#000bff'
+                : colors.highlightColor,
             padding: 4,
           }}
           onPress={() => setSelectedMode(modeOption.key)}
@@ -130,15 +140,35 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 
       <View
         style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginHorizontal: 10,
+          marginVertical: 10,
+        }}
+      >
+        <Text style={{ color: colors.lightText, fontSize: 20 }}>
+          {formatMDYTime(result.createdAt)}
+        </Text>
+        <Text style={{ color: colors.lightText, fontSize: 20 }}>
+          {formatDurationHHMMSS(
+            new Date(result.completionTime).getTime() -
+              new Date(result.startedLearn).getTime(),
+          )}
+        </Text>
+      </View>
+
+      <View
+        style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          marginVertical: 20,
         }}
       >
         <CircularProgress percentage={correctPercentage} />
       </View>
 
-      <View style={{ marginHorizontal: 50 }}>
+      <View style={{ marginHorizontal: width < 640 ? 10 : 50 }}>
         <View style={styles.buttonsContainer}>{renderModeButtons()}</View>
         {isLoading && <Loading />}
         {modesMap[selectedMode] && (
@@ -146,6 +176,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
             style={{ height: 400, width: '100%' }}
             data={modesMap[selectedMode]?.words}
             keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
             renderItem={({ item }) => (
               <View
                 style={[
@@ -154,14 +185,38 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
                 ]}
               >
                 <View style={styles.resultContainer}>
-                  <ThemeText style={[styles.title]}>
+                  <ThemeText
+                    style={[styles.title, { fontSize: width < 640 ? 15 : 25 }]}
+                  >
                     {item.word} - {item.translate}
                   </ThemeText>
                 </View>
-                <View style={styles.mistakesAmountContainer}>
-                  <ThemeText style={[styles.title]}>
-                    {item.mistakesAmount}
-                  </ThemeText>
+                <View
+                  style={[
+                    styles.mistakesAmountContainer,
+                    {
+                      paddingVertical: 10,
+                      paddingHorizontal: item.mistakesAmount >= 1 ? 14 : 10,
+                      backgroundColor:
+                        item.mistakesAmount === 0 ? '#81DC9F' : '#FC8277',
+                    },
+                  ]}
+                >
+                  {item.mistakesAmount === 0 ? (
+                    <Entypo name="check" size={15} color={colors.background} />
+                  ) : (
+                    <Text
+                      style={[
+                        styles.title,
+                        {
+                          fontWeight: 'bold',
+                          fontSize: width < 640 ? 15 : 25,
+                        },
+                      ]}
+                    >
+                      {item.mistakesAmount}
+                    </Text>
+                  )}
                 </View>
               </View>
             )}

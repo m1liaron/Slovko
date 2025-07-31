@@ -6,7 +6,7 @@ import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
 import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
-import { pickImage } from '@/utils/utils';
+import { pickImage } from '@/utils';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { useNavigation } from '@react-navigation/native';

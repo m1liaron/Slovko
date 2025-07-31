@@ -4,7 +4,6 @@ import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { formatDMTDate } from '@/utils/utils';
 import type { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, FlatList, Text, View } from 'react-native';
@@ -18,6 +17,7 @@ import {
   getSharedGroup,
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 import styles from './SharedGroupDetailsScreen.styles';
+import { formatMDYTime } from '@/utils';
 
 /**
  * @param route { object: { params }}
@@ -65,13 +65,6 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
       });
     }
   };
-
-  const formatMDYTime = (date: Date) =>
-    new Date(date).toLocaleDateString(i18n.locale || 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
 
   return (
     <ThemeBackground style={{ padding: 20 }}>
