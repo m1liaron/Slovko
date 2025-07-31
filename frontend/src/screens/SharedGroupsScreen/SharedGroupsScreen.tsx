@@ -45,7 +45,6 @@ import { selectUser } from '../../redux/userReducer/userSlice';
 import styles from './SharedGroupsScreen.styles';
 
 const SharedGroupsScreen = () => {
-  const { user } = useAppSelector(selectUser);
   const {
     theme: { colors },
   } = useAppTheme();

@@ -51,6 +51,7 @@ const translations = {
         'November',
         'December',
       ],
+      completed: 'Виконав',
     },
     profileScreen: {
       profileTitle: 'Your Profile',
@@ -216,6 +217,7 @@ const translations = {
         'Листопад',
         'Грудень',
       ],
+      completed: 'Виконав',
     },
     profileScreen: {
       profileTitle: 'Ваш профіль',

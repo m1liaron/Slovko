@@ -10,9 +10,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type React from 'react';
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
-  Platform,
   Text,
   useWindowDimensions,
   View,
@@ -23,12 +21,7 @@ import BackButton from '../../components/BackButton/BackButton';
 import Loading from '../../components/Loading';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import { getResultDetails } from '../../redux/resultReducer/resultSlice';
-import {
-  formatDMTDate,
-  formatDurationHHMMSS,
-  formatMDYTime,
-  formatTime,
-} from '../../utils';
+import { formatDurationHHMMSS, formatMDYTime, formatTime } from '../../utils';
 import styles from './ResultDetailsScreen.styles';
 import { PieChart, ProgressChart } from 'react-native-chart-kit';
 import CircularProgress from '@/components/CircularProgress/CircularProgress';
