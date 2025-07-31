@@ -266,7 +266,7 @@ const translations = {
     },
     resultDetailsScreen: {
       title: 'Деталі Результату',
-      correctPercentage: 'Відсоток Вірних Відповідей',
+      correctPercentage: 'Правильні Відповідi',
       flashCards: 'Картки',
       check: 'Вибір Перекладу',
       quiz: 'Вікторина',
