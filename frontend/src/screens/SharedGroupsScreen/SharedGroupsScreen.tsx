@@ -229,6 +229,7 @@ const SharedGroupsScreen = () => {
             <View style={{ flexDirection: 'row', gap: 5, padding: 10 }}>
               {difficulties.map((diff) => (
                 <Pressable
+                  key={diff}
                   onPress={() => setSelectedDifficulty(diff)}
                   style={[
                     styles.difficultyBtn,

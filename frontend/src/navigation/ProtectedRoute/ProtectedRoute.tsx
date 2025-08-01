@@ -34,7 +34,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, status, user, message } = useAppSelector(selectUser);
+  const { isAuthenticated, status, user } = useAppSelector(selectUser);
   const isConnected = useAppSelector((state) => state.network.isConnected);
 
   const [isLoading, setIsLoading] = useState(true);

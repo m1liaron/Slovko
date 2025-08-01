@@ -1,4 +1,4 @@
-import { getUnsplashPhotos } from '@/api/unsplash';
+  import { getUnsplashPhotos } from '@/api/unsplash';
 import noCardsImage from '@/assets/images/no-cards.png';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';

@@ -157,7 +157,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
                   >
                     Переклад:{' '}
                   </ThemeText>
-                  <ThemeText style={{ fontSize: fontSize - 15 }}>
+                  <ThemeText style={{ fontSize: fontSize - 10 }}>
                     {item.translateWord}
                   </ThemeText>
                 </View>

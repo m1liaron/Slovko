@@ -1,12 +1,12 @@
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import type { AppPath } from '@/common/enums/app/AppPath';
+import { AppPath } from '@/common/enums/app/AppPath';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
-import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import type { RootStackParamList, StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import type { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
@@ -15,11 +15,13 @@ import { useAppTheme } from '../../contexts/ThemeProvider';
 import {
   copySharedGroup,
   getSharedGroup,
+  removeSharedGroup,
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 import styles from './SharedGroupDetailsScreen.styles';
 import { formatMDYTime } from '@/utils';
 import { selectUser } from '@/redux/userReducer/userSlice';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 /**
  * @param route { object: { params }}
@@ -36,6 +38,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
+   const navigation = useNavigation<StackNavigation>();
   const { sharedGroupId } = route.params as { sharedGroupId: string };
   const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
   const { user } = useAppSelector(selectUser);
@@ -69,6 +72,11 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
     }
   };
 
+  const handleRemoveSharedGroup = () => {
+    dispatch(removeSharedGroup(sharedGroup.id));
+    navigation.navigate(AppPath.SharedGroup);
+  }
+
   return (
     <ThemeBackground style={{ padding: 20 }}>
       <View style={{ zIndex: 100 }}>
@@ -98,7 +106,9 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
           </View>
 
           {sharedGroup.userId === user?.id && (
-            <FontAwesome6 name="trash" size={30} color={colors.primary} />
+            <Pressable onPress={handleRemoveSharedGroup}>
+              <FontAwesome6 name="trash" size={30} color={colors.primary} />
+            </Pressable>
           )}
         </View>
 

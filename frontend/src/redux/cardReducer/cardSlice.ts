@@ -122,19 +122,20 @@ const cardSlice = createSlice({
 				state.filteredCards = action.payload;
 			})
 			.addCase(addCard.fulfilled, (state, action) => {
-				const { tempId, card } = action.payload;
-				if (tempId) {
-					state.cards = state.cards.filter((card) => card.id !== tempId);
-					state.filteredCards = state.filteredCards.filter(
-						(card) => card.id !== tempId,
-					);
-					state.globalCards = state.globalCards.filter(
-						(card) => String(card.id) !== String(tempId),
-					);
+				// const { tempId, card } = action.payload;
+				// if (tempId) {
+				// 	state.cards = state.cards.filter((card) => card.id !== tempId);
+				// 	state.filteredCards = state.filteredCards.filter(
+				// 		(card) => card.id !== tempId,
+				// 	);
+				// 	state.globalCards = state.globalCards.filter(
+				// 		(card) => String(card.id) !== String(tempId),
+				// 	);
 
-					state.cards.push(card);
-					state.globalCards.push(card);
-				}
+				// 	state.cards.push(card);
+				// 	state.globalCards.push(card);
+				// }
+				state.cards.push(action.payload.card);
 			})
 			.addCase(addManyCards.fulfilled, (state, action) => {
 				state.cards.push(...action.payload.cards);
