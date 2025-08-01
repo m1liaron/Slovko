@@ -41,7 +41,7 @@ export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
     };
 
     performRemove();
-  }, [dispatch, id, globalCards.filter]);
+  }, [dispatch, id]);
 
   return (
     <Link

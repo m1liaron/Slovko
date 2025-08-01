@@ -115,53 +115,40 @@ const SharedGroupsScreen = () => {
   }, [error, status]);
 
   const renderItem = ({ item }: { item: ISharedGroup }) => (
-    <View
+    <Pressable
       key={item.id}
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 20,
-      }}
+      style={[styles.sharedGroup, { borderColor: colors.lightBackground }]}
+      onPress={() =>
+        navigation.navigate(AppPath.SharedGroupDetails, {
+          sharedGroupId: item.id,
+        })
+      }
     >
-      <Pressable
-        style={styles.sharedGroup}
-        onPress={() =>
-          navigation.navigate(AppPath.SharedGroupDetails, {
-            sharedGroupId: item.id,
-          })
-        }
+      <View
+        style={{
+          flexDirection: 'row',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+        }}
       >
-        <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-            }}
+        <Image
+          source={item?.user?.image ? { uri: item.user.image } : AvatarImage}
+          style={styles.avatarIcon}
+        />
+        <View>
+          <ThemeText style={{ fontSize: 30 }}>{item.title}</ThemeText>
+          <ThemeText
+            style={[
+              styles.avatarName,
+              { backgroundColor: colors.lightBackground },
+            ]}
           >
-            <Image
-              source={
-                item?.user?.image ? { uri: item.user.image } : AvatarImage
-              }
-              style={styles.avatarIcon}
-            />
-            <View>
-              <ThemeText style={{ fontSize: 30 }}>{item.title}</ThemeText>
-              <ThemeText
-                style={[
-                  styles.avatarName,
-                  { backgroundColor: colors.lightBackground },
-                ]}
-              >
-                {item?.user?.name}
-              </ThemeText>
-            </View>
-          </View>
+            {item?.user?.name}
+          </ThemeText>
         </View>
-      </Pressable>
-    </View>
+      </View>
+    </Pressable>
   );
 
   const renderFooter = () =>

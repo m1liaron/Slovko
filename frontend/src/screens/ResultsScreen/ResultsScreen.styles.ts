@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   searchInput: {
-    flex: 1,
     fontSize: 16,
   },
   sortSelect: {
@@ -34,7 +33,6 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     backgroundColor: '#DCDCDC',
-    width: '90%',
     alignSelf: 'center',
     padding: 16,
     borderRadius: 10,

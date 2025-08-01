@@ -18,6 +18,8 @@ import {
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 import styles from './SharedGroupDetailsScreen.styles';
 import { formatMDYTime } from '@/utils';
+import { selectUser } from '@/redux/userReducer/userSlice';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 /**
  * @param route { object: { params }}
@@ -36,6 +38,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
   } = useAppTheme();
   const { sharedGroupId } = route.params as { sharedGroupId: string };
   const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
+  const { user } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -73,17 +76,29 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
       </View>
 
       <View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <BackButton />
-          {sharedGroup && (
-            <ThemeText
-              style={{
-                fontSize: 30,
-                fontWeight: 'bold',
-              }}
-            >
-              {sharedGroup.title}
-            </ThemeText>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View>
+            <BackButton />
+            {sharedGroup && (
+              <ThemeText
+                style={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                }}
+              >
+                {sharedGroup.title}
+              </ThemeText>
+            )}
+          </View>
+
+          {sharedGroup.userId === user?.id && (
+            <FontAwesome6 name="trash" size={30} color={colors.primary} />
           )}
         </View>
 
@@ -102,7 +117,6 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
           <FlatList
             data={sharedGroup.sharedCards}
             contentContainerStyle={styles.cardsList}
-            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <View
                 style={[

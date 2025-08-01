@@ -3,23 +3,11 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   sharedGroup: {
     padding: 10,
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
+    width: '100%',
     flex: 1,
     borderRadius: 10,
+    borderWidth: 2,
     gap: 30,
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   header: {
     alignItems: 'center',

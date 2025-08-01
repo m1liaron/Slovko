@@ -276,6 +276,7 @@ const ResultsScreen = () => {
 
       <FlatList
         data={Object.entries(groupedResults)}
+        contentContainerStyle={{ maxHeight: 500 }}
         keyExtractor={(item) => item[0]}
         renderItem={({ item }: { item: [string, IResult[]] }) => (
           <View style={{ marginBottom: 20 }}>
@@ -303,15 +304,14 @@ const ResultsScreen = () => {
                 }
               >
                 <View style={styles.flex}>
-                  <Text
+                  <ThemeText
                     style={{
-                      color: colors.primary,
                       fontWeight: 'bold',
                       fontSize: 30,
                     }}
                   >
                     {result.title}
-                  </Text>
+                  </ThemeText>
                   <Text style={{ color: colors.lightText, fontSize: 25 }}>
                     {`${i18n.t('resultsScreen.completed')} ${new Date(
                       result.createdAt,
@@ -327,7 +327,6 @@ const ResultsScreen = () => {
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
         ListFooterComponent={renderFooter}
-        contentContainerStyle={{ paddingBottom: 20 }}
       />
     </ThemeBackground>
   );
