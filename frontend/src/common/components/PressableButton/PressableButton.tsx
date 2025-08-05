@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, ViewStyle } from 'react-native';
 import styles from './PressableButton.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 
@@ -15,7 +15,7 @@ import { useAppTheme } from '@/contexts/ThemeProvider';
 interface PressableButtonProps {
   text: string;
   onPress?: () => void;
-  buttonStyle?: object;
+  buttonStyle?: ViewStyle;
   disabled?: boolean;
 }
 

@@ -195,8 +195,7 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
             style={[
               styles.word,
               {
-                backgroundColor: letterColors[index] || 'transparent',
-                borderColor: colors.primary,
+                backgroundColor: letterColors[index] || colors.lightBackground,
               },
             ]}
             onPress={() => handleLetterSelection(item, index)}

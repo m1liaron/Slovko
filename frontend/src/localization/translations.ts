@@ -258,6 +258,9 @@ const translations = {
         addButton: 'Додати',
         learnButton: 'Вчитися',
       },
+      sortByDate: 'Сортувати за датою',
+      sortByName: 'Сортувати за назвою',
+      sortByReviewDate: 'Сортувати за датою перевірки',
     },
     sharedGroup: {
       sharedOn: 'Поширено',

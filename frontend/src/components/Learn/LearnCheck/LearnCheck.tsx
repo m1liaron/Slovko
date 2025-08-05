@@ -151,7 +151,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
             {
               backgroundColor:
                 selectedWord === item
-                  ? colors.lightBackground
+                  ? colors.lightText
                   : colors.lightBackground,
               opacity: isAllCardsLearned && learnedWords.includes(item) ? 0 : 1,
             },

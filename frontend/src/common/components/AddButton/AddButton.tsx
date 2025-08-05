@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './AddButton.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
@@ -13,17 +13,18 @@ import { useAppTheme } from '@/contexts/ThemeProvider';
 
 interface AddButtonProps {
   onPress: () => void;
+  viewStyles?: StyleProp<ViewStyle>;
   iconSize?: number;
 }
 
-const AddButton = ({ onPress, iconSize = 30 }: AddButtonProps) => {
+const AddButton = ({ onPress, viewStyles, iconSize = 30 }: AddButtonProps) => {
   const {
     theme: {
       colors: { highlightColor },
     },
   } = useAppTheme();
   return (
-    <View style={styles.addButtonContainer}>
+    <View style={[styles.addButtonContainer, viewStyles]}>
       <Pressable
         onPress={onPress}
         style={[

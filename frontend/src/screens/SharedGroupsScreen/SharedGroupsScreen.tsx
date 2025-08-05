@@ -202,7 +202,7 @@ const SharedGroupsScreen = () => {
         onPress={() => setShowFilter((prev) => !prev)}
       >
         {showFilter ? (
-          <FontAwesome name="filter" size={21} color={colors.primary} />
+          <FontAwesome name="filter" size={23.5} color={colors.primary} />
         ) : (
           <Feather name="filter" size={20} color={colors.primary} />
         )}
@@ -238,54 +238,14 @@ const SharedGroupsScreen = () => {
                       backgroundColor:
                         selectedDifficulty === diff
                           ? colors.highlightColor
-                          : '',
+                          : colors.background,
                     },
                   ]}
                 >
-                  <Text
-                    style={{
-                      color:
-                        selectedDifficulty === diff
-                          ? colors.background
-                          : colors.primary,
-                    }}
-                  >
-                    {diff}
-                  </Text>
+                  <ThemeText>{diff}</ThemeText>
                 </Pressable>
               ))}
             </View>
-          </View>
-
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: 20,
-              alignItems: 'center',
-            }}
-          >
-            <RNPickerSelect
-              placeholder={{
-                label: i18n.t('sharedGroupsScreen.sort'),
-                value: 'sort',
-              }}
-              onValueChange={() => {}}
-              items={sortOptions}
-              style={{
-                inputWeb: sortSelectStyle,
-                inputIOS: sortSelectStyle,
-                inputAndroid: sortSelectStyle,
-              }}
-            />
-            <FontAwesome
-              onPress={() =>
-                setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))
-              }
-              size={30}
-              color={colors.primary}
-              name={sortOrder == 'asc' ? 'sort-asc' : 'sort-desc'}
-            />
           </View>
         </View>
       ) : null}

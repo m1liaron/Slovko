@@ -1,4 +1,4 @@
-  import { getUnsplashPhotos } from '@/api/unsplash';
+import { getUnsplashPhotos } from '@/api/unsplash';
 import noCardsImage from '@/assets/images/no-cards.png';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
@@ -24,6 +24,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   Text,
@@ -74,18 +75,13 @@ type CardListProps = {
 };
 
 const CardList = ({ groupId }: CardListProps) => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const {
     theme: { colors },
   } = useAppTheme();
   const { group } = useAppSelector((state) => state.groups);
-  const {
-    cards = [],
-    filteredCards,
-    error,
-    status,
-  } = useAppSelector((state) => state.cards);
+  const { cards = [], isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
@@ -434,7 +430,7 @@ const CardList = ({ groupId }: CardListProps) => {
 
   return (
     <View style={styles.container}>
-      {status === DataStatus.PENDING ? (
+      {isLoading ? (
         <ActivityIndicator color={colors.primary} />
       ) : !cards?.length ? (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -454,69 +450,31 @@ const CardList = ({ groupId }: CardListProps) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[
             styles.listContainer,
-            { padding: screenWidth < 620 ? 0 : 50 },
+            {
+              padding: screenWidth < 620 ? 10 : 50,
+              paddingBottom: 80,
+              height: screenHeight * 0.5,
+            },
           ]}
+          numColumns={1}
         />
       )}
 
       {cards.length > 1 && (
         <View style={{ marginHorizontal: 20 }}>
-          {/* <View
-						style={{
-							flexDirection: "row",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<Pressable onPress={decWordsRange}>
-							<FontAwesome name="minus" color={colors.primary} size={40} />
-						</Pressable>
-						<View
-							style={{
-								flexDirection: "column",
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<ThemeText style={{ fontSize: 35 }}>
-								{Math.floor(wordsRangeNumber)}
-							</ThemeText>
-							<Slider
-								style={{ width: 200, height: 40 }}
-								minimumValue={2}
-								maximumValue={cards.length}
-								value={wordsRangeNumber}
-								onSlidingComplete={onChangeCardsRange}
-								minimumTrackTintColor="#FFFFFF"
-								maximumTrackTintColor="#000000"
-							/>
-						</View>
-
-						<Pressable onPress={incWordsRange}>
-							<FontAwesome name="plus" color={colors.primary} size={40} />
-						</Pressable>
-						{filteredCards.length > cards.length && (
-							<Pressable
-								style={{
-									padding: 5,
-									borderRadius: 10,
-									borderWidth: 2,
-									borderColor: "#bcbcbc",
-									marginHorizontal: 10,
-								}}
-								onPress={() => dispatch(resetFilter())}
-							>
-								<Entypo name="back-in-time" size={30} color="#bcbcbc" />
-							</Pressable>
-						)}
-					</View> */}
-          <PressableButton
-            onPress={navigateToLearn}
-            text={i18n.t('group.cardList.learnButton')}
-          />
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <PressableButton
+              onPress={navigateToLearn}
+              text={i18n.t('group.cardList.learnButton')}
+              buttonStyle={{ flex: 1 }}
+            />
+            <AddButton
+              viewStyles={{ position: 'relative', bottom: 0, right: 0 }}
+              onPress={() => setShowAddModal(true)}
+            />
+          </View>
         </View>
       )}
-      <AddButton onPress={() => setShowAddModal(true)} />
 
       <DefaultModal
         isVisible={showAddModal}
@@ -666,9 +624,6 @@ const CardList = ({ groupId }: CardListProps) => {
             onPress={onSaveCard}
             text={i18n.t('group.cardList.addButton')}
           />
-          {error && status === DataStatus.ERROR && (
-            <Text style={{ fontSize: 30, color: '#ff0000' }}>{error}</Text>
-          )}
         </View>
       </DefaultModal>
     </View>
