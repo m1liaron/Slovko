@@ -27,7 +27,7 @@ const PressableButton = ({
 }: PressableButtonProps) => {
   const {
     theme: {
-      colors: { highlightColor, background },
+      colors: { highlightColor, primary },
     },
   } = useAppTheme();
 
@@ -44,7 +44,7 @@ const PressableButton = ({
       ]}
       disabled={disabled}
     >
-      <Text style={[styles.buttonText, { color: background }]}>{text}</Text>
+      <Text style={[styles.buttonText, { color: primary }]}>{text}</Text>
     </Pressable>
   );
 };

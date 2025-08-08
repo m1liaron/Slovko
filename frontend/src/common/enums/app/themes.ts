@@ -7,6 +7,7 @@ type Theme = {
     iconColor: string;
     text: string;
     highlightColor: string;
+    highlightDarkColor: string;
     lightText: string;
   };
 };
@@ -21,6 +22,7 @@ const lightTheme: Theme = {
     iconColor: '#12171D',
     text: '#12171D',
     highlightColor: '#5B62F8',
+    highlightDarkColor: '#1e2157ff',
   },
 };
 
@@ -34,6 +36,7 @@ const darkTheme: Theme = {
     iconColor: '#fff',
     text: '#fff',
     highlightColor: '#5B62F8',
+    highlightDarkColor: '#1e2157ff',
   },
 };
 
