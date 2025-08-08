@@ -58,12 +58,12 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const { cards, filteredCards } = useAppSelector((state) => state.cards);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [groupTitle, setGroupTitle] = useState<string>('');
-  const [nextReviewSort, setNextReviewSort] = useState<'asc' | 'desc'>('asc'); // asc || desc
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
     cards?.length || 2,
   );
   const [sort, setSort] = useState('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
@@ -102,26 +102,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     ];
   }, [group]);
 
-  const RenderStatusButtons = () => {
-    return statusCardsButtons.map(({ status, title, amount, color }) => (
-      <Pressable
-        key={title}
-        style={{
-          padding: 10,
-          borderRadius: 10,
-          borderWidth: 2,
-          borderColor: color,
-          marginHorizontal: 10,
-          alignItems: 'center',
-        }}
-        onPress={() => dispatch(filterCardsByStatus({ status }))}
-      >
-        <Text style={{ color, fontWeight: 'bold' }}>{amount}</Text>
-        <Text style={{ color, fontWeight: 'bold' }}>{title}</Text>
-      </Pressable>
-    ));
-  };
-
   const updateGroupTitle = () => {
     if (!groupTitle) {
       return console.error('Provide title');
@@ -134,9 +114,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     );
   };
 
-  const sortByNextReview = () => {
-    dispatch(sortCards(nextReviewSort));
-    setNextReviewSort(nextReviewSort === 'asc' ? 'desc' : 'asc');
+  const handleSort = () => {
+    dispatch(sortCards(sortOrder));
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
   const handleRemoveGroup = () => {
@@ -159,13 +139,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     if (wordsRangeNumber < cards?.length) {
       setWordsRangeNumber(wordsRangeNumber + 1);
     }
-  };
-
-  const navigateToLearn = () => {
-    if (wordsRangeNumber !== cards.length) {
-      dispatch(rangeCards(wordsRangeNumber));
-    }
-    navigation.navigate(AppPath.Learn, { groupId });
   };
 
   return (
@@ -278,9 +251,33 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
               i18n.t('group.sortByName'),
               i18n.t('group.sortByReviewDate'),
             ]}
+            customStyle={{ width: '100%', paddingHorizontal: 20 }}
             currentSelect={sort}
             setCurrentSelect={setSort}
+            showSortIcon={true}
+            setSortOrder={setSortOrder}
+            sortOrder={sortOrder}
           />
+
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            {statusCardsButtons.map(({ status, title, amount, color }) => (
+              <Pressable
+                key={title}
+                style={{
+                  padding: 10,
+                  borderRadius: 10,
+                  borderWidth: 2,
+                  borderColor: color,
+                  marginHorizontal: 10,
+                  alignItems: 'center',
+                }}
+                onPress={() => dispatch(filterCardsByStatus({ status }))}
+              >
+                <Text style={{ color, fontWeight: 'bold' }}>{amount}</Text>
+                <Text style={{ color, fontWeight: 'bold' }}>{title}</Text>
+              </Pressable>
+            ))}
+          </View>
 
           <PressableButton
             buttonStyle={{ marginTop: 20 }}

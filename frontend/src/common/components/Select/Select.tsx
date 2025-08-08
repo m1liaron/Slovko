@@ -1,25 +1,31 @@
 import { View } from 'moti';
 import ThemeText from '../ThemeText/ThemeText';
-import { Pressable, FlatList, Text } from 'react-native';
+import { Pressable, FlatList, Text, ViewStyle } from 'react-native';
 import { useState } from 'react';
 import styles from './Select.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
-import { AntDesign, Entypo, Feather } from '@expo/vector-icons';
+import { Entypo, Feather } from '@expo/vector-icons';
 
 interface SelectProps {
   placeholder?: string;
   data: string[];
+  customStyle?: ViewStyle;
   currentSelect: string;
   setCurrentSelect: (item: string) => void;
-  iconPress?: () => void;
+  showSortIcon?: boolean;
+  sortOrder?: 'asc' | 'desc';
+  setSortOrder?: (order: 'asc' | 'desc') => void;
 }
 
 const Select: React.FC<SelectProps> = ({
   placeholder,
   data,
+  customStyle,
   currentSelect,
   setCurrentSelect,
-  iconPress,
+  showSortIcon,
+  sortOrder,
+  setSortOrder,
 }) => {
   const {
     theme: { colors },
@@ -28,20 +34,40 @@ const Select: React.FC<SelectProps> = ({
 
   return (
     <View style={{ zIndex: 2 }}>
-      <Pressable
-        style={[
-          styles.selectPlaceholder,
-          { backgroundColor: colors.lightBackground },
-        ]}
-        onPress={() => setShowSelect((prev) => !prev)}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
       >
-        <ThemeText>{placeholder || data[0]}</ThemeText>
-        <Feather
-          name={showSelect ? 'arrow-down' : 'arrow-up'}
-          size={25}
-          color={colors.primary}
-        />
-      </Pressable>
+        <Pressable
+          style={[
+            styles.selectPlaceholder,
+            { backgroundColor: colors.lightBackground, ...customStyle },
+          ]}
+          onPress={() => setShowSelect((prev) => !prev)}
+        >
+          <ThemeText>{placeholder || data[0]}</ThemeText>
+          <Feather
+            name={showSelect ? 'arrow-down' : 'arrow-up'}
+            size={25}
+            color={colors.primary}
+          />
+        </Pressable>
+
+        {showSortIcon && typeof setSortOrder === 'function' && (
+          <Pressable
+            onPress={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+          >
+            <Feather
+              name={sortOrder === 'asc' ? 'arrow-down' : 'arrow-up'}
+              size={25}
+              color={colors.primary}
+            />
+          </Pressable>
+        )}
+      </View>
 
       {showSelect && (
         <View style={{ position: 'absolute', top: 50 }}>
