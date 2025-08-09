@@ -76,11 +76,14 @@ const cardSlice = createSlice({
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
     },
     rangeCards: (state, action) => {
+      state.isLoading = true;
       if (action.payload) {
         state.cards = [...state.cards.slice(0, action.payload)];
+        state.isLoading = false;
       }
     },
     sortCards: (state, action: PayloadAction<'asc' | 'desc'>) => {
+      state.isLoading = true;
       state.cards.sort((a, b) => {
         const timeA = new Date(a.nextReviewAt).getTime();
         const timeB = new Date(b.nextReviewAt).getTime();
@@ -90,6 +93,7 @@ const cardSlice = createSlice({
         }
         return timeB - timeA;
       });
+      state.isLoading = false;
     },
     filterCardsByStatus: (state, action) => {
       state.cards = state.filteredCards.filter(
@@ -97,7 +101,9 @@ const cardSlice = createSlice({
       );
     },
     resetFilter: (state) => {
+      state.isLoading = true;
       state.cards = [...state.filteredCards];
+      state.isLoading = false;
     },
   },
   extraReducers: (builder) => {

@@ -1,91 +1,90 @@
-import noGroupsImage from "@/assets/images/no_groups.png";
-import { SkeletonGroupItem } from "@/common/components/SkeletonGroupItem/SkeletonGroupItem";
-import { enqueueOrDispatch } from "@/helpers/offlineHelpers/enqueueOrDispatch";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux.hooks";
-import React, { useEffect, useState } from "react";
-import { FlatList, Image, Text, View } from "react-native";
-import Toast from "react-native-toast-message";
-import { v4 as uuid } from "uuid";
-import AddButton from "../../../common/components/AddButton/AddButton";
-import AddInput from "../../../common/components/AddInput/AddInput";
-import PressableButton from "../../../common/components/PressableButton/PressableButton";
-import { useAppTheme } from "../../../contexts/ThemeProvider";
+import noGroupsImage from '@/assets/images/no_groups.png';
+import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, Text, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { v4 as uuid } from 'uuid';
+import AddButton from '../../../common/components/AddButton/AddButton';
+import AddInput from '../../../common/components/AddInput/AddInput';
+import PressableButton from '../../../common/components/PressableButton/PressableButton';
+import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
-	addGroup,
-	addStateGroup,
-	getAllGroups,
-	selectGroup,
-} from "../../../redux/groupReducer/groupSlice";
-import DefaultModal from "../../DefaultModal/DefaultModal";
-import { GroupItem } from "../GroupItem/GroupItem";
-import styles from "./GroupList.styles";
+  addGroup,
+  addStateGroup,
+  getAllGroups,
+} from '../../../redux/groupReducer/groupSlice';
+import DefaultModal from '../../DefaultModal/DefaultModal';
+import { GroupItem } from '../GroupItem/GroupItem';
+import styles from './GroupList.styles';
 
 export const GroupList = () => {
-	const {
-		theme: { colors },
-	} = useAppTheme();
-	const { groups, isLoading } = useAppSelector((state) => state.groups);
-	const [title, setTitle] = useState<string>("");
-	const [showAddModal, setShowAddModal] = useState<boolean>(false);
-	const dispatch = useAppDispatch();
+  const {
+    theme: { colors },
+  } = useAppTheme();
+  const { groups, isLoading } = useAppSelector((state) => state.groups);
+  const [title, setTitle] = useState<string>('');
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		dispatch(enqueueOrDispatch(getAllGroups, {}));
-	}, [dispatch]);
+  useEffect(() => {
+    dispatch(enqueueOrDispatch(getAllGroups, {}));
+  }, [dispatch]);
 
-	const handleAddGroup = () => {
-		if (!title.length) {
-			Toast.show({
-				type: "error",
-				text1: "Please enter a title",
-			});
-		}
-		const newGroup = {
-			id: uuid(),
-			title,
-		};
-		dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
-		setTitle("");
-		setShowAddModal(false);
-	};
+  const handleAddGroup = () => {
+    if (!title.length) {
+      Toast.show({
+        type: 'error',
+        text1: 'Please enter a title',
+      });
+    }
+    const newGroup = {
+      id: uuid(),
+      title,
+    };
+    dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
+    setTitle('');
+    setShowAddModal(false);
+  };
 
-	return (
-		<View style={styles.container}>
-			<View style={styles.groupListContainer}>
-				{isLoading ? (
-					<FlatList
-						data={Array(5).fill(null)}
-						keyExtractor={(_, index) => `skeleton-${index}`}
-						renderItem={() => <SkeletonGroupItem />}
-					/>
-				) : !groups.length ? (
-					<View style={styles.noGroupsContainer}>
-						<Image source={noGroupsImage} />
-					</View>
-				) : (
-					<FlatList
-						data={groups}
-						renderItem={({ item }) => <GroupItem item={item} />}
-						keyExtractor={(item) => item.id}
-					/>
-				)}
-			</View>
-			<AddButton onPress={() => setShowAddModal(true)} />
+  return (
+    <View style={styles.container}>
+      <View style={styles.groupListContainer}>
+        {isLoading ? (
+          <FlatList
+            data={Array(5).fill(null)}
+            keyExtractor={(_, index) => `skeleton-${index}`}
+            renderItem={() => <SkeletonGroupItem />}
+          />
+        ) : !groups.length ? (
+          <View style={styles.noGroupsContainer}>
+            <Image source={noGroupsImage} />
+          </View>
+        ) : (
+          <FlatList
+            data={groups}
+            renderItem={({ item }) => <GroupItem item={item} />}
+            keyExtractor={(item) => item.id}
+          />
+        )}
+      </View>
+      <AddButton onPress={() => setShowAddModal(true)} />
 
-			<DefaultModal
-				isVisible={showAddModal}
-				handleClose={() => setShowAddModal(false)}
-			>
-				<Text style={{ color: colors.primary }}>Додайте Групу!</Text>
-				<AddInput
-					placeholder="Назва Групи"
-					placeholderTextColor="#A0A0A0"
-					value={title}
-					onChangeText={setTitle}
-				/>
+      <DefaultModal
+        isVisible={showAddModal}
+        handleClose={() => setShowAddModal(false)}
+      >
+        <Text style={{ color: colors.primary }}>Додайте Групу!</Text>
+        <AddInput
+          placeholder="Назва Групи"
+          placeholderTextColor="#A0A0A0"
+          value={title}
+          onChangeText={setTitle}
+        />
 
-				<PressableButton onPress={handleAddGroup} text="Додати групу" />
-			</DefaultModal>
-		</View>
-	);
+        <PressableButton onPress={handleAddGroup} text="Додати групу" />
+      </DefaultModal>
+    </View>
+  );
 };

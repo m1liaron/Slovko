@@ -424,15 +424,15 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
 
         {addCardMode ? (
           <View style={styles.bulkAddContainer}>
+            <AddInput
+              placeholder="Додати слова у text/plain"
+              placeholderTextColor={colors.primary}
+              value={textPlain}
+              onChangeText={setTextPlain}
+              height={100}
+            />
             {Platform.OS === 'web' ? (
               <View>
-                <AddInput
-                  placeholder="Додати слова у text/plain"
-                  placeholderTextColor={colors.primary}
-                  value={textPlain}
-                  onChangeText={setTextPlain}
-                  height={100}
-                />
                 <View style={styles.fileInputContainer}>
                   <Fontisto name="import" size={30} color={colors.background} />
                   <input

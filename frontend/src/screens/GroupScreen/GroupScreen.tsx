@@ -7,14 +7,8 @@ import type {
   StackNavigation,
 } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { getGroupStorage } from '@/redux/groupReducer/groupThunk';
-import type { RootState } from '@/redux/store';
-import {
-  Entypo,
-  Feather,
-  FontAwesome,
-  MaterialCommunityIcons,
-} from '@expo/vector-icons';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -31,7 +25,6 @@ import {
   filterCardsByStatus,
   rangeCards,
   resetFilter,
-  selectCard,
   sortCards,
 } from '../../redux/cardReducer/cardSlice';
 import {
@@ -43,6 +36,7 @@ import {
 } from '../../redux/groupReducer/groupSlice';
 import Slider from '@react-native-community/slider';
 import { Select } from '@/common/components/Select/Select';
+import { LineLoader } from '@/common/components/LineLoader/LineLoader';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -55,14 +49,16 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   } = useAppTheme();
   const { groupId } = route.params as { groupId: string };
   const { group, status } = useAppSelector((state) => state.groups);
-  const { cards, filteredCards } = useAppSelector((state) => state.cards);
+  const { cards, filteredCards, isLoading } = useAppSelector(
+    (state) => state.cards,
+  );
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [groupTitle, setGroupTitle] = useState<string>('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
     cards?.length || 2,
   );
-  const [sort, setSort] = useState('date');
+  const [sort, setSort] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const dispatch = useAppDispatch();
@@ -114,9 +110,13 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     );
   };
 
-  const handleSort = () => {
-    dispatch(sortCards(sortOrder));
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  const handleFilterCards = () => {
+    if (sort.length > 0) {
+      dispatch(sortCards(sortOrder));
+    }
+    if (wordsRangeNumber !== cards.length || wordsRangeNumber !== 2) {
+      dispatch(rangeCards(wordsRangeNumber));
+    }
   };
 
   const handleRemoveGroup = () => {
@@ -157,13 +157,15 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pressable onPress={() => setShowFilterModal((prev) => !prev)}>
-            {showFilterModal ? (
-              <FontAwesome name="filter" size={23.5} color={colors.primary} />
-            ) : (
-              <Feather name="filter" size={20} color={colors.primary} />
-            )}
-          </Pressable>
+          <View>
+            <Pressable onPress={() => setShowFilterModal((prev) => !prev)}>
+              {showFilterModal ? (
+                <FontAwesome name="filter" size={23.5} color={colors.primary} />
+              ) : (
+                <Feather name="filter" size={20} color={colors.primary} />
+              )}
+            </Pressable>
+          </View>
 
           <Pressable onPress={() => setShowEditModal((prev) => !prev)}>
             <Entypo
@@ -174,6 +176,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           </Pressable>
         </View>
       </View>
+
+      {isLoading && <LineLoader />}
 
       {showFilterModal && (
         <View
@@ -226,20 +230,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                 <Pressable onPress={incWordsRange}>
                   <FontAwesome name="plus" color={colors.primary} size={40} />
                 </Pressable>
-                {filteredCards.length > cards.length && (
-                  <Pressable
-                    style={{
-                      padding: 5,
-                      borderRadius: 10,
-                      borderWidth: 2,
-                      borderColor: '#bcbcbc',
-                      marginHorizontal: 10,
-                    }}
-                    onPress={() => dispatch(resetFilter())}
-                  >
-                    <Entypo name="back-in-time" size={30} color="#bcbcbc" />
-                  </Pressable>
-                )}
               </View>
             </View>
           )}
@@ -279,10 +269,27 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
             ))}
           </View>
 
-          <PressableButton
-            buttonStyle={{ marginTop: 20 }}
-            text={i18n.t('sharedGroupsScreen.filter')}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <PressableButton
+              onPress={handleFilterCards}
+              buttonStyle={{ marginTop: 20, width: '60%' }}
+              text={i18n.t('sharedGroupsScreen.filter')}
+            />
+            {filteredCards.length > cards.length && (
+              <Pressable
+                style={{
+                  padding: 5,
+                  borderRadius: 10,
+                  borderWidth: 2,
+                  borderColor: '#bcbcbc',
+                  marginHorizontal: 10,
+                }}
+                onPress={() => dispatch(resetFilter())}
+              >
+                <Entypo name="back-in-time" size={30} color="#bcbcbc" />
+              </Pressable>
+            )}
+          </View>
         </View>
       )}
 

@@ -5,8 +5,6 @@ const { width: screenWidth } = Dimensions.get('window');
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: screenWidth < 620 ? 10 : 50,
-    paddingBottom: 16,
   },
   centered: {
     flex: 1,

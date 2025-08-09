@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Platform,
   Text,
   useWindowDimensions,
   View,
@@ -101,26 +102,28 @@ const CardList = ({ groupId }: CardListProps) => {
             {
               padding: screenWidth < 620 ? 10 : 50,
               paddingBottom: 80,
-              height: screenHeight * 0.5,
+              height: Platform.OS === 'web' ? 500 : 'auto',
             },
           ]}
           numColumns={1}
         />
       )}
 
-      {cards.length > 1 && (
-        <View style={{ marginHorizontal: 20 }}>
-          <View style={{ flexDirection: 'row', gap: 10 }}>
+      <View style={{ marginHorizontal: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          {cards.length > 1 && (
             <PressableButton
               onPress={navigateToLearn}
               text={i18n.t('group.cardList.learnButton')}
               buttonStyle={{ flex: 1 }}
             />
-          </View>
+          )}
+          <AddButton
+            viewStyles={{ position: 'relative', right: 0, bottom: 10 }}
+            onPress={() => setShowAddModal(true)}
+          />
         </View>
-      )}
-
-      <AddButton onPress={() => setShowAddModal(true)} />
+      </View>
 
       <AddCardModal
         showAddModal={showAddModal}

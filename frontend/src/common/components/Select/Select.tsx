@@ -87,6 +87,7 @@ const Select: React.FC<SelectProps> = ({
                 )}
               </Pressable>
             )}
+            keyExtractor={(item) => item}
             contentContainerStyle={[
               styles.selectModal,
               { backgroundColor: colors.lightBackground },
