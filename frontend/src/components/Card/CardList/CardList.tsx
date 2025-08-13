@@ -86,6 +86,7 @@ const CardList = ({ groupId }: CardListProps) => {
           data={cards}
           renderItem={({ item }) => (
             <MemoCardItem
+              key={item.id}
               item={item}
               onRemove={() =>
                 dispatch(

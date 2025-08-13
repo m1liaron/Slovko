@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContainer: {
-    paddingBottom: 100, // enough space for button row
+    paddingBottom: 80, // enough space for button row
   },
   buttonRow: {
     flexDirection: 'row',

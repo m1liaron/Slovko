@@ -146,8 +146,10 @@ const cardSlice = createSlice({
         state.cards.push(action.payload.card);
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
-        state.cards.push(...action.payload.cards);
-        state.globalCards.push(...action.payload.cards);
+        if (action.payload.cards.length > 0) {
+          state.cards.push(...action.payload.cards);
+          state.globalCards.push(...action.payload.cards);
+        }
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {

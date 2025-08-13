@@ -465,8 +465,10 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                       const [key, value] = item;
                       return (
                         <View key={value} style={styles.jsonRow}>
-                          <Text style={styles.jsonKey}>{key}</Text>
-                          <Text style={styles.jsonValue}>{value}</Text>
+                          <ThemeText style={styles.jsonKey}>{key}</ThemeText>
+                          <ThemeText style={styles.jsonValue}>
+                            {value}
+                          </ThemeText>
                         </View>
                       );
                     }}

@@ -275,7 +275,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
               buttonStyle={{ marginTop: 20, width: '60%' }}
               text={i18n.t('sharedGroupsScreen.filter')}
             />
-            {filteredCards.length > cards.length && (
+            {filteredCards.length < cards.length && (
               <Pressable
                 style={{
                   padding: 5,

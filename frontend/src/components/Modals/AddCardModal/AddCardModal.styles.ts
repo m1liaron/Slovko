@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   },
   jsonTableContainer: {
     marginTop: 10,
+    height: 500,
   },
   jsonTable: {
     borderWidth: 1,
