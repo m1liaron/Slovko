@@ -1,34 +1,25 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-	},
-	cardsList: {
-		flexDirection: "row",
-		paddingHorizontal: 20,
-		height: Dimensions.get("window").height - 500,
-		marginTop: 20,
-	},
-	cardContainer: {
-		minWidth: 300,
-		backgroundColor: "#ffffff",
-		padding: 16,
-		borderRadius: 8,
-		borderWidth: 1,
-		borderColor: "#000",
-		shadowOpacity: 0.2,
-		shadowRadius: 5,
-		height: Dimensions.get("window").height - 500,
-		marginRight: 30,
-	},
-	title: {
-		fontSize: 30,
-		fontWeight: "bold",
-		marginBottom: 8,
-	},
+  cardsList: {
+    paddingHorizontal: 20,
+    marginVertical: 30,
+    maxHeight: 500,
+    marginBottom: 120,
+  },
+  cardContainer: {
+    padding: 16,
+    borderRadius: 10,
+    marginRight: 30,
+    marginBottom: 10,
+    alignSelf: 'center',
+    width: '100%',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
 });
 
 export default styles;

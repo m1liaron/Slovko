@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
+import 'react-native-get-random-values';
 import { Provider } from 'react-redux';
 import { persistor, store } from './src/redux/store';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';

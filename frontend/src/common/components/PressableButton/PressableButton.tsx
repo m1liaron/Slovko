@@ -1,7 +1,7 @@
-import React from "react";
-import { Pressable } from "react-native";
-import ThemeText from "../ThemeText/ThemeText";
-import styles from "./PressableButton.styles";
+import React from 'react';
+import { Pressable, Text, ViewStyle } from 'react-native';
+import styles from './PressableButton.styles';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 
 /**
  * @param text {string}
@@ -13,27 +13,40 @@ import styles from "./PressableButton.styles";
  */
 
 interface PressableButtonProps {
-	text: string;
-	onPress?: () => void;
-	buttonStyle?: object;
-	disabled?: boolean;
+  text: string;
+  onPress?: () => void;
+  buttonStyle?: ViewStyle;
+  disabled?: boolean;
 }
 
 const PressableButton = ({
-	text,
-	onPress,
-	buttonStyle,
-	disabled,
+  text,
+  onPress,
+  buttonStyle,
+  disabled,
 }: PressableButtonProps) => {
-	return (
-		<Pressable
-			onPress={onPress}
-			style={[styles.button, { ...buttonStyle }]}
-			disabled={disabled}
-		>
-			<ThemeText style={styles.buttonText}>{text}</ThemeText>
-		</Pressable>
-	);
+  const {
+    theme: {
+      colors: { highlightColor, primary },
+    },
+  } = useAppTheme();
+
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.button,
+        {
+          backgroundColor: highlightColor,
+          shadowColor: highlightColor,
+          ...buttonStyle,
+        },
+      ]}
+      disabled={disabled}
+    >
+      <Text style={[styles.buttonText, { color: primary }]}>{text}</Text>
+    </Pressable>
+  );
 };
 
 export default PressableButton;

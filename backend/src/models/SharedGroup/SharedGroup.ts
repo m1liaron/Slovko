@@ -9,6 +9,7 @@ interface SharedGroupAttributes extends BaseAttributes {
 	title: string;
 	userId: string;
 	isAnonymous: boolean;
+	wordsLength: number;
 }
 
 interface SharedGroupCreationAttributes extends BaseCreationAttributes<SharedGroupAttributes> { }
@@ -17,6 +18,7 @@ class SharedGroup extends CustomModal<SharedGroupAttributes, SharedGroupCreation
 	public title!: string;
 	public userId!: string;
 	public isAnonymous!: boolean;
+	public wordsLength!: number;
 
 	sharedCards?: SharedCard[]
 }
@@ -57,6 +59,10 @@ SharedGroup.init(
 			type: DataTypes.BOOLEAN,
 			allowNull: false,
 			defaultValue: false,
+		},
+		wordsLength: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
 		}
 	},
 	{

@@ -30,12 +30,7 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
 				{
 					model: Card,
 					as: "cards",
-				},
-				{
-					model: User,
-					as: "user",
-					attributes: { exclude: ["password"] },
-				},
+				}
 			],
 		});
 		if (!group || !group.cards) {
@@ -44,7 +39,8 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
 		const sharedGroup = await SharedGroup.create({
 			title: title ? title : group.title,
 			userId: id,
-			isAnonymous
+			isAnonymous,
+			wordsLength: group.cards.length
 		});
 		if (group.cards.length > 0) {
 			await Promise.all(

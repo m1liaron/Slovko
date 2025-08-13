@@ -1,7 +1,8 @@
-import React from "react";
-import { Pressable, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import styles from "./AddButton.styles";
+import React from 'react';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from './AddButton.styles';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 
 /**
  * @param onPress {function} - react-native function for press on button
@@ -11,17 +12,29 @@ import styles from "./AddButton.styles";
  */
 
 interface AddButtonProps {
-	onPress: () => void;
-	iconSize?: number;
+  onPress: () => void;
+  viewStyles?: StyleProp<ViewStyle>;
+  iconSize?: number;
 }
 
-const AddButton = ({ onPress, iconSize = 30 }: AddButtonProps) => {
-	return (
-		<View style={styles.addButtonContainer}>
-			<Pressable onPress={onPress} style={styles.addButton}>
-				<Icon name="plus" size={iconSize} color="#007AFF" />
-			</Pressable>
-		</View>
-	);
+const AddButton = ({ onPress, viewStyles, iconSize = 30 }: AddButtonProps) => {
+  const {
+    theme: {
+      colors: { highlightColor },
+    },
+  } = useAppTheme();
+  return (
+    <View style={[styles.addButtonContainer, viewStyles]}>
+      <Pressable
+        onPress={onPress}
+        style={[
+          styles.addButton,
+          { borderColor: highlightColor, shadowColor: highlightColor },
+        ]}
+      >
+        <Icon name="plus" size={iconSize} color={highlightColor} />
+      </Pressable>
+    </View>
+  );
 };
 export default AddButton;
