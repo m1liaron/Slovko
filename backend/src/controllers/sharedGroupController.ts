@@ -144,7 +144,10 @@ const removeSharedGroup = async (req: AuthRequest, res: Response) => {
 };
 
 const copySharedGroup = async (req: AuthRequest, res: Response) => {
-	const { sharedGroupId } = req.params;
+	const {
+		params: { sharedGroupId },
+		body: { sectionId }
+	} = req;
 	try {
 		const sharedGroup = await SharedGroup.findOne({
 			where: { id: sharedGroupId },
@@ -159,7 +162,7 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
 		}
 
 		const existGroup = await Group.findOne({
-			where: { userId: req.user.id, title: sharedGroup.title }
+			where: { sectionId, title: sharedGroup.title }
 		});
 		if (existGroup) {
 			res
@@ -170,7 +173,7 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
 
 		const newGroup = await Group.create({
 			title: sharedGroup.title,
-			userId: req.user.id,
+			sectionId
 		});
 		if (sharedGroup.sharedCards.length > 0) {
 			await Promise.all(

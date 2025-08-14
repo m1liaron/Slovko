@@ -4,17 +4,16 @@ import { sequelize } from "../db/sequelize.js";
 import { User } from "./User.js";
 import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel.js";
 import { Card } from "./Card.js";
-
 interface GroupAttributes extends BaseAttributes {
   title: string;
-  userId: string;
+  sectionId: string;
 }
 
 interface GroupCreationAttributes extends BaseCreationAttributes<GroupAttributes> { }
 
 class Group extends CustomModal<GroupAttributes, GroupCreationAttributes> implements GroupAttributes {
   public title!: string;
-  public userId!: string;
+  public sectionId!: string;
 
   cards?: Card[]
   user?: User
@@ -40,11 +39,11 @@ Group.init(
         },
       },
     },
-    userId: {
+    sectionId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: User,
+        model: "Sections",
         key: "id",
       },
     },

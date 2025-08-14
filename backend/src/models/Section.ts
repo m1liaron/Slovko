@@ -24,7 +24,7 @@ class Section extends CustomModal<
   groups?: Group[];
 }
 
-Group.init(
+Section.init(
   {
     id: {
       type: DataTypes.UUID,

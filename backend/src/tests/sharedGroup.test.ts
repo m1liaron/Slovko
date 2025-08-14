@@ -31,7 +31,7 @@ describe("SHARED_GROUP_ROUTES", async () => {
   });
 
   it("COPY_SHARED_GROUP", async () => {
-    const res = await authRequest("post", `/sharedGroups/${sharedGroupId}`);
+    const res = await authRequest("post", `/sharedGroups/${sharedGroupId}`, { sectionId: testData.testSection.id });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.title).toBe(sharedGroupTitle);

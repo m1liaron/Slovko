@@ -22,6 +22,10 @@ interface ITestData {
   };
   testCard: Card;
   cards: Card[];
+  testSection: {
+    id?: string;
+    title: string;
+  };
   testGroup: {
     id?: string;
     title: string;
@@ -37,6 +41,9 @@ const testData: ITestData = {
     password: "rty1245",
     points: 200,
     froze: 0,
+  },
+  testSection: {
+    title: "New Section"
   },
   testGroup: {
     title: "New Group",

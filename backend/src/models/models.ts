@@ -19,6 +19,10 @@ Section.belongsTo(User, { foreignKey: "userId", as: "user" });
 Section.hasMany(Group, { foreignKey: "sectionId", as: "groups" });
 Group.belongsTo(Section, { foreignKey: "sectionId", as: "section" });
 
+// Group - Card
+Group.hasMany(Card, { foreignKey: "groupId", as: "cards" });
+Card.belongsTo(Group, { foreignKey: "groupId", as: "group" });
+
 // User - SharedGroup
 User.hasMany(SharedGroup, { foreignKey: "userId", as: "sharedGroups" });
 SharedGroup.belongsTo(User, { foreignKey: "userId", as: "user" });
@@ -26,10 +30,6 @@ SharedGroup.belongsTo(User, { foreignKey: "userId", as: "user" });
 // User - Streak
 User.hasMany(Streak, { foreignKey: "userId", as: "streakDates" });
 Streak.belongsTo(User, { foreignKey: "userId", as: "user" });
-
-// Group - Card
-Group.hasMany(Card, { foreignKey: "groupId", as: "cards" });
-Card.belongsTo(Group, { foreignKey: "groupId", as: "group" });
 
 // User - Result
 User.hasMany(Result, { foreignKey: "userId", as: "results" });
@@ -67,10 +67,11 @@ SharedCardLikes.belongsTo(SharedCard, {
 });
 
 export {
-  Card,
   User,
-  Streak,
+  Section,
   Group,
+  Card,
+  Streak,
   Result,
   ResultMode,
   WordResult,

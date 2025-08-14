@@ -13,6 +13,7 @@ import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
 import { initializeLogger } from "./middlewares/initializeLogger.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { EnvVariables } from "./common/enums/index.js";
+import { sectionRoute } from "./routes/sectionRoute.js";
 
 const app: Application = express();
 
@@ -25,6 +26,7 @@ app.use("/cards", authMiddleware, cardRoute);
 app.use("/groups", authMiddleware, groupRoute);
 app.use("/results", authMiddleware, resultRoute);
 app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
+app.use("/sections", authMiddleware, sectionRoute);
 
 const port = EnvVariables.PORT || 3000;
 
