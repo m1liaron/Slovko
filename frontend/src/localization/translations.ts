@@ -9,6 +9,7 @@ const translations = {
       notificationBody: 'You have {{count}} words to review.',
       notificationPermissionDenied: 'Notificaitons are blocked by the user',
       saveUkraine: 'Save Ukraine!',
+      sections: 'Sections',
     },
     sharedGroupsScreen: {
       mySharedGroups: 'My shared groups',
@@ -176,6 +177,7 @@ const translations = {
       notificationBody: 'У вас є {{count}} слова для повторення.',
       notificationPermissionDenied: 'Повідомлення заблоковані користувачем.',
       saveUkraine: 'Save Ukraine!',
+      sections: 'Секції',
     },
     sharedGroupsScreen: {
       mySharedGroups: 'Мої поширені групи',
