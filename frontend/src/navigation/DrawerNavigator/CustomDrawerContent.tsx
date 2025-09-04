@@ -1,35 +1,41 @@
-import { FlatList, Pressable, Text, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 import styles from './CustomDrawerContent.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { Entypo } from '@expo/vector-icons';
 import { i18n } from '@/localization/i18n';
 import { useEffect, useState } from 'react';
-import { createAuthorizedInstance } from '@/utils';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import DefaultModal from '@/components/DefaultModal/DefaultModal';
+import AddInput from '@/common/components/AddInput/AddInput';
+import Toast from 'react-native-toast-message';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { addSection, getSections } from '@/redux/sectionReducer/sectionSlice';
 
 const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const [sections, setSections] = useState<[]>();
+  const dispatch = useAppDispatch();
+  const { sections } = useAppSelector((state) => state.sections);
 
-  const fetchSections = async () => {
-    try {
-      const axiosInstance = await createAuthorizedInstance();
-      const res = await axiosInstance.get('/sections');
-      console.log(res);
-      setSections(res.data);
-    } catch (error) {
-      console.error(error);
+  const [showSectionModal, setShowSectionModal] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+
+  const onAddTitle = () => {
+    if (newTitle.length <= 2) {
+      Toast.show({
+        type: 'success',
+        text1: 'Min Length of title is two',
+      });
     }
+
+    dispatch(addSection(newTitle));
   };
 
   useEffect(() => {
-    fetchSections();
+    dispatch(getSections());
   }, []);
-
-  console.log(sections);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -45,13 +51,42 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
       <View style={styles.divider} />
 
       {sections && sections.length === 0 ? (
-        <PressableButton text="Створити секцію" />
+        <PressableButton
+          text="Створити секцію"
+          onPress={() => setShowSectionModal(true)}
+        />
       ) : (
         <FlatList
           data={sections}
-          renderItem={({ item }) => <ThemeText>{item}</ThemeText>}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                backgroundColor: colors.lightBackground,
+                borderColor: colors.lightText,
+                borderWidth: 2,
+                borderRadius: 20,
+                padding: 20,
+              }}
+            >
+              <ThemeText>{item.title}</ThemeText>
+            </View>
+          )}
         />
       )}
+
+      <DefaultModal
+        isVisible={showSectionModal}
+        handleClose={() => setShowSectionModal(false)}
+      >
+        <View>
+          <AddInput
+            placeholder="Назва секції"
+            value={newTitle}
+            onChangeText={setNewTitle}
+          />
+          <PressableButton text="Додати" onPress={onAddTitle} />
+        </View>
+      </DefaultModal>
     </View>
   );
 };

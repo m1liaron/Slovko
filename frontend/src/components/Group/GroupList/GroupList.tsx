@@ -18,6 +18,7 @@ import {
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
 import styles from './GroupList.styles';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 export const GroupList = () => {
   const {
@@ -75,7 +76,7 @@ export const GroupList = () => {
         isVisible={showAddModal}
         handleClose={() => setShowAddModal(false)}
       >
-        <Text style={{ color: colors.primary }}>Додайте Групу!</Text>
+        <ThemeText>Додайте Групу!</ThemeText>
         <AddInput
           placeholder="Назва Групи"
           placeholderTextColor="#A0A0A0"
