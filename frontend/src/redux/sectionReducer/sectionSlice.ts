@@ -29,14 +29,22 @@ const initialState: InitialState = {
 const sectionSlice = createSlice({
   name: 'sections',
   initialState,
-  reducers: {},
+  reducers: {
+    setActiveSectionId: (state, action) => {
+      state.activeSectionId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getSections.fulfilled, (state, action) => {
+        if (!state.activeSectionId) {
+          state.activeSectionId = action.payload[0].id;
+        }
         state.sections = action.payload;
       })
-      .addCase(addSection.fulfilled, (state, action) => {
+      .addCase(addSection.fulfilled, (state, action: { payload: ISection }) => {
         state.sections = [...state.sections, action.payload];
+        state.activeSectionId = action.payload.id;
       })
       .addCase(updateSection.fulfilled, (state, action) => {
         const updatedSection = action.payload;
@@ -58,6 +66,7 @@ const sectionSlice = createSlice({
 });
 
 export const selectSections = (state: RootState) => state.sections.sections;
+export const { setActiveSectionId } = sectionSlice.actions;
 export const sectionReducers = sectionSlice.reducer;
 
 export {

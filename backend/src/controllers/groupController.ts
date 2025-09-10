@@ -9,7 +9,7 @@ import { Response } from "express";
 import { sendError } from "../helpers/index.js";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
-  const { sectionId } = req.body;
+  const { sectionId } = req.params;
   try {
     const groups = await Group.findAll({
       where: { sectionId },
@@ -22,7 +22,10 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
 };
 
 const getGroup = async (req: AuthRequest, res: Response) => {
-  const { params: { id }, body: { sectionId }} = req;
+  const {
+    params: { id },
+    body: { sectionId },
+  } = req;
   try {
     const group = await Group.findOne({
       where: { id, sectionId },
@@ -128,13 +131,15 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
       params: { id },
-      body: { sectionId }
+      body: { sectionId },
     } = req;
     const group = await Group.findOne({
       where: { id, sectionId },
     });
     if (!group) {
-      res.status(StatusCodes.NOT_FOUND).send({ error: true, message: "Group not found" });
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .send({ error: true, message: "Group not found" });
       return;
     }
 

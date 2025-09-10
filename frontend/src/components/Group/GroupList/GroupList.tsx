@@ -9,7 +9,6 @@ import { v4 as uuid } from 'uuid';
 import AddButton from '../../../common/components/AddButton/AddButton';
 import AddInput from '../../../common/components/AddInput/AddInput';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';
-import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   addGroup,
   addStateGroup,
@@ -21,17 +20,15 @@ import styles from './GroupList.styles';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 export const GroupList = () => {
-  const {
-    theme: { colors },
-  } = useAppTheme();
   const { groups, isLoading } = useAppSelector((state) => state.groups);
+  const { activeSectionId } = useAppSelector((state) => state.sections);
   const [title, setTitle] = useState<string>('');
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getAllGroups, {}));
-  }, [dispatch]);
+    dispatch(enqueueOrDispatch(getAllGroups, activeSectionId));
+  }, [dispatch, activeSectionId]);
 
   const handleAddGroup = () => {
     if (!title.length) {
@@ -43,6 +40,7 @@ export const GroupList = () => {
     const newGroup = {
       id: uuid(),
       title,
+      sectionId: activeSectionId,
     };
     dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
     setTitle('');

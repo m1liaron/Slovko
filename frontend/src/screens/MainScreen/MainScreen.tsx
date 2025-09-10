@@ -33,6 +33,7 @@ import styles from './MainScreen.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
 import { CustomDrawerContent } from '@/navigation/DrawerNavigator/CustomDrawerContent';
+import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
 
 const MainScreen = () => {
   useLanguage();
@@ -42,9 +43,6 @@ const MainScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const [daysPassed, setDaysPassed] = useState('');
-  const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
-  const [showDrawerMenu, setShowDrawerMenu] = useState(false);
   const repeatedGroupsIds = useAppSelector(
     (state) => state.cards.repeatedCards,
   );
@@ -52,6 +50,13 @@ const MainScreen = () => {
     (prev, curr) => prev + curr.cards.length,
     0,
   );
+  const { sections, activeSectionId } = useAppSelector(
+    (state) => state.sections,
+  );
+
+  const [daysPassed, setDaysPassed] = useState('');
+  const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
+  const [showDrawerMenu, setShowDrawerMenu] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {

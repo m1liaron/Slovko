@@ -43,7 +43,7 @@ const persisConfig = {
     'offlineQueue',
     'network',
     'sharedGroups',
-    'sectionReducers',
+    'sections',
   ],
 };
 

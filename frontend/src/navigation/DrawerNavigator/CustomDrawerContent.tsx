@@ -10,14 +10,20 @@ import DefaultModal from '@/components/DefaultModal/DefaultModal';
 import AddInput from '@/common/components/AddInput/AddInput';
 import Toast from 'react-native-toast-message';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { addSection, getSections } from '@/redux/sectionReducer/sectionSlice';
+import {
+  addSection,
+  getSections,
+  setActiveSectionId,
+} from '@/redux/sectionReducer/sectionSlice';
 
 const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   const {
     theme: { colors },
   } = useAppTheme();
   const dispatch = useAppDispatch();
-  const { sections } = useAppSelector((state) => state.sections);
+  const { sections, activeSectionId } = useAppSelector(
+    (state) => state.sections,
+  );
 
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -50,29 +56,31 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
 
       <View style={styles.divider} />
 
-      {sections && sections.length === 0 ? (
-        <PressableButton
-          text="Створити секцію"
-          onPress={() => setShowSectionModal(true)}
-        />
-      ) : (
-        <FlatList
-          data={sections}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                backgroundColor: colors.lightBackground,
-                borderColor: colors.lightText,
-                borderWidth: 2,
-                borderRadius: 20,
-                padding: 20,
-              }}
-            >
-              <ThemeText>{item.title}</ThemeText>
-            </View>
-          )}
-        />
-      )}
+      <PressableButton
+        text="Створити секцію"
+        onPress={() => setShowSectionModal(true)}
+      />
+
+      <FlatList
+        data={sections}
+        renderItem={({ item }) => (
+          <Pressable
+            style={{
+              borderColor:
+                activeSectionId === item.id
+                  ? colors.highlightColor
+                  : colors.lightBackground,
+              borderWidth: 2,
+              borderRadius: 20,
+              padding: 20,
+              marginBottom: 20,
+            }}
+            onPress={() => dispatch(setActiveSectionId(item.id))}
+          >
+            <ThemeText>{item.title}</ThemeText>
+          </Pressable>
+        )}
+      />
 
       <DefaultModal
         isVisible={showSectionModal}
