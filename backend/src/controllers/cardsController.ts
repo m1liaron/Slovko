@@ -147,7 +147,7 @@ const updateCardsAfterReview = async (req: Request, res: Response) => {
 
       card.status = "Repeated";
       card.learnedAt = new Date();
-      card.reviewCount = newReviewCount;
+      card.reviewCount = newReviewCount + 1;
       card.nextReviewAt = nextReviewDate;
 
       await card.save();
