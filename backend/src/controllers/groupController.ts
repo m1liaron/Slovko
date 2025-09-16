@@ -151,4 +151,35 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export { getAllGroups, getGroup, addGroup, removeGroup, updateGroup };
+const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
+  try {
+    const {
+      params: { id },
+      body: { sectionId: newSectionId },
+    } = req;
+
+    const updatedGroup = await Group.update(
+      { sectionId: newSectionId },
+      {
+        where: {
+          id,
+          sectionId: newSectionId,
+        },
+      },
+    );
+    if (updatedGroup[0] === 0) {
+      return res.status(404).json({ error: true, message: "Group not found" });
+    }
+  } catch (error) {
+    sendError(res, error);
+  }
+};
+
+export {
+  getAllGroups,
+  getGroup,
+  addGroup,
+  removeGroup,
+  updateGroup,
+  moveGroupToAnotherSection,
+};
