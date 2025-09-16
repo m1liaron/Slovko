@@ -39,10 +39,6 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     dispatch(addSection(newTitle));
   };
 
-  useEffect(() => {
-    dispatch(getSections());
-  }, []);
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

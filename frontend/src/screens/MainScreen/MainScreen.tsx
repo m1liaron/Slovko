@@ -33,7 +33,10 @@ import styles from './MainScreen.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
 import { CustomDrawerContent } from '@/navigation/DrawerNavigator/CustomDrawerContent';
-import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
+import {
+  getSections,
+  setActiveSectionId,
+} from '@/redux/sectionReducer/sectionSlice';
 
 const MainScreen = () => {
   useLanguage();
@@ -57,6 +60,16 @@ const MainScreen = () => {
   const [daysPassed, setDaysPassed] = useState('');
   const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
   const [showDrawerMenu, setShowDrawerMenu] = useState(false);
+
+  useEffect(() => {
+    dispatch(getSections());
+  }, []);
+
+  useEffect(() => {
+    if (!activeSectionId) {
+      setActiveSectionId(sections[0]);
+    }
+  }, []);
 
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
@@ -114,7 +127,9 @@ const MainScreen = () => {
   };
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getRepeatedCards, {}));
+    dispatch(
+      enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
+    );
   }, [dispatch]);
 
   const daysSince = useCallback((dateString: string) => {

@@ -12,9 +12,11 @@ import { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
   try {
+    const { sectionId } = req.params;
+
     const groups = await Group.findAll({
       where: {
-        userId: req.user.id,
+        sectionId,
       },
       attributes: ["id", "title"],
     });
