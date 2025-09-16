@@ -6,13 +6,16 @@ import type {
   RootStackParamList,
   StackNavigation,
 } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { getGroupStorage } from '@/redux/groupReducer/groupThunk';
+import {
+  getGroupStorage,
+  moveGroupToAnotherSection,
+} from '@/redux/groupReducer/groupThunk';
 import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import AddInput from '../../common/components/AddInput/AddInput';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
@@ -37,6 +40,8 @@ import {
 import Slider from '@react-native-community/slider';
 import { Select } from '@/common/components/Select/Select';
 import { LineLoader } from '@/common/components/LineLoader/LineLoader';
+import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
+import { FlatList } from 'react-native-gesture-handler';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -52,6 +57,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const { cards, filteredCards, isLoading } = useAppSelector(
     (state) => state.cards,
   );
+  const { sections } = useAppSelector((state) => state.sections);
+
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [groupTitle, setGroupTitle] = useState<string>('');
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -60,6 +67,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   );
   const [sort, setSort] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [newSectionId, setNewSectionId] = useState<string>();
+  const [showSectionList, setShowSectionList] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
@@ -123,6 +132,18 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId));
     setShowEditModal(false);
     navigation.navigate(AppPath.Main);
+  };
+
+  const handleMoveGroupToAnotherSection = () => {
+    if (!newSectionId) {
+      Alert.alert('Please select section to move group');
+      return;
+    }
+    dispatch(moveGroupToAnotherSection({ groupId, sectionId: newSectionId }));
+    setActiveSectionId(null);
+    setShowEditModal(false);
+    setShowSectionList(false);
+    navigation.navigate(AppPath.Home);
   };
 
   const onChangeCardsRange = useCallback((value: number) => {
@@ -314,6 +335,52 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         <Pressable onPress={handleRemoveGroup}>
           <Entypo name="trash" size={30} color={colors.primary} />
         </Pressable>
+
+        <View>
+          <Pressable
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => setShowSectionList((prev) => !prev)}
+          >
+            <ThemeText>{i18n.t('group.moveGroup')}</ThemeText>
+            <Feather
+              name={showSectionList ? 'arrow-down' : 'arrow-right'}
+              color={colors.primary}
+              size={30}
+            />
+          </Pressable>
+
+          {showSectionList && (
+            <View>
+              <FlatList
+                data={sections}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 10,
+                  margin: 10,
+                }}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <Pressable
+                    style={{
+                      padding: 10,
+                      backgroundColor:
+                        newSectionId === item.id ? colors.highlightColor : '',
+                      borderRadius: 10,
+                    }}
+                    onPress={() => setNewSectionId(item.id)}
+                  >
+                    <ThemeText>{item.title}</ThemeText>
+                  </Pressable>
+                )}
+              />
+              <PressableButton
+                text="Перемістити"
+                onPress={handleMoveGroupToAnotherSection}
+              />
+            </View>
+          )}
+        </View>
       </DefaultModal>
     </ThemeBackground>
   );

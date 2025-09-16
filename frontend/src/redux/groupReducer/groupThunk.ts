@@ -63,3 +63,14 @@ export const updateGroup = createAppAsyncThunk(
     return response.data;
   },
 );
+
+export const moveGroupToAnotherSection = createAppAsyncThunk(
+  'group/moveToSection',
+  async ({ sectionId, groupId }: { sectionId: string; groupId: string }) => {
+    const axiosInstance = await createAuthorizedInstance();
+    const response = await axiosInstance.put(`/groups/${groupId}`, {
+      sectionId,
+    });
+    return response.data;
+  },
+);

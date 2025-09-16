@@ -78,6 +78,7 @@ const translations = {
       known: 'Known',
       changeTitle: 'Change title',
       inputPlaceholder: 'Title...',
+      moveGroup: 'Move group to another section',
       changeButton: 'Change',
       cardList: {
         addCardTitle: 'Add a Card!',
@@ -245,6 +246,7 @@ const translations = {
       known: 'Знаю',
       changeTitle: 'Змініть назву',
       inputPlaceholder: 'Назва...',
+      moveGroup: 'Перемістити групу в інший розділ',
       changeButton: 'Змінити',
       cardList: {
         addCardTitle: 'Додайте Карточку!',

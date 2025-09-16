@@ -155,21 +155,24 @@ const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
   try {
     const {
       params: { id },
-      body: { sectionId: newSectionId },
+      body: { sectionId },
     } = req;
 
     const updatedGroup = await Group.update(
-      { sectionId: newSectionId },
+      { sectionId },
       {
         where: {
           id,
-          sectionId: newSectionId,
         },
       },
     );
     if (updatedGroup[0] === 0) {
-      return res.status(404).json({ error: true, message: "Group not found" });
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: true, message: "Group not found" });
     }
+
+    res.status(StatusCodes.OK).json(updateGroup);
   } catch (error) {
     sendError(res, error);
   }
