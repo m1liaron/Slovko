@@ -9,6 +9,7 @@ const translations = {
       notificationBody: 'You have {{count}} words to review.',
       notificationPermissionDenied: 'Notificaitons are blocked by the user',
       saveUkraine: 'Save Ukraine!',
+      sections: 'Sections',
     },
     sharedGroupsScreen: {
       mySharedGroups: 'My shared groups',
@@ -77,6 +78,7 @@ const translations = {
       known: 'Known',
       changeTitle: 'Change title',
       inputPlaceholder: 'Title...',
+      moveGroup: 'Move group to another section',
       changeButton: 'Change',
       cardList: {
         addCardTitle: 'Add a Card!',
@@ -176,6 +178,7 @@ const translations = {
       notificationBody: 'У вас є {{count}} слова для повторення.',
       notificationPermissionDenied: 'Повідомлення заблоковані користувачем.',
       saveUkraine: 'Save Ukraine!',
+      sections: 'Секції',
     },
     sharedGroupsScreen: {
       mySharedGroups: 'Мої поширені групи',
@@ -243,6 +246,7 @@ const translations = {
       known: 'Знаю',
       changeTitle: 'Змініть назву',
       inputPlaceholder: 'Назва...',
+      moveGroup: 'Перемістити групу в інший розділ',
       changeButton: 'Змінити',
       cardList: {
         addCardTitle: 'Додайте Карточку!',

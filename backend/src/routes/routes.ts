@@ -1,4 +1,4 @@
-export { authRouter } from "./authRouter.js";
+export { authRouter } from "./authRoute.js";
 export { userRoute } from "./userRoute.js";
 export { cardRoute } from "./cardRoute.js";
 export { groupRoute } from "./groupRoute.js";

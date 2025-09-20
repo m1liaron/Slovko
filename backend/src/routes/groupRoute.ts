@@ -1,18 +1,20 @@
-import { authRouter } from "./authRouter.js";
-const { router, get, post, patch, delete: remove } = authRouter();
+import { authRouter } from "./authRoute.js";
+const { router, get, post, patch, delete: remove, put } = authRouter();
 import {
-	getAllGroups,
-	addGroup,
-	removeGroup,
-	getGroup,
-	updateGroup,
+  getAllGroups,
+  addGroup,
+  removeGroup,
+  getGroup,
+  updateGroup,
+  moveGroupToAnotherSection,
 } from "../controllers/groupController.js";
 
-get("/", getAllGroups)
+get("/:sectionId", getAllGroups);
 post("/", addGroup);
 
-remove("/:id", removeGroup)
-get("/:id", getGroup)
-patch("/:id", updateGroup)
+remove("/:id", removeGroup);
+get("/:id", getGroup);
+patch("/:id", updateGroup);
+put("/:id", moveGroupToAnotherSection);
 
 export { router as groupRoute };

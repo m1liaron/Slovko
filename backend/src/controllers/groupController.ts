@@ -9,10 +9,10 @@ import { Response } from "express";
 import { sendError } from "../helpers/index.js";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
-  const userId = req.user.id;
+  const { sectionId } = req.params;
   try {
     const groups = await Group.findAll({
-      where: { userId },
+      where: { sectionId },
     });
 
     res.status(StatusCodes.OK).json(groups);
@@ -22,11 +22,13 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
 };
 
 const getGroup = async (req: AuthRequest, res: Response) => {
-  const { id } = req.params;
-  const userId = req.user.id;
+  const {
+    params: { id },
+    body: { sectionId },
+  } = req;
   try {
     const group = await Group.findOne({
-      where: { id, userId },
+      where: { id, sectionId },
       include: [
         {
           model: Card,
@@ -80,14 +82,12 @@ const getGroup = async (req: AuthRequest, res: Response) => {
 };
 
 const addGroup = async (req: AuthRequest, res: Response) => {
-  const data = req.body;
-  const userId = req.user.id;
+  const { title, sectionId } = req.body;
   try {
     const existGroup = await Group.findOne({
       where: {
-        title: data.title,
-        userId: userId,
-        ...(data.id != null ? { id: data.id } : {}),
+        title: title,
+        sectionId,
       },
     });
     if (existGroup) {
@@ -95,9 +95,8 @@ const addGroup = async (req: AuthRequest, res: Response) => {
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: true, message: "Group already exists" });
     }
-    const newGroup = (await Group.create({ ...data, userId })).toJSON();
-    console.log("new created group: ", newGroup);
-    return res.status(200).json(newGroup);
+    const newGroup = (await Group.create({ title, sectionId })).toJSON();
+    return res.status(StatusCodes.OK).json(newGroup);
   } catch (error) {
     sendError(res, error);
   }
@@ -107,10 +106,10 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
       params: { id: groupId },
-      user: { id: userId },
+      body: { sectionId },
     } = req;
     const updatedGroup = await Group.update(req.body, {
-      where: { id: groupId, userId },
+      where: { id: groupId, sectionId },
       returning: true,
     });
 
@@ -131,23 +130,59 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
 const removeGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      user: { id: userId },
       params: { id },
+      body: { sectionId },
     } = req;
-    const card = await Group.findOne({
-      where: { id, userId },
+    const group = await Group.findOne({
+      where: { id, sectionId },
     });
-    if (!card) {
-      res.status(404).send({ error: true, message: "Card not found" });
+    if (!group) {
+      res
+        .status(StatusCodes.NOT_FOUND)
+        .send({ error: true, message: "Group not found" });
       return;
     }
 
     await Card.destroy({ where: { groupId: id } });
-    await card.destroy();
-    res.status(200).json(card);
+    await group.destroy();
+    res.status(200).json({ id: group.id });
   } catch (error) {
     sendError(res, error);
   }
 };
 
-export { getAllGroups, getGroup, addGroup, removeGroup, updateGroup };
+const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
+  try {
+    const {
+      params: { id },
+      body: { sectionId },
+    } = req;
+
+    const updatedGroup = await Group.update(
+      { sectionId },
+      {
+        where: {
+          id,
+        },
+      },
+    );
+    if (updatedGroup[0] === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ error: true, message: "Group not found" });
+    }
+
+    res.status(StatusCodes.OK).json(updateGroup);
+  } catch (error) {
+    sendError(res, error);
+  }
+};
+
+export {
+  getAllGroups,
+  getGroup,
+  addGroup,
+  removeGroup,
+  updateGroup,
+  moveGroupToAnotherSection,
+};

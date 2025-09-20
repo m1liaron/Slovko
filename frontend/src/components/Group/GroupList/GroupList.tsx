@@ -9,7 +9,6 @@ import { v4 as uuid } from 'uuid';
 import AddButton from '../../../common/components/AddButton/AddButton';
 import AddInput from '../../../common/components/AddInput/AddInput';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';
-import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   addGroup,
   addStateGroup,
@@ -18,19 +17,18 @@ import {
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
 import styles from './GroupList.styles';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 export const GroupList = () => {
-  const {
-    theme: { colors },
-  } = useAppTheme();
   const { groups, isLoading } = useAppSelector((state) => state.groups);
+  const { activeSectionId } = useAppSelector((state) => state.sections);
   const [title, setTitle] = useState<string>('');
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getAllGroups, {}));
-  }, [dispatch]);
+    dispatch(enqueueOrDispatch(getAllGroups, activeSectionId));
+  }, [dispatch, activeSectionId]);
 
   const handleAddGroup = () => {
     if (!title.length) {
@@ -42,6 +40,7 @@ export const GroupList = () => {
     const newGroup = {
       id: uuid(),
       title,
+      sectionId: activeSectionId,
     };
     dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
     setTitle('');
@@ -75,7 +74,7 @@ export const GroupList = () => {
         isVisible={showAddModal}
         handleClose={() => setShowAddModal(false)}
       >
-        <Text style={{ color: colors.primary }}>Додайте Групу!</Text>
+        <ThemeText>Додайте Групу!</ThemeText>
         <AddInput
           placeholder="Назва Групи"
           placeholderTextColor="#A0A0A0"

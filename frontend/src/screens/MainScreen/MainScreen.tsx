@@ -4,7 +4,7 @@ import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { FontAwesome6 } from '@expo/vector-icons';
+import { Entypo, FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
@@ -17,11 +17,9 @@ import {
   View,
 } from 'react-native';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import { AppPath } from '../../common/enums/app/app';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import { GroupList } from '../../components/Group/GroupList/GroupList';
-import { useAppTheme } from '../../contexts/ThemeProvider';
 import {
   getRepeatedCards,
   getRepeatedCardsFromIds,
@@ -32,15 +30,22 @@ import {
   scheduleNotification,
 } from '../../utils/notifications';
 import styles from './MainScreen.styles';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import { CustomDrawerContent } from '@/navigation/DrawerNavigator/CustomDrawerContent';
+import {
+  getSections,
+  setActiveSectionId,
+} from '@/redux/sectionReducer/sectionSlice';
 
 const MainScreen = () => {
   useLanguage();
   const dispatch = useAppDispatch();
   const navigate = useNavigation<StackNavigation>();
   const { user } = useAppSelector(selectUser);
-  const { theme } = useAppTheme();
-  const [daysPassed, setDaysPassed] = useState('');
-  const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
+  const {
+    theme: { colors },
+  } = useAppTheme();
   const repeatedGroupsIds = useAppSelector(
     (state) => state.cards.repeatedCards,
   );
@@ -48,6 +53,23 @@ const MainScreen = () => {
     (prev, curr) => prev + curr.cards.length,
     0,
   );
+  const { sections, activeSectionId } = useAppSelector(
+    (state) => state.sections,
+  );
+
+  const [daysPassed, setDaysPassed] = useState('');
+  const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
+  const [showDrawerMenu, setShowDrawerMenu] = useState(false);
+
+  useEffect(() => {
+    dispatch(getSections());
+  }, []);
+
+  useEffect(() => {
+    if (!activeSectionId) {
+      setActiveSectionId(sections[0]);
+    }
+  }, []);
 
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
@@ -105,7 +127,9 @@ const MainScreen = () => {
   };
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getRepeatedCards, {}));
+    dispatch(
+      enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
+    );
   }, [dispatch]);
 
   const daysSince = useCallback((dateString: string) => {
@@ -155,24 +179,52 @@ const MainScreen = () => {
     ? '#F5712A'
     : user?.frozen
       ? '#2aaef5'
-      : theme.colors.iconColor;
+      : colors.iconColor;
 
   return (
     <ThemeBackground>
-      <Pressable
+      {showDrawerMenu && (
+        <Pressable
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.3)', // darken backdrop
+            flexDirection: 'row',
+            zIndex: 20,
+          }}
+          onPress={() => setShowDrawerMenu(false)} // close when tap backdrop
+        >
+          <CustomDrawerContent handleClose={() => setShowDrawerMenu(false)} />
+        </Pressable>
+      )}
+      <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'flex-start',
+          justifyContent: 'space-between',
           alignItems: 'center',
           paddingHorizontal: 20,
         }}
-        onPress={() => navigate.navigate(AppPath.Streak)}
       >
-        <FontAwesome6 name="fire-flame-simple" size={30} color={streakColor} />
-        <Text style={{ color: streakColor, fontSize: 35 }}>
-          {user?.streak || 0}
-        </Text>
-      </Pressable>
+        <Pressable onPress={() => setShowDrawerMenu((prev) => !prev)}>
+          <Entypo name="menu" size={30} color={colors.primary} />
+        </Pressable>
+        <Pressable
+          onPress={() => navigate.navigate(AppPath.Streak)}
+          style={{ flexDirection: 'row', alignItems: 'center' }}
+        >
+          <FontAwesome6
+            name="fire-flame-simple"
+            size={30}
+            color={streakColor}
+          />
+          <Text style={{ color: streakColor, fontSize: 35 }}>
+            {user?.streak || 0}
+          </Text>
+        </Pressable>
+      </View>
 
       <Text style={styles.timePassedText}>
         {i18n.t('mainScreen.alreadyPassed')} {daysPassed}{' '}
@@ -183,11 +235,11 @@ const MainScreen = () => {
         <Pressable
           style={[
             styles.repeatButton,
-            { backgroundColor: theme.colors.highlightColor },
+            { backgroundColor: colors.highlightColor },
           ]}
           onPress={() => setShowRepeatedModal(true)}
         >
-          <Text style={{ color: theme.colors.background, fontSize: 30 }}>
+          <Text style={{ color: colors.background, fontSize: 30 }}>
             {i18n.t('mainScreen.repeatWords')} - {repeatedCardsLength}
           </Text>
         </Pressable>
@@ -212,16 +264,13 @@ const MainScreen = () => {
           renderItem={({ item }) => (
             <Pressable
               key={item.title}
-              style={[
-                styles.item,
-                { backgroundColor: theme.colors.lightBackground },
-              ]}
+              style={[styles.item, { backgroundColor: colors.lightBackground }]}
               onPress={() => learnGroupRepeatedCards(item.cards)}
             >
-              <Text style={{ color: theme.colors.primary, fontSize: 30 }}>
+              <Text style={{ color: colors.primary, fontSize: 30 }}>
                 {item.title}
               </Text>
-              <Text style={{ color: theme.colors.primary, fontSize: 30 }}>
+              <Text style={{ color: colors.primary, fontSize: 30 }}>
                 {item.cards.length}
               </Text>
             </Pressable>

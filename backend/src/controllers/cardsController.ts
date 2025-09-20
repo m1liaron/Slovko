@@ -12,9 +12,11 @@ import { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
   try {
+    const { sectionId } = req.params;
+
     const groups = await Group.findAll({
       where: {
-        userId: req.user.id,
+        sectionId,
       },
       attributes: ["id", "title"],
     });
@@ -147,7 +149,7 @@ const updateCardsAfterReview = async (req: Request, res: Response) => {
 
       card.status = "Repeated";
       card.learnedAt = new Date();
-      card.reviewCount = newReviewCount;
+      card.reviewCount = newReviewCount + 1;
       card.nextReviewAt = nextReviewDate;
 
       await card.save();
