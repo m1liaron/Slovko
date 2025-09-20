@@ -11,7 +11,6 @@ import {
   FlatList,
   Image,
   Platform,
-  Text,
   useWindowDimensions,
   View,
 } from 'react-native';
