@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     borderRadius: 12,
     paddingHorizontal: 10,
     height: 36,
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 10,
     marginTop: 20,
+    width: '80%',
   },
 });
 

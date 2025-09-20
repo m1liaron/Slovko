@@ -1,6 +1,11 @@
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { LoginScreen, RegisterScreen } from '@/screens';
+import {
+  LoginScreen,
+  RegisterScreen,
+  WelcomeScreen,
+  ChooseLanguageScreen,
+} from '@/screens';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   NavigationContainer,
@@ -12,7 +17,6 @@ import { AppPath, DataStatus } from '../../common/enums/app/app';
 import Loading from '../../components/Loading';
 import { getUser, selectUser } from '../../redux/userReducer/userSlice';
 import MainStackNavigator from '../MainStackNavigator/MainStackNavigator';
-import WelcomeScreen from '@/screens/WelcomeScreen/WelcomeScreen';
 
 export type RootStackParamList = {
   [AppPath.Main]: undefined;
@@ -97,7 +101,11 @@ const ProtectedRoute = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name={AppPath.Welcome} component={WelcomeScreen} />
+        <Stack.Screen name={AppPath.Welcome} component={MainStackNavigator} />
+        <Stack.Screen
+          name={AppPath.ChooseLanguage}
+          component={ChooseLanguageScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

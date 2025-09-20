@@ -1,5 +1,10 @@
 const translations = {
   en: {
+    welcomeScreen: {
+      welcome: 'Welcome to Slovko',
+      customize: "Let's customize your learning",
+      start: 'Start',
+    },
     mainScreen: {
       alreadyPassed: 'It has been',
       daysPassed: 'days since the beginning of the war.',
@@ -169,6 +174,14 @@ const translations = {
     },
   },
   uk: {
+    welcomeScreen: {
+      welcome: 'Вітаю у Slovko',
+      customize: 'Давайте налаштуємо ваше навчання',
+      start: 'Почати',
+    },
+    chooseLanguageScreen: {
+      whichLanguage: 'Which language do you want to learn?',
+    },
     mainScreen: {
       alreadyPassed: 'Вже минуло',
       daysPassed: 'з початку війни.',
