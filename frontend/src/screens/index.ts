@@ -13,10 +13,12 @@ import StreakScreen from './StreakScreen/StreakScreen';
 
 import ChooseLanguageScreen from './ChooseLanguageScreen/ChooseLanguageScreen';
 import WelcomeScreen from './WelcomeScreen/WelcomeScreen';
+import ChooseWordsScreen from './ChooseWordsScreen/ChooseWordsScreen';
 
 export {
   WelcomeScreen,
   ChooseLanguageScreen,
+  ChooseWordsScreen,
   MainScreen,
   RegisterScreen,
   LoginScreen,

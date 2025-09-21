@@ -5,6 +5,7 @@ import {
   RegisterScreen,
   WelcomeScreen,
   ChooseLanguageScreen,
+  ChooseWordsScreen,
 } from '@/screens';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -105,6 +106,10 @@ const ProtectedRoute = () => {
         <Stack.Screen
           name={AppPath.ChooseLanguage}
           component={ChooseLanguageScreen}
+        />
+        <Stack.Screen
+          name={AppPath.ChooseWords}
+          component={ChooseWordsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

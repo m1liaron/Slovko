@@ -12,8 +12,10 @@ import ThemeText from '@/common/components/ThemeText/ThemeText';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
 import { SearchInput } from '@/common/components/SearchInput/SearchInput';
 import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
 
-// ⚠️ IDs should be unique (fixed here)
 const languages = [
   { id: 1, title: 'English', flag: '🇬🇧' },
   { id: 2, title: 'German', flag: '🇩🇪' },
@@ -24,12 +26,13 @@ const ChooseLanguageScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const dispatch = useAppDispatch();
 
   const [filteredLanguages, setFilteredLanguages] = useState<
     { id: number; title: string; flag: string }[]
   >([]);
   const [searchInput, setSearchInput] = useState<string>('');
-  const [chosenLanguage, setChoseLanguage] = useState<string>('');
+  const { selectedLanguage } = useAppSelector((state) => state.sections);
 
   useEffect(() => {
     if (searchInput) {
@@ -100,7 +103,7 @@ const ChooseLanguageScreen = () => {
             <TouchableOpacity
               key={item.id}
               activeOpacity={0.7}
-              onPress={() => setChoseLanguage(item.title)}
+              onPress={() => dispatch(setSelectedLanguage(item.title))}
               style={{
                 width: '45%', // about half of screen
                 minWidth: 150,
@@ -111,7 +114,7 @@ const ChooseLanguageScreen = () => {
                 paddingVertical: 18,
                 paddingHorizontal: 20,
                 backgroundColor:
-                  chosenLanguage === item.title
+                  selectedLanguage === item.title
                     ? colors.highlightColor
                     : colors.lightBackground,
                 borderRadius: 16,
@@ -128,7 +131,7 @@ const ChooseLanguageScreen = () => {
                   fontSize: 18,
                   fontWeight: '600',
                   color:
-                    chosenLanguage === item.title
+                    selectedLanguage === item.title
                       ? colors.primary
                       : colors.text,
                 }}

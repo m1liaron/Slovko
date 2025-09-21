@@ -5,6 +5,7 @@ interface IAppPath {
   SharedGroupDetails: string;
   Welcome: string;
   ChooseLanguage: string;
+  ChooseWords: string;
   Home: string;
   Main: string;
   Profile: string;
@@ -22,11 +23,12 @@ interface IAppPath {
 
 const AppPath: IAppPath = {
   Loading: 'loading',
-  ChooseLanguage: 'ChooseLanguage',
   Group: 'group',
   SharedGroup: 'shared-group',
   SharedGroupDetails: 'shared-group/sharedGroupId',
   Welcome: 'welcome',
+  ChooseLanguage: 'choose-language',
+  ChooseWords: 'choose-words',
   Home: 'home',
   Main: 'main',
   Profile: 'profile',

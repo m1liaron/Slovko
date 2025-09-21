@@ -1,0 +1,166 @@
+{
+  "English": [
+    {
+      "id": 1,
+      "title": "cat"
+    },
+    {
+      "id": 2,
+      "title": "house"
+    },
+    {
+      "id": 3,
+      "title": "water"
+    },
+    {
+      "id": 4,
+      "title": "school"
+    },
+    {
+      "id": 5,
+      "title": "family"
+    },
+    {
+      "id": 6,
+      "title": "friend"
+    },
+    {
+      "id": 7,
+      "title": "computer"
+    },
+    {
+      "id": 8,
+      "title": "important"
+    },
+    {
+      "id": 9,
+      "title": "beautiful"
+    },
+    {
+      "id": 10,
+      "title": "expensive"
+    },
+    {
+      "id": 11,
+      "title": "environment"
+    },
+    {
+      "id": 12,
+      "title": "government"
+    },
+    {
+      "id": 13,
+      "title": "responsibility"
+    },
+    {
+      "id": 14,
+      "title": "opportunity"
+    },
+    {
+      "id": 15,
+      "title": "communication"
+    },
+    {
+      "id": 16,
+      "title": "development"
+    },
+    {
+      "id": 17,
+      "title": "architecture"
+    },
+    {
+      "id": 18,
+      "title": "psychology"
+    },
+    {
+      "id": 19,
+      "title": "entrepreneurship"
+    },
+    {
+      "id": 20,
+      "title": "sustainability"
+    }
+  ],
+  "German": [
+    {
+      "id": 1,
+      "title": "Katze"
+    },
+    {
+      "id": 2,
+      "title": "Haus"
+    },
+    {
+      "id": 3,
+      "title": "Wasser"
+    },
+    {
+      "id": 4,
+      "title": "Schule"
+    },
+    {
+      "id": 5,
+      "title": "Familie"
+    },
+    {
+      "id": 6,
+      "title": "Freund"
+    },
+    {
+      "id": 7,
+      "title": "Computer"
+    },
+    {
+      "id": 8,
+      "title": "wichtig"
+    },
+    {
+      "id": 9,
+      "title": "schön"
+    },
+    {
+      "id": 10,
+      "title": "teuer"
+    },
+    {
+      "id": 11,
+      "title": "Umwelt"
+    },
+    {
+      "id": 12,
+      "title": "Regierung"
+    },
+    {
+      "id": 13,
+      "title": "Verantwortung"
+    },
+    {
+      "id": 14,
+      "title": "Möglichkeit"
+    },
+    {
+      "id": 15,
+      "title": "Kommunikation"
+    },
+    {
+      "id": 16,
+      "title": "Entwicklung"
+    },
+    {
+      "id": 17,
+      "title": "Architektur"
+    },
+    {
+      "id": 18,
+      "title": "Psychologie"
+    },
+    {
+      "id": 19,
+      "title": "Unternehmertum"
+    },
+    {
+      "id": 20,
+      "title": "Nachhaltigkeit"
+    }
+  ]
+}

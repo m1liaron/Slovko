@@ -12,15 +12,17 @@ import {
 
 interface InitialState {
   sections: ISection[];
+  activeSectionId: string;
+  selectedLanguage: string;
   status: IDataStatus;
   error: undefined | null | string;
-  activeSectionId: string;
   isLoading: boolean;
 }
 
 const initialState: InitialState = {
   sections: [],
   activeSectionId: '',
+  selectedLanguage: '',
   status: DataStatus.IDLE,
   error: null,
   isLoading: false,
@@ -30,6 +32,9 @@ const sectionSlice = createSlice({
   name: 'sections',
   initialState,
   reducers: {
+    setSelectedLanguage: (state, action) => {
+      state.selectedLanguage = action.payload;
+    },
     setActiveSectionId: (state, action) => {
       state.activeSectionId = action.payload;
     },
@@ -66,7 +71,7 @@ const sectionSlice = createSlice({
 });
 
 export const selectSections = (state: RootState) => state.sections.sections;
-export const { setActiveSectionId } = sectionSlice.actions;
+export const { setActiveSectionId, setSelectedLanguage } = sectionSlice.actions;
 export const sectionReducers = sectionSlice.reducer;
 
 export {
