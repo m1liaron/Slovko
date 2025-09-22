@@ -10,6 +10,7 @@ import ThemeBackground from '../../common/components/ThemeBackground/Themebackgr
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
 import { register } from '../../redux/userReducer/userSlice';
+import { isValidEmail, isValidPassword } from '@/utils';
 
 const RegisterScreen = () => {
   const navigation = useNavigation<StackNavigation>();
@@ -37,23 +38,38 @@ const RegisterScreen = () => {
       });
     }
 
+    if (!isValidEmail(email)) {
+      return Toast.show({
+        type: 'error',
+        text1: 'Помилка',
+        text2: 'Невірний формат email!',
+      });
+    }
+
+    if (!isValidPassword(password)) {
+      return Toast.show({
+        type: 'error',
+        text1: 'Помилка',
+        text2: 'Пароль має містити щонайменше 6 символів!',
+      });
+    }
+
     const registerData = {
       name,
       email,
       password,
     };
 
-    const response = await dispatch(register(registerData));
-    if (register.rejected.match(response)) {
-      // const error = response.payload || "Registration failed";
-      // !Todo make type for error
-      return Toast.show({
-        type: 'error',
-        text1: 'Помилка',
-        text2: 'Registration failed',
+    dispatch(register(registerData))
+      .unwrap()
+      .catch((error) => {
+        const message = error.message || i18n.t('errors.loginFailed');
+        Toast.show({
+          type: 'error',
+          text1: 'Невдача',
+          text2: message,
+        });
       });
-    }
-    navigation.navigate(AppPath.Home);
   };
   return (
     <ThemeBackground style={styles.container}>

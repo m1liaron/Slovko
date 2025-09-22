@@ -9,17 +9,18 @@ import Toast from 'react-native-toast-message';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
-import { login } from '../../redux/userReducer/userSlice';
+import { login, selectUser } from '../../redux/userReducer/userSlice';
 import styles from './LoginScreen.styles';
+import { isValidEmail, isValidPassword } from '@/utils';
 
 const LoginScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const dispatch = useAppDispatch();
-  const isConnected = useAppSelector((state) => state.network.isConnected);
+  const { message } = useAppSelector((state) => state.user);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [notShowPassword, setNotShowPassword] = useState(true);
+  const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
   const handleSubmit = async () => {
     if (!email.length || !password.length) {
@@ -30,16 +31,32 @@ const LoginScreen = () => {
       });
     }
 
-    const response = dispatch(login({ email, password }));
-    if (login.rejected.match(response)) {
-      // const error = response.payload || "Login failed";
-
-      Toast.show({
+    if (!isValidEmail(email)) {
+      return Toast.show({
         type: 'error',
-        text1: 'Невдача',
-        text2: 'Login failed',
+        text1: 'Помилка',
+        text2: 'Невірний формат email!',
       });
     }
+
+    if (!isValidPassword(password)) {
+      return Toast.show({
+        type: 'error',
+        text1: 'Помилка',
+        text2: 'Пароль має містити щонайменше 6 символів!',
+      });
+    }
+
+    dispatch(login({ email, password }))
+      .unwrap()
+      .catch((error) => {
+        const message = error.message || i18n.t('errors.loginFailed');
+        Toast.show({
+          type: 'error',
+          text1: 'Невдача',
+          text2: message,
+        });
+      });
   };
 
   return (
@@ -61,16 +78,16 @@ const LoginScreen = () => {
           style={styles.input}
           placeholder={i18n.t('loginScreen.passwordPlaceholder')}
           placeholderTextColor="#ccc"
-          secureTextEntry={notShowPassword}
+          secureTextEntry={isPasswordHidden}
           value={password}
           onChangeText={setPassword}
         />
         <Pressable
-          onPress={() => setNotShowPassword(!notShowPassword)}
+          onPress={() => setIsPasswordHidden(!isPasswordHidden)}
           style={styles.iconContainer}
         >
           <Entypo
-            name={notShowPassword ? 'eye' : 'eye-with-line'}
+            name={isPasswordHidden ? 'eye' : 'eye-with-line'}
             size={20}
             color="#333"
           />

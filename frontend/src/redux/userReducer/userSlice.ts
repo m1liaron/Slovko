@@ -112,6 +112,7 @@ const userSlice = createSlice({
         state.status = DataStatus.ERROR;
         state.isLoading = false;
         state.codeStatus = payload.status;
+        state.message = payload.message;
       });
   },
 });

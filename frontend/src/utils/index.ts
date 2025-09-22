@@ -13,3 +13,4 @@ export {
 } from './notifications';
 export { pickImage } from './images/pickImage';
 export { showConfirmAlert } from './showConfirmAlert';
+export { isValidEmail, isValidPassword } from './form-validation';
