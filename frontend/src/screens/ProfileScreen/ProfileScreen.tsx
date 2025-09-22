@@ -18,6 +18,7 @@ import {
   Image,
   Platform,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -116,7 +117,7 @@ export default function ProfileScreen() {
         {i18n.t('profileScreen.profileTitle')}
       </ThemeText>
 
-      <View>
+      <ScrollView>
         <View>
           {!isEditing ? (
             <View style={{ alignSelf: 'center' }}>
@@ -380,7 +381,7 @@ export default function ProfileScreen() {
             />
           )}
         </View>
-      </View>
+      </ScrollView>
     </ThemeBackground>
   );
 }
