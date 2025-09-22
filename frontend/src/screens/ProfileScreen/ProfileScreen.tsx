@@ -31,6 +31,7 @@ import { useAppTheme } from '../../contexts/ThemeProvider';
 import { logout, selectUser } from '../../redux/userReducer/userSlice';
 import { updateUser } from '../../redux/userReducer/userThunk';
 import styles from './ProfileScreen.styles';
+import { persistor } from '@/redux/store';
 
 export default function ProfileScreen() {
   const { user } = useAppSelector(selectUser);
@@ -60,6 +61,7 @@ export default function ProfileScreen() {
       const answer = confirm('Are you sure you want to log out?');
       if (answer) {
         dispatch(logout());
+        await persistor.purge();
       }
     } else {
       Alert.alert(
@@ -70,7 +72,8 @@ export default function ProfileScreen() {
           {
             text: 'Logout',
             onPress: async () => {
-              await AsyncStorage.removeItem('token');
+              dispatch(logout());
+              await persistor.purge();
               navigation.navigate(AppPath.Login);
             },
           },

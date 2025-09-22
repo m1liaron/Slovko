@@ -18,3 +18,4 @@ export {
 } from './result.type';
 export { ISharedGroup } from './sharedGroup';
 export { ISection } from './section.type';
+export type { RejectedAction, RejectedPayload } from './rejectedAction';
