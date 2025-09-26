@@ -28,7 +28,7 @@ export const GroupList = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (activeSectionId) {
+    if (activeSectionId.length > 0) {
       dispatch(enqueueOrDispatch(getAllGroups, activeSectionId));
     }
   }, [dispatch, activeSectionId]);

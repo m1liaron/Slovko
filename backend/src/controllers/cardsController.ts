@@ -74,28 +74,16 @@ const getCardsFromIds = async (req: Request, res: Response) => {
 
 const getAllCards = async (req: Request, res: Response) => {
   const { groupId } = req.params;
+  console.log("GroupId: ", groupId);
   try {
     const cards = await Card.findAll({
       where: {
         groupId,
-        status: {
-          [Op.in]: ["To Learn", "Repeated"],
-        },
       },
       include: [{ model: Image, as: "image" }],
     });
 
-    const updatedCards = await Promise.all(
-      cards.map(async (card) => {
-        if (new Date(card.nextReviewAt).getTime() - new Date().getTime() < 0) {
-          card.status = "To Learn";
-          await card.save();
-        }
-        return card;
-      }),
-    );
-
-    res.status(200).json(updatedCards);
+    res.status(200).json(cards);
   } catch (error) {
     sendError(res, error);
   }
