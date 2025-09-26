@@ -453,7 +453,12 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
             )}
 
             {Object.keys(jsonOutput).length > 0 && (
-              <View style={styles.jsonTableContainer}>
+              <View
+                style={[
+                  styles.jsonTableContainer,
+                  { backgroundColor: colors.lightBackground },
+                ]}
+              >
                 <View style={styles.jsonTable}>
                   <Text style={styles.jsonTableTitle}>
                     {i18n.t('group.cardList.dataTitle')}
@@ -461,12 +466,18 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                   <FlatList
                     data={Object.entries(jsonOutput)}
                     keyExtractor={([key]) => key}
+                    contentContainerStyle={{ paddingBottom: 10 }}
                     renderItem={({ item }) => {
                       const [key, value] = item;
                       return (
                         <View key={value} style={styles.jsonRow}>
                           <ThemeText style={styles.jsonKey}>{key}</ThemeText>
-                          <ThemeText style={styles.jsonValue}>
+                          <ThemeText
+                            style={[
+                              styles.jsonValue,
+                              { color: colors.lightText },
+                            ]}
+                          >
                             {value}
                           </ThemeText>
                         </View>

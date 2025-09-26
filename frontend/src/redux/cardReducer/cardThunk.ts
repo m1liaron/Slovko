@@ -83,7 +83,7 @@ export const getRepeatedCards = createAppAsyncThunk(
   'card/getRepeatedCards',
   async ({ sectionId }: { sectionId: string }) => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.get(`/cards/${sectionId}`);
+    const response = await axiosInstance.get(`/cards/repeated/${sectionId}`);
     return response.data;
   },
 );

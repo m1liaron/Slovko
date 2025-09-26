@@ -16,10 +16,10 @@ import { networkReducer } from './networkReducer/networkSlice';
 import { offlineQueueReducer } from './offlineQueueReducer/offlineQueueSlice';
 import { resultReducers } from './resultReducer/resultSlice';
 import { sharedGroupReducers } from './sharedGroupReducer/sharedGroupSlice';
-import { userReducers } from './userReducer/userSlice';
+import { logout, userReducers } from './userReducer/userSlice';
 import { sectionReducers } from './sectionReducer/sectionSlice';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   user: userReducers,
   sections: sectionReducers,
   groups: groupReducers,
@@ -29,6 +29,16 @@ const rootReducer = combineReducers({
   network: networkReducer,
   offlineQueue: offlineQueueReducer,
 });
+
+const rootReducer = (
+  state: ReturnType<typeof appReducer> | undefined,
+  action: any,
+) => {
+  if (action.type === logout.type) {
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
 
 export type RootState = ReturnType<typeof rootReducer>;
 

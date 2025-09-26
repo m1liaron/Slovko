@@ -34,14 +34,16 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, status, user } = useAppSelector(selectUser);
+  const { isAuthenticated, status, codeStatus, user } =
+    useAppSelector(selectUser);
   const isConnected = useAppSelector((state) => state.network.isConnected);
 
   const [isLoading, setIsLoading] = useState(true);
   const [hasToken, setHasToken] = useState(false);
   const triedGetUserRef = useRef(false);
 
-  const backendOff = status === DataStatus.ERROR;
+  const backendOff =
+    status === DataStatus.ERROR && (codeStatus === 401 || codeStatus > 500);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -53,7 +55,7 @@ const ProtectedRoute = () => {
     };
 
     checkToken();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (!isAuthenticated || (backendOff && !user)) {
@@ -82,7 +84,7 @@ const ProtectedRoute = () => {
     return <Loading />;
   }
 
-  if (!hasToken) {
+  if (!isAuthenticated) {
     return (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>

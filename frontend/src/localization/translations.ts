@@ -1,5 +1,8 @@
 const translations = {
   en: {
+    errors: {
+      loginFailed: 'Login Failed',
+    },
     mainScreen: {
       alreadyPassed: 'It has been',
       daysPassed: 'days since the beginning of the war.',
@@ -169,6 +172,9 @@ const translations = {
     },
   },
   uk: {
+    errors: {
+      loginFailed: 'Не вдалося увійти',
+    },
     mainScreen: {
       alreadyPassed: 'Вже минуло',
       daysPassed: 'з початку війни.',
