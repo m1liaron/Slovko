@@ -1,3 +1,4 @@
+import { Language } from "./Language.js";
 import { User } from "./User.js";
 import { Section } from "./Section.js";
 import { Group } from "./Group.js";
@@ -67,6 +68,7 @@ SharedCardLikes.belongsTo(SharedCard, {
 });
 
 export {
+  Language,
   User,
   Section,
   Group,

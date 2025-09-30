@@ -14,12 +14,14 @@ import { initializeLogger } from "./middlewares/initializeLogger.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { EnvVariables } from "./common/enums/index.js";
 import { sectionRoute } from "./routes/sectionRoute.js";
+import { ensureLanguages } from "./initFunctions/createLanguages.js";
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(initializeLogger);
+ensureLanguages();
 
 app.use("/users", userRoute);
 app.use("/cards", authMiddleware, cardRoute);

@@ -1,37 +1,31 @@
 import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
 import { sequelize } from "../db/sequelize.js";
-import { User } from "./User.js";
 import { Group } from "./Group.js";
 import {
   BaseAttributes,
   BaseCreationAttributes,
   CustomModal,
 } from "./CustomModel.js";
-import { Language } from "./Language.js";
 
-interface SectionAttributes extends BaseAttributes {
+interface LanguageAttributes extends BaseAttributes {
   title: string;
   code: string | null;
-  languageId: string;
-  userId: string;
 }
 
-class Section extends CustomModal<
-  SectionAttributes,
-  BaseCreationAttributes<SectionAttributes>
+class Language extends CustomModal<
+  LanguageAttributes,
+  BaseCreationAttributes<LanguageAttributes>
 > {
   public title!: string;
-  public userId!: string;
 
   groups?: Group[];
 }
 
-Section.init(
+Language.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: uuidv4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     title: {
@@ -46,30 +40,21 @@ Section.init(
           msg: "Title cannot be empty",
         },
       },
+      unique: true,
     },
-    languageId: {
-      type: DataTypes.UUID,
-      allowNull: true,
-      references: {
-        model: Language,
-        key: "id",
-      },
-    },
-    userId: {
-      type: DataTypes.UUID,
+    code: {
+      // this this used for languages, for example english: en
+      type: DataTypes.STRING,
       allowNull: false,
-      references: {
-        model: User,
-        key: "id",
-      },
+      unique: true,
     },
   },
   {
     sequelize,
-    modelName: "Section",
-    tableName: "Sections",
+    modelName: "Language",
+    tableName: "Languages",
     timestamps: true,
   },
 );
 
-export { Section };
+export { Language };
