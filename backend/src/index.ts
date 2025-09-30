@@ -15,6 +15,7 @@ import { validateEnvVariables } from "./helpers/db/index.js";
 import { EnvVariables } from "./common/enums/index.js";
 import { sectionRoute } from "./routes/sectionRoute.js";
 import { ensureLanguages } from "./initFunctions/createLanguages.js";
+import { languageRoute } from "./routes/languageRoute.js";
 
 const app: Application = express();
 
@@ -24,6 +25,7 @@ app.use(initializeLogger);
 ensureLanguages();
 
 app.use("/users", userRoute);
+app.use("/languages", authMiddleware, languageRoute);
 app.use("/cards", authMiddleware, cardRoute);
 app.use("/groups", authMiddleware, groupRoute);
 app.use("/results", authMiddleware, resultRoute);

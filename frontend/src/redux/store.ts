@@ -18,9 +18,11 @@ import { resultReducers } from './resultReducer/resultSlice';
 import { sharedGroupReducers } from './sharedGroupReducer/sharedGroupSlice';
 import { logout, userReducers } from './userReducer/userSlice';
 import { sectionReducers } from './sectionReducer/sectionSlice';
+import { languageReducers } from './languageReducer/languageSlice';
 
 const appReducer = combineReducers({
   user: userReducers,
+  languages: languageReducers,
   sections: sectionReducers,
   groups: groupReducers,
   sharedGroups: sharedGroupReducers,
@@ -47,6 +49,7 @@ const persisConfig = {
   storage: AsyncStorage,
   whitelist: [
     'user',
+    'languages',
     'groups',
     'cards',
     'results',

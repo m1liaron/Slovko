@@ -36,16 +36,7 @@ Section.init(
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 30],
-        notNull: {
-          msg: "Please provide a title",
-        },
-        notEmpty: {
-          msg: "Title cannot be empty",
-        },
-      },
+      allowNull: true,
     },
     languageId: {
       type: DataTypes.UUID,
@@ -54,6 +45,10 @@ Section.init(
         model: Language,
         key: "id",
       },
+    },
+    symbol: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     userId: {
       type: DataTypes.UUID,

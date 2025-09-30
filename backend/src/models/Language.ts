@@ -10,6 +10,7 @@ import {
 interface LanguageAttributes extends BaseAttributes {
   title: string;
   code: string | null;
+  symbol: string;
 }
 
 class Language extends CustomModal<
@@ -27,6 +28,10 @@ Language.init(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+    },
+    symbol: {
+      type: DataTypes.STRING,
+      defaultValue: true,
     },
     title: {
       type: DataTypes.STRING,
