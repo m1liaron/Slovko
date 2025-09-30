@@ -16,6 +16,10 @@ import { Image } from "./Image.js";
 User.hasMany(Section, { foreignKey: "userId", as: "sections" });
 Section.belongsTo(User, { foreignKey: "userId", as: "user" });
 
+// Section - Language
+Section.belongsTo(Language, { foreignKey: "languageId" });
+Language.hasMany(Section, { foreignKey: "languageId" });
+
 // Section - Group
 Section.hasMany(Group, { foreignKey: "sectionId", as: "groups" });
 Group.belongsTo(Section, { foreignKey: "sectionId", as: "section" });

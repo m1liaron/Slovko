@@ -1,5 +1,4 @@
 import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
 import { sequelize } from "../db/sequelize.js";
 import { User } from "./User.js";
 import { Group } from "./Group.js";
@@ -11,9 +10,8 @@ import {
 import { Language } from "./Language.js";
 
 interface SectionAttributes extends BaseAttributes {
-  title: string;
-  code: string | null;
-  languageId: string;
+  title?: string;
+  languageId?: string;
   userId: string;
 }
 
@@ -31,7 +29,7 @@ Section.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: uuidv4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     title: {
@@ -45,10 +43,6 @@ Section.init(
         model: Language,
         key: "id",
       },
-    },
-    symbol: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
     userId: {
       type: DataTypes.UUID,

@@ -95,7 +95,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
               borderColor: colors.highlightColor,
               borderWidth: 3,
             }}
-            onPress={() => onAddSectionLanguage()}
+            onPress={onAddSectionLanguage}
           />
         </View>
       ) : (
