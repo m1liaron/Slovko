@@ -29,7 +29,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
 
   const [showSectionModal, setShowSectionModal] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
-  const [chosenLanguage, setChosenLanguage] = useState<Language | undefined>();
+  const [chosenLanguage, setChosenLanguage] = useState<Language | null>();
   const [newTitle, setNewTitle] = useState('');
 
   const onAddSection = () => {
@@ -41,6 +41,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     }
 
     dispatch(addSection({ title: newTitle }));
+    setNewTitle("");
   };
 
   const onAddSectionLanguage = () => {
@@ -52,6 +53,8 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
       return;
     }
 
+    setChosenLanguage(null);
+    setShowLanguages(false);
     dispatch(addSection({ languageId: chosenLanguage.id }));
   };
 
@@ -73,7 +76,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
               <Pressable
                 style={{
                   borderColor:
-                    chosenLanguage?.id === item.id ? colors.highlightColor : '',
+                    chosenLanguage?.id === item.id ? colors.highlightColor : colors.primary,
                   borderWidth: 2,
                   borderRadius: 20,
                   padding: 20,
@@ -115,7 +118,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
             text="Вибрати мову"
             buttonStyle={{
               backgroundColor: 'transparent',
-              borderColor: colors.highlightColor,
+              borderColor: colors.highlightDarkColor,
               borderWidth: 3,
             }}
             onPress={() => setShowLanguages(true)}
@@ -125,6 +128,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
 
           <PressableButton
             text="Створити секцію"
+            buttonStyle={{ backgroundColor: colors.highlightDarkColor }}  
             onPress={() => setShowSectionModal(true)}
           />
 
@@ -144,7 +148,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                 }}
                 onPress={() => dispatch(setActiveSectionId(item.id))}
               >
-                <ThemeText>{item.title}</ThemeText>
+                <ThemeText>{item.Language?.symbol} {item.title || item.Language?.title}</ThemeText>
               </Pressable>
             )}
           />

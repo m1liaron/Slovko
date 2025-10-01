@@ -22,7 +22,6 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 app.use(initializeLogger);
-ensureLanguages();
 
 app.use("/users", userRoute);
 app.use("/languages", authMiddleware, languageRoute);
@@ -40,6 +39,7 @@ const start = async () => {
     await connectDB();
     console.log("Database connected, attempting to sync models...");
     await sequelize.sync({ alter: true });
+    await ensureLanguages();
 
     app.listen(port, () => {
       console.log(`HTTPS server running on port https://localhost:${port}`);

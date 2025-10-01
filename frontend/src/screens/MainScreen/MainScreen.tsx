@@ -193,11 +193,11 @@ const MainScreen = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.3)', // darken backdrop
+            backgroundColor: 'rgba(0,0,0,0.3)', 
             flexDirection: 'row',
             zIndex: 20,
           }}
-          onPress={() => setShowDrawerMenu(false)} // close when tap backdrop
+          onPress={() => setShowDrawerMenu(false)} 
         >
           <CustomDrawerContent handleClose={() => setShowDrawerMenu(false)} />
         </Pressable>
