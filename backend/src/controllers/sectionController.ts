@@ -23,17 +23,21 @@ const addSection: AuthRequestHandler = async (req, res) => {
   const data = req.body;
   const userId = req.user.id;
   try {
-    const existSection = await Section.findOne({
-      where: {
-        title: data.title ?? null,
-        userId: userId,
-      },
-    });
-    if (existSection) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: true, message: "Section already exists" });
+    if (data.title || data.languageId) {
+      const existSection = await Section.findOne({
+        where: {
+          title: data.title ?? null,
+          languageId: data.languageId ?? null,
+          userId: userId,
+        },
+      });
+      if (existSection) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ error: true, message: "Section already exists" });
+      }
     }
+
     const newSection = (
       await Section.create({
         title: data.title || null,
@@ -41,6 +45,17 @@ const addSection: AuthRequestHandler = async (req, res) => {
         userId,
       })
     ).toJSON();
+    if (data.languageId) {
+      const section = await Section.findOne({
+        where: {
+          languageId: data.languageId || null,
+          userId,
+        },
+        include: [{ model: Language, attributes: ["id", "title", "symbol"] }],
+      });
+      res.status(StatusCodes.OK).json(section);
+      return;
+    }
     res.status(StatusCodes.OK).json(newSection);
   } catch (error) {
     sendError(res, error);
