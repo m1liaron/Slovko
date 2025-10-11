@@ -4,17 +4,16 @@ const styles = StyleSheet.create({
   anouncement: {
     backgroundColor: '#FFD700',
     width: '100%',
-    padding: 10,
+    padding: 5,
   },
   title: {
-    fontSize: 36,
+    fontSize: 26,
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#0033A0',
-    marginTop: 20,
   },
   subtitle: {
-    fontSize: 28,
+    fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
     color: '#FFD700',
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
   },
   timePassedText: {
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 20,
     backgroundColor: '#FFD700',
     color: '#0033A0',
     padding: 15,

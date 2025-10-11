@@ -205,14 +205,16 @@ const ResultsScreen = () => {
           },
         ]}
       >
-        <Ionicons name="search" size={20} color={colors.lightText} />
-        <TextInput
-          style={[styles.searchInput, { color: colors.primary }]}
-          placeholder={i18n.t('sharedGroupsScreen.searchPlaceholder')}
-          placeholderTextColor={colors.lightText}
-          value={filterValue}
-          onChangeText={setFilterValue}
-        />
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Ionicons name="search" size={20} color={colors.lightText} />
+          <TextInput
+            style={[styles.searchInput, { color: colors.primary }]}
+            placeholder={i18n.t('sharedGroupsScreen.searchPlaceholder')}
+            placeholderTextColor={colors.lightText}
+            value={filterValue}
+            onChangeText={setFilterValue}
+          />
+        </View>
         <Pressable onPress={() => setShowFilter((prev) => !prev)}>
           {showFilter ? (
             <FontAwesome name="filter" size={21} color={colors.lightText} />

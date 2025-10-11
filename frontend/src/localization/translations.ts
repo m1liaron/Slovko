@@ -83,6 +83,7 @@ const translations = {
       inputPlaceholder: 'Title...',
       moveGroup: 'Move group to another section',
       changeButton: 'Change',
+      noSections: 'No Sections',
       cardList: {
         addCardTitle: 'Add a Card!',
         oneCard: 'Single',
@@ -124,6 +125,7 @@ const translations = {
       selectGraph: 'Select Graph',
       selectMode: 'Select Mode',
       selectWordsMode: 'Select Words Mode',
+      noData: 'No data available for statistics',
     },
     streakScreen: {
       frozenAlreadyBought: 'Freeze already bought',
@@ -254,6 +256,7 @@ const translations = {
       inputPlaceholder: 'Назва...',
       moveGroup: 'Перемістити групу в інший розділ',
       changeButton: 'Змінити',
+      noSections: 'Немає секцій',
       cardList: {
         addCardTitle: 'Додайте Карточку!',
         oneCard: 'Одна',
@@ -295,6 +298,7 @@ const translations = {
       linear: 'Лінійний',
       bar: 'Стовпчатий',
       pie: 'Пиріг',
+      noData: 'Немає даних для статистики',
       selectGraph: 'Виберіть графік',
       selectMode: 'Виберіть режим',
       selectWordsMode: 'Виберіть режим слів',

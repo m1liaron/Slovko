@@ -1,10 +1,10 @@
-import { Language } from "./language.type";
+import { Language } from './language.type';
 
 type ISection = {
   id: string;
   title: string;
   userId?: string;
-  Language?: Language
+  Language?: Language;
 };
 
 export type { ISection };

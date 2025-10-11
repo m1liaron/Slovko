@@ -28,6 +28,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
   const [quizOptions, setQuizOptions] = useState<QuizOption[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<QuizOption | null>(null);
+  const [isSoundPlayed, setIsSoundPlayed] = useState(false);
   const currentCard = cards[displayedQuizIndex];
 
   useEffect(() => {
@@ -72,6 +73,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
     setSelectedOption(option);
     if (option.isCorrect) {
       await playSuccessSound();
+      setIsSoundPlayed(true);
       setIsCorrect(true);
       moveToNextCard();
       handleSetData(currentCard, true);
@@ -87,6 +89,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
 
   const playSuccessSound = async () => {
     try {
+      if (isSoundPlayed) return;
       const { sound } = await Audio.Sound.createAsync(
         require('../../../assets/audio/success.mp3'),
         { positionMillis: 0 },
@@ -97,6 +100,8 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
       await sound.playAsync();
     } catch (error) {
       console.error('Error playing sound', error);
+    } finally {
+      setIsSoundPlayed(false);
     }
   };
 

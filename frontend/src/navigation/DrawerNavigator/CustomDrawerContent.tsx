@@ -76,7 +76,9 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
               <Pressable
                 style={{
                   borderColor:
-                    chosenLanguage?.id === item.id ? colors.highlightColor : colors.primary,
+                    chosenLanguage?.id === item.id
+                      ? colors.highlightColor
+                      : colors.primary,
                   borderWidth: 2,
                   borderRadius: 20,
                   padding: 20,
@@ -148,7 +150,9 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                 }}
                 onPress={() => dispatch(setActiveSectionId(item.id))}
               >
-                <ThemeText>{item.Language?.symbol} {item.title || item.Language?.title}</ThemeText>
+                <ThemeText>
+                  {item.Language?.symbol} {item.title || item.Language?.title}
+                </ThemeText>
               </Pressable>
             )}
           />
