@@ -1,27 +1,34 @@
-import GroupScreen from "./GroupScreen/GroupScreen";
-import LearnScreen from "./LearnScreen/LearnScreen";
-import LoginScreen from "./LoginScreen/LoginScreen";
-import MainScreen from "./MainScreen/MainScreen";
-import ProfileScreen from "./ProfileScreen/ProfileScreen";
-import RegisterScreen from "./RegisterScreen/RegisterScreen";
-import ResultDetailsScreen from "./ResultDetailsScreen/ResultDetailsScreen";
-import ResultsScreen from "./ResultsScreen/ResultsScreen";
-import SharedGroupDetailsScreen from "./SharedGroupDetailsScreen/SharedGroupDetailsScreen";
-import SharedGroupsScreen from "./SharedGroupsScreen/SharedGroupsScreen";
-import StatisticsScreen from "./StatisticsScreen/StatisticsScreen";
-import StreakScreen from "./StreakScreen/StreakScreen";
+import GroupScreen from './GroupScreen/GroupScreen';
+import LearnScreen from './LearnScreen/LearnScreen';
+import LoginScreen from './LoginScreen/LoginScreen';
+import MainScreen from './MainScreen/MainScreen';
+import ProfileScreen from './ProfileScreen/ProfileScreen';
+import RegisterScreen from './RegisterScreen/RegisterScreen';
+import ResultDetailsScreen from './ResultDetailsScreen/ResultDetailsScreen';
+import ResultsScreen from './ResultsScreen/ResultsScreen';
+import SharedGroupDetailsScreen from './SharedGroupDetailsScreen/SharedGroupDetailsScreen';
+import SharedGroupsScreen from './SharedGroupsScreen/SharedGroupsScreen';
+import StatisticsScreen from './StatisticsScreen/StatisticsScreen';
+import StreakScreen from './StreakScreen/StreakScreen';
+
+import ChooseLanguageScreen from './ChooseLanguageScreen/ChooseLanguageScreen';
+import WelcomeScreen from './WelcomeScreen/WelcomeScreen';
+import ChooseWordsScreen from './ChooseWordsScreen/ChooseWordsScreen';
 
 export {
-	MainScreen,
-	RegisterScreen,
-	LoginScreen,
-	GroupScreen,
-	LearnScreen,
-	ProfileScreen,
-	ResultDetailsScreen,
-	ResultsScreen,
-	SharedGroupsScreen,
-	SharedGroupDetailsScreen,
-	StatisticsScreen,
-	StreakScreen,
+  WelcomeScreen,
+  ChooseLanguageScreen,
+  ChooseWordsScreen,
+  MainScreen,
+  RegisterScreen,
+  LoginScreen,
+  GroupScreen,
+  LearnScreen,
+  ProfileScreen,
+  ResultDetailsScreen,
+  ResultsScreen,
+  SharedGroupsScreen,
+  SharedGroupDetailsScreen,
+  StatisticsScreen,
+  StreakScreen,
 };
