@@ -18,7 +18,6 @@ import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
 import styles from './GroupList.styles';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { selectUser } from '@/redux/userReducer/userSlice';
 
 export const GroupList = () => {
   const { groups, isLoading } = useAppSelector((state) => state.groups);

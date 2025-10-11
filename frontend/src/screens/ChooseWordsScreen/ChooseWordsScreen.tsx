@@ -13,6 +13,7 @@ import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/hooks/redux.hooks';
 import languagesJson from '@/assets/data/languages.json';
+import { FlatList } from 'react-native-gesture-handler';
 
 type Word = {
   id: number;
@@ -28,15 +29,13 @@ const languages: LanguagesData = languagesJson;
 
 const ChooseWordsScreen = () => {
   const { width } = useWindowDimensions();
-  const {
-    theme: { colors },
-  } = useAppTheme();
+  const { theme } = useAppTheme();
   const { selectedLanguage } = useAppSelector((state) => state.sections);
   const [words, setWords] = useState<Word[]>([]);
   const [chosenWords, setChosenWords] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedLanguage && selectedLanguage in languages) {
+    if (selectedLanguage?.length > 0) {
       setWords(languages[selectedLanguage as keyof typeof languages]);
     }
   }, [selectedLanguage]);
@@ -52,7 +51,6 @@ const ChooseWordsScreen = () => {
   return (
     <ThemeBackground
       style={{
-        flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 30,
       }}
@@ -68,61 +66,62 @@ const ChooseWordsScreen = () => {
             fontSize: 26,
             fontWeight: '700',
             textAlign: 'center',
-            color: colors.text,
           }}
         >
-          {i18n.t('chooseLanguageScreen.whichLanguage')}
+          {i18n.t('chooseWordsScreen.chooseWords')}
         </ThemeText>
       </View>
 
-      {words.length > 0 && (
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: 16,
-          }}
-        >
-          {words.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              activeOpacity={0.7}
-              onPress={() => handleSetChosenWord(item)}
-              style={{
-                width: '45%',
-                minWidth: 150,
-                maxWidth: 250,
-                marginBottom: 16,
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 18,
-                paddingHorizontal: 20,
-                backgroundColor: chosenWords.includes(item.title)
-                  ? colors.highlightColor
-                  : colors.lightBackground,
-                borderRadius: 16,
-                shadowColor: '#000',
-                shadowOpacity: 0.08,
-                shadowOffset: { width: 0, height: 2 },
-                shadowRadius: 4,
-                elevation: 2,
-              }}
-            >
-              <Text
+      {words?.length > 0 && (
+        <>
+          <FlatList
+            data={words}
+            numColumns={2} // ✅ two columns
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{
+              justifyContent: 'center',
+              paddingBottom: 40,
+            }}
+            columnWrapperStyle={{
+              justifyContent: 'center',
+              gap: 16,
+            }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => handleSetChosenWord(item)}
                 style={{
-                  fontSize: 18,
-                  fontWeight: '600',
-                  color: chosenWords.includes(item.title)
-                    ? colors.primary
-                    : colors.text,
+                  width: '45%',
+                  minWidth: 150,
+                  maxWidth: 250,
+                  marginBottom: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingVertical: 18,
+                  paddingHorizontal: 20,
+                  backgroundColor: chosenWords.includes(item.title)
+                    ? theme.colors.highlightColor
+                    : theme.colors.lightBackground,
+                  borderRadius: 16,
+                  shadowColor: '#000',
+                  shadowOpacity: 0.08,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowRadius: 4,
+                  elevation: 2,
                 }}
               >
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: '600',
+                  }}
+                >
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </>
       )}
     </ThemeBackground>
   );

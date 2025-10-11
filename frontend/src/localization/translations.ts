@@ -4,8 +4,8 @@ const translations = {
       welcome: 'Welcome to Slovko',
       customize: "Let's customize your learning",
       start: 'Start',
-    errors: {
-      loginFailed: 'Login Failed',
+      next: 'Next',
+      chooseWords: 'Now select words, which translate you know',
     },
     mainScreen: {
       alreadyPassed: 'It has been',
@@ -176,17 +176,25 @@ const translations = {
       totalScore: 'Total Score',
       accuracyPercentage: 'Accuracy Percentage',
     },
+    chooseLanguageScreen: {
+      whichLanguage: 'Which language do you want to learn?',
+    },
+    chooseWordsScreen: {
+      chooseWords: 'Now choose words, which translate you know',
+    },
   },
   uk: {
     welcomeScreen: {
       welcome: 'Вітаю у Slovko',
       customize: 'Давайте налаштуємо ваше навчання',
       start: 'Почати',
+      next: 'Наступне',
     },
     chooseLanguageScreen: {
-      whichLanguage: 'Which language do you want to learn?',
-    errors: {
-      loginFailed: 'Не вдалося увійти',
+      whichLanguage: 'Яку мову ви хочете вивчати?',
+    },
+    chooseWordsScreen: {
+      chooseWords: 'Тепер оберіть слова переклад, яких ви знаєте',
     },
     mainScreen: {
       alreadyPassed: 'Вже минуло',

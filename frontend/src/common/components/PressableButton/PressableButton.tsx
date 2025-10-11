@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, ViewStyle } from 'react-native';
+import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
 import styles from './PressableButton.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 
@@ -16,6 +16,7 @@ interface PressableButtonProps {
   text: string;
   onPress?: () => void;
   buttonStyle?: ViewStyle;
+  textStyle?: TextStyle;
   disabled?: boolean;
 }
 
@@ -23,6 +24,7 @@ const PressableButton = ({
   text,
   onPress,
   buttonStyle,
+  textStyle,
   disabled,
 }: PressableButtonProps) => {
   const {
@@ -44,7 +46,9 @@ const PressableButton = ({
       ]}
       disabled={disabled}
     >
-      <Text style={[styles.buttonText, { color: primary }]}>{text}</Text>
+      <Text style={[styles.buttonText, { color: primary, ...textStyle }]}>
+        {text}
+      </Text>
     </Pressable>
   );
 };

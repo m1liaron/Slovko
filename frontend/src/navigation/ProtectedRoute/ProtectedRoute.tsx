@@ -90,21 +90,21 @@ const ProtectedRoute = () => {
     return <Loading />;
   }
 
-  if (!isAuthenticated) {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name={AppPath.Login} component={LoginScreen} />
-          <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
+  // if (!isAuthenticated) {
+  //   return (
+  //     <NavigationContainer>
+  //       <Stack.Navigator screenOptions={{ headerShown: false }}>
+  //         <Stack.Screen name={AppPath.Login} component={LoginScreen} />
+  //         <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+  //       </Stack.Navigator>
+  //     </NavigationContainer>
+  //   );
+  // }
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name={AppPath.Welcome} component={MainStackNavigator} />
+        <Stack.Screen name={AppPath.Welcome} component={WelcomeScreen} />
         <Stack.Screen
           name={AppPath.ChooseLanguage}
           component={ChooseLanguageScreen}
