@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   formContainer: {
     padding: 16,
-    gap: 10,
   },
   bulkAddContainer: {
     marginTop: 16,
@@ -11,34 +10,41 @@ const styles = StyleSheet.create({
   fileInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
   },
   fileInput: {
     marginLeft: 8,
     padding: 5,
   },
   jsonTableContainer: {
-    marginTop: 10,
-    height: 500,
+    marginTop: 12,
+    maxHeight: 300,
+    borderWidth: 1,
+    borderRadius: 8,
+    overflow: 'scroll',
   },
   jsonTable: {
-    borderWidth: 1,
     padding: 8,
   },
   jsonTableTitle: {
     fontWeight: 'bold',
-    marginBottom: 6,
+    marginBottom: 8,
+    fontSize: 16,
   },
   jsonRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingVertical: 6,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
   },
   jsonKey: {
     fontWeight: 'bold',
+    flexShrink: 0,
+    marginRight: 8,
   },
   jsonValue: {
     flex: 1,
-    marginLeft: 5,
+    flexShrink: 1,
   },
   image: {
     width: 100,

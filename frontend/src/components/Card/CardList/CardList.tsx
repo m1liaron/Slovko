@@ -42,7 +42,7 @@ type CardListProps = {
 };
 
 const CardList = ({ groupId }: CardListProps) => {
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
 
   const {
     theme: { colors },

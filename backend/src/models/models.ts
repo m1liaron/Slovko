@@ -1,3 +1,4 @@
+import { Language } from "./Language.js";
 import { User } from "./User.js";
 import { Section } from "./Section.js";
 import { Group } from "./Group.js";
@@ -14,6 +15,10 @@ import { Image } from "./Image.js";
 // User - Section
 User.hasMany(Section, { foreignKey: "userId", as: "sections" });
 Section.belongsTo(User, { foreignKey: "userId", as: "user" });
+
+// Section - Language
+Section.belongsTo(Language, { foreignKey: "languageId" });
+Language.hasMany(Section, { foreignKey: "languageId" });
 
 // Section - Group
 Section.hasMany(Group, { foreignKey: "sectionId", as: "groups" });
@@ -67,6 +72,7 @@ SharedCardLikes.belongsTo(SharedCard, {
 });
 
 export {
+  Language,
   User,
   Section,
   Group,

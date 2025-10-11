@@ -15,9 +15,18 @@ export const getSections = createAppAsyncThunk<ISection[], void>(
 
 export const addSection = createAppAsyncThunk(
   'section/add-section',
-  async (title: string) => {
+  async ({
+    title,
+    languageId,
+  }: {
+    title?: string;
+    languageId?: null | string;
+  }) => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.post(basicRoute, { title });
+    const response = await axiosInstance.post(basicRoute, {
+      title,
+      languageId,
+    });
     return response.data;
   },
 );

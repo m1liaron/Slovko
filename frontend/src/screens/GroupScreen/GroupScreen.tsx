@@ -57,7 +57,12 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const { cards, filteredCards, isLoading } = useAppSelector(
     (state) => state.cards,
   );
-  const { sections } = useAppSelector((state) => state.sections);
+  const { sections, activeSectionId } = useAppSelector(
+    (state) => state.sections,
+  );
+  const showSections = sections.filter(
+    (section) => section.id !== activeSectionId,
+  );
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [groupTitle, setGroupTitle] = useState<string>('');
@@ -337,22 +342,24 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         </Pressable>
 
         <View>
-          <Pressable
-            style={{ flexDirection: 'row', alignItems: 'center' }}
-            onPress={() => setShowSectionList((prev) => !prev)}
-          >
-            <ThemeText>{i18n.t('group.moveGroup')}</ThemeText>
-            <Feather
-              name={showSectionList ? 'arrow-down' : 'arrow-right'}
-              color={colors.primary}
-              size={30}
-            />
-          </Pressable>
+          {showSections.length > 0 && (
+            <Pressable
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+              onPress={() => setShowSectionList((prev) => !prev)}
+            >
+              <ThemeText>{i18n.t('group.moveGroup')}</ThemeText>
+              <Feather
+                name={showSectionList ? 'arrow-down' : 'arrow-right'}
+                color={colors.primary}
+                size={30}
+              />
+            </Pressable>
+          )}
 
-          {showSectionList && (
+          {showSectionList && showSections.length > 0 && (
             <View>
               <FlatList
-                data={sections}
+                data={showSections}
                 contentContainerStyle={{
                   flexDirection: 'row',
                   alignItems: 'center',

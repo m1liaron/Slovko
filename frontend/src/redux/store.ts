@@ -16,11 +16,13 @@ import { networkReducer } from './networkReducer/networkSlice';
 import { offlineQueueReducer } from './offlineQueueReducer/offlineQueueSlice';
 import { resultReducers } from './resultReducer/resultSlice';
 import { sharedGroupReducers } from './sharedGroupReducer/sharedGroupSlice';
-import { userReducers } from './userReducer/userSlice';
+import { logout, userReducers } from './userReducer/userSlice';
 import { sectionReducers } from './sectionReducer/sectionSlice';
+import { languageReducers } from './languageReducer/languageSlice';
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   user: userReducers,
+  languages: languageReducers,
   sections: sectionReducers,
   groups: groupReducers,
   sharedGroups: sharedGroupReducers,
@@ -30,6 +32,16 @@ const rootReducer = combineReducers({
   offlineQueue: offlineQueueReducer,
 });
 
+const rootReducer = (
+  state: ReturnType<typeof appReducer> | undefined,
+  action: any,
+) => {
+  if (action.type === logout.type) {
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
 export type RootState = ReturnType<typeof rootReducer>;
 
 const persisConfig = {
@@ -37,6 +49,7 @@ const persisConfig = {
   storage: AsyncStorage,
   whitelist: [
     'user',
+    'languages',
     'groups',
     'cards',
     'results',

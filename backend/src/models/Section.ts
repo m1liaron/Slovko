@@ -1,5 +1,4 @@
 import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
 import { sequelize } from "../db/sequelize.js";
 import { User } from "./User.js";
 import { Group } from "./Group.js";
@@ -8,9 +7,11 @@ import {
   BaseCreationAttributes,
   CustomModal,
 } from "./CustomModel.js";
+import { Language } from "./Language.js";
 
 interface SectionAttributes extends BaseAttributes {
-  title: string;
+  title?: string;
+  languageId?: string;
   userId: string;
 }
 
@@ -28,20 +29,19 @@ Section.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: uuidv4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 30],
-        notNull: {
-          msg: "Please provide a title",
-        },
-        notEmpty: {
-          msg: "Title cannot be empty",
-        },
+      allowNull: true,
+    },
+    languageId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: Language,
+        key: "id",
       },
     },
     userId: {

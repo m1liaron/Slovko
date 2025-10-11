@@ -62,6 +62,10 @@ const MainScreen = () => {
   const [showDrawerMenu, setShowDrawerMenu] = useState(false);
 
   useEffect(() => {
+    dispatch(enqueueOrDispatch(getUser, {}));
+  }, []);
+
+  useEffect(() => {
     dispatch(getSections());
   }, []);
 
@@ -70,6 +74,14 @@ const MainScreen = () => {
       setActiveSectionId(sections[0]);
     }
   }, []);
+
+  useEffect(() => {
+    if (activeSectionId) {
+      dispatch(
+        enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
+      );
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
@@ -126,12 +138,6 @@ const MainScreen = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(
-      enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
-    );
-  }, [dispatch]);
-
   const daysSince = useCallback((dateString: string) => {
     const targetDate = new Date(dateString).getTime();
     const now = new Date().getTime();
@@ -143,10 +149,6 @@ const MainScreen = () => {
     const days = daysSince('2022-02-24');
     setDaysPassed(days);
   }, [daysSince]);
-
-  useEffect(() => {
-    dispatch(enqueueOrDispatch(getUser, {}));
-  }, []);
 
   const openLink = () => {
     Linking.openURL('https://savelife.in.ua/en/');
@@ -191,11 +193,11 @@ const MainScreen = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.3)', // darken backdrop
+            backgroundColor: 'rgba(0,0,0,0.3)', 
             flexDirection: 'row',
             zIndex: 20,
           }}
-          onPress={() => setShowDrawerMenu(false)} // close when tap backdrop
+          onPress={() => setShowDrawerMenu(false)} 
         >
           <CustomDrawerContent handleClose={() => setShowDrawerMenu(false)} />
         </Pressable>

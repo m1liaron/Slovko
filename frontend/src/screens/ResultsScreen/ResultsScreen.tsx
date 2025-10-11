@@ -215,7 +215,6 @@ const ResultsScreen = () => {
             onChangeText={setFilterValue}
           />
         </View>
-
         <Pressable onPress={() => setShowFilter((prev) => !prev)}>
           {showFilter ? (
             <FontAwesome name="filter" size={21} color={colors.lightText} />
