@@ -184,6 +184,7 @@ const translations = {
       chooseWords: 'Now choose words, which translate you know',
       yourLevel: 'Based on your answers, your level is',
       approxLevel: 'This is approximately level, not 100% right',
+      slogan: 'Remember words forever',
     },
   },
   uk: {
@@ -201,6 +202,7 @@ const translations = {
       chooseWords: 'Тепер оберіть слова переклад, яких ви знаєте',
       yourLevel: 'Базуючись на ваших відповідях, ваш приблизний рівень',
       approxLevel: 'Це приблизний рівень, не на 100% правильний',
+      slogan: "Запам'ятовуйте слова назавжди",
     },
     mainScreen: {
       alreadyPassed: 'Вже минуло',

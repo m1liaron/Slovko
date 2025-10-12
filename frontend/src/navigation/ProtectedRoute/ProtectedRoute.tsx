@@ -105,6 +105,7 @@ const ProtectedRoute = () => {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={AppPath.Welcome} component={WelcomeScreen} />
+        <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
         <Stack.Screen
           name={AppPath.ChooseLanguage}
           component={ChooseLanguageScreen}

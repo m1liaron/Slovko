@@ -7,6 +7,7 @@ import {
   Image,
   useWindowDimensions,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useEffect, useMemo, useState } from 'react';
@@ -14,6 +15,10 @@ import { useAppSelector } from '@/hooks/redux.hooks';
 import { FlatList } from 'react-native-gesture-handler';
 import languagesJson from '@/assets/data/languages.json';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { AppPath } from '@/common/enums/app/AppPath';
+import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
 
 type Word = {
   id: number;
@@ -43,10 +48,10 @@ const getLevelFromScore = (avg: number) => {
   if (avg < 5.5) return 'C1';
   return 'C2';
 };
-
 const languages = languagesJson as LanguagesData;
 
 const ChooseWordsScreen = () => {
+  const navigation = useNavigation<StackNavigation>();
   const { width } = useWindowDimensions();
   const { theme } = useAppTheme();
   const { selectedLanguage } = useAppSelector((state) => state.sections);
@@ -97,6 +102,20 @@ const ChooseWordsScreen = () => {
     return getLevelFromScore(highestKnown);
   };
 
+  const percentage = () => {
+    const level = userLevel();
+    if (level) {
+      return level.includes('A') ? 25 : level.includes('B') ? 75 : 100;
+    }
+  };
+
+  const handleBack = () => {
+    setShowLevel(false);
+    navigation.navigate(AppPath.ChooseLanguage);
+  };
+
+  const contentWidth = width < 720 ? '100%' : '50%';
+
   return (
     <ThemeBackground
       style={{
@@ -105,57 +124,138 @@ const ChooseWordsScreen = () => {
       }}
     >
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <Image
-          source={IconImage}
-          style={{ width: width / 5, height: width / 5, marginBottom: 15 }}
-          resizeMode="contain"
-        />
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={IconImage}
+            style={{
+              width: width < 720 ? width / 5 : width / 10,
+              height: width < 720 ? width / 5 : width / 10,
+              marginBottom: 15,
+            }}
+            resizeMode="contain"
+          />
+          <ThemeText style={{ fontWeight: 'bold', fontSize: 30 }}>
+            Slovko
+          </ThemeText>
+        </View>
         <ThemeText
           style={{
-            fontSize: 26,
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: 40,
           }}
         >
           {showLevel
-            ? i18n.t('chooseWordsScreen.yourLevel')
+            ? i18n.t('chooseWordsScreen.slogan')
             : i18n.t('chooseWordsScreen.chooseWords')}
-          {showLevel && (
-            <ThemeText style={{ fontSize: 15 }}>
-              ({i18n.t('chooseWordsScreen.approxLevel')})
-            </ThemeText>
-          )}
         </ThemeText>
 
         {showLevel ? (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
+          <>
             <View
               style={{
-                paddingVertical: 20,
-                paddingHorizontal: 40,
-                borderRadius: 100,
-                backgroundColor: theme.colors.highlightColor,
+                flex: 1,
+                width: contentWidth,
+                backgroundColor: theme.colors.lightBackground,
+                borderRadius: 20,
+                padding: 20,
               }}
             >
-              <ThemeText
-                style={{
-                  fontSize: 28,
-                  fontWeight: '700',
-                  textAlign: 'center',
-                }}
-              >
-                {userLevel()}
-              </ThemeText>
+              <View>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <EvilIcons
+                      name="trophy"
+                      color={theme.colors.iconColor}
+                      size={25}
+                    />
+                    <ThemeText style={{ fontSize: 20 }}>Your Level</ThemeText>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      gap: 10,
+                      alignItems: 'center',
+                      borderRadius: 15,
+                      backgroundColor: theme.colors.highlightDarkColor,
+                      padding: 10,
+                    }}
+                  >
+                    <AntDesign name="star" color="#fff" />
+                    <Text style={{ color: '#fff' }}>{userLevel()}</Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    width: '100%',
+                    height: 5,
+                    borderRadius: 40,
+                    backgroundColor: theme.colors.lightText,
+                    padding: 5,
+                    marginVertical: 10,
+                    zIndex: 0,
+                    position: 'relative',
+                  }}
+                >
+                  <View
+                    style={{
+                      position: 'absolute',
+                      width: `${percentage() || 10}%`,
+                      height: 10,
+                      borderRadius: 40,
+                      zIndex: 1,
+                      top: 0,
+                      left: 0,
+                      backgroundColor: theme.colors.highlightColor,
+                    }}
+                  ></View>
+                </View>
+
+                <View style={{ flexDirection: 'row', gap: 5 }}>
+                  <Entypo
+                    name="globe"
+                    size={20}
+                    color={theme.colors.iconColor}
+                  />
+                  <ThemeText>Learning Language</ThemeText>
+                </View>
+                <View
+                  style={{
+                    alignSelf: 'flex-start',
+                    padding: 20,
+                    borderRadius: 20,
+                    borderColor: theme.colors.highlightColor,
+                    borderWidth: 3,
+                    marginVertical: 10,
+                  }}
+                >
+                  <ThemeText>{selectedLanguage}</ThemeText>
+                </View>
+                <PressableButton
+                  onPress={handleBack}
+                  text="< Change language"
+                />
+              </View>
             </View>
-          </View>
+            <View style={{ gap: 10, width: contentWidth, margin: 10 }}>
+              <PressableButton
+                onPress={() => navigation.navigate(AppPath.Register)}
+                text="Continue with Registration"
+              />
+              <PressableButton
+                gradientColor={theme.colors.lightBackground}
+                text="Continue without Registration"
+                buttonStyle={{ backgroundColor: theme.colors.lightBackground }}
+              />
+            </View>
+          </>
         ) : (
           <>
             {words?.length > 0 && (
@@ -165,6 +265,9 @@ const ChooseWordsScreen = () => {
                 keyExtractor={(item) => item.id.toString()}
                 contentContainerStyle={{
                   justifyContent: 'center',
+                  flexDirection: 'row',
+                  gap: 10,
+                  flexWrap: 'wrap',
                   paddingBottom: 100, // leave space for buttons
                 }}
                 columnWrapperStyle={{
@@ -195,14 +298,18 @@ const ChooseWordsScreen = () => {
                       elevation: 2,
                     }}
                   >
-                    <ThemeText
+                    <Text
                       style={{
                         fontSize: 18,
                         fontWeight: '600',
+                        color:
+                          chosenWords.includes(item.title) || theme.dark
+                            ? '#fff'
+                            : '#000',
                       }}
                     >
                       {item.title}
-                    </ThemeText>
+                    </Text>
                   </TouchableOpacity>
                 )}
               />
@@ -211,7 +318,7 @@ const ChooseWordsScreen = () => {
         )}
       </View>
 
-      {chosenWords.length >= 1 && (
+      {!showLevel && (
         <View
           style={{
             flexDirection: 'row',
@@ -226,19 +333,18 @@ const ChooseWordsScreen = () => {
             right: 20,
           }}
         >
-          {showLevel && (
-            <PressableButton
-              buttonStyle={{ flex: 1 }}
-              onPress={() => setShowLevel(false)}
-              text={i18n.t('welcomeScreen.back')}
-            />
-          )}
-
           <PressableButton
             buttonStyle={{ flex: 1 }}
-            onPress={() => setShowLevel(true)}
-            text={i18n.t('welcomeScreen.next')}
+            onPress={handleBack}
+            text={i18n.t('welcomeScreen.back')}
           />
+          {chosenWords.length >= 1 && (
+            <PressableButton
+              buttonStyle={{ flex: 1 }}
+              onPress={() => setShowLevel(true)}
+              text={i18n.t('welcomeScreen.next')}
+            />
+          )}
         </View>
       )}
     </ThemeBackground>

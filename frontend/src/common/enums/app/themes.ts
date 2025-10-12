@@ -21,8 +21,8 @@ const lightTheme: Theme = {
     lightText: '#626471ff',
     iconColor: '#12171D',
     text: '#12171D',
-    highlightColor: '#5B62F8',
-    highlightDarkColor: '#1e2157ff',
+    highlightColor: '#9E2CE2',
+    highlightDarkColor: '#7533EE',
   },
 };
 
@@ -35,8 +35,8 @@ const darkTheme: Theme = {
     lightText: '#718696ff',
     iconColor: '#fff',
     text: '#fff',
-    highlightColor: '#5B62F8',
-    highlightDarkColor: '#1e2157ff',
+    highlightColor: '#9E2CE2',
+    highlightDarkColor: '#7533EE',
   },
 };
 

@@ -5,7 +5,6 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
 } from 'react-native';
 import IconImage from '@/assets/images/favicon.png';
 import { i18n } from '@/localization/i18n';
@@ -17,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
-import { Link, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { AppPath } from '@/common/enums/app/AppPath';
 import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 
@@ -74,11 +73,20 @@ const ChooseLanguageScreen = () => {
       }}
     >
       <View style={{ alignItems: 'center', marginBottom: 40 }}>
-        <Image
-          source={IconImage}
-          style={{ width: width / 5, height: width / 5, marginBottom: 15 }}
-          resizeMode="contain"
-        />
+        <View style={{ alignItems: 'center' }}>
+          <Image
+            source={IconImage}
+            style={{
+              width: width < 720 ? width / 5 : width / 10,
+              height: width < 720 ? width / 5 : width / 10,
+              marginBottom: 15,
+            }}
+            resizeMode="contain"
+          />
+          <ThemeText style={{ fontWeight: 'bold', fontSize: 30 }}>
+            Slovko
+          </ThemeText>
+        </View>
         <ThemeText
           style={{
             fontSize: 26,
@@ -114,9 +122,10 @@ const ChooseLanguageScreen = () => {
           <FlatList
             data={filteredLanguages}
             contentContainerStyle={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
+              flexDirection: width < 720 ? 'column' : 'row',
               justifyContent: 'center',
+              alignItems: 'center',
+              flexWrap: 'wrap',
               gap: 16,
             }}
             renderItem={({ item }) => (
@@ -125,8 +134,6 @@ const ChooseLanguageScreen = () => {
                 activeOpacity={0.7}
                 onPress={() => dispatch(setSelectedLanguage(item.title))}
                 style={{
-                  minWidth: 150,
-                  maxWidth: 250,
                   marginBottom: 16,
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -135,9 +142,7 @@ const ChooseLanguageScreen = () => {
                   backgroundColor:
                     selectedLanguage === item.title
                       ? theme.colors.highlightColor
-                      : theme.dark
-                        ? theme.colors.highlightDarkColor
-                        : theme.colors.lightBackground,
+                      : theme.colors.lightBackground,
                   borderRadius: 16,
                   shadowColor: '#000',
                   shadowOpacity: 0.08,
@@ -171,7 +176,6 @@ const ChooseLanguageScreen = () => {
         <PressableButton
           onPress={() => navigation.navigate(AppPath.ChooseWords)}
           text={i18n.t('welcomeScreen.next')}
-          textStyle={{ color: '#fff' }}
         />
       )}
     </ThemeBackground>
