@@ -5,6 +5,7 @@ const translations = {
       customize: "Let's customize your learning",
       start: 'Start',
       next: 'Next',
+      back: 'Back',
       chooseWords: 'Now select words, which translate you know',
     },
     mainScreen: {
@@ -181,6 +182,8 @@ const translations = {
     },
     chooseWordsScreen: {
       chooseWords: 'Now choose words, which translate you know',
+      yourLevel: 'Based on your answers, your level is',
+      approxLevel: 'This is approximately level, not 100% right',
     },
   },
   uk: {
@@ -189,12 +192,15 @@ const translations = {
       customize: 'Давайте налаштуємо ваше навчання',
       start: 'Почати',
       next: 'Наступне',
+      back: 'Назад',
     },
     chooseLanguageScreen: {
       whichLanguage: 'Яку мову ви хочете вивчати?',
     },
     chooseWordsScreen: {
       chooseWords: 'Тепер оберіть слова переклад, яких ви знаєте',
+      yourLevel: 'Базуючись на ваших відповідях, ваш приблизний рівень',
+      approxLevel: 'Це приблизний рівень, не на 100% правильний',
     },
     mainScreen: {
       alreadyPassed: 'Вже минуло',

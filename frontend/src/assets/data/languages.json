@@ -2,165 +2,205 @@
   "English": [
     {
       "id": 1,
-      "title": "cat"
+      "title": "cat",
+      "level": "A1"
     },
     {
       "id": 2,
-      "title": "house"
+      "title": "house",
+      "level": "A1"
     },
     {
       "id": 3,
-      "title": "water"
+      "title": "water",
+      "level": "A1"
     },
     {
       "id": 4,
-      "title": "school"
+      "title": "school",
+      "level": "A1"
     },
     {
       "id": 5,
-      "title": "family"
+      "title": "family",
+      "level": "A1"
     },
     {
       "id": 6,
-      "title": "friend"
+      "title": "friend",
+      "level": "A1"
     },
     {
       "id": 7,
-      "title": "computer"
+      "title": "computer",
+      "level": "A2"
     },
     {
       "id": 8,
-      "title": "important"
+      "title": "important",
+      "level": "A2"
     },
     {
       "id": 9,
-      "title": "beautiful"
+      "title": "beautiful",
+      "level": "A2"
     },
     {
       "id": 10,
-      "title": "expensive"
+      "title": "expensive",
+      "level": "B1"
     },
     {
       "id": 11,
-      "title": "environment"
+      "title": "environment",
+      "level": "B1"
     },
     {
       "id": 12,
-      "title": "government"
+      "title": "government",
+      "level": "B2"
     },
     {
       "id": 13,
-      "title": "responsibility"
+      "title": "responsibility",
+      "level": "B2"
     },
     {
       "id": 14,
-      "title": "opportunity"
+      "title": "opportunity",
+      "level": "B2"
     },
     {
       "id": 15,
-      "title": "communication"
+      "title": "communication",
+      "level": "B2"
     },
     {
       "id": 16,
-      "title": "development"
+      "title": "development",
+      "level": "C1"
     },
     {
       "id": 17,
-      "title": "architecture"
+      "title": "architecture",
+      "level": "C1"
     },
     {
       "id": 18,
-      "title": "psychology"
+      "title": "psychology",
+      "level": "C1"
     },
     {
       "id": 19,
-      "title": "entrepreneurship"
+      "title": "entrepreneurship",
+      "level": "C2"
     },
     {
       "id": 20,
-      "title": "sustainability"
+      "title": "sustainability",
+      "level": "C2"
     }
   ],
   "German": [
     {
       "id": 1,
-      "title": "Katze"
+      "title": "Katze",
+      "level": "A1"
     },
     {
       "id": 2,
-      "title": "Haus"
+      "title": "Haus",
+      "level": "A1"
     },
     {
       "id": 3,
-      "title": "Wasser"
+      "title": "Wasser",
+      "level": "A1"
     },
     {
       "id": 4,
-      "title": "Schule"
+      "title": "Schule",
+      "level": "A1"
     },
     {
       "id": 5,
-      "title": "Familie"
+      "title": "Familie",
+      "level": "A1"
     },
     {
       "id": 6,
-      "title": "Freund"
+      "title": "Freund",
+      "level": "A1"
     },
     {
       "id": 7,
-      "title": "Computer"
+      "title": "Computer",
+      "level": "A2"
     },
     {
       "id": 8,
-      "title": "wichtig"
+      "title": "wichtig",
+      "level": "A2"
     },
     {
       "id": 9,
-      "title": "schön"
+      "title": "schön",
+      "level": "A2"
     },
     {
       "id": 10,
-      "title": "teuer"
+      "title": "teuer",
+      "level": "B1"
     },
     {
       "id": 11,
-      "title": "Umwelt"
+      "title": "Umwelt",
+      "level": "B1"
     },
     {
       "id": 12,
-      "title": "Regierung"
+      "title": "Regierung",
+      "level": "B2"
     },
     {
       "id": 13,
-      "title": "Verantwortung"
+      "title": "Verantwortung",
+      "level": "B2"
     },
     {
       "id": 14,
-      "title": "Möglichkeit"
+      "title": "Möglichkeit",
+      "level": "B2"
     },
     {
       "id": 15,
-      "title": "Kommunikation"
+      "title": "Kommunikation",
+      "level": "B2"
     },
     {
       "id": 16,
-      "title": "Entwicklung"
+      "title": "Entwicklung",
+      "level": "C1"
     },
     {
       "id": 17,
-      "title": "Architektur"
+      "title": "Architektur",
+      "level": "C1"
     },
     {
       "id": 18,
-      "title": "Psychologie"
+      "title": "Psychologie",
+      "level": "C1"
     },
     {
       "id": 19,
-      "title": "Unternehmertum"
+      "title": "Unternehmertum",
+      "level": "C2"
     },
     {
       "id": 20,
-      "title": "Nachhaltigkeit"
+      "title": "Nachhaltigkeit",
+      "level": "C2"
     }
   ]
 }
