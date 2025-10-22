@@ -1,7 +1,8 @@
 import type { IGroup } from '@/common/enums/types/group.type';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
+import { getStorageItem } from '@/utils/storage';
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 
 export const getAllGroups = createAppAsyncThunk(
   'group/getAll',
@@ -33,7 +34,7 @@ export const getGroup = createAppAsyncThunk(
 export const getGroupStorage = createAppAsyncThunk(
   'group/get-storage',
   async ({ groupId }: { groupId: string }) => {
-    const storage = await AsyncStorage.getItem('persist:root');
+    const storage = await getStorageItem(AsyncStorageVariables.PERSIST_ROOT);
     if (!storage) {
       return null;
     }

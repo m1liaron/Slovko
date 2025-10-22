@@ -18,6 +18,7 @@ import { AppPath, DataStatus } from '../../common/enums/app/app';
 import Loading from '../../components/Loading';
 import { getUser, selectUser } from '../../redux/userReducer/userSlice';
 import MainStackNavigator from '../MainStackNavigator/MainStackNavigator';
+import { getStorageItem } from '@/utils/storage';
 
 export type RootStackParamList = {
   [AppPath.Main]: undefined;
@@ -53,7 +54,7 @@ const ProtectedRoute = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('token');
+      const token = await getStorageItem('token');
       if (token) {
         setHasToken(true);
       }

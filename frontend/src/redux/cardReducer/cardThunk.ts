@@ -3,9 +3,10 @@ import type {
   ICard,
   UpdateCardRequst,
 } from '@/common/enums/types/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
+import { getStorageItem } from '@/utils/storage';
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 
 export const getCards = createAppAsyncThunk(
   'card/get-cards',
@@ -19,7 +20,7 @@ export const getCards = createAppAsyncThunk(
 export const getCardsStorage = createAppAsyncThunk(
   'card/get-cards-storage',
   async ({ groupId }: { groupId: string }) => {
-    const storage = await AsyncStorage.getItem('persist:root');
+    const storage = await getStorageItem(AsyncStorageVariables.PERSIST_ROOT);
     if (!storage) {
       return null;
     }
