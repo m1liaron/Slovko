@@ -45,4 +45,4 @@ const AppPath: IAppPath = {
 } as const;
 
 export type TypeAppPath = typeof AppPath;
-export { AppPath };
+export { AppPath, IAppPath };
