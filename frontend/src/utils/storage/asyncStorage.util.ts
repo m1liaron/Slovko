@@ -2,7 +2,8 @@ import { AsyncStorageKey } from '@/common/enums/types/asyncStorageKey';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getStorageItem = async (key: AsyncStorageKey) => {
-  return await getStorageItem(key);
+  const data = await AsyncStorage.getItem(key);
+  return data;
 };
 
 const setStorageItem = async (key: AsyncStorageKey, value: string) => {

@@ -10,7 +10,7 @@ import {
   Text,
 } from 'react-native';
 import { useAppTheme } from '@/contexts/ThemeProvider';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSelector } from '@/hooks/redux.hooks';
 import { FlatList } from 'react-native-gesture-handler';
 import languagesJson from '@/assets/data/languages.json';
@@ -19,6 +19,8 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { AppPath } from '@/common/enums/app/AppPath';
 import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
+import { removeStorageItem, setStorageItem } from '@/utils/storage';
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 
 type Word = {
   id: number;
@@ -116,6 +118,16 @@ const ChooseWordsScreen = () => {
 
   const contentWidth = width < 720 ? '100%' : '50%';
 
+  const navigateToRegister = async () => {
+    await setStorageItem(AsyncStorageVariables.FIRST_START, 'false');
+    navigation.navigate(AppPath.Register);
+  };
+
+  const navigateToMain = async () => {
+    await setStorageItem(AsyncStorageVariables.FIRST_START, 'false');
+    navigation.navigate(AppPath.Home);
+  };
+
   return (
     <ThemeBackground
       style={{
@@ -176,7 +188,9 @@ const ChooseWordsScreen = () => {
                       color={theme.colors.iconColor}
                       size={25}
                     />
-                    <ThemeText style={{ fontSize: 20 }}>Your Level</ThemeText>
+                    <ThemeText style={{ fontSize: 20 }}>
+                      {i18n.t('chooseWordsScreen.yourLevel')}
+                    </ThemeText>
                   </View>
                   <View
                     style={{
@@ -240,18 +254,19 @@ const ChooseWordsScreen = () => {
                 </View>
                 <PressableButton
                   onPress={handleBack}
-                  text="< Change language"
+                  text={`< ${i18n.t('chooseWordsScreen.changeLanguage')}`}
                 />
               </View>
             </View>
             <View style={{ gap: 10, width: contentWidth, margin: 10 }}>
               <PressableButton
-                onPress={() => navigation.navigate(AppPath.Register)}
-                text="Continue with Registration"
+                onPress={navigateToRegister}
+                text={i18n.t('chooseWordsScreen.withRegistration')}
               />
               <PressableButton
+                onPress={navigateToMain}
                 gradientColor={theme.colors.lightBackground}
-                text="Continue without Registration"
+                text={i18n.t('chooseWordsScreen.withoutRegistration')}
                 buttonStyle={{ backgroundColor: theme.colors.lightBackground }}
               />
             </View>

@@ -14,7 +14,12 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { AppPath, AsyncStorageVariables, DataStatus, TypeAppPath } from '../../common/enums/app/app';
+import {
+  AppPath,
+  AsyncStorageVariables,
+  DataStatus,
+  TypeAppPath,
+} from '../../common/enums/app/app';
 import Loading from '../../components/Loading';
 import { getUser, selectUser } from '../../redux/userReducer/userSlice';
 import MainStackNavigator from '../MainStackNavigator/MainStackNavigator';
@@ -42,11 +47,15 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [initialRoute, setInitialRoute] = useState<IAppPath[keyof IAppPath]>(AppPath.Main);
+  const [initialRoute, setInitialRoute] = useState<IAppPath[keyof IAppPath]>(
+    AppPath.Main,
+  );
 
   useEffect(() => {
     (async () => {
-      const firstLaunch = await getStorageItem(AsyncStorageVariables.FIRST_START)
+      const firstLaunch = await getStorageItem(
+        AsyncStorageVariables.FIRST_START,
+      );
       if (!firstLaunch) {
         await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
         setInitialRoute(AppPath.Welcome);
@@ -61,14 +70,18 @@ const ProtectedRoute = () => {
     return <Loading />;
   }
 
-  return (
-    <NavigationContainer    >
+  return isLoading ? (
+    <Loading />
+  ) : (
+    <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
         initialRouteName={initialRoute}
       >
+        <Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
         <Stack.Screen name={AppPath.Welcome} component={WelcomeScreen} />
         <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+        <Stack.Screen name={AppPath.Login} component={RegisterScreen} />
         <Stack.Screen
           name={AppPath.ChooseLanguage}
           component={ChooseLanguageScreen}
