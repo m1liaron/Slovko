@@ -11,10 +11,15 @@ import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
 import { register } from '../../redux/userReducer/userSlice';
 import { isValidEmail, isValidPassword } from '@/utils';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
 
 const RegisterScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const dispatch = useAppDispatch();
+  const {
+    theme: { colors },
+  } = useAppTheme();
 
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -128,14 +133,14 @@ const RegisterScreen = () => {
         onChangeText={setConfirmPassword}
       />
 
-      <Pressable style={styles.button} onPress={handleSubmit}>
-        <ThemeText style={styles.buttonText}>
-          {i18n.t('registerScreen.signUpButton')}
-        </ThemeText>
-      </Pressable>
+      <PressableButton
+        text={i18n.t('registerScreen.signUpButton')}
+        buttonStyle={styles.button}
+        onPress={handleSubmit}
+      />
 
       <Pressable onPress={() => navigation.navigate(AppPath.Login)}>
-        <Text style={styles.switchText}>
+        <Text style={{ color: colors.highlightColor }}>
           {i18n.t('registerScreen.switchText')}
         </Text>
       </Pressable>
@@ -179,21 +184,11 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    maxWidth: 400,
-    height: 50,
-    backgroundColor: '#3498db',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: 15,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  switchText: {
-    color: '#3498db',
-    fontSize: 14,
   },
 });
 

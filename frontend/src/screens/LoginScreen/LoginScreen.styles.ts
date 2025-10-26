@@ -37,22 +37,12 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    maxWidth: 400,
-    height: 50,
-    backgroundColor: '#3498db',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: 15,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  switchText: {
-    color: '#3498db',
-    fontSize: 14,
   },
 });
 

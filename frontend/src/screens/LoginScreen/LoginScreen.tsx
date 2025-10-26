@@ -9,14 +9,18 @@ import Toast from 'react-native-toast-message';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
-import { login, selectUser } from '../../redux/userReducer/userSlice';
+import { login } from '../../redux/userReducer/userSlice';
 import styles from './LoginScreen.styles';
 import { isValidEmail, isValidPassword } from '@/utils';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 
 const LoginScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const dispatch = useAppDispatch();
-  const { message } = useAppSelector((state) => state.user);
+  const {
+    theme: { colors },
+  } = useAppTheme();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -94,14 +98,14 @@ const LoginScreen = () => {
         </Pressable>
       </View>
 
-      <Pressable style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>
-          {i18n.t('loginScreen.loginButton')}
-        </Text>
-      </Pressable>
+      <PressableButton
+        buttonStyle={styles.button}
+        onPress={handleSubmit}
+        text={i18n.t('loginScreen.loginButton')}
+      />
 
       <Pressable onPress={() => navigation.navigate(AppPath.Register)}>
-        <Text style={styles.switchText}>
+        <Text style={{ color: colors.highlightColor }}>
           {i18n.t('loginScreen.switchText')}
         </Text>
       </Pressable>

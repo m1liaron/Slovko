@@ -81,7 +81,7 @@ const ProtectedRoute = () => {
         <Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
         <Stack.Screen name={AppPath.Welcome} component={WelcomeScreen} />
         <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-        <Stack.Screen name={AppPath.Login} component={RegisterScreen} />
+        <Stack.Screen name={AppPath.Login} component={LoginScreen} />
         <Stack.Screen
           name={AppPath.ChooseLanguage}
           component={ChooseLanguageScreen}
