@@ -6,7 +6,11 @@ import {
   isPending,
   isRejected,
 } from '@reduxjs/toolkit';
-import { DataStatus, type IDataStatus } from '../../common/enums/app/app';
+import {
+  AsyncStorageVariables,
+  DataStatus,
+  type IDataStatus,
+} from '../../common/enums/app/app';
 import {
   buyFreeze,
   getUser,
@@ -17,6 +21,7 @@ import {
   updateUserStreak,
 } from './userThunk';
 import { RejectedPayload } from '@/common/enums/types/rejectedAction';
+import { removeStorageItem } from '@/utils/storage';
 
 interface InitialState {
   user: IUser | null;
@@ -48,7 +53,7 @@ const userSlice = createSlice({
       state.streakDates = [];
       state.message = '';
       state.status = DataStatus.IDLE;
-      AsyncStorage.removeItem('token');
+      removeStorageItem(AsyncStorageVariables.TOKEN);
     },
   },
   extraReducers: (builder) => {
