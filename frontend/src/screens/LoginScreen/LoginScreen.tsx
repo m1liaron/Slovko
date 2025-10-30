@@ -53,6 +53,9 @@ const LoginScreen = () => {
 
     dispatch(login({ email, password }))
       .unwrap()
+      .then(() => {
+        navigation.navigate(AppPath.Home);
+      })
       .catch((error) => {
         const message = error.message || i18n.t('errors.loginFailed');
         Toast.show({

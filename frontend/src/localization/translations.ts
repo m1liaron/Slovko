@@ -165,6 +165,7 @@ const translations = {
       quizMode: 'Quiz mode',
       guessWordMode: 'Guess Word mode',
       checkTranslateMode: 'Check Translate mode',
+      crossWordMode: 'Crossword mode',
       leaveStudyMessage:
         'Are you sure you want to leave the study session and lose your progress?',
       lessonCompleteTitle: 'Well done! Great work!',
@@ -367,6 +368,7 @@ const translations = {
       quizMode: 'Режим вікторини',
       guessWordMode: 'Режим вгадування слів',
       checkTranslateMode: 'Режим перевірки перекладу',
+      crossWordMode: 'Режим кросворду',
       leaveStudyMessage:
         'Ви дійсно хочете покинути навчання та втратити прогрес?',
       lessonCompleteTitle: 'Молодець! Гарно позаймався/лась',

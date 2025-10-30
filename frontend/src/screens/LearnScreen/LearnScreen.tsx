@@ -24,6 +24,7 @@ import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import LearnCards from '../../components/Learn/LearnCards/LearnCards';
 import LearnGuessWord from '../../components/Learn/LearnGuessWord/LearnGuessWord';
 import LearnQuiz from '../../components/Learn/LearnQuiz/LearnQuiz';
+import { LearnCrossWord } from '@/components/Learn/LearnCrossWord/LearnCrossWord';
 import Loading from '../../components/Loading';
 import ExitModal from '../../components/Modals/ExitModal/ExitModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
@@ -39,7 +40,7 @@ import {
 import { updateUserStreak } from '../../redux/userReducer/userSlice';
 import { formatTime } from '../../utils/formatTime/formatTime';
 
-type Section = 'cards' | 'quiz' | 'word' | 'check' | 'finish';
+type Section = 'cards' | 'quiz' | 'word' | 'check' | 'crossWord' | 'finish';
 
 interface SectionOption {
   text: string;
@@ -63,6 +64,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const { repeatedCards, cards, status } = useAppSelector(
     (state) => state.cards,
   );
+  const { activeSectionId } = useAppSelector((state) => state.sections);
 
   // Section State
   const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
@@ -73,6 +75,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const [isQuizEnabled, setIsQuizEnabled] = useState<boolean>(true);
   const [isGuessWordEnabled, setIsGuessWordEnabled] = useState<boolean>(true);
   const [isCheckEnabled, setIsCheckEnabled] = useState<boolean>(true);
+  const [isCrossWordEnabled, setIsCrossWordEnabled] = useState<boolean>(true);
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
@@ -95,7 +98,8 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     const transitions: Record<Section, Section> = {
       cards: isQuizEnabled ? 'quiz' : isGuessWordEnabled ? 'word' : 'finish',
       quiz: isGuessWordEnabled ? 'word' : 'finish',
-      word: isCheckEnabled ? 'check' : 'finish',
+      word: isCheckEnabled ? 'crossWord' : 'finish',
+      crossWord: isCrossWordEnabled ? 'check' : 'finish',
       check: 'finish',
       finish: 'finish',
     };
@@ -177,7 +181,9 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     dispatch(enqueueOrDispatch(updateUserStreak, {}));
     handleSaveResults();
     if (repeatedCards.length) {
-      dispatch(enqueueOrDispatch(getRepeatedCards, {}));
+      dispatch(
+        enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
+      );
     }
   };
 
@@ -218,6 +224,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
         state: isCheckEnabled,
         changeState: setIsCheckEnabled,
         sectionName: 'check',
+      },
+      {
+        text: i18n.t('learnScreen.checkTranslateMode'),
+        iconName: 'checklist',
+        state: isCrossWordEnabled,
+        changeState: setIsGuessWordEnabled,
+        sectionName: 'crossWord',
       },
     ];
 
@@ -302,6 +315,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 
                 {currentSection === 'check' && isCheckEnabled && (
                   <LearnCheck
+                    onComplete={handleNextSection}
+                    handleSetData={handleSetData}
+                  />
+                )}
+
+                {currentSection === 'crossWord' && isCrossWordEnabled && (
+                  <LearnCrossWord
                     onComplete={handleNextSection}
                     handleSetData={handleSetData}
                   />

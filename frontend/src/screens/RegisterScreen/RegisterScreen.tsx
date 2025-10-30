@@ -13,6 +13,7 @@ import { register } from '../../redux/userReducer/userSlice';
 import { isValidEmail, isValidPassword } from '@/utils';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import styles from '../LoginScreen/LoginScreen.styles';
 
 const RegisterScreen = () => {
   const navigation = useNavigation<StackNavigation>();
@@ -67,6 +68,9 @@ const RegisterScreen = () => {
 
     dispatch(register(registerData))
       .unwrap()
+      .then(() => {
+        navigation.navigate(AppPath.Home);
+      })
       .catch((error) => {
         const message = error.message || i18n.t('errors.loginFailed');
         Toast.show({
@@ -147,49 +151,5 @@ const RegisterScreen = () => {
     </ThemeBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 30,
-  },
-  input: {
-    width: '100%',
-    maxWidth: 400,
-    height: 50,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    fontSize: 16,
-    borderWidth: 0,
-  },
-  passwordContainer: {
-    maxWidth: 400,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    position: 'absolute',
-    right: 0,
-    top: 15,
-    paddingHorizontal: 10,
-  },
-  button: {
-    width: '100%',
-    marginBottom: 15,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-});
 
 export default RegisterScreen;
