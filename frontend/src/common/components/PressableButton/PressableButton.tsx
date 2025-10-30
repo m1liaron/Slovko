@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
 import styles from './PressableButton.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface PressableButtonProps {
-  text: string;
+  text?: string;
   onPress?: () => void;
   buttonStyle?: ViewStyle;
   textStyle?: TextStyle;
   gradientColor?: string;
   disabled?: boolean;
+  children?: ReactNode;
 }
 
 const PressableButton = ({
@@ -20,6 +21,7 @@ const PressableButton = ({
   gradientColor,
   textStyle,
   disabled,
+  children,
 }: PressableButtonProps) => {
   const {
     theme: {
@@ -46,9 +48,13 @@ const PressableButton = ({
           { justifyContent: 'center', alignItems: 'center' },
         ]}
       >
-        <Text style={[styles.buttonText, { color: '#fff' }, textStyle]}>
-          {text}
-        </Text>
+        {text ? (
+          <Text style={[styles.buttonText, { color: '#fff' }, textStyle]}>
+            {text}
+          </Text>
+        ) : (
+          children
+        )}
       </LinearGradient>
     </Pressable>
   );

@@ -9,7 +9,6 @@ import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
 import { pickImage } from '@/utils';
 import { Feather } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -63,6 +62,7 @@ export default function ProfileScreen() {
       if (answer) {
         dispatch(logout());
         await persistor.purge();
+        navigation.navigate(AppPath.Register);
       }
     } else {
       Alert.alert(

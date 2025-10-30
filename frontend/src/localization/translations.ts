@@ -182,9 +182,11 @@ const translations = {
     },
     chooseWordsScreen: {
       chooseWords: 'Now choose words, which translate you know',
-      yourLevel: 'Based on your answers, your level is',
-      approxLevel: 'This is approximately level, not 100% right',
+      yourLevel: 'Your level is',
       slogan: 'Remember words forever',
+      changeLanguage: 'Change language',
+      withoutRegistration: 'Continue without Registration',
+      withRegistration: 'Continue with Registration',
     },
   },
   uk: {
@@ -200,9 +202,11 @@ const translations = {
     },
     chooseWordsScreen: {
       chooseWords: 'Тепер оберіть слова переклад, яких ви знаєте',
-      yourLevel: 'Базуючись на ваших відповідях, ваш приблизний рівень',
-      approxLevel: 'Це приблизний рівень, не на 100% правильний',
+      yourLevel: 'Ваш рівень',
       slogan: "Запам'ятовуйте слова назавжди",
+      changeLanguage: 'Змінить мову',
+      withoutRegistration: 'Продовжити без реєстрації',
+      withRegistration: 'Продовжити з реєстрацією',
     },
     mainScreen: {
       alreadyPassed: 'Вже минуло',

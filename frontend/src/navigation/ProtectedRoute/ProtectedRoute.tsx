@@ -14,11 +14,17 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
-import { AppPath, DataStatus } from '../../common/enums/app/app';
+import {
+  AppPath,
+  AsyncStorageVariables,
+  DataStatus,
+  TypeAppPath,
+} from '../../common/enums/app/app';
 import Loading from '../../components/Loading';
 import { getUser, selectUser } from '../../redux/userReducer/userSlice';
 import MainStackNavigator from '../MainStackNavigator/MainStackNavigator';
-import { getStorageItem } from '@/utils/storage';
+import { getStorageItem, setStorageItem } from '@/utils/storage';
+import { IAppPath } from '@/common/enums/app/AppPath';
 
 export type RootStackParamList = {
   [AppPath.Main]: undefined;
@@ -40,73 +46,42 @@ export type StackNavigation = NavigationProp<RootStackParamList>;
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const ProtectedRoute = () => {
-  const dispatch = useAppDispatch();
-  const { isAuthenticated, status, codeStatus, user } =
-    useAppSelector(selectUser);
-  const isConnected = useAppSelector((state) => state.network.isConnected);
-
   const [isLoading, setIsLoading] = useState(true);
-  const [hasToken, setHasToken] = useState(false);
-  const triedGetUserRef = useRef(false);
-
-  const backendOff =
-    status === DataStatus.ERROR && (codeStatus === 401 || codeStatus > 500);
+  const [initialRoute, setInitialRoute] = useState<IAppPath[keyof IAppPath]>(
+    AppPath.Main,
+  );
 
   useEffect(() => {
-    const checkToken = async () => {
-      const token = await getStorageItem('token');
-      if (token) {
-        setHasToken(true);
+    (async () => {
+      const firstLaunch = await getStorageItem(
+        AsyncStorageVariables.FIRST_START,
+      );
+      if (!firstLaunch) {
+        await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
+        setInitialRoute(AppPath.Welcome);
+      } else {
+        setInitialRoute(AppPath.Main);
       }
       setIsLoading(false);
-    };
-
-    checkToken();
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (!isAuthenticated || (backendOff && !user)) {
-      setHasToken(false);
-      setIsLoading(false);
-    }
-  }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (hasToken && isConnected && user && !triedGetUserRef.current) {
-      triedGetUserRef.current = true;
-
-      (async () => {
-        try {
-          dispatch(enqueueOrDispatch(getUser, () => {}));
-        } catch (error) {
-          console.warn('getUser failed or backend offline:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      })();
-    }
-  }, [hasToken, isConnected, dispatch]);
+    })();
+  }, []);
 
   if (isLoading) {
     return <Loading />;
   }
 
-  // if (!isAuthenticated) {
-  //   return (
-  //     <NavigationContainer>
-  //       <Stack.Navigator screenOptions={{ headerShown: false }}>
-  //         <Stack.Screen name={AppPath.Login} component={LoginScreen} />
-  //         <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
-  //       </Stack.Navigator>
-  //     </NavigationContainer>
-  //   );
-  // }
-
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={initialRoute}
+      >
+        <Stack.Screen name={AppPath.Home} component={MainStackNavigator} />
         <Stack.Screen name={AppPath.Welcome} component={WelcomeScreen} />
         <Stack.Screen name={AppPath.Register} component={RegisterScreen} />
+        <Stack.Screen name={AppPath.Login} component={LoginScreen} />
         <Stack.Screen
           name={AppPath.ChooseLanguage}
           component={ChooseLanguageScreen}

@@ -42,7 +42,7 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@types/react": "~18.3.12",
     "@types/react-redux": "^7.1.34",
-    "axios": "^1.6.7",
+    "axios": "^1.13.1",
     "expo": "~52.0.46",
     "expo-av": "~15.0.2",
     "expo-checkbox": "~4.0.1",
@@ -51,6 +51,7 @@
     "expo-file-system": "~18.0.12",
     "expo-image-manipulator": "~13.0.6",
     "expo-image-picker": "~16.0.6",
+    "expo-linear-gradient": "~14.0.2",
     "expo-localization": "~16.0.1",
     "expo-notifications": "~0.29.14",
     "expo-speech": "~13.0.1",
@@ -83,8 +84,7 @@
     "typescript": "^5.3.3",
     "unsplash-js": "^7.0.19",
     "uuid": "^11.1.0",
-    "xlsx": "^0.18.5",
-    "expo-linear-gradient": "~14.0.2"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
