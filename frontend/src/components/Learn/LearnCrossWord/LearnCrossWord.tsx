@@ -11,9 +11,13 @@ interface LearnCheckProps {
   handleSetData: (card: ICard, isCorrect: boolean) => void;
 }
 
+type Coord = { row: number; col: number };
+
 const LearnCrossWord: React.FC<LearnCheckProps> = () => {
   const { cards } = useAppSelector((state) => state.cards);
   const [crossWord, setCrossWord] = useState<string[][]>();
+  const [selectedCoords, setSelectedCoords] = useState<Coord[]>([]);
+  const [foundCoords, setFoundCoords] = useState<Set<string>>();
   const shownWords = cards.map((card) => card.word).slice(0, 11);
   const gridSize = Math.max(...shownWords.map((w) => w.length)) + 5;
 
@@ -78,7 +82,7 @@ const LearnCrossWord: React.FC<LearnCheckProps> = () => {
   ) => {
     for (let i = 0; i < word.length; i++) {
       const r = row + (dir === 'V' ? i : 0);
-      const c = col + (dir === 'V' ? i : 0);
+      const c = col + (dir === 'H' ? i : 0);
       grid[r][c] = word[i].toUpperCase();
     }
   };
@@ -87,6 +91,26 @@ const LearnCrossWord: React.FC<LearnCheckProps> = () => {
     const crossWord = generateCrossword(shownWords);
     setCrossWord(crossWord);
   }, []);
+
+  const keyForCoord = (r: number, c: number) => `${r}-${c}`;
+
+  const handleSelectLetter = (rowIndex: number, colIndex: number) => {
+    setSelectedCoords((prev) => {
+      const alreadySelected = prev.some(
+        (coord) => coord.row === rowIndex && coord.col === colIndex,
+      );
+
+      if (alreadySelected) {
+        // Unselect it
+        return prev.filter(
+          (coord) => coord.row !== rowIndex || coord.col !== colIndex,
+        );
+      } else {
+        // Add it
+        return [...prev, { rowIndex, colIndex }];
+      }
+    });
+  };
 
   return (
     <ThemeBackground>
@@ -109,6 +133,7 @@ const LearnCrossWord: React.FC<LearnCheckProps> = () => {
                 justifyContent: 'center',
                 backgroundColor: letter ? '#fff' : '#eee',
               }}
+              onPress={() => handleSelectLetter(rowIndex, colIndex)}
             >
               <Text style={{ fontWeight: '600', fontSize: 16 }}>{letter}</Text>
             </Pressable>

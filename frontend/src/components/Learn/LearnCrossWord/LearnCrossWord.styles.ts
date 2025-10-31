@@ -7,8 +7,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cell: {
-    width: 36,
-    height: 36,
+    width: 136,
+    height: 136,
     borderWidth: 1,
     borderColor: '#333',
     backgroundColor: '#fff',
