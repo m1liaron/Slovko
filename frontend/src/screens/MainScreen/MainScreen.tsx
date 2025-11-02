@@ -241,7 +241,7 @@ const MainScreen = () => {
           ]}
           onPress={() => setShowRepeatedModal(true)}
         >
-          <Text style={{ color: colors.background, fontSize: 30 }}>
+          <Text style={{ color: colors.background, fontSize: 20 }}>
             {i18n.t('mainScreen.repeatWords')} - {repeatedCardsLength}
           </Text>
         </Pressable>

@@ -20,7 +20,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, Pressable, Text, View, ScrollView } from 'react-native';
+import { Alert, Pressable, Text, View, ScrollView, useWindowDimensions } from 'react-native';
 import AddInput from '../../common/components/AddInput/AddInput';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
@@ -57,6 +57,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
+  const maxContentWidth = isDesktop ? 1200 : width;
+  
   const { groupId } = route.params as { groupId: string };
   const { group, status } = useAppSelector((state) => state.groups);
   const { cards, filteredCards, isLoading } = useAppSelector(
@@ -193,312 +197,374 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   };
 
   return (
-    <ThemeBackground style={{ padding: 0 }}>
-      {/* Header Section */}
-      <View
-        style={{
-          padding: 20,
-          paddingTop: 40,
-          backgroundColor: colors.lightBackground,
-        }}
-      >
+    <ThemeBackground style={{ padding: 0, alignItems: 'center' }}>
+      <View style={{ width: '100%', maxWidth: maxContentWidth }}>
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 8,
-              }}
-            >
-              <BackButton />
-              <ThemeText
-                style={{ fontSize: 25, fontWeight: 'bold', marginLeft: 10 }}
-              >
-                {group?.title}
-              </ThemeText>
-            </View>
-          </View>
-
-          {/* View Mode Toggle */}
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Pressable
-              onPress={() => setViewMode('list')}
-              style={{
-                backgroundColor:
-                  viewMode === 'list' ? colors.primary : colors.lightText,
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                borderRadius: 20,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 6,
-              }}
-            >
-              <MaterialIcons
-                name="view-list"
-                size={20}
-                color={viewMode === 'list' ? colors.lightText : colors.primary}
-              />
-              <Text
-                style={{
-                  color: viewMode === 'list' ? colors.lightText : colors.text,
-                  fontWeight: '600',
-                }}
-              >
-                List
-              </Text>
-            </Pressable>
-
-            <Pressable
-              onPress={() => setViewMode('cards')}
-              style={{
-                backgroundColor:
-                  viewMode === 'cards' ? colors.primary : colors.lightText,
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                borderRadius: 20,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 6,
-              }}
-            >
-              <MaterialIcons
-                name="view-carousel"
-                size={20}
-                color={viewMode === 'cards' ? colors.lightText : colors.primary}
-              />
-              <Text
-                style={{
-                  color:
-                    viewMode === 'cards' ? colors.lightText : colors.primary,
-                  fontWeight: '600',
-                }}
-              >
-                Cards
-              </Text>
-            </Pressable>
-
-            <Pressable onPress={() => setShowEditModal(true)}>
-              <Entypo
-                name="dots-three-vertical"
-                size={24}
-                color={colors.iconColor}
-              />
-            </Pressable>
-          </View>
-        </View>
-      </View>
-
-      {/* Progress Section */}
-      <View
-        style={{
-          backgroundColor: colors.background,
-          padding: 20,
-          marginHorizontal: 20,
-          marginTop: 20,
-          borderRadius: 16,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 3,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 12,
-          }}
-        >
-          <ThemeText style={{ fontSize: 18, fontWeight: '600' }}>
-            Progress
-          </ThemeText>
-          <ThemeText style={{ fontSize: 16 }}>
-            {learnedCards}/{totalCards} learned
-          </ThemeText>
-        </View>
-        <View
-          style={{
-            height: 12,
+            padding: isDesktop ? 32 : 20,
+            paddingTop: isDesktop ? 32 : 40,
             backgroundColor: colors.lightBackground,
-            borderRadius: 6,
-            overflow: 'hidden',
+            flexDirection: 'row'
           }}
         >
           <View
             style={{
-              height: '100%',
-              width: `${progressPercentage}%`,
-              backgroundColor: colors.primary,
-              borderRadius: 6,
+              flexDirection: isDesktop ? 'row' : 'column',
+              justifyContent: 'space-between',
+              alignItems: isDesktop ? 'center' : 'flex-start',
+              gap: 16,
             }}
-          />
-        </View>
-      </View>
-
-      {/* Filters Section */}
-      <View
-        style={{
-          backgroundColor: colors.background,
-          padding: 20,
-          marginHorizontal: 20,
-          marginTop: 20,
-          borderRadius: 16,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 3,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginBottom: 20,
-          }}
-        >
-          <Feather name="filter" size={20} color={colors.primary} />
-          <ThemeText style={{ fontSize: 18, fontWeight: '600', marginLeft: 8 }}>
-            Filters
-          </ThemeText>
-        </View>
-
-        <ScrollView
-          horizontal={true}
-          style={{
-            flexDirection: 'row',
-            gap: 20,
-            borderStartColor: colors.primary,
-          }}
-        >
-          {/* Cards to show slider */}
-          <View style={{ flex: 1, margin: 20 }}>
-            <ThemeText style={{ fontSize: 14, marginBottom: 8, opacity: 0.7 }}>
-              Cards to show
-            </ThemeText>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Pressable onPress={decWordsRange}>
-                <FontAwesome name="minus" color={colors.primary} size={20} />
-              </Pressable>
-              <View style={{ flex: 1, alignItems: 'center' }}>
-                <ThemeText style={{ fontSize: 24, fontWeight: 'bold' }}>
-                  {Math.floor(wordsRangeNumber)}
+          >
+            <View style={{ flex: isDesktop ? 1 : undefined }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: isDesktop ? 0 : 8,
+                }}
+              >
+                <BackButton />
+                <ThemeText
+                  style={{ 
+                    fontSize: isDesktop ? 32 : 25, 
+                    fontWeight: 'bold', 
+                    marginLeft: 10 
+                  }}
+                >
+                  {group?.title}
                 </ThemeText>
-                <Slider
-                  style={{ width: '100%', height: 40 }}
-                  minimumValue={2}
-                  maximumValue={cards.length}
-                  value={wordsRangeNumber}
-                  onSlidingComplete={onChangeCardsRange}
-                  minimumTrackTintColor={colors.primary}
-                  maximumTrackTintColor={colors.lightBackground}
-                />
               </View>
-              <Pressable onPress={incWordsRange}>
-                <FontAwesome name="plus" color={colors.primary} size={20} />
+            </View>
+
+            {/* View Mode Toggle */}
+            <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+              <Pressable
+                style={{
+                  borderRadius: 20,
+                  backgroundColor: showFilterModal
+                    ? colors.primary
+                    : colors.lightBackground,
+                  padding: 10,
+                }}
+                onPress={() => setShowFilterModal((prev) => !prev)}
+              >
+                <Feather
+                  name="filter"
+                  size={20}
+                  color={showFilterModal ? colors.background : colors.text}
+                />
+              </Pressable>
+              
+              <Pressable
+                onPress={() => setViewMode('list')}
+                style={{
+                  backgroundColor:
+                    viewMode === 'list' ? colors.primary : colors.lightBackground,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <MaterialIcons
+                  name="view-list"
+                  size={20}
+                  color={viewMode === 'list' ? colors.background : colors.text}
+                />
+                <Text
+                  style={{
+                    color: viewMode === 'list' ? colors.background : colors.text,
+                    fontWeight: '600',
+                  }}
+                >
+                  List
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => setViewMode('cards')}
+                style={{
+                  backgroundColor:
+                    viewMode === 'cards'
+                      ? colors.primary
+                      : colors.lightBackground,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <MaterialIcons
+                  name="view-carousel"
+                  size={20}
+                  color={viewMode === 'cards' ? colors.background : colors.text}
+                />
+                <Text
+                  style={{
+                    color:
+                      viewMode === 'cards' ? colors.background : colors.text,
+                    fontWeight: '600',
+                  }}
+                >
+                  Cards
+                </Text>
+              </Pressable>
+
+              <Pressable 
+                onPress={() => setShowEditModal(true)}
+                style={{
+                  padding: 10,
+                  backgroundColor: colors.lightBackground,
+                  borderRadius: 20,
+                }}
+              >
+                <Entypo
+                  name="dots-three-vertical"
+                  size={20}
+                  color={colors.iconColor}
+                />
               </Pressable>
             </View>
           </View>
+        </View>
 
-          {/* Sort by dropdown */}
-          <View style={{ flex: 1, margin: 20 }}>
-            <ThemeText style={{ fontSize: 14, marginBottom: 8, opacity: 0.7 }}>
-              Sort by
+        <View
+          style={{
+            backgroundColor: colors.background,
+            padding: isDesktop ? 32 : 20,
+            marginHorizontal: isDesktop ? 32 : 20,
+            marginTop: 20,
+            borderRadius: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginBottom: 12,
+            }}
+          >
+            <ThemeText style={{ fontSize: 18, fontWeight: '600' }}>
+              Progress
             </ThemeText>
-            <Select
-              placeholder="Default order"
-              data={[
-                i18n.t('group.sortByDate'),
-                i18n.t('group.sortByName'),
-                i18n.t('group.sortByReviewDate'),
-              ]}
-              customStyle={{ width: '100%' }}
-              currentSelect={sort}
-              setCurrentSelect={setSort}
-              showSortIcon={true}
-              setSortOrder={setSortOrder}
-              sortOrder={sortOrder}
+            <ThemeText style={{ fontSize: 16 }}>
+              {learnedCards}/{totalCards} learned
+            </ThemeText>
+          </View>
+          <View
+            style={{
+              height: 12,
+              backgroundColor: colors.lightBackground,
+              borderRadius: 6,
+              overflow: 'hidden',
+            }}
+          >
+            <View
+              style={{
+                height: '100%',
+                width: `${progressPercentage}%`,
+                backgroundColor: colors.primary,
+                borderRadius: 6,
+              }}
             />
           </View>
+        </View>
 
-          {/* Status filters */}
-          <View style={{ flex: 1, margin: 20 }}>
-            <ThemeText style={{ fontSize: 14, marginBottom: 8, opacity: 0.7 }}>
-              Status
-            </ThemeText>
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-              {statusCardsButtons.map(({ status, title, icon, color }) => (
-                <Pressable
-                  key={status}
-                  onPress={() => handleStatusFilter(status)}
+        {showFilterModal && (
+          <View
+            style={{
+              backgroundColor: colors.background,
+              padding: isDesktop ? 32 : 20,
+              marginHorizontal: isDesktop ? 32 : 20,
+              marginTop: 20,
+              borderRadius: 16,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 3,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 20,
+              }}
+            >
+              <Feather name="filter" size={20} color={colors.primary} />
+              <ThemeText
+                style={{ fontSize: 18, fontWeight: '600', marginLeft: 8 }}
+              >
+                Filters
+              </ThemeText>
+            </View>
+
+            <View style={{ gap: 24 }}>
+              {/* Cards to show slider */}
+              <View>
+                <ThemeText
+                  style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}
+                >
+                  Cards to show
+                </ThemeText>
+                <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: 6,
-                    paddingHorizontal: 12,
-                    paddingVertical: 8,
-                    borderRadius: 20,
-                    backgroundColor:
-                      selectedStatus === status
-                        ? colors.lightBackground
-                        : 'transparent',
-                    borderWidth: 1,
-                    borderColor:
-                      selectedStatus === status
-                        ? colors.primary
-                        : colors.lightBackground,
+                    gap: 16,
                   }}
                 >
-                  <MaterialIcons name={icon} size={18} color={color} />
-                  <Text style={{ color: colors.text, fontSize: 14 }}>
-                    {title}
+                  <Pressable
+                    onPress={decWordsRange}
+                    style={{
+                      padding: 8,
+                      backgroundColor: colors.lightBackground,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <FontAwesome
+                      name="minus"
+                      color={colors.primary}
+                      size={16}
+                    />
+                  </Pressable>
+                  <View style={{ flex: 1, alignItems: 'center' }}>
+                    <ThemeText style={{ fontSize: 24, fontWeight: 'bold' }}>
+                      {Math.floor(wordsRangeNumber)}
+                    </ThemeText>
+                    <Slider
+                      style={{ width: '100%', height: 40 }}
+                      minimumValue={2}
+                      maximumValue={cards.length}
+                      value={wordsRangeNumber}
+                      onSlidingComplete={onChangeCardsRange}
+                      minimumTrackTintColor={colors.primary}
+                      maximumTrackTintColor={colors.lightBackground}
+                    />
+                  </View>
+                  <Pressable
+                    onPress={incWordsRange}
+                    style={{
+                      padding: 8,
+                      backgroundColor: colors.lightBackground,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <FontAwesome name="plus" color={colors.primary} size={16} />
+                  </Pressable>
+                </View>
+              </View>
+
+              {/* Sort by dropdown */}
+              <View>
+                <ThemeText
+                  style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}
+                >
+                  Sort by
+                </ThemeText>
+                <Select
+                  placeholder="Default order"
+                  data={[
+                    i18n.t('group.sortByDate'),
+                    i18n.t('group.sortByName'),
+                    i18n.t('group.sortByReviewDate'),
+                  ]}
+                  customStyle={{ width: '100%' }}
+                  currentSelect={sort}
+                  setCurrentSelect={setSort}
+                  showSortIcon={true}
+                  setSortOrder={setSortOrder}
+                  sortOrder={sortOrder}
+                />
+              </View>
+
+              {/* Status filters */}
+              <View>
+                <ThemeText
+                  style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}
+                >
+                  Status
+                </ThemeText>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                  {statusCardsButtons.map(({ status, title, icon, color }) => (
+                    <Pressable
+                      key={status}
+                      onPress={() => handleStatusFilter(status)}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 6,
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        borderRadius: 20,
+                        backgroundColor:
+                          selectedStatus === status
+                            ? colors.lightBackground
+                            : 'transparent',
+                        borderWidth: 1,
+                        borderColor:
+                          selectedStatus === status
+                            ? colors.primary
+                            : colors.lightBackground,
+                      }}
+                    >
+                      <MaterialIcons name={icon} size={18} color={color} />
+                      <Text style={{ color: colors.text, fontSize: 14 }}>
+                        {title}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
+              </View>
+            </View>
+
+            <View style={{ marginTop: 20, gap: 12 }}>
+              <ThemeText style={{ fontSize: 14, opacity: 0.6 }}>
+                Showing {filteredCards.length} of {totalCards} words
+              </ThemeText>
+
+              {filteredCards.length < cards.length && (
+                <Pressable
+                  onPress={() => {
+                    dispatch(resetFilter());
+                    setSelectedStatus(null);
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 8,
+                    alignSelf: 'flex-start',
+                    paddingVertical: 8,
+                  }}
+                >
+                  <Entypo name="back-in-time" size={18} color={colors.primary} />
+                  <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '600' }}>
+                    Reset filters
                   </Text>
                 </Pressable>
-              ))}
+              )}
             </View>
           </View>
-        </ScrollView>
-
-        <ThemeText style={{ fontSize: 14, marginTop: 16, opacity: 0.6 }}>
-          Showing {filteredCards.length} of {totalCards} words
-        </ThemeText>
-
-        {filteredCards.length < cards.length && (
-          <Pressable
-            onPress={() => {
-              dispatch(resetFilter());
-              setSelectedStatus(null);
-            }}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 6,
-              marginTop: 12,
-            }}
-          >
-            <Entypo name="back-in-time" size={18} color={colors.primary} />
-            <Text style={{ color: colors.primary, fontSize: 14 }}>
-              Reset filters
-            </Text>
-          </Pressable>
         )}
+
       </View>
 
-      {isLoading && <LineLoader />}
+        {isLoading && <LineLoader />}
 
-      {/* Cards List */}
-      <CardList groupId={groupId} />
-
-      {/* Edit Modal */}
+        {/* Cards List */}
+        <View style={{ paddingHorizontal: isDesktop ? 32 : 0 }}>
+          <CardList groupId={groupId} />
+        </View>
       <DefaultModal
         isVisible={showEditModal}
         handleClose={() => setShowEditModal(false)}
@@ -522,35 +588,34 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         <View>
           {showSections.length > 0 && (
             <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
               onPress={() => setShowSectionList((prev) => !prev)}
             >
               <ThemeText>{i18n.t('group.moveGroup')}</ThemeText>
               <Feather
                 name={showSectionList ? 'arrow-down' : 'arrow-right'}
                 color={colors.primary}
-                size={30}
+                size={24}
               />
             </Pressable>
           )}
 
           {showSectionList && showSections.length > 0 && (
-            <View>
+            <View style={{ marginTop: 16 }}>
               <FlatList
                 data={showSections}
                 contentContainerStyle={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
                   gap: 10,
-                  margin: 10,
                 }}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <Pressable
                     style={{
-                      padding: 10,
+                      padding: 12,
                       backgroundColor:
-                        newSectionId === item.id ? colors.highlightColor : '',
+                        newSectionId === item.id
+                          ? colors.highlightColor
+                          : colors.lightBackground,
                       borderRadius: 10,
                     }}
                     onPress={() => setNewSectionId(item.id)}
@@ -559,10 +624,12 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                   </Pressable>
                 )}
               />
-              <PressableButton
-                text="Перемістити"
-                onPress={handleMoveGroupToAnotherSection}
-              />
+              <View style={{ marginTop: 16 }}>
+                <PressableButton
+                  text="Перемістити"
+                  onPress={handleMoveGroupToAnotherSection}
+                />
+              </View>
             </View>
           )}
         </View>

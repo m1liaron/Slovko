@@ -45,7 +45,9 @@ const sectionSlice = createSlice({
         if (!state.activeSectionId) {
           state.activeSectionId = action.payload[0].id;
         }
-        state.sections = action.payload;
+        if (Array.isArray(action.payload)) {
+          state.sections = action.payload;
+        }
       })
       .addCase(addSection.fulfilled, (state, action: { payload: ISection }) => {
         state.sections = [...state.sections, action.payload];

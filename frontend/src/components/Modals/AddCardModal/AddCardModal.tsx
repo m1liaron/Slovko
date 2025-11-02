@@ -25,6 +25,8 @@ import { addStateManyCards } from '@/redux/cardReducer/cardSlice';
 import { addManyCards } from '@/redux/cardReducer/cardThunk';
 import pLimit from 'p-limit';
 import { useAppDispatch } from '@/hooks/redux.hooks';
+import { ScrollView } from 'moti';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;
@@ -50,6 +52,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const [imageUri, setImageUri] = useState<string>('');
   const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
   const [textPlain, setTextPlain] = useState('');
+  const [showJsonInput, setShowJsonInput] = useState(false);
+  
 
   const {
     theme: { colors },
@@ -386,173 +390,398 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       isVisible={showAddModal}
       handleClose={() => setShowAddModal(false)}
     >
-      <View style={styles.formContainer}>
-        <ThemeText style={styles.title}>
-          {i18n.t('group.cardList.addCardTitle')}
-        </ThemeText>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: 5,
-          }}
-        >
-          <PressableButton
-            text={i18n.t('group.cardList.oneCard')}
-            onPress={() => setAddCardMode(0)}
-            buttonStyle={{
-              flex: 1,
-              backgroundColor:
-                addCardMode === 0
-                  ? colors.highlightDarkColor
-                  : colors.highlightColor,
-            }}
-          />
-          <PressableButton
-            text={i18n.t('group.cardList.manyCards')}
-            onPress={() => setAddCardMode(1)}
-            buttonStyle={{
-              flex: 1,
-              backgroundColor:
-                addCardMode === 1
-                  ? colors.highlightDarkColor
-                  : colors.highlightColor,
-            }}
-          />
-        </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ padding: 24 }}>
+          {/* Header */}
+          <ThemeText style={{ fontSize: 24, fontWeight: '700', marginBottom: 24 }}>
+            {i18n.t('group.cardList.addCardTitle')}
+          </ThemeText>
 
-        {addCardMode ? (
-          <View style={styles.bulkAddContainer}>
-            <AddInput
-              placeholder="Додати слова у text/plain"
-              placeholderTextColor={colors.primary}
-              value={textPlain}
-              onChangeText={setTextPlain}
-              height={100}
-            />
-            {Platform.OS === 'web' ? (
-              <View>
-                <View style={styles.fileInputContainer}>
-                  <Fontisto name="import" size={30} color={colors.background} />
-                  <input
-                    type="file"
-                    onChange={handleFileChange}
-                    style={styles.fileInput}
+          {/* Mode Toggle */}
+          <View
+            style={{
+              flexDirection: 'row',
+              gap: 12,
+              marginBottom: 24,
+              padding: 4,
+              backgroundColor: colors.lightBackground,
+              borderRadius: 12,
+            }}
+          >
+            <Pressable
+              onPress={() => setAddCardMode(0)}
+              style={{
+                flex: 1,
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                borderRadius: 8,
+                backgroundColor:
+                  addCardMode === 0 ? colors.primary : 'transparent',
+                alignItems: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  color: addCardMode === 0 ? colors.background : colors.text,
+                  fontWeight: '600',
+                  fontSize: 15,
+                }}
+              >
+                {i18n.t('group.cardList.oneCard')}
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setAddCardMode(1)}
+              style={{
+                flex: 1,
+                paddingVertical: 12,
+                paddingHorizontal: 16,
+                borderRadius: 8,
+                backgroundColor:
+                  addCardMode === 1 ? colors.primary : 'transparent',
+                alignItems: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  color: addCardMode === 1 ? colors.background : colors.text,
+                  fontWeight: '600',
+                  fontSize: 15,
+                }}
+              >
+                {i18n.t('group.cardList.manyCards')}
+              </Text>
+            </Pressable>
+          </View>
+
+          {/* Bulk Add Mode */}
+          {addCardMode ? (
+            <View style={{ gap: 20 }}>
+              {/* Text Input */}
+              <Pressable
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 28,
+                    backgroundColor: showJsonInput ? colors.primary : colors.lightBackground,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+                onPress={() => setShowJsonInput(prev => !prev)}
+                >
+                  <MaterialCommunityIcons name="code-json" size={24} color={showJsonInput ? colors.background : colors.primary} />
+              </Pressable>
+              {showJsonInput && (
+                <View>
+                  <ThemeText
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      marginBottom: 8,
+                      opacity: 0.7,
+                    }}
+                  >
+                    Add words as text
+                  </ThemeText>
+                  <AddInput
+                    placeholder="Enter text in plain format"
+                    placeholderTextColor={colors.lightText}
+                    value={textPlain}
+                    onChangeText={setTextPlain}
+                    height={120}
+                    multiline
                   />
                 </View>
-                <ThemeText>{i18n.t('group.cardList.fileTypes')}</ThemeText>
-              </View>
-            ) : (
-              <View>
+              )}
+
+
+              {/* File Import */}
+              {Platform.OS === 'web' ? (
+                <View
+                  style={{
+                    padding: 20,
+                    backgroundColor: colors.lightBackground,
+                    borderRadius: 12,
+                    borderWidth: 2,
+                    borderColor: colors.lightBackground,
+                    borderStyle: 'dashed',
+                  }}
+                >
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 12,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 28,
+                        backgroundColor: colors.background,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Fontisto name="import" size={24} color={colors.primary} />
+                    </View>
+                    <input
+                      type="file"
+                      onChange={handleFileChange}
+                      style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        opacity: 0,
+                        cursor: 'pointer',
+                      }}
+                    />
+                    <View style={{ alignItems: 'center' }}>
+                      <ThemeText
+                        style={{ fontSize: 15, fontWeight: '600', marginBottom: 4 }}
+                      >
+                        Import from file
+                      </ThemeText>
+                      <ThemeText style={{ fontSize: 13, opacity: 0.6 }}>
+                        {i18n.t('group.cardList.fileTypes')}
+                      </ThemeText>
+                    </View>
+                  </View>
+                </View>
+              ) : (
                 <PressableButton
                   text={i18n.t('group.cardList.importTxt')}
                   onPress={handleImportMobile}
+                  buttonStyle={{
+                    backgroundColor: colors.lightBackground,
+                    borderWidth: 2,
+                    borderColor: colors.primary,
+                  }}
+                  textStyle={{ color: colors.primary }}
+                />
+              )}
+
+              {/* JSON Preview */}
+              {Object.keys(jsonOutput).length > 0 && (
+                <View>
+                  <ThemeText
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '600',
+                      marginBottom: 12,
+                      opacity: 0.7,
+                    }}
+                  >
+                    {i18n.t('group.cardList.dataTitle')} ({Object.keys(jsonOutput).length} items)
+                  </ThemeText>
+                  <View
+                    style={{
+                      backgroundColor: colors.lightBackground,
+                      borderRadius: 12,
+                      maxHeight: 200,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <FlatList
+                      data={Object.entries(jsonOutput)}
+                      keyExtractor={([key]) => key}
+                      contentContainerStyle={{ padding: 16 }}
+                      renderItem={({ item, index }) => {
+                        const [key, value] = item;
+                        return (
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              paddingVertical: 12,
+                              paddingHorizontal: 12,
+                              borderBottomWidth:
+                                index < Object.keys(jsonOutput).length - 1 ? 1 : 0,
+                              borderBottomColor: colors.background,
+                              gap: 16,
+                            }}
+                          >
+                            <ThemeText
+                              style={{ fontWeight: '600', fontSize: 14, flex: 1 }}
+                              numberOfLines={1}
+                            >
+                              {key}
+                            </ThemeText>
+                            <ThemeText
+                              style={{
+                                color: colors.lightText,
+                                fontSize: 14,
+                                flex: 1,
+                                textAlign: 'right',
+                              }}
+                              numberOfLines={1}
+                            >
+                              {value}
+                            </ThemeText>
+                          </View>
+                        );
+                      }}
+                    />
+                  </View>
+                </View>
+              )}
+            </View>
+          ) : (
+            /* Single Card Mode */
+            <View style={{ gap: 20 }}>
+              {/* Image Selection */}
+              <View>
+                <ThemeText
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    marginBottom: 12,
+                    opacity: 0.7,
+                  }}
+                >
+                  Card Image
+                </ThemeText>
+                <PressableButton
+                  text={i18n.t('group.cardList.chooseImage')}
+                  onPress={() => pickImage(imageUri, setImageUri)}
+                  buttonStyle={{
+                    backgroundColor: colors.lightBackground,
+                  }}
+                  textStyle={{ color: colors.primary }}
+                />
+
+                {/* Selected Image Preview */}
+                {imageUri !== '' && (
+                  <View style={{ marginTop: 12, alignItems: 'center' }}>
+                    <Image
+                      source={{ uri: imageUri }}
+                      style={{
+                        width: 160,
+                        height: 160,
+                        borderRadius: 12,
+                        resizeMode: 'cover',
+                      }}
+                    />
+                  </View>
+                )}
+
+                {/* Unsplash Images Grid */}
+                {unsplashImages.length > 0 && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      gap: 8,
+                      marginTop: 12,
+                    }}
+                  >
+                    {unsplashImages.map((image, index) => (
+                      <Pressable
+                        key={image.slice(0, 10)}
+                        onPress={() => setChosenPhoto(image, index)}
+                        style={{
+                          borderRadius: 8,
+                          borderWidth: 3,
+                          borderColor:
+                            chosenImage === index ? colors.primary : 'transparent',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Image
+                          source={{ uri: image }}
+                          style={{
+                            width: 80,
+                            height: 80,
+                            resizeMode: 'cover',
+                          }}
+                        />
+                      </Pressable>
+                    ))}
+                  </View>
+                )}
+              </View>
+
+              {/* Word Input */}
+              <View>
+                <ThemeText
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    marginBottom: 8,
+                    opacity: 0.7,
+                  }}
+                >
+                  Word
+                </ThemeText>
+                <AddInput
+                  value={value}
+                  onChangeText={setValue}
+                  placeholder={i18n.t('group.cardList.wordPlaceholder')}
+                  onFocus={fetchUnsplashPhotos}
                 />
               </View>
-            )}
 
-            {Object.keys(jsonOutput).length > 0 && (
-              <View
-                style={[
-                  styles.jsonTableContainer,
-                  { backgroundColor: colors.lightBackground },
-                ]}
-              >
-                <View style={styles.jsonTable}>
-                  <Text style={styles.jsonTableTitle}>
-                    {i18n.t('group.cardList.dataTitle')}
-                  </Text>
-                  <FlatList
-                    data={Object.entries(jsonOutput)}
-                    keyExtractor={([key]) => key}
-                    contentContainerStyle={{ paddingBottom: 10 }}
-                    renderItem={({ item }) => {
-                      const [key, value] = item;
-                      return (
-                        <View key={value} style={styles.jsonRow}>
-                          <ThemeText style={styles.jsonKey}>{key}</ThemeText>
-                          <ThemeText
-                            style={[
-                              styles.jsonValue,
-                              { color: colors.lightText },
-                            ]}
-                          >
-                            {value}
-                          </ThemeText>
-                        </View>
-                      );
-                    }}
-                  />
-                </View>
+              {/* Answer Input */}
+              <View>
+                <ThemeText
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    marginBottom: 8,
+                    opacity: 0.7,
+                  }}
+                >
+                  Translation
+                </ThemeText>
+                <AddInput
+                  value={answerWord}
+                  onChangeText={setAnswerWord}
+                  placeholder={i18n.t('group.cardList.answerPlaceholder')}
+                />
               </View>
-            )}
-          </View>
-        ) : (
-          <View>
+
+              {/* Validation Checkbox */}
+              <Pressable
+                onPress={() => setIsValidateWord(!isValidateWord)}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: 16,
+                  backgroundColor: colors.lightBackground,
+                  borderRadius: 12,
+                }}
+              >
+                <Checkbox
+                  value={isValidateWord}
+                  onValueChange={setIsValidateWord}
+                  color={isValidateWord ? colors.primary : undefined}
+                />
+                <ThemeText style={{ fontSize: 15, flex: 1 }}>
+                  {i18n.t('group.cardList.validation')}
+                </ThemeText>
+              </Pressable>
+            </View>
+          )}
+
+          {/* Submit Button */}
+          <View style={{ marginTop: 32 }}>
             <PressableButton
-              text={i18n.t('group.cardList.chooseImage')}
-              onPress={() => pickImage(imageUri, setImageUri)}
-            />
-            {imageUri !== '' && (
-              <Image source={{ uri: imageUri }} style={styles.image} />
-            )}
-
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                gap: 5,
+              onPress={onSaveCard}
+              text={i18n.t('group.cardList.addButton')}
+              buttonStyle={{
+                paddingVertical: 16,
+                borderRadius: 12,
               }}
-            >
-              {unsplashImages.length > 0 &&
-                unsplashImages.map((image, index) => (
-                  <Pressable
-                    key={image.slice(0, 10)}
-                    style={{
-                      borderWidth: 4,
-                      borderColor:
-                        chosenImage === index ? '#679bd7' : colors.primary,
-                    }}
-                    onPress={() => setChosenPhoto(image, index)}
-                  >
-                    <Image
-                      key={image.slice(0, 10)}
-                      source={{ uri: image }}
-                      style={styles.image}
-                    />
-                  </Pressable>
-                ))}
-            </View>
-
-            <AddInput
-              value={value}
-              onChangeText={setValue}
-              placeholder={i18n.t('group.cardList.wordPlaceholder')}
-              onFocus={fetchUnsplashPhotos}
+              textStyle={{
+                fontSize: 16,
+                fontWeight: '600',
+              }}
             />
-
-            <AddInput
-              value={answerWord}
-              onChangeText={setAnswerWord}
-              placeholder={i18n.t('group.cardList.answerPlaceholder')}
-            />
-            <View style={{ flexDirection: 'row' }}>
-              <ThemeText>{i18n.t('group.cardList.validation')} </ThemeText>
-              <Checkbox
-                value={isValidateWord}
-                onValueChange={setIsValidateWord}
-              />
-            </View>
           </View>
-        )}
-
-        <PressableButton
-          onPress={onSaveCard}
-          text={i18n.t('group.cardList.addButton')}
-        />
-      </View>
+        </View>
+      </ScrollView>
     </DefaultModal>
   );
 };

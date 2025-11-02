@@ -76,11 +76,7 @@ const CardList = ({ groupId }: CardListProps) => {
     <View style={styles.container}>
       {isLoading ? (
         <ActivityIndicator color={colors.primary} />
-      ) : !cards?.length ? (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Image source={noCardsImage} />
-        </View>
-      ) : (
+      )  : (
         <FlatList
           data={cards}
           renderItem={({ item }) => (

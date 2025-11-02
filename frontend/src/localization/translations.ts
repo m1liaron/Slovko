@@ -92,8 +92,8 @@ const translations = {
       cardList: {
         addCardTitle: 'Add a Card!',
         oneCard: 'Single',
-        manyCards: 'Multiple (NEW)',
-        fileTypes: 'Available file types: txt, text/plain, NEW: xlsx, xls',
+        manyCards: 'Multiple',
+        fileTypes: 'Available file types: txt, text/plain',
         importTxt: 'Import .txt',
         dataTitle: 'Data:',
         chooseImage: 'Choose image from gallery',
@@ -292,8 +292,8 @@ const translations = {
       cardList: {
         addCardTitle: 'Додайте Карточку!',
         oneCard: 'Одна',
-        manyCards: 'Багато, НОВИНКА',
-        fileTypes: 'Доступні типи файлів: txt, text/plain, НОВИНКА: xlsx, xls',
+        manyCards: 'Багато',
+        fileTypes: 'Доступні типи файлів: txt, text/plain, xlsx, xls',
         importTxt: 'Імпортувати .txt',
         dataTitle: 'Дані:',
         chooseImage: 'Виберіть зображення з галереї',
