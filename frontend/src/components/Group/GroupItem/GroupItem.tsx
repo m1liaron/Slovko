@@ -1,58 +1,82 @@
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { removeCard, removeStateCard } from '@/redux/cardReducer/cardSlice';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { Link } from '@react-navigation/native';
-import { useCallback } from 'react';
-import { Text } from 'react-native';
+import { Text, useWindowDimensions } from 'react-native';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
-import {
-  removeGroup,
-  removeStateGroup,
-} from '../../../redux/groupReducer/groupSlice';
 import styles from './Group.styles';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { View } from 'moti';
+import { IGroup } from '@/common/enums/types/group.type';
 
 interface GroupItemProps {
-  item: {
-    id: string;
-    title: string;
-  };
+  item: IGroup;
 }
 
-export const GroupItem = ({ item: { id, title } }: GroupItemProps) => {
+export const GroupItem = ({
+  item: { id, title, toLearnCount, repeatedCount, learnedCount, knowCount },
+}: GroupItemProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const dispatch = useAppDispatch();
-  const { globalCards } = useAppSelector((state) => state.cards);
 
-  const handleRemoveGroup = useCallback(() => {
-    // Don't call dispatch directly in render - wrap in async function
-    const performRemove = async () => {
-      try {
-        await dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, id));
-        const groupsCards = globalCards.filter((card) => card.groupId === id);
-        for (const card of groupsCards) {
-          dispatch(enqueueOrDispatch(removeCard, removeStateCard, card.id));
-        }
-      } catch (error) {
-        console.error('Failed to remove group:', error);
-      }
-    };
+  const { width } = useWindowDimensions();
+  const groupWidth = width < 720 ? width / 1.2 : width / 5;
 
-    performRemove();
-  }, [dispatch, id]);
+  const progress = knowCount! / 100;
 
   return (
     <Link
       key={id}
       style={[
         styles.item,
-        { borderColor: colors.lightBackground, shadowColor: colors.primary },
+        {
+          width: groupWidth,
+          borderColor: colors.lightBackground,
+          alignSelf: 'center',
+        },
       ]}
       to={{ screen: 'group', params: { groupId: id } }}
     >
-      <Text style={{ fontSize: 30, color: colors.primary }}>{title}</Text>
+      <View>
+        <ThemeText
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ fontSize: 20 }}
+        >
+          {title}
+        </ThemeText>
+        <View>
+          <View style={{ flexDirection: 'row', margin: 10 }}>
+            {toLearnCount! > 0 ? (
+              <ThemeText>To learn {toLearnCount} </ThemeText>
+            ) : (
+              <ThemeText>No words to Learn</ThemeText>
+            )}
+            {repeatedCount! > 0 && (
+              <ThemeText>Repeated {repeatedCount} </ThemeText>
+            )}
+            {learnedCount! > 0 && (
+              <ThemeText>Learned {learnedCount} </ThemeText>
+            )}
+          </View>
+          <View
+            style={{
+              width: groupWidth / 1.5,
+              height: 10,
+              backgroundColor: colors.lightBackground,
+              borderRadius: 40,
+            }}
+          >
+            <View
+              style={{
+                width: `${progress}%`,
+                height: '100%',
+                borderRadius: 40,
+                backgroundColor: colors.primary,
+              }}
+            ></View>
+          </View>
+        </View>
+      </View>
       <SimpleLineIcons name="arrow-right" size={30} color={colors.primary} />
     </Link>
   );

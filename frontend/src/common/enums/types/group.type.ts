@@ -1,10 +1,11 @@
 type IGroup = {
-	id: string;
-	title: string;
-	userId?: string;
-	learnedCardsAmount?: number;
-	learnToCardsAmount?: number;
-	knowCardsAmount?: number;
+  id: string;
+  title: string;
+  userId?: string;
+  toLearnCount?: number;
+  repeatedCount?: number;
+  knowCount?: number;
+  learnedCount?: number;
 };
 
 export type { IGroup };

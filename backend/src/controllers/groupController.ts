@@ -7,12 +7,49 @@ import {
 } from "../common/types/AuthRequest.type.js";
 import { Response } from "express";
 import { sendError } from "../helpers/index.js";
+import { literal } from "sequelize";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
   const { sectionId } = req.params;
   try {
     const groups = await Group.findAll({
       where: { sectionId },
+      attributes: {
+        include: [
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'To Learn'  
+          )`),
+            "toLearnCount",
+          ],
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'Repeated'  
+          )`),
+            "repeatedCount",
+          ],
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'Know' 
+          )`),
+            "knowCount",
+          ],
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'Learned'
+          )`),
+            "learnedCount",
+          ],
+        ],
+      },
     });
 
     res.status(StatusCodes.OK).json(groups);
