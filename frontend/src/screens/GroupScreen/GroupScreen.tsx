@@ -20,7 +20,14 @@ import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, Pressable, Text, View, ScrollView, useWindowDimensions } from 'react-native';
+import {
+  Alert,
+  Pressable,
+  Text,
+  View,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native';
 import AddInput from '../../common/components/AddInput/AddInput';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
@@ -60,7 +67,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const { width } = useWindowDimensions();
   const isDesktop = width >= 768;
   const maxContentWidth = isDesktop ? 1200 : width;
-  
+
   const { groupId } = route.params as { groupId: string };
   const { group, status } = useAppSelector((state) => state.groups);
   const { cards, filteredCards, isLoading } = useAppSelector(
@@ -204,7 +211,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
             padding: isDesktop ? 32 : 20,
             paddingTop: isDesktop ? 32 : 40,
             backgroundColor: colors.lightBackground,
-            flexDirection: 'row'
           }}
         >
           <View
@@ -225,10 +231,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
               >
                 <BackButton />
                 <ThemeText
-                  style={{ 
-                    fontSize: isDesktop ? 32 : 25, 
-                    fontWeight: 'bold', 
-                    marginLeft: 10 
+                  style={{
+                    fontSize: isDesktop ? 32 : 25,
+                    fontWeight: 'bold',
+                    marginLeft: 10,
                   }}
                 >
                   {group?.title}
@@ -254,12 +260,14 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                   color={showFilterModal ? colors.background : colors.text}
                 />
               </Pressable>
-              
+
               <Pressable
                 onPress={() => setViewMode('list')}
                 style={{
                   backgroundColor:
-                    viewMode === 'list' ? colors.primary : colors.lightBackground,
+                    viewMode === 'list'
+                      ? colors.primary
+                      : colors.lightBackground,
                   paddingHorizontal: 16,
                   paddingVertical: 8,
                   borderRadius: 20,
@@ -275,7 +283,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                 />
                 <Text
                   style={{
-                    color: viewMode === 'list' ? colors.background : colors.text,
+                    color:
+                      viewMode === 'list' ? colors.background : colors.text,
                     fontWeight: '600',
                   }}
                 >
@@ -314,7 +323,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                 </Text>
               </Pressable>
 
-              <Pressable 
+              <Pressable
                 onPress={() => setShowEditModal(true)}
                 style={{
                   padding: 10,
@@ -382,6 +391,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         {showFilterModal && (
           <View
             style={{
+              position: 'absolute',
               backgroundColor: colors.background,
               padding: isDesktop ? 32 : 20,
               marginHorizontal: isDesktop ? 32 : 20,
@@ -392,6 +402,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
               shadowOpacity: 0.1,
               shadowRadius: 4,
               elevation: 3,
+              opacity: 1,
             }}
           >
             <View
@@ -495,7 +506,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                 >
                   Status
                 </ThemeText>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                <View
+                  style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}
+                >
                   {statusCardsButtons.map(({ status, title, icon, color }) => (
                     <Pressable
                       key={status}
@@ -547,8 +560,18 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                     paddingVertical: 8,
                   }}
                 >
-                  <Entypo name="back-in-time" size={18} color={colors.primary} />
-                  <Text style={{ color: colors.primary, fontSize: 14, fontWeight: '600' }}>
+                  <Entypo
+                    name="back-in-time"
+                    size={18}
+                    color={colors.primary}
+                  />
+                  <Text
+                    style={{
+                      color: colors.primary,
+                      fontSize: 14,
+                      fontWeight: '600',
+                    }}
+                  >
                     Reset filters
                   </Text>
                 </Pressable>
@@ -556,15 +579,15 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
             </View>
           </View>
         )}
-
       </View>
 
-        {isLoading && <LineLoader />}
+      {isLoading && <LineLoader />}
 
-        {/* Cards List */}
-        <View style={{ paddingHorizontal: isDesktop ? 32 : 0 }}>
-          <CardList groupId={groupId} />
-        </View>
+      {/* Cards List */}
+      <View style={{ paddingHorizontal: isDesktop ? 32 : 0 }}>
+        <CardList groupId={groupId} />
+      </View>
+
       <DefaultModal
         isVisible={showEditModal}
         handleClose={() => setShowEditModal(false)}
