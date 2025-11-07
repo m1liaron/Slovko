@@ -69,7 +69,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   // Section State
   const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
   const [currentSection, setCurrentSection] = useState<Section>('cards');
-  const [finishedSections, setFinishedSections] = useState<Section[]>([]);
 
   // Modes Toggles
   const [isQuizEnabled, setIsQuizEnabled] = useState<boolean>(true);
@@ -107,7 +106,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     if (nextSection === 'finish') {
       finishLesson();
     } else {
-      setFinishedSections((prev) => [...prev, currentSection]);
       setCurrentSection(nextSection);
     }
   };
@@ -167,7 +165,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     setIsQuizEnabled(true);
     setIsGuessWordEnabled(true);
     setShowSettingsModal(false);
-    setFinishedSections([]);
     setCurrentSection('cards');
     setIsLessonOver(true);
 

@@ -78,7 +78,10 @@ const cardSlice = createSlice({
     rangeCards: (state, action) => {
       state.isLoading = true;
       if (action.payload) {
-        state.cards = [...state.cards.slice(0, action.payload)];
+        const limit = action.payload;
+        const source =
+          limit > state.cards.length ? state.filteredCards : state.cards;
+        state.cards = source.slice(0, limit);
         state.isLoading = false;
       }
     },
