@@ -403,8 +403,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         <View
           style={{
             position: 'absolute',
-            top: 50,
-            left: 500,
+            top: isDesktop ? 60 : 130,
+            left: isDesktop ? '50%' : '0%',
             backgroundColor: colors.background,
             padding: isDesktop ? 32 : 20,
             marginHorizontal: isDesktop ? 32 : 20,

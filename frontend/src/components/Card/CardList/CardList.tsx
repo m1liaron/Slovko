@@ -76,7 +76,7 @@ const CardList = ({ groupId }: CardListProps) => {
     <View style={styles.container}>
       {isLoading ? (
         <ActivityIndicator color={colors.primary} />
-      )  : (
+      ) : (
         <FlatList
           data={cards}
           renderItem={({ item }) => (
@@ -98,7 +98,7 @@ const CardList = ({ groupId }: CardListProps) => {
             {
               padding: screenWidth < 620 ? 10 : 50,
               paddingBottom: 80,
-              height: Platform.OS === 'web' ? 500 : 'auto',
+              height: Platform.OS === 'web' ? 350 : 'auto',
             },
           ]}
           numColumns={1}
