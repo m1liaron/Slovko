@@ -19,6 +19,8 @@ import PressableButton from '@/common/components/PressableButton/PressableButton
 import { useNavigation } from '@react-navigation/native';
 import { AppPath } from '@/common/enums/app/AppPath';
 import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const languages = [
   { id: 1, title: 'English', flag: '🇬🇧' },
@@ -66,12 +68,14 @@ const ChooseLanguageScreen = () => {
   }, [searchInput]);
 
   return (
-    <ThemeBackground
+    <SafeAreaView
       style={{
+        flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 30,
       }}
     >
+      <WelcomeThemeBackground />
       <View style={{ alignItems: 'center', marginBottom: 40 }}>
         <View style={{ alignItems: 'center' }}>
           <Image
@@ -83,20 +87,20 @@ const ChooseLanguageScreen = () => {
             }}
             resizeMode="contain"
           />
-          <ThemeText style={{ fontWeight: 'bold', fontSize: 30 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff' }}>
             Slovko
-          </ThemeText>
+          </Text>
         </View>
-        <ThemeText
+        <Text
           style={{
             fontSize: 26,
             fontWeight: '700',
             textAlign: 'center',
-            color: theme.colors.text,
+            color: '#fff',
           }}
         >
           {i18n.t('chooseLanguageScreen.whichLanguage')}
-        </ThemeText>
+        </Text>
       </View>
 
       <View
@@ -176,9 +180,10 @@ const ChooseLanguageScreen = () => {
         <PressableButton
           onPress={() => navigation.navigate(AppPath.ChooseWords)}
           text={i18n.t('welcomeScreen.next')}
+          buttonStyle={{ margin: 10 }}
         />
       )}
-    </ThemeBackground>
+    </SafeAreaView>
   );
 };
 

@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   Text,
+  SafeAreaView,
 } from 'react-native';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,7 @@ import { AppPath } from '@/common/enums/app/AppPath';
 import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
 import { removeStorageItem, setStorageItem } from '@/utils/storage';
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 
 type Word = {
   id: number;
@@ -129,12 +131,14 @@ const ChooseWordsScreen = () => {
   };
 
   return (
-    <ThemeBackground
+    <SafeAreaView
       style={{
+        flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 30,
       }}
     >
+      <WelcomeThemeBackground />
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Image
@@ -146,21 +150,22 @@ const ChooseWordsScreen = () => {
             }}
             resizeMode="contain"
           />
-          <ThemeText style={{ fontWeight: 'bold', fontSize: 30 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff' }}>
             Slovko
-          </ThemeText>
+          </Text>
         </View>
-        <ThemeText
+        <Text
           style={{
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: 40,
+            color: '#fff',
           }}
         >
           {showLevel
             ? i18n.t('chooseWordsScreen.slogan')
             : i18n.t('chooseWordsScreen.chooseWords')}
-        </ThemeText>
+        </Text>
 
         {showLevel ? (
           <>
@@ -265,9 +270,8 @@ const ChooseWordsScreen = () => {
               />
               <PressableButton
                 onPress={navigateToMain}
-                gradientColor={theme.colors.lightBackground}
+                gradientColor={theme.colors.highlightDarkColor}
                 text={i18n.t('chooseWordsScreen.withoutRegistration')}
-                buttonStyle={{ backgroundColor: theme.colors.lightBackground }}
               />
             </View>
           </>
@@ -294,9 +298,7 @@ const ChooseWordsScreen = () => {
                     activeOpacity={0.7}
                     onPress={() => handleSetChosenWord(item)}
                     style={{
-                      width: '45%',
                       minWidth: 150,
-                      maxWidth: 250,
                       marginBottom: 16,
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -362,7 +364,7 @@ const ChooseWordsScreen = () => {
           )}
         </View>
       )}
-    </ThemeBackground>
+    </SafeAreaView>
   );
 };
 

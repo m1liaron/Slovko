@@ -2,7 +2,7 @@ const translations = {
   en: {
     welcomeScreen: {
       welcome: 'Welcome to Slovko',
-      customize: "Let's customize your learning",
+      journey: "Let's start your learning path",
       start: 'Start',
       next: 'Next',
       back: 'Back',
@@ -18,6 +18,13 @@ const translations = {
       notificationPermissionDenied: 'Notificaitons are blocked by the user',
       saveUkraine: 'Save Ukraine!',
       sections: 'Sections',
+      drawer: {
+        addLanguage: 'Add Language',
+        chooseLanguage: 'Choose Language',
+        createLanguage: 'Create Language',
+        nameSection: 'Name of section',
+        add: 'Add',
+      },
     },
     sharedGroupsScreen: {
       mySharedGroups: 'My shared groups',
@@ -193,7 +200,7 @@ const translations = {
   uk: {
     welcomeScreen: {
       welcome: 'Вітаю у Slovko',
-      customize: 'Давайте налаштуємо ваше навчання',
+      journey: 'Давайте почнемо ваше навчання',
       start: 'Почати',
       next: 'Наступне',
       back: 'Назад',
@@ -219,6 +226,13 @@ const translations = {
       notificationPermissionDenied: 'Повідомлення заблоковані користувачем.',
       saveUkraine: 'Save Ukraine!',
       sections: 'Секції',
+      drawer: {
+        addLanguage: 'Додати мову',
+        chooseLanguage: 'Вибрати мову',
+        createLanguage: 'Створити мову',
+        nameSection: 'Назва секції',
+        add: 'Додати',
+      },
     },
     sharedGroupsScreen: {
       mySharedGroups: 'Мої поширені групи',

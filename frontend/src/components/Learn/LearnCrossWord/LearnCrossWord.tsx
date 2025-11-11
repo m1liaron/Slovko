@@ -125,8 +125,8 @@ const LearnCrossWord: React.FC<LearnCheckProps> = () => {
             <Pressable
               key={`${rowIndex}-${colIndex}`}
               style={{
-                width: gridSize,
-                height: gridSize,
+                width: 40,
+                height: 40,
                 borderWidth: 1,
                 borderColor: '#ddd',
                 alignItems: 'center',
