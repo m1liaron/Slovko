@@ -19,6 +19,7 @@ import { getStorageItem, setStorageItem } from '@/utils/storage';
 import { IAppPath } from '@/common/enums/app/AppPath';
 import { useAppDispatch } from '@/hooks/redux.hooks';
 import { getUser } from '@/redux/userReducer/userThunk';
+import { initToken } from '@/utils/storage/initToken';
 
 export type RootStackParamList = {
   [AppPath.Main]: undefined;
@@ -47,19 +48,21 @@ const ProtectedRoute = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    initToken();
+  }, []);
+
+  useEffect(() => {
     (async () => {
       const firstLaunch = await getStorageItem(
         AsyncStorageVariables.FIRST_START,
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (!firstLaunch) {
+      if (firstLaunch === undefined) {
         setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
       }
 
-      if (firstLaunch) {
-        await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
-        console.log('First launch detected');
+      if (firstLaunch === 'true') {
         setInitialRoute(AppPath.Welcome);
         setIsLoading(false);
         return;
@@ -72,8 +75,6 @@ const ProtectedRoute = () => {
         } else {
           setInitialRoute(AppPath.Main);
         }
-      } else {
-        setInitialRoute(AppPath.Login);
       }
 
       setIsLoading(false);

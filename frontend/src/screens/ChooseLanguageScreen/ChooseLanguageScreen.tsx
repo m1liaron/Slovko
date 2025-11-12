@@ -21,6 +21,7 @@ import { AppPath } from '@/common/enums/app/AppPath';
 import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Loading from '@/components/Loading';
 
 const languages = [
   { id: 1, title: 'English', flag: '🇬🇧' },
@@ -118,9 +119,7 @@ const ChooseLanguageScreen = () => {
 
       {/* Language List */}
       {filteredLanguages.length === 0 ? (
-        <ThemeText style={{ fontSize: 30, textAlign: 'center' }}>
-          No Language found
-        </ThemeText>
+        <Loading />
       ) : (
         <>
           <FlatList

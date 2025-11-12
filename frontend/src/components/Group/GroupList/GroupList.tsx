@@ -2,7 +2,7 @@ import noGroupsImage from '@/assets/images/no_groups.png';
 import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FlatList, Image, View, useWindowDimensions } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { v4 as uuid } from 'uuid';
@@ -12,16 +12,18 @@ import PressableButton from '../../../common/components/PressableButton/Pressabl
 import {
   addGroup,
   addStateGroup,
-  getAllGroups,
 } from '../../../redux/groupReducer/groupSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { useAppTheme } from '@/contexts/ThemeProvider';
+import { i18n } from '@/localization/i18n';
 
 export const GroupList = () => {
   const { groups, isLoading } = useAppSelector((state) => state.groups);
-  const { activeSectionId } = useAppSelector((state) => state.sections);
+  const { activeSectionId, sections } = useAppSelector(
+    (state) => state.sections,
+  );
   const [title, setTitle] = useState<string>('');
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -31,7 +33,6 @@ export const GroupList = () => {
   } = useAppTheme();
 
   const isDesktop = width >= 768;
-  const isMobile = width < 768;
 
   // Calculate number of columns based on screen width
   const numColumns = width >= 1200 ? 3 : width >= 768 ? 2 : 1;
@@ -40,7 +41,14 @@ export const GroupList = () => {
     if (!title.length) {
       Toast.show({
         type: 'error',
-        text1: 'Please enter a title',
+        text1: i18n.t('mainScreen.groupList.enterTitle'),
+      });
+      return;
+    }
+    if (!activeSectionId || sections.length === 0) {
+      Toast.show({
+        type: 'error',
+        text1: i18n.t('mainScreen.groupList.pleaseCreate'),
       });
       return;
     }
@@ -56,7 +64,12 @@ export const GroupList = () => {
 
   return (
     <View style={{ flex: 1, paddingHorizontal: isDesktop ? 32 : 20 }}>
-      <View style={{ flex: 1, maxWidth: 1400, width: '100%', alignSelf: 'center' }}>
+      <View style={{ zIndex: 5 }}>
+        <Toast />
+      </View>
+      <View
+        style={{ flex: 1, maxWidth: 1400, width: '100%', alignSelf: 'center' }}
+      >
         {isLoading ? (
           <FlatList
             data={Array(5).fill(null)}
@@ -97,7 +110,7 @@ export const GroupList = () => {
             columnWrapperStyle={
               numColumns > 1 ? { gap: 16, marginBottom: 16 } : undefined
             }
-            contentContainerStyle={{ 
+            contentContainerStyle={{
               paddingVertical: 20,
               gap: numColumns === 1 ? 16 : 0,
             }}
@@ -110,8 +123,10 @@ export const GroupList = () => {
         isVisible={showAddModal}
         handleClose={() => setShowAddModal(false)}
       >
-        <ThemeText style={{ fontSize: 20, fontWeight: '600', marginBottom: 16 }}>
-          Додайте Групу!
+        <ThemeText
+          style={{ fontSize: 20, fontWeight: '600', marginBottom: 16 }}
+        >
+          {i18n.t('mainScreen.groupList.addGroup')}
         </ThemeText>
         <AddInput
           placeholder="Назва Групи"

@@ -9,6 +9,7 @@ import {
   removeSection,
   updateSection,
 } from './sectionThunk';
+import { v4 as uuidv4 } from 'uuid';
 
 interface InitialState {
   sections: ISection[];
@@ -32,6 +33,14 @@ const sectionSlice = createSlice({
   name: 'sections',
   initialState,
   reducers: {
+    addStateSection: (state, action) => {
+      const newSection = {
+        id: uuidv4(),
+        title: action.payload.title,
+      };
+      state.sections = [...state.sections, newSection];
+      state.activeSectionId = newSection.id;
+    },
     setSelectedLanguage: (state, action) => {
       state.selectedLanguage = action.payload;
     },
@@ -73,7 +82,8 @@ const sectionSlice = createSlice({
 });
 
 export const selectSections = (state: RootState) => state.sections.sections;
-export const { setActiveSectionId, setSelectedLanguage } = sectionSlice.actions;
+export const { addStateSection, setActiveSectionId, setSelectedLanguage } =
+  sectionSlice.actions;
 export const sectionReducers = sectionSlice.reducer;
 
 export {

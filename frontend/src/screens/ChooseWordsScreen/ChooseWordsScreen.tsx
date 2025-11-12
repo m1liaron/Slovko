@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '@/hooks/redux.hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { FlatList } from 'react-native-gesture-handler';
 import languagesJson from '@/assets/data/languages.json';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
@@ -23,6 +23,11 @@ import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
 import { removeStorageItem, setStorageItem } from '@/utils/storage';
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
+import {
+  addSection,
+  addStateSection,
+} from '@/redux/sectionReducer/sectionSlice';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 
 type Word = {
   id: number;
@@ -58,6 +63,7 @@ const ChooseWordsScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const { width } = useWindowDimensions();
   const { theme } = useAppTheme();
+  const dispatch = useAppDispatch();
   const { selectedLanguage } = useAppSelector((state) => state.sections);
   const [words, setWords] = useState<Word[]>([]);
   const [chosenWords, setChosenWords] = useState<string[]>([]);
@@ -128,6 +134,13 @@ const ChooseWordsScreen = () => {
   const navigateToMain = async () => {
     await setStorageItem(AsyncStorageVariables.FIRST_START, 'false');
     navigation.navigate(AppPath.Home);
+    if (selectedLanguage) {
+      dispatch(
+        enqueueOrDispatch(addSection, addStateSection, {
+          title: selectedLanguage,
+        }),
+      );
+    }
   };
 
   return (

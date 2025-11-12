@@ -12,11 +12,13 @@ import Toast from 'react-native-toast-message';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import {
   addSection,
+  addStateSection,
   setActiveSectionId,
 } from '@/redux/sectionReducer/sectionSlice';
 import { getLanguages } from '@/redux/languageReducer/languageThunk';
 import { Language } from '@/common/enums/types/language.type';
-import { useLanguage } from '@/contexts/LanguageProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   const {
@@ -42,7 +44,9 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
 
-    dispatch(addSection({ title: newTitle }));
+    dispatch(
+      enqueueOrDispatch(addSection, addStateSection, { title: newTitle }),
+    );
     setNewTitle('');
   };
 
@@ -68,7 +72,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     <View
       style={[
         styles.container,
-        { width: width / 3, backgroundColor: colors.background },
+        { width: width / 2, backgroundColor: colors.background },
       ]}
     >
       {showLanguages && languages.length > 0 ? (
@@ -118,12 +122,16 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
             </Pressable>
           </View>
 
-          <PressableButton
-            text={i18n.t('mainScreen.drawer.chooseLanguage')}
-            onPress={() => setShowLanguages(true)}
-          />
+          {HAS_TOKEN && (
+            <>
+              <PressableButton
+                text={i18n.t('mainScreen.drawer.chooseLanguage')}
+                onPress={() => setShowLanguages(true)}
+              />
 
-          <View style={styles.divider} />
+              <View style={styles.divider} />
+            </>
+          )}
 
           <PressableButton
             text={i18n.t('mainScreen.drawer.createLanguage')}
