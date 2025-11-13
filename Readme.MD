@@ -22,7 +22,7 @@ Make sure you have the following installed:
    # or
    yarn
 
-   cd server
+   cd backend
    npm i
    ```
    
@@ -37,6 +37,16 @@ Make sure you have the following installed:
    ```
 
    This will open the Expo Developer Tools in your browser. You can scan the QR code with Expo Go or run the app in a simulator or in web.
+2. **(Optional) create certificates for https server:**
+
+   ```bash
+   mkdir certs
+   cd certs
+   openssl req -x509 -newkey rsa:4096 -nodes -keyout key.pem -out cert.pem -days 365
+
+   ```
+
+   This will create certificates in certs folder.
 
 # ✨ Key Features
 
