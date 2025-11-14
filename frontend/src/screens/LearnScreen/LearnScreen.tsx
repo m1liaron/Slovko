@@ -40,7 +40,7 @@ import {
 import { updateUserStreak } from '../../redux/userReducer/userSlice';
 import { formatTime } from '../../utils/formatTime/formatTime';
 
-type Section = 'cards' | 'quiz' | 'word' | 'check' | 'crossWord' | 'finish';
+type Section = 'cards' | 'quiz' | 'word' | 'check' | 'finish';
 
 interface SectionOption {
   text: string;
@@ -97,8 +97,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     const transitions: Record<Section, Section> = {
       cards: isQuizEnabled ? 'quiz' : isGuessWordEnabled ? 'word' : 'finish',
       quiz: isGuessWordEnabled ? 'word' : 'finish',
-      word: isCheckEnabled ? 'crossWord' : 'finish',
-      crossWord: isCrossWordEnabled ? 'check' : 'finish',
+      word: isCheckEnabled ? 'check' : 'finish',
       check: 'finish',
       finish: 'finish',
     };
@@ -222,13 +221,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
         changeState: setIsCheckEnabled,
         sectionName: 'check',
       },
-      {
-        text: i18n.t('learnScreen.checkTranslateMode'),
-        iconName: 'checklist',
-        state: isCrossWordEnabled,
-        changeState: setIsGuessWordEnabled,
-        sectionName: 'crossWord',
-      },
+      // {
+      //   text: i18n.t('learnScreen.checkTranslateMode'),
+      //   iconName: 'checklist',
+      //   state: isCrossWordEnabled,
+      //   changeState: setIsGuessWordEnabled,
+      //   sectionName: 'crossWord',
+      // },
     ];
 
     return sections.map(
@@ -317,12 +316,12 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
                   />
                 )}
 
-                {currentSection === 'crossWord' && isCrossWordEnabled && (
+                {/* {currentSection === 'crossWord' && isCrossWordEnabled && (
                   <LearnCrossWord
                     onComplete={handleNextSection}
                     handleSetData={handleSetData}
                   />
-                )}
+                )} */}
 
                 <Pressable
                   onPress={() => toggleSwitch(setShowSettingsModal)}
