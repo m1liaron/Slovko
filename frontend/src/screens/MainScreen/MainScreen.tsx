@@ -37,6 +37,7 @@ import {
   getSections,
   setActiveSectionId,
 } from '@/redux/sectionReducer/sectionSlice';
+import { getAllGroups } from '@/redux/groupReducer/groupThunk';
 
 const MainScreen = () => {
   useLanguage();
@@ -63,10 +64,8 @@ const MainScreen = () => {
 
   useEffect(() => {
     dispatch(enqueueOrDispatch(getUser, {}));
-  }, []);
-
-  useEffect(() => {
     dispatch(getSections());
+    dispatch(getAllGroups(activeSectionId));
   }, []);
 
   useEffect(() => {
@@ -193,11 +192,11 @@ const MainScreen = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.3)', 
+            backgroundColor: 'rgba(0,0,0,0.3)',
             flexDirection: 'row',
             zIndex: 20,
           }}
-          onPress={() => setShowDrawerMenu(false)} 
+          onPress={() => setShowDrawerMenu(false)}
         >
           <CustomDrawerContent handleClose={() => setShowDrawerMenu(false)} />
         </Pressable>
