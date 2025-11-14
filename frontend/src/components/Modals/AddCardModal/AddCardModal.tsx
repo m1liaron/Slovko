@@ -18,7 +18,6 @@ import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
-import styles from './AddCardModal.styles';
 
 import { type AddCardRequest } from '@/common/enums/types/card.type';
 import { addStateManyCards } from '@/redux/cardReducer/cardSlice';
@@ -53,7 +52,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
   const [textPlain, setTextPlain] = useState('');
   const [showJsonInput, setShowJsonInput] = useState(false);
-  
 
   const {
     theme: { colors },
@@ -393,7 +391,9 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ padding: 24 }}>
           {/* Header */}
-          <ThemeText style={{ fontSize: 24, fontWeight: '700', marginBottom: 24 }}>
+          <ThemeText
+            style={{ fontSize: 24, fontWeight: '700', marginBottom: 24 }}
+          >
             {i18n.t('group.cardList.addCardTitle')}
           </ThemeText>
 
@@ -459,17 +459,23 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
             <View style={{ gap: 20 }}>
               {/* Text Input */}
               <Pressable
-                  style={{
-                    width: 56,
-                    height: 56,
-                    borderRadius: 28,
-                    backgroundColor: showJsonInput ? colors.primary : colors.lightBackground,
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  backgroundColor: showJsonInput
+                    ? colors.primary
+                    : colors.lightBackground,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-                onPress={() => setShowJsonInput(prev => !prev)}
-                >
-                  <MaterialCommunityIcons name="code-json" size={24} color={showJsonInput ? colors.background : colors.primary} />
+                onPress={() => setShowJsonInput((prev) => !prev)}
+              >
+                <MaterialCommunityIcons
+                  name="code-json"
+                  size={24}
+                  color={showJsonInput ? colors.background : colors.primary}
+                />
               </Pressable>
               {showJsonInput && (
                 <View>
@@ -493,7 +499,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                   />
                 </View>
               )}
-
 
               {/* File Import */}
               {Platform.OS === 'web' ? (
@@ -524,7 +529,11 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                         justifyContent: 'center',
                       }}
                     >
-                      <Fontisto name="import" size={24} color={colors.primary} />
+                      <Fontisto
+                        name="import"
+                        size={24}
+                        color={colors.primary}
+                      />
                     </View>
                     <input
                       type="file"
@@ -539,7 +548,11 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                     />
                     <View style={{ alignItems: 'center' }}>
                       <ThemeText
-                        style={{ fontSize: 15, fontWeight: '600', marginBottom: 4 }}
+                        style={{
+                          fontSize: 15,
+                          fontWeight: '600',
+                          marginBottom: 4,
+                        }}
                       >
                         Import from file
                       </ThemeText>
@@ -573,7 +586,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                       opacity: 0.7,
                     }}
                   >
-                    {i18n.t('group.cardList.dataTitle')} ({Object.keys(jsonOutput).length} items)
+                    {i18n.t('group.cardList.dataTitle')} (
+                    {Object.keys(jsonOutput).length} items)
                   </ThemeText>
                   <View
                     style={{
@@ -597,13 +611,19 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                               paddingVertical: 12,
                               paddingHorizontal: 12,
                               borderBottomWidth:
-                                index < Object.keys(jsonOutput).length - 1 ? 1 : 0,
+                                index < Object.keys(jsonOutput).length - 1
+                                  ? 1
+                                  : 0,
                               borderBottomColor: colors.background,
                               gap: 16,
                             }}
                           >
                             <ThemeText
-                              style={{ fontWeight: '600', fontSize: 14, flex: 1 }}
+                              style={{
+                                fontWeight: '600',
+                                fontSize: 14,
+                                flex: 1,
+                              }}
                               numberOfLines={1}
                             >
                               {key}
@@ -684,7 +704,9 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                           borderRadius: 8,
                           borderWidth: 3,
                           borderColor:
-                            chosenImage === index ? colors.primary : 'transparent',
+                            chosenImage === index
+                              ? colors.primary
+                              : 'transparent',
                           overflow: 'hidden',
                         }}
                       >

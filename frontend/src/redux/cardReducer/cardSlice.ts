@@ -47,7 +47,10 @@ const cardSlice = createSlice({
   initialState,
   reducers: {
     addStateManyCards: (state, action) => {
-      state.cards.push(...action.payload.cards);
+      const data = action.payload.cards;
+      state.cards.push(...data);
+      state.globalCards.push(...data);
+      state.filteredCards.push(...data);
     },
     addStateCard: (state, action) => {
       const { card: newCard, tempId } = action.payload;
@@ -197,6 +200,7 @@ const cardSlice = createSlice({
       .addMatcher(isRejected, (state, action) => {
         state.status = DataStatus.ERROR;
         state.lastFetchedSuccessfully = false;
+        state.isLoading = false;
         const payload = action.payload as { message?: string } | undefined;
         state.error = payload?.message ?? action.error.message;
       });

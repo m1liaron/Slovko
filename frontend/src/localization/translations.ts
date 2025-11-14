@@ -102,6 +102,8 @@ const translations = {
       moveGroup: 'Move group to another section',
       changeButton: 'Change',
       noSections: 'No Sections',
+      noCardsLearned: 'No Cards',
+      learned: 'Learned',
       cardList: {
         addCardTitle: 'Add a Card!',
         oneCard: 'Single',
@@ -318,6 +320,8 @@ const translations = {
       moveGroup: 'Перемістити групу в інший розділ',
       changeButton: 'Змінити',
       noSections: 'Немає секцій',
+      noCardsLearned: 'Немає Карток',
+      learned: 'Вивчених',
       cardList: {
         addCardTitle: 'Додайте Карточку!',
         oneCard: 'Одна',

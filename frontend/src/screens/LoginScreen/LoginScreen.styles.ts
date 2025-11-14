@@ -6,16 +6,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 40,
+    paddingHorizontal: 12,
+    paddingTop: 30,
+    paddingBottom: 20,
+    margin: 'auto',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
-  },
-  iconContainer: {
-    marginBottom: 20,
   },
   iconGradient: {
     width: 80,
@@ -32,13 +29,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
     marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#ccc',
     textAlign: 'center',
   },
   formContainer: {
@@ -65,7 +60,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 56,
-    color: '#fff',
     fontSize: 16,
   },
   eyeIcon: {
@@ -73,7 +67,6 @@ const styles = StyleSheet.create({
   },
   signUpButton: {
     marginTop: 8,
-    marginBottom: 20,
     height: 56,
     borderRadius: 16,
     shadowColor: '#000',
@@ -115,11 +108,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 'auto',
-    paddingTop: 20,
   },
   footerText: {
-    color: '#ccc',
     fontSize: 15,
   },
   footerLink: {

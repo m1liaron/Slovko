@@ -6,13 +6,13 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -24,8 +24,10 @@ import { register } from '../../redux/userReducer/userSlice';
 import { isValidEmail, isValidPassword } from '@/utils';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import styles from '../LoginScreen/LoginScreen.styles';
 
 const RegisterScreen = () => {
+  const { width: screenWidth } = useWindowDimensions();
   const navigation = useNavigation<StackNavigation>();
   const dispatch = useAppDispatch();
   const {
@@ -101,7 +103,10 @@ const RegisterScreen = () => {
         style={styles.keyboardView}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { width: screenWidth < 720 ? 'auto' : '40%' },
+          ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -110,7 +115,7 @@ const RegisterScreen = () => {
             entering={FadeInDown.duration(600).springify()}
             style={styles.header}
           >
-            <View style={styles.iconContainer}>
+            <View>
               <LinearGradient
                 colors={[colors.highlightColor, colors.highlightDarkColor]}
                 style={styles.iconGradient}
@@ -118,10 +123,9 @@ const RegisterScreen = () => {
                 <Ionicons name="person-add" size={40} color="#fff" />
               </LinearGradient>
             </View>
-            <Text style={styles.title}>{i18n.t('registerScreen.title')}</Text>
-            <Text style={styles.subtitle}>
-              Create your account to get started
-            </Text>
+            <ThemeText style={styles.title}>
+              {i18n.t('registerScreen.title')}
+            </ThemeText>
           </Animated.View>
 
           {/* Form Section */}
@@ -141,7 +145,7 @@ const RegisterScreen = () => {
               <TextInput
                 style={styles.input}
                 placeholder={i18n.t('registerScreen.namePlaceholder')}
-                placeholderTextColor="#999"
+                placeholderTextColor="#ccc"
                 autoCapitalize="words"
                 value={name}
                 onChangeText={setName}
@@ -274,15 +278,15 @@ const RegisterScreen = () => {
             entering={FadeInUp.delay(400).duration(600)}
             style={styles.footer}
           >
-            <Text style={styles.footerText}>
+            <ThemeText style={styles.footerText}>
               {i18n.t('registerScreen.switchText')}{' '}
-            </Text>
+            </ThemeText>
             <Pressable onPress={() => navigation.navigate(AppPath.Login)}>
-              <Text
+              <ThemeText
                 style={[styles.footerLink, { color: colors.highlightColor }]}
               >
                 {i18n.t('loginScreen.loginButton')}
-              </Text>
+              </ThemeText>
             </Pressable>
           </Animated.View>
         </ScrollView>
@@ -290,133 +294,5 @@ const RegisterScreen = () => {
     </ThemeBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  keyboardView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    paddingBottom: 20,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  iconContainer: {
-    marginBottom: 5,
-  },
-  iconGradient: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#ccc',
-    textAlign: 'center',
-  },
-  formContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 24,
-    padding: 12,
-    marginBottom: 5,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
-    marginBottom: 8,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
-  },
-  inputIconContainer: {
-    marginRight: 6,
-  },
-  input: {
-    flex: 1,
-    height: 56,
-    color: '#fff',
-    fontSize: 16,
-  },
-  eyeIcon: {
-    padding: 8,
-  },
-  signUpButton: {
-    marginTop: 8,
-    marginBottom: 20,
-    height: 56,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  },
-  dividerText: {
-    color: '#999',
-    paddingHorizontal: 16,
-    fontSize: 14,
-  },
-  guestButton: {
-    height: 56,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  guestButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 'auto',
-    paddingTop: 20,
-  },
-  footerText: {
-    color: '#ccc',
-    fontSize: 15,
-  },
-  footerLink: {
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-});
 
 export default RegisterScreen;

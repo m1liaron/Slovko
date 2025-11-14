@@ -11,9 +11,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  listContainer: {
-    paddingBottom: 80, // enough space for button row
-  },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',

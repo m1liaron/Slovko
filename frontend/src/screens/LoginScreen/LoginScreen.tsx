@@ -10,6 +10,7 @@ import {
   Pressable,
   Text,
   TextInput,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -26,6 +27,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const LoginScreen = () => {
+  const { width: screenWidth } = useWindowDimensions();
   const navigation = useNavigation<StackNavigation>();
   const dispatch = useAppDispatch();
   const {
@@ -84,7 +86,10 @@ const LoginScreen = () => {
         style={styles.keyboardView}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { width: screenWidth < 720 ? 'auto' : '40%' },
+          ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -93,7 +98,7 @@ const LoginScreen = () => {
             entering={FadeInDown.duration(600).springify()}
             style={styles.header}
           >
-            <View style={styles.iconContainer}>
+            <View>
               <LinearGradient
                 colors={[colors.highlightColor, colors.highlightDarkColor]}
                 style={styles.iconGradient}
@@ -101,10 +106,9 @@ const LoginScreen = () => {
                 <Ionicons name="person-add" size={40} color="#fff" />
               </LinearGradient>
             </View>
-            <Text style={styles.title}>{i18n.t('registerScreen.title')}</Text>
-            <Text style={styles.subtitle}>
-              Create your account to get started
-            </Text>
+            <ThemeText style={styles.title}>
+              {i18n.t('registerScreen.title')}
+            </ThemeText>
           </Animated.View>
 
           {/* Form Section */}
@@ -207,15 +211,15 @@ const LoginScreen = () => {
             entering={FadeInUp.delay(400).duration(600)}
             style={styles.footer}
           >
-            <Text style={styles.footerText}>
+            <ThemeText style={styles.footerText}>
               {i18n.t('loginScreen.switchText')}{' '}
-            </Text>
+            </ThemeText>
             <Pressable onPress={() => navigation.navigate(AppPath.Register)}>
-              <Text
+              <ThemeText
                 style={[styles.footerLink, { color: colors.highlightColor }]}
               >
-                {i18n.t('loginScreen.loginButton')}
-              </Text>
+                {i18n.t('loginScreen.register')}
+              </ThemeText>
             </Pressable>
           </Animated.View>
         </ScrollView>

@@ -42,7 +42,7 @@ type CardListProps = {
 };
 
 const CardList = ({ groupId }: CardListProps) => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height } = useWindowDimensions();
 
   const {
     theme: { colors },
@@ -72,26 +72,6 @@ const CardList = ({ groupId }: CardListProps) => {
     navigation.navigate(AppPath.Learn, { groupId });
   };
 
-  const renderFooter = () => (
-    <View
-      style={{
-        paddingVertical: 20,
-        paddingHorizontal: screenWidth < 620 ? 10 : 50,
-      }}
-    >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        {cards.length > 1 && (
-          <PressableButton
-            onPress={navigateToLearn}
-            text={i18n.t('group.cardList.learnButton')}
-            buttonStyle={{ flex: 1 }}
-          />
-        )}
-        <AddButton onPress={() => setShowAddModal(true)} />
-      </View>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       {isLoading ? (
@@ -113,17 +93,28 @@ const CardList = ({ groupId }: CardListProps) => {
           )}
           keyExtractor={(item) => item.id}
           contentContainerStyle={[
-            styles.listContainer,
             {
               padding: screenWidth < 620 ? 10 : 50,
-              paddingBottom: 20, // Reduced since footer has its own padding
-              height: Platform.OS === 'web' ? 550 : 'auto',
+              paddingBottom: 20,
+              height: Platform.OS === 'web' ? height / 1.9 : 'auto',
             },
           ]}
-          numColumns={1}
-          ListFooterComponent={renderFooter}
         />
       )}
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        {cards.length > 1 && (
+          <PressableButton
+            onPress={navigateToLearn}
+            text={i18n.t('group.cardList.learnButton')}
+            buttonStyle={{ flex: 1 }}
+          />
+        )}
+        <AddButton
+          viewStyles={{ position: 'static', right: 0 }}
+          onPress={() => setShowAddModal(true)}
+        />
+      </View>
 
       <AddCardModal
         showAddModal={showAddModal}

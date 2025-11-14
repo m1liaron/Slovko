@@ -343,6 +343,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
             </View>
           </View>
         </View>
+        {isLoading && <LineLoader />}
 
         <View
           style={{
@@ -369,7 +370,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
               Progress
             </ThemeText>
             <ThemeText style={{ fontSize: 16 }}>
-              {learnedCards}/{totalCards} learned
+              {learnedCards > 0
+                ? `${learnedCards}/${filteredCards.length}`
+                : i18n.t('group.noCardsLearned')}{' '}
+              {i18n.t('group.learned')}
             </ThemeText>
           </View>
           <View
@@ -391,8 +395,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           </View>
         </View>
       </View>
-
-      {isLoading && <LineLoader />}
 
       {/* Cards List */}
       <View style={{ paddingHorizontal: isDesktop ? 32 : 0 }}>
@@ -464,6 +466,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                   </ThemeText>
                   <Slider
                     style={{ width: '100%', height: 40 }}
+                    disabled={filteredCards.length === 0}
                     minimumValue={2}
                     maximumValue={filteredCards.length}
                     value={wordsRangeNumber}
