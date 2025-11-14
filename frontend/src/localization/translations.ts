@@ -195,6 +195,10 @@ const translations = {
       timeSpent: 'Time Spent',
       totalScore: 'Total Score',
       accuracyPercentage: 'Accuracy Percentage',
+      learnCards: {
+        swipeLeft: "Swipe to left if you don't know",
+        swipeRight: 'ПSwipe to right if you know',
+      },
     },
     chooseLanguageScreen: {
       whichLanguage: 'Which language do you want to learn?',
@@ -416,6 +420,10 @@ const translations = {
       timeSpent: 'Час витрачено',
       totalScore: 'Загальний бал',
       accuracyPercentage: 'Відсоток точності',
+      learnCards: {
+        swipeLeft: 'Проведіть вліво, якщо не знаєте',
+        swipeRight: 'Проведіть вправо, якщо не знаєте',
+      },
     },
   },
 };

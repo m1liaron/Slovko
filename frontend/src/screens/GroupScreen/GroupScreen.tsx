@@ -101,6 +101,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   }
 
   useEffect(() => {
+    setWordsRangeNumber(filteredCards.length);
+  }, [filteredCards.length]);
+
+  useEffect(() => {
     if (!group || group.id !== groupId) {
       dispatch(enqueueOrDispatch(getGroupStorage, getGroup, { groupId }));
     }
@@ -148,15 +152,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         title: groupTitle,
       }),
     );
-  };
-
-  const handleFilterCards = () => {
-    if (sort.length > 0) {
-      dispatch(sortCards(sortOrder));
-    }
-    if (wordsRangeNumber !== cards.length || wordsRangeNumber !== 2) {
-      dispatch(rangeCards(wordsRangeNumber));
-    }
   };
 
   const handleRemoveGroup = () => {
@@ -467,7 +462,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                   <Slider
                     style={{ width: '100%', height: 40 }}
                     disabled={filteredCards.length === 0}
-                    minimumValue={2}
                     maximumValue={filteredCards.length}
                     value={wordsRangeNumber}
                     onSlidingComplete={onChangeCardsRange}

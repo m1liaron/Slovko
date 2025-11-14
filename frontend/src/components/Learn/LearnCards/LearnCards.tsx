@@ -19,6 +19,8 @@ import Animated, {
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import styles from './LearnCards.styles';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import { i18n } from '@/localization/i18n';
 
 interface LearnCardsProps {
   onComplete: () => void;
@@ -114,6 +116,64 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     setIsHorizontalSwipe(false);
   };
 
+  const renderInstructionButtons = () => (
+    <View
+      style={{
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        right: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        zIndex: 10,
+      }}
+    >
+      {/* Red button - Left */}
+      <View
+        style={{
+          backgroundColor: '#ef4444',
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          borderRadius: 8,
+          maxWidth: '45%',
+        }}
+      >
+        <Text
+          style={{
+            color: '#ffffff',
+            fontSize: 12,
+            fontWeight: '600',
+            textAlign: 'center',
+          }}
+        >
+          {i18n.t('learnScreen.learnCards.swipeLeft')}
+        </Text>
+      </View>
+
+      {/* Green button - Right */}
+      <View
+        style={{
+          backgroundColor: '#22c55e',
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          borderRadius: 8,
+          maxWidth: '45%',
+        }}
+      >
+        <Text
+          style={{
+            color: '#ffffff',
+            fontSize: 12,
+            fontWeight: '600',
+            textAlign: 'center',
+          }}
+        >
+          {i18n.t('learnScreen.learnCards.swipeRight')}
+        </Text>
+      </View>
+    </View>
+  );
+
   const renderCard = (card: ICard, index: number) => (
     <Pressable
       onPress={() => handleFlipCard(index)}
@@ -129,6 +189,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           frontAnimatedStyle,
         ]}
       >
+        {renderInstructionButtons()}
         <View style={{ marginTop: 10 }}>
           {card.image?.url ? (
             <Image
@@ -159,6 +220,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           backAnimatedStyle,
         ]}
       >
+        {renderInstructionButtons()}
         <View style={{ marginTop: 10 }}>
           {card.image?.url ? (
             <Image
@@ -183,35 +245,21 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
   );
 
   return (
-    <Swiper
-      cards={learningCards}
-      renderCard={(card, index) => renderCard(card, index)}
-      keyExtractor={(card) => card.id}
-      onSwipedRight={handleSwipeRight}
-      onSwipedLeft={handleSwipeLeft}
-      onSwipedAll={onComplete}
-      stackSize={3}
-      cardIndex={currentCardIndex}
-      backgroundColor={'transparent'}
-      verticalSwipe={false}
-      horizontalSwipe={isHorizontalSwipe}
-      overlayLabels={{
-        left: {
-          title: 'Не знаю',
-          style: {
-            label: styles.overlayLabelLeftTitle,
-            wrapper: styles.overlayLabelLeftWrapper,
-          },
-        },
-        right: {
-          title: 'Знаю',
-          style: {
-            label: styles.overlayLabelRightTitle,
-            wrapper: styles.overlayLabelRightWrapper,
-          },
-        },
-      }}
-    />
+    <>
+      <Swiper
+        cards={learningCards}
+        renderCard={(card, index) => renderCard(card, index)}
+        keyExtractor={(card) => card.id}
+        onSwipedRight={handleSwipeRight}
+        onSwipedLeft={handleSwipeLeft}
+        onSwipedAll={onComplete}
+        stackSize={3}
+        cardIndex={currentCardIndex}
+        backgroundColor={'transparent'}
+        verticalSwipe={false}
+        horizontalSwipe={isHorizontalSwipe}
+      />
+    </>
   );
 };
 

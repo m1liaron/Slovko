@@ -145,7 +145,6 @@ const StreakScreen = () => {
             <PressableButton
               text={i18n.t('streakScreen.buyFreeze')}
               onPress={() => dispatch(buyFreeze({ froze: 100 }))}
-              buttonStyle={styles.buyFreezeButton}
             />
           </View>
         )}

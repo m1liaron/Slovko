@@ -25,6 +25,7 @@ import { isValidEmail, isValidPassword } from '@/utils';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import styles from '../LoginScreen/LoginScreen.styles';
+import { initToken } from '@/utils/storage/initToken';
 
 const RegisterScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -83,6 +84,7 @@ const RegisterScreen = () => {
     dispatch(register(registerData))
       .unwrap()
       .then(() => {
+        initToken();
         navigation.navigate(AppPath.Home);
       })
       .catch((error) => {
@@ -143,7 +145,7 @@ const RegisterScreen = () => {
                 />
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.primary }]}
                 placeholder={i18n.t('registerScreen.namePlaceholder')}
                 placeholderTextColor="#ccc"
                 autoCapitalize="words"
@@ -162,7 +164,7 @@ const RegisterScreen = () => {
                 />
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.primary }]}
                 placeholder={i18n.t('registerScreen.emailPlaceholder')}
                 placeholderTextColor="#999"
                 keyboardType="email-address"
@@ -182,7 +184,7 @@ const RegisterScreen = () => {
                 />
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.primary }]}
                 placeholder={i18n.t('loginScreen.passwordPlaceholder')}
                 placeholderTextColor="#999"
                 secureTextEntry={!showPassword}
@@ -211,7 +213,7 @@ const RegisterScreen = () => {
                 />
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.primary }]}
                 placeholder={i18n.t(
                   'registerScreen.confirmPasswordPlaceholder',
                 )}

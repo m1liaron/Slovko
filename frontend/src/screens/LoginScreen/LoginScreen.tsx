@@ -25,6 +25,7 @@ import { useAppTheme } from '@/contexts/ThemeProvider';
 import { ScrollView } from 'moti';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import { initToken } from '@/utils/storage/initToken';
 
 const LoginScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -66,6 +67,7 @@ const LoginScreen = () => {
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
+        initToken();
         navigation.navigate(AppPath.Home);
       })
       .catch((error) => {
@@ -126,7 +128,7 @@ const LoginScreen = () => {
                 />
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.primary }]}
                 placeholder={i18n.t('loginScreen.emailPlaceholder')}
                 placeholderTextColor="#999"
                 keyboardType="email-address"
@@ -146,7 +148,7 @@ const LoginScreen = () => {
                 />
               </View>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { color: colors.primary }]}
                 placeholder={i18n.t('loginScreen.passwordPlaceholder')}
                 placeholderTextColor="#999"
                 secureTextEntry={!showPassword}

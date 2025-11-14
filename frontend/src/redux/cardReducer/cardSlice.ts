@@ -150,10 +150,12 @@ const cardSlice = createSlice({
         // 	state.globalCards.push(card);
         // }
         state.cards.push(action.payload.card);
+        state.filteredCards.push(action.payload.card);
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
         if (action.payload.cards.length > 0) {
           state.cards.push(...action.payload.cards);
+          state.filteredCards.push(...action.payload.cards);
           state.globalCards.push(...action.payload.cards);
         }
       })

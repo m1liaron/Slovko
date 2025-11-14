@@ -171,6 +171,7 @@ const addCard = async (req: Request, res: Response) => {
 
     try {
       const dictionaryData = await getDictionaryData(word);
+      console.log(dictionaryData);
       definition = dictionaryData.definition || "";
       example = dictionaryData.example || "";
     } catch (dictionaryError) {
