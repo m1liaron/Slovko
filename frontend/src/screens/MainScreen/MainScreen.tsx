@@ -65,8 +65,11 @@ const MainScreen = () => {
   useEffect(() => {
     dispatch(enqueueOrDispatch(getUser, {}));
     dispatch(getSections());
-    dispatch(getAllGroups(activeSectionId));
   }, []);
+
+  useEffect(() => {
+    dispatch(getAllGroups(activeSectionId));
+  }, [activeSectionId]);
 
   useEffect(() => {
     if (!activeSectionId) {
