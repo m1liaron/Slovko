@@ -89,7 +89,6 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
 
   const playSuccessSound = async () => {
     try {
-      if (isSoundPlayed) return;
       const { sound } = await Audio.Sound.createAsync(
         require('../../../assets/audio/success.mp3'),
         { positionMillis: 0 },

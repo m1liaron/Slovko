@@ -167,11 +167,10 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
 const removeGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      params: { id },
-      body: { sectionId },
+      params: { groupId, sectionId },
     } = req;
     const group = await Group.findOne({
-      where: { id, sectionId },
+      where: { id: groupId, sectionId },
     });
     if (!group) {
       res
@@ -180,7 +179,7 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    await Card.destroy({ where: { groupId: id } });
+    await Card.destroy({ where: { groupId: groupId } });
     await group.destroy();
     res.status(200).json({ id: group.id });
   } catch (error) {

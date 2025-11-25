@@ -161,13 +161,12 @@ const cardSlice = createSlice({
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
-        state.cards = state.cards.filter((card) => card.id !== action.payload);
-        state.filteredCards = state.filteredCards.filter(
+        const filteredCards = state.cards.filter(
           (card) => card.id !== action.payload,
         );
-        state.globalCards = state.globalCards.filter(
-          (card) => card.id !== action.payload,
-        );
+        state.cards = filteredCards;
+        state.filteredCards = filteredCards;
+        state.globalCards = filteredCards;
       })
       // update card
       .addCase(updateCard.fulfilled, (state, action) => {

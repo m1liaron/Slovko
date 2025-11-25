@@ -38,6 +38,7 @@ import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import {
   filterCardsByStatus,
+  getRepeatedCards,
   rangeCards,
   resetFilter,
   sortCards,
@@ -155,7 +156,13 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   };
 
   const handleRemoveGroup = () => {
-    dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId));
+    dispatch(
+      enqueueOrDispatch(removeGroup, removeStateGroup, {
+        groupId,
+        sectionId: activeSectionId,
+      }),
+    );
+    dispatch(getRepeatedCards({ sectionId: activeSectionId }));
     setShowEditModal(false);
     navigation.navigate(AppPath.Main);
   };
@@ -186,7 +193,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   };
 
   const incWordsRange = () => {
-    if (wordsRangeNumber < cards?.length) {
+    if (wordsRangeNumber < filteredCards?.length) {
       onChangeCardsRange(wordsRangeNumber + 1);
     }
   };

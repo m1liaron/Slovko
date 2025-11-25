@@ -49,9 +49,11 @@ export const getGroupStorage = createAppAsyncThunk(
 
 export const removeGroup = createAppAsyncThunk(
   'group/remove',
-  async (id: string) => {
+  async ({ groupId, sectionId }: { groupId: string; sectionId: string }) => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.delete(`/groups/${id}`);
+    const response = await axiosInstance.delete(
+      `/groups/${groupId}/${sectionId}`,
+    );
     return response.data;
   },
 );

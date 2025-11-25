@@ -12,7 +12,7 @@ import {
 get("/:sectionId", getAllGroups);
 post("/", addGroup);
 
-remove("/:id", removeGroup);
+remove("/:groupId/:sectionId", removeGroup);
 get("/:id", getGroup);
 patch("/:id", updateGroup);
 put("/:id", moveGroupToAnotherSection);
