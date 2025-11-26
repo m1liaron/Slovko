@@ -1,4 +1,3 @@
-import noCardsImage from '@/assets/images/no-cards.png';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -52,7 +51,6 @@ const CardList = ({ groupId }: CardListProps) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
-  const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
     cards?.length || 2,
   );
@@ -96,31 +94,10 @@ const CardList = ({ groupId }: CardListProps) => {
             {
               padding: screenWidth < 620 ? 10 : 50,
               paddingBottom: 20,
-              height: Platform.OS === 'web' ? height / 1.9 : 'auto',
             },
           ]}
         />
       )}
-
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        {cards.length > 1 && (
-          <PressableButton
-            onPress={navigateToLearn}
-            text={i18n.t('group.cardList.learnButton')}
-            buttonStyle={{ flex: 1 }}
-          />
-        )}
-        <AddButton
-          viewStyles={{ position: 'static', right: 0 }}
-          onPress={() => setShowAddModal(true)}
-        />
-      </View>
-
-      <AddCardModal
-        showAddModal={showAddModal}
-        setShowAddModal={setShowAddModal}
-        groupId={groupId}
-      />
     </View>
   );
 };

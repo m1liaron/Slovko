@@ -73,7 +73,7 @@ const MainScreen = () => {
 
   useEffect(() => {
     if (!activeSectionId) {
-      setActiveSectionId(sections[0]);
+      dispatch(setActiveSectionId(sections[0]));
     }
   }, []);
 
@@ -83,7 +83,7 @@ const MainScreen = () => {
         enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
       );
     }
-  }, [dispatch]);
+  }, [dispatch, activeSectionId]);
 
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
@@ -116,7 +116,6 @@ const MainScreen = () => {
       throw new Error('Ваш браузер не підтримує повідомлення');
     }
 
-    console.log(`Notification.permission: ${Notification.permission}`);
     if (Notification.permission !== 'granted') {
       Notification.requestPermission().then((permission) => {
         if (repeatedCardsLength) {
@@ -134,7 +133,6 @@ const MainScreen = () => {
               notificationOptions,
             );
           } else {
-            alert(i18n.t('mainScreen.notificationPermissionDenied'));
             console.log('Повідомлення заблоковані користувачем.');
           }
         }
