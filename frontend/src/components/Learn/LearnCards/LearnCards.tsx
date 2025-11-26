@@ -1,7 +1,7 @@
 import type { ICard } from '@/common/enums/types/card.type';
 import { useAppSelector } from '@/hooks/redux.hooks';
 import * as Speech from 'expo-speech';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -20,6 +20,12 @@ import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import styles from './LearnCards.styles';
 import { i18n } from '@/localization/i18n';
+import AddInput from '@/common/components/AddInput/AddInput';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import Toast from 'react-native-toast-message';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import Slider from '@react-native-community/slider';
+import Checkbox from 'expo-checkbox';
 
 interface LearnCardsProps {
   onComplete: () => void;
@@ -38,11 +44,18 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [isHorizontalSwipe, setIsHorizontalSwipe] = useState<boolean>(false);
+  const [valueAnswer, setValueAnswer] = useState("");
+  const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
 
+  const [shouldSwipeBack, setShouldSwipeBack] = useState(false);
+  const [typeMode, setTypeMode] = useState(true);
+
+  const swiperRef = useRef<Swiper<ICard>>(null);
   const rotation = useSharedValue(0);
   const { width, height } = useWindowDimensions();
 
   const handleFlipCard = (index: number) => {
+    if (typeMode) return;
     setFlippedCards((prevFlippedCards) => {
       if (prevFlippedCards[index]) {
         return prevFlippedCards;
@@ -52,7 +65,6 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         duration: 500,
       });
 
-      setIsHorizontalSwipe(true);
       Speech.speak(learningCards[index].word);
 
       return { ...prevFlippedCards, [index]: true };
@@ -92,6 +104,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     setTimeout(() => setShowRightSwipeView(false), 1000);
     setCurrentIndexCardsFlipped();
     setFlashCards(learningCards[currentCardIndex], true);
+    setShouldSwipeBack(cards.length - 1 === currentCardIndex);
   };
 
   const handleSwipeLeft = (index: number) => {
@@ -108,12 +121,40 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 
     setCurrentIndexCardsFlipped();
     setFlashCards(learningCards[currentCardIndex], false);
+    setShouldSwipeBack(cards.length - 1 === currentCardIndex);
   };
 
   const setCurrentIndexCardsFlipped = () => {
     setCurrentCardIndex((prevIndex) => prevIndex + 1);
-    setIsHorizontalSwipe(false);
   };
+
+  const checkAnswer = () => {
+    if (valueAnswer.length === 0) {
+        Toast.show({
+          type: 'error',
+          text1: 'Fail',
+          text2: 'Input must be filled',
+        });
+      return;
+    }
+    const currentCard = learningCards[currentCardIndex];
+    setIsHorizontalSwipe(true);
+    handleFlipCard(currentCardIndex || 0);
+
+    setTimeout(() => {
+      if (valueAnswer.trim().toLowerCase() === currentCard.translateWord.toLowerCase()) {
+        swiperRef.current?.swipeRight();
+        setPlaceholderColor('#62c485')
+      } else {
+        swiperRef.current?.swipeLeft();
+        setPlaceholderColor('#ff1100')
+      }
+    }, 500);
+
+    setValueAnswer('');
+    setIsHorizontalSwipe(false);
+    setPlaceholderColor(colors.primary);
+  }
 
   const renderCard = (card: ICard, index: number) => (
     <Pressable
@@ -196,6 +237,15 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           opacity: 0.2,
         }}
       ></View>
+
+      <View style={{ position: 'absolute', left: 20, top: 20, zIndex: 10, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        <Checkbox
+          value={typeMode}
+          onValueChange={setTypeMode}
+        />
+        <ThemeText>{i18n.t('learnScreen.learnCards.answer')}</ThemeText>
+      </View>
+
       <View
         style={{
           position: 'absolute',
@@ -209,6 +259,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         }}
       ></View>
       <Swiper
+        ref={swiperRef}
         cards={learningCards}
         renderCard={(card, index) => renderCard(card, index)}
         keyExtractor={(card) => card.id}
@@ -216,11 +267,40 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         onSwipedLeft={handleSwipeLeft}
         onSwipedAll={onComplete}
         stackSize={3}
+        goBackToPreviousCardOnSwipeRight={shouldSwipeBack}
+        goBackToPreviousCardOnSwipeLeft={shouldSwipeBack}
         cardIndex={currentCardIndex}
         backgroundColor={'transparent'}
         verticalSwipe={false}
-        horizontalSwipe={isHorizontalSwipe}
+        horizontalSwipe={typeMode ? isHorizontalSwipe : true} 
       />
+
+      {typeMode && (
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 20,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 10,
+            backgroundColor: colors.lightBackground,
+          }}
+        >
+          <AddInput
+            value={valueAnswer}
+            placeholderTextColor={placeholderColor}
+            onChangeText={setValueAnswer}
+            height={50}
+            placeholder={i18n.t('learnScreen.learnCards.answer')}
+          />
+          <ThemeText>
+            {valueAnswer.length}/
+            <Text style={{ color: valueAnswer.length > cards[currentCardIndex].word.length ? "red" : "" }}>{cards[currentCardIndex].word.length}</Text>
+          </ThemeText >
+          <PressableButton text={i18n.t('learnScreen.learnCards.checkAnswer')} onPress={checkAnswer}/>
+        </View>
+      )}
     </>
   );
 };

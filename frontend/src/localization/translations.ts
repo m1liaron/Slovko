@@ -198,6 +198,8 @@ const translations = {
       learnCards: {
         swipeLeft: "Swipe to left if you don't know",
         swipeRight: 'ПSwipe to right if you know',
+        answer: 'Type in Answer',
+        checkAnswer: 'Check answer'
       },
     },
     chooseLanguageScreen: {
@@ -423,6 +425,8 @@ const translations = {
       learnCards: {
         swipeLeft: 'Проведіть вліво, якщо не знаєте',
         swipeRight: 'Проведіть вправо, якщо не знаєте',
+        answer: 'Напишіть відповідь',
+        checkAnswer: 'Перевірити відповідь'
       },
     },
   },
