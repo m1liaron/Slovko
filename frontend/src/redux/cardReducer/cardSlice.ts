@@ -20,11 +20,15 @@ import {
   updateCard,
   updateCardsAfterLearn,
 } from './cardThunk';
+
+export type LearningMode = 'cards' | 'quiz' | 'word' | 'check';
+
 interface InitialState {
   cards: ICard[];
   globalCards: ICard[];
   filteredCards: ICard[];
   repeatedCards: IRepeatedGroup[];
+  shownModes: Record<LearningMode, boolean>;
   lastFetchedSuccessfully: boolean;
   status: IDataStatus;
   error: undefined | null | string;
@@ -36,6 +40,12 @@ const initialState: InitialState = {
   globalCards: [],
   filteredCards: [],
   repeatedCards: [],
+  shownModes: {
+    cards: true, // always
+    quiz: true,
+    word: true,
+    check: true,
+  },
   lastFetchedSuccessfully: false,
   status: DataStatus.IDLE,
   error: null,
@@ -110,6 +120,16 @@ const cardSlice = createSlice({
       state.isLoading = true;
       state.cards = [...state.filteredCards];
       state.isLoading = false;
+    },
+    addLearningMode: (
+      state,
+      action: PayloadAction<{ sectionName: LearningMode }>,
+    ) => {
+      const { sectionName } = action.payload;
+      if (!sectionName.length) return;
+
+      const prev = state.shownModes[sectionName];
+      state.shownModes[sectionName] = !prev;
     },
   },
   extraReducers: (builder) => {
@@ -217,6 +237,7 @@ export const {
   resetFilter,
   rangeCards,
   sortCards,
+  addLearningMode,
 } = cardSlice.actions;
 export const selectCard = (state: RootState) => state.cards.cards;
 export {

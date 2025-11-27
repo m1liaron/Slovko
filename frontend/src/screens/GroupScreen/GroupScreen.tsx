@@ -36,8 +36,10 @@ import CardList from '../../components/Card/CardList/CardList';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import {
+  addLearningMode,
   filterCardsByStatus,
   getRepeatedCards,
+  LearningMode,
   rangeCards,
   resetFilter,
 } from '../../redux/cardReducer/cardSlice';
@@ -63,24 +65,12 @@ type GroupScreenProps = StackScreenProps<
   typeof AppPath.Group
 >;
 
-const LEARNING_MODES = [
-  {
-    id: 1,
-    name: 'FlashCards',
-  },
-  {
-    id: 2,
-    name: 'Quiz',
-  },
-  {
-    id: 3,
-    name: 'Guess Word',
-  },
-  {
-    id: 4,
-    name: 'Choose translations',
-  },
-];
+interface ShowModeLearning {
+  text: string;
+  iconName: string;
+  shown: boolean;
+  sectionName: LearningMode;
+}
 
 const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const {
@@ -119,18 +109,26 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
-  const [shownLearningModes, setShownLearningModes] = useState([
+  const [shownLearningModes, setShownLearningModes] = useState<
+    ShowModeLearning[]
+  >([
     {
-      name: 'Quiz',
+      text: i18n.t('learnScreen.quizMode'),
+      iconName: 'quiz',
       shown: true,
+      sectionName: 'quiz',
     },
     {
-      name: 'Guess Word',
+      text: i18n.t('learnScreen.guessWordMode'),
+      iconName: 'wordpress',
       shown: true,
+      sectionName: 'word',
     },
     {
-      name: 'Choose translations',
+      text: i18n.t('learnScreen.checkTranslateMode'),
+      iconName: 'checklist',
       shown: true,
+      sectionName: 'check',
     },
   ]);
 
@@ -267,6 +265,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       prev.map((mode, i) =>
         i === index ? { ...mode, shown: !mode.shown } : mode,
       ),
+    );
+    dispatch(
+      addLearningMode({ sectionName: shownLearningModes[index].sectionName }),
     );
   };
 
@@ -465,7 +466,14 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         <CardList groupId={groupId} />
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 10,
+          padding: 20,
+        }}
+      >
         {cards.length > 1 && (
           <PressableButton
             onPress={handleShowModesModal}
@@ -474,7 +482,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           />
         )}
         <AddButton
-          viewStyles={{ position: 'static', right: 0 }}
+          viewStyles={{ position: 'static', right: 0, bottom: 0 }}
           onPress={() => setShowAddModal(true)}
         />
       </View>
@@ -680,7 +688,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
             </Text>
             <FlatList
               data={shownLearningModes}
-              keyExtractor={(item) => item.name}
+              keyExtractor={(item) => item.text}
               contentContainerStyle={{ marginBottom: 20 }}
               renderItem={({ item, index }) => (
                 <View
@@ -695,7 +703,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                     value={item.shown}
                     onValueChange={() => onChangeLearningModeShown(index)}
                   />
-                  <Text style={{ fontSize: 20 }}>{item.name}</Text>
+                  <MaterialIcons name={item.iconName} size={30} />
+                  <Text style={{ fontSize: 20 }}>{item.text}</Text>
                 </View>
               )}
             />
