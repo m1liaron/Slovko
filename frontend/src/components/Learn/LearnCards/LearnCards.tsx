@@ -24,7 +24,6 @@ import AddInput from '@/common/components/AddInput/AddInput';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import Toast from 'react-native-toast-message';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import Slider from '@react-native-community/slider';
 import Checkbox from 'expo-checkbox';
 
 interface LearnCardsProps {
@@ -44,7 +43,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
   const [flippedCards, setFlippedCards] = useState<Record<string, boolean>>({});
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [isHorizontalSwipe, setIsHorizontalSwipe] = useState<boolean>(false);
-  const [valueAnswer, setValueAnswer] = useState("");
+  const [valueAnswer, setValueAnswer] = useState('');
   const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
 
   const [shouldSwipeBack, setShouldSwipeBack] = useState(false);
@@ -76,12 +75,10 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
       transform: [
         { perspective: 1000 },
         {
-          rotateY: `${interpolate(rotation.value, [0, 180], [0, Math.PI])}rad`,
+          rotateY: `${interpolate(rotation.value, [0, 180], [0, 180])}deg`,
         },
       ],
-      position: 'absolute',
-      top: 0,
-      left: 0,
+      backfaceVisibility: 'hidden',
     };
   });
 
@@ -90,12 +87,10 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
       transform: [
         { perspective: 1000 },
         {
-          rotateY: `${interpolate(rotation.value, [0, 180], [Math.PI, 0])}rad`,
+          rotateY: `${interpolate(rotation.value, [0, 180], [180, 360])}deg`,
         },
       ],
-      position: 'absolute',
-      top: 0,
-      left: 0,
+      backfaceVisibility: 'hidden',
     };
   });
 
@@ -130,11 +125,11 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 
   const checkAnswer = () => {
     if (valueAnswer.length === 0) {
-        Toast.show({
-          type: 'error',
-          text1: 'Fail',
-          text2: 'Input must be filled',
-        });
+      Toast.show({
+        type: 'error',
+        text1: 'Fail',
+        text2: 'Input must be filled',
+      });
       return;
     }
     const currentCard = learningCards[currentCardIndex];
@@ -142,85 +137,96 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     handleFlipCard(currentCardIndex || 0);
 
     setTimeout(() => {
-      if (valueAnswer.trim().toLowerCase() === currentCard.translateWord.toLowerCase()) {
+      if (
+        valueAnswer.trim().toLowerCase() ===
+        currentCard.translateWord.toLowerCase()
+      ) {
         swiperRef.current?.swipeRight();
-        setPlaceholderColor('#62c485')
+        setPlaceholderColor('#62c485');
       } else {
         swiperRef.current?.swipeLeft();
-        setPlaceholderColor('#ff1100')
+        setPlaceholderColor('#ff1100');
       }
     }, 500);
 
     setValueAnswer('');
     setIsHorizontalSwipe(false);
     setPlaceholderColor(colors.primary);
-  }
+  };
+
+  const cardWidth = width < 720 ? '90%' : '40%';
 
   const renderCard = (card: ICard, index: number) => (
     <Pressable
       onPress={() => handleFlipCard(index)}
-      style={[styles.cardContainer, { width: width < 720 ? '90%' : '40%' }]}
+      style={[styles.cardContainer, { width: cardWidth }]}
     >
-      <Animated.View
-        style={[
-          styles.card,
-          {
-            backgroundColor: colors.lightBackground,
-            backfaceVisibility: 'hidden',
-          },
-          frontAnimatedStyle,
-        ]}
-      >
-        <View style={{ marginTop: 10 }}>
-          {card.image?.url ? (
-            <Image
-              source={{ uri: card.image.url.toString() }}
-              style={{
-                width: width < 800 ? 200 : 400,
-                height: '50%',
-                borderRadius: 10,
-                margin: 'auto',
-              }}
-            />
-          ) : null}
-        </View>
-        <Text
-          style={[styles.cardText, { color: colors.primary }]}
-          selectable={false}
+      <View style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.lightBackground,
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+            },
+            frontAnimatedStyle,
+          ]}
         >
-          {card.word}
-        </Text>
-      </Animated.View>
-      <Animated.View
-        style={[
-          styles.card,
-          {
-            backgroundColor: colors.lightBackground,
-            backfaceVisibility: 'hidden',
-          },
-          backAnimatedStyle,
-        ]}
-      >
-        <View style={{ marginTop: 10 }}>
-          {card.image?.url ? (
-            <Image
-              source={{ uri: card.image.url.toString() }}
-              style={{
-                width: width < 800 ? 200 : 400,
-                height: 300,
-                borderRadius: 10,
-                margin: 'auto',
-              }}
-            />
-          ) : null}
-        </View>
-        <Text
-          style={[styles.cardText, { color: colors.primary }]}
-          selectable={false}
+          <View style={{ marginTop: 10 }}>
+            {card.image?.url ? (
+              <Image
+                source={{ uri: card.image.url.toString() }}
+                style={{
+                  width: width < 800 ? 200 : 400,
+                  height: '50%',
+                  borderRadius: 10,
+                  alignSelf: 'center',
+                }}
+              />
+            ) : null}
+          </View>
+          <Text
+            style={[styles.cardText, { color: colors.primary }]}
+            selectable={false}
+          >
+            {card.word}
+          </Text>
+        </Animated.View>
+        <Animated.View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.lightBackground,
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+            },
+            backAnimatedStyle,
+          ]}
         >
-          {card.translateWord}
-        </Text>
-      </Animated.View>
+          <View style={{ marginTop: 10 }}>
+            {card.image?.url ? (
+              <Image
+                source={{ uri: card.image.url.toString() }}
+                style={{
+                  width: width < 800 ? 200 : 400,
+                  height: 300,
+                  borderRadius: 10,
+                  alignSelf: 'center',
+                }}
+              />
+            ) : null}
+          </View>
+          <Text
+            style={[styles.cardText, { color: colors.primary }]}
+            selectable={false}
+          >
+            {card.translateWord}
+          </Text>
+        </Animated.View>
+      </View>
     </Pressable>
   );
 
@@ -236,13 +242,20 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           backgroundColor: 'red',
           opacity: 0.2,
         }}
-      ></View>
+      />
 
-      <View style={{ position: 'absolute', left: 20, top: 20, zIndex: 10, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-        <Checkbox
-          value={typeMode}
-          onValueChange={setTypeMode}
-        />
+      <View
+        style={{
+          position: 'absolute',
+          left: 20,
+          top: 20,
+          zIndex: 10,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 10,
+        }}
+      >
+        <Checkbox value={typeMode} onValueChange={setTypeMode} />
         <ThemeText>{i18n.t('learnScreen.learnCards.answer')}</ThemeText>
       </View>
 
@@ -257,7 +270,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           opacity: 0.2,
           zIndex: 0,
         }}
-      ></View>
+      />
       <Swiper
         ref={swiperRef}
         cards={learningCards}
@@ -272,7 +285,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         cardIndex={currentCardIndex}
         backgroundColor={'transparent'}
         verticalSwipe={false}
-        horizontalSwipe={typeMode ? isHorizontalSwipe : true} 
+        horizontalSwipe={typeMode ? isHorizontalSwipe : true}
       />
 
       {typeMode && (
@@ -296,9 +309,21 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           />
           <ThemeText>
             {valueAnswer.length}/
-            <Text style={{ color: valueAnswer.length > cards[currentCardIndex].word.length ? "red" : "" }}>{cards[currentCardIndex].word.length}</Text>
-          </ThemeText >
-          <PressableButton text={i18n.t('learnScreen.learnCards.checkAnswer')} onPress={checkAnswer}/>
+            <Text
+              style={{
+                color:
+                  valueAnswer.length > cards[currentCardIndex].word.length
+                    ? 'red'
+                    : '',
+              }}
+            >
+              {cards[currentCardIndex].word.length}
+            </Text>
+          </ThemeText>
+          <PressableButton
+            text={i18n.t('learnScreen.learnCards.checkAnswer')}
+            onPress={checkAnswer}
+          />
         </View>
       )}
     </>

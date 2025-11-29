@@ -58,15 +58,17 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   );
   const { activeSectionId } = useAppSelector((state) => state.sections);
 
-  const enabledModes = Object.entries(shownModes)
-    .filter(([_, isEnabled]) => isEnabled)
-    .map(([mode, _]) => mode) as Section[];
+  // Cards mode is always shown first, then add other enabled modes (excluding cards)
+  const enabledModes: Section[] = [
+    'cards',
+    ...Object.entries(shownModes)
+      .filter(([mode, isEnabled]) => mode !== 'cards' && isEnabled)
+      .map(([mode, _]) => mode as Section),
+  ];
 
   // Section State
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [currentSection, setCurrentSection] = useState<Section>(
-    enabledModes[0] || 'cards',
-  );
+  const [currentSection, setCurrentSection] = useState<Section>('cards');
   const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
 
   // Modes Toggles
@@ -79,26 +81,21 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const [checkCards, setCheckCards] = useState<ResultsCard[]>([]);
 
   // Timing State
-  const [startLearnDate, setStartLearnDate] = useState<Date>(new Date());
   const [elapsedTime, setElapsedTime] = useState<string>('');
 
+  const startLearnDate = new Date();
   const projectName = groups?.find((group) => group.id === groupId)?.title;
 
   const handleNextSection = () => {
     const nextSectionIndex = currentSectionIndex + 1;
 
-    console.log(
-      `Current section: ${currentSection}, Next index: ${nextSectionIndex}, Total modes: ${enabledModes.length}`,
-    );
-
-    // Check if this was the last section
     if (nextSectionIndex >= enabledModes.length) {
       console.log('Finishing lesson...');
       finishLesson();
     } else {
-      // Move to next section
+      const nextSection = enabledModes[nextSectionIndex];
       setCurrentSectionIndex(nextSectionIndex);
-      setCurrentSection(enabledModes[nextSectionIndex]);
+      setCurrentSection(nextSection);
     }
   };
 
@@ -149,14 +146,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
       flashCards,
       quiz: quizCards,
       guessWord: guessWordCards,
-      startedLearn: startLearnDate,
-      completionTime: new Date(),
+      startedLearn: startLearnDate.toISOString(), // Convert Date to string
+      completionTime: new Date().toISOString(), // Convert Date to string
     };
     dispatch(enqueueOrDispatch(saveResults, addStateResult, resultData));
   };
 
   const finishLesson = () => {
-    console.log('Setting lesson over to true');
     setIsLessonOver(true);
 
     const endLearnDate = new Date().getTime();
@@ -209,30 +205,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
       ? Math.floor((correctAnswersAmount / resultsData.length) * 100)
       : 0;
 
-  // Check if no modes are enabled
-  if (enabledModes.length === 0) {
-    return (
-      <ThemeBackground>
-        <View style={styles.centeredContainer}>
-          <Text
-            style={{
-              color: theme.colors.primary,
-              fontSize: 20,
-              textAlign: 'center',
-            }}
-          >
-            {i18n.t('learnScreen.noModesEnabled') ||
-              'Please enable at least one learning mode'}
-          </Text>
-          <PressableButton
-            text={i18n.t('common.back') || 'Back'}
-            onPress={leaveStudy}
-          />
-        </View>
-      </ThemeBackground>
-    );
-  }
-
   console.log(
     'Render - isLessonOver:',
     isLessonOver,
@@ -253,25 +225,25 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
               <Loading />
             ) : (
               <View style={styles.centeredContainer}>
-                {currentSection === 'cards' && shownModes.cards && (
+                {currentSection === 'cards' && (
                   <LearnCards
                     onComplete={handleNextSection}
                     setFlashCards={handleSetData}
                   />
                 )}
-                {currentSection === 'quiz' && shownModes.quiz && (
+                {currentSection === 'quiz' && (
                   <LearnQuiz
                     onComplete={handleNextSection}
                     handleSetData={handleSetData}
                   />
                 )}
-                {currentSection === 'word' && shownModes.word && (
+                {currentSection === 'word' && (
                   <LearnGuessWord
                     onComplete={handleNextSection}
                     handleSetData={handleSetData}
                   />
                 )}
-                {currentSection === 'check' && shownModes.check && (
+                {currentSection === 'check' && (
                   <LearnCheck
                     onComplete={handleNextSection}
                     handleSetData={handleSetData}

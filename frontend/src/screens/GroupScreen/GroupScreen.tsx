@@ -82,7 +82,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
   const { groupId } = route.params as { groupId: string };
   const { group, status } = useAppSelector((state) => state.groups);
-  const { cards, filteredCards, isLoading } = useAppSelector(
+  const { cards, filteredCards, isLoading, shownModes } = useAppSelector(
     (state) => state.cards,
   );
   const { sections, activeSectionId } = useAppSelector(
@@ -115,19 +115,19 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     {
       text: i18n.t('learnScreen.quizMode'),
       iconName: 'quiz',
-      shown: true,
+      shown: shownModes.quiz,
       sectionName: 'quiz',
     },
     {
       text: i18n.t('learnScreen.guessWordMode'),
       iconName: 'wordpress',
-      shown: true,
+      shown: shownModes.word,
       sectionName: 'word',
     },
     {
       text: i18n.t('learnScreen.checkTranslateMode'),
       iconName: 'checklist',
-      shown: true,
+      shown: shownModes.check,
       sectionName: 'check',
     },
   ]);
