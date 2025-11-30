@@ -201,6 +201,7 @@ const translations = {
         swipeRight: 'ПSwipe to right if you know',
         answer: 'Type in Answer',
         checkAnswer: 'Check answer',
+        tapToFlip: 'Tap to Flip',
       },
     },
     chooseLanguageScreen: {
@@ -429,6 +430,7 @@ const translations = {
         swipeRight: 'Проведіть вправо, якщо не знаєте',
         answer: 'Напишіть відповідь',
         checkAnswer: 'Перевірити відповідь',
+        tapToFlip: 'Натисніть, щоб перегорнути',
       },
     },
   },

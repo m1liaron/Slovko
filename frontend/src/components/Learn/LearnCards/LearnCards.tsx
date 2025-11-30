@@ -18,7 +18,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
-import styles from './LearnCards.styles';
 import { i18n } from '@/localization/i18n';
 import AddInput from '@/common/components/AddInput/AddInput';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
@@ -51,7 +50,9 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 
   const swiperRef = useRef<Swiper<ICard>>(null);
   const rotation = useSharedValue(0);
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
+  const isMobile = width < 600;
+  const isTablet = width >= 600 && width < 1024;
 
   const handleFlipCard = (index: number) => {
     if (typeMode) return;
@@ -154,77 +155,177 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     setPlaceholderColor(colors.primary);
   };
 
-  const cardWidth = width < 720 ? '90%' : '40%';
+  const handleTypeModeChange = (newValue: boolean) => {
+    setTypeMode(newValue);
+    setFlippedCards({});
+    rotation.value = 0;
+  };
+
+  const cardWidth = isMobile ? '90%' : isTablet ? '70%' : '50%';
+  const cardHeight = isMobile ? '70%' : '75%';
 
   const renderCard = (card: ICard, index: number) => (
     <Pressable
-      onPress={() => handleFlipCard(index)}
-      style={[styles.cardContainer, { width: cardWidth }]}
+      key={card.id}
+      onPress={() => !typeMode && handleFlipCard(index)}
+      disabled={typeMode}
+      style={{
+        width: cardWidth,
+        height: '100%',
+        margin: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
     >
-      <View style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <View style={{ position: 'relative', width: '100%', height: cardHeight }}>
+        {/* Front of card */}
         <Animated.View
           style={[
-            styles.card,
             {
               backgroundColor: colors.lightBackground,
               position: 'absolute',
               width: '100%',
               height: '100%',
+              borderRadius: 24,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.15,
+              shadowRadius: 16,
+              elevation: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: isMobile ? 20 : 32,
+              borderWidth: 1,
+              borderColor: colors.primary + '10',
             },
             frontAnimatedStyle,
           ]}
         >
-          <View style={{ marginTop: 10 }}>
-            {card.image?.url ? (
-              <Image
-                source={{ uri: card.image.url.toString() }}
-                style={{
-                  width: width < 800 ? 200 : 400,
-                  height: '50%',
-                  borderRadius: 10,
-                  alignSelf: 'center',
-                }}
-              />
-            ) : null}
-          </View>
-          <Text
-            style={[styles.cardText, { color: colors.primary }]}
-            selectable={false}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+            }}
           >
-            {card.word}
-          </Text>
+            {card.image?.url ? (
+              <View
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 16,
+                  overflow: 'hidden',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 8,
+                }}
+              >
+                <Image
+                  source={{ uri: card.image.url.toString() }}
+                  style={{
+                    width: isMobile ? 180 : isTablet ? 280 : 360,
+                    height: isMobile ? 180 : isTablet ? 280 : 360,
+                    borderRadius: 16,
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+            ) : null}
+            <Text
+              style={{
+                fontSize: isMobile ? 28 : isTablet ? 36 : 42,
+                fontWeight: '700',
+                color: colors.primary,
+                textAlign: 'center',
+                letterSpacing: 0.5,
+              }}
+              selectable={false}
+            >
+              {card.word}
+            </Text>
+            {!typeMode && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: colors.lightText,
+                  marginTop: 16,
+                  opacity: 0.6,
+                }}
+              >
+                {i18n.t('learnScreen.learnCards.tapToFlip')}
+              </Text>
+            )}
+          </View>
         </Animated.View>
+
+        {/* Back of card */}
         <Animated.View
           style={[
-            styles.card,
             {
               backgroundColor: colors.lightBackground,
               position: 'absolute',
               width: '100%',
               height: '100%',
+              borderRadius: 24,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.15,
+              shadowRadius: 16,
+              elevation: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: isMobile ? 20 : 32,
+              borderWidth: 1,
+              borderColor: colors.primary + '10',
             },
             backAnimatedStyle,
           ]}
         >
-          <View style={{ marginTop: 10 }}>
-            {card.image?.url ? (
-              <Image
-                source={{ uri: card.image.url.toString() }}
-                style={{
-                  width: width < 800 ? 200 : 400,
-                  height: 300,
-                  borderRadius: 10,
-                  alignSelf: 'center',
-                }}
-              />
-            ) : null}
-          </View>
-          <Text
-            style={[styles.cardText, { color: colors.primary }]}
-            selectable={false}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+            }}
           >
-            {card.translateWord}
-          </Text>
+            {card.image?.url ? (
+              <View
+                style={{
+                  marginBottom: 24,
+                  borderRadius: 16,
+                  overflow: 'hidden',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 8,
+                }}
+              >
+                <Image
+                  source={{ uri: card.image.url.toString() }}
+                  style={{
+                    width: isMobile ? 180 : isTablet ? 280 : 360,
+                    height: isMobile ? 180 : isTablet ? 280 : 360,
+                    borderRadius: 16,
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
+            ) : null}
+            <Text
+              style={{
+                fontSize: isMobile ? 28 : isTablet ? 36 : 42,
+                fontWeight: '700',
+                color: colors.primary,
+                textAlign: 'center',
+                letterSpacing: 0.5,
+              }}
+              selectable={false}
+            >
+              {card.translateWord}
+            </Text>
+          </View>
         </Animated.View>
       </View>
     </Pressable>
@@ -232,18 +333,6 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 
   return (
     <>
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '50%',
-          height: height,
-          backgroundColor: 'red',
-          opacity: 0.2,
-        }}
-      />
-
       <View
         style={{
           position: 'absolute',
@@ -255,22 +344,13 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
           gap: 10,
         }}
       >
-        <Checkbox value={typeMode} onValueChange={setTypeMode} />
+        <Checkbox
+          value={typeMode}
+          onValueChange={(value) => handleTypeModeChange(value)}
+        />
         <ThemeText>{i18n.t('learnScreen.learnCards.answer')}</ThemeText>
       </View>
 
-      <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '50%',
-          height: height,
-          backgroundColor: 'green',
-          opacity: 0.2,
-          zIndex: 0,
-        }}
-      />
       <Swiper
         ref={swiperRef}
         cards={learningCards}
@@ -312,12 +392,12 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
             <Text
               style={{
                 color:
-                  valueAnswer.length > cards[currentCardIndex].word.length
+                  valueAnswer.length > cards[currentCardIndex]?.word.length
                     ? 'red'
                     : '',
               }}
             >
-              {cards[currentCardIndex].word.length}
+              {cards[currentCardIndex]?.word?.length}
             </Text>
           </ThemeText>
           <PressableButton

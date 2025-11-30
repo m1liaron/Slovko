@@ -22,6 +22,7 @@ import type React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
+  Platform,
   Pressable,
   Text,
   View,
@@ -115,19 +116,19 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     {
       text: i18n.t('learnScreen.quizMode'),
       iconName: 'quiz',
-      shown: shownModes.quiz,
+      shown: shownModes?.quiz ?? true,
       sectionName: 'quiz',
     },
     {
       text: i18n.t('learnScreen.guessWordMode'),
       iconName: 'wordpress',
-      shown: shownModes.word,
+      shown: shownModes?.word ?? true,
       sectionName: 'word',
     },
     {
       text: i18n.t('learnScreen.checkTranslateMode'),
       iconName: 'checklist',
-      shown: shownModes.check,
+      shown: shownModes?.check ?? true,
       sectionName: 'check',
     },
   ]);
@@ -257,7 +258,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     }
     navigation.navigate(AppPath.Learn, { groupId });
     bottomSheetRef.current?.close();
-    setShowAddModal(false);
+    setShowModesModal(false);
   };
 
   const onChangeLearningModeShown = (index: number) => {
@@ -462,7 +463,13 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       </View>
 
       {/* Cards List */}
-      <View style={{ flex: 1, paddingHorizontal: isDesktop ? 32 : 0 }}>
+      <View
+        style={{
+          flexShrink: isDesktop ? 0 : 1,
+          height: isDesktop ? 500 : '',
+          paddingHorizontal: isDesktop ? 32 : 0,
+        }}
+      >
         <CardList groupId={groupId} />
       </View>
 
@@ -478,7 +485,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           <PressableButton
             onPress={handleShowModesModal}
             text={i18n.t('group.cardList.learnButton')}
-            buttonStyle={{ flex: 1 }}
+            buttonStyle={{ flex: 1, width: isDesktop ? 500 : 'auto' }}
           />
         )}
         <AddButton
@@ -671,7 +678,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         </View>
       )}
 
-      {showModesModal && (
+      {Platform.OS !== 'web' && showModesModal && (
         <BottomSheet
           enablePanDownToClose={true}
           snapPoints={[300, '40%']}
@@ -716,6 +723,46 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           </BottomSheetView>
         </BottomSheet>
       )}
+
+      <DefaultModal
+        isVisible={showModesModal && Platform.OS === 'web'}
+        handleClose={() => setShowModesModal(false)}
+      >
+        <ThemeText style={{ fontSize: 20, fontWeight: 'bold' }}>
+          {i18n.t('group.chooseModes')}
+        </ThemeText>
+        <FlatList
+          data={shownLearningModes}
+          keyExtractor={(item) => item.text}
+          contentContainerStyle={{ marginBottom: 20 }}
+          renderItem={({ item, index }) => (
+            <View
+              key={index}
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                alignItems: 'center',
+              }}
+            >
+              <Checkbox
+                value={item.shown}
+                onValueChange={() => onChangeLearningModeShown(index)}
+              />
+              <MaterialIcons
+                name={item.iconName}
+                size={30}
+                color={colors.primary}
+              />
+              <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
+            </View>
+          )}
+        />
+        <PressableButton
+          onPress={navigateToLearn}
+          text={i18n.t('group.cardList.learnButton')}
+          buttonStyle={{ width: '100%' }}
+        />
+      </DefaultModal>
 
       <AddCardModal
         showAddModal={showAddModal}

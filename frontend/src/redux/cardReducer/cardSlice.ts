@@ -89,7 +89,6 @@ const cardSlice = createSlice({
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
     },
     rangeCards: (state, action) => {
-      state.isLoading = true;
       if (action.payload) {
         const limit = action.payload;
         const source =
@@ -117,7 +116,6 @@ const cardSlice = createSlice({
       );
     },
     resetFilter: (state) => {
-      state.isLoading = true;
       state.cards = [...state.filteredCards];
       state.isLoading = false;
     },
