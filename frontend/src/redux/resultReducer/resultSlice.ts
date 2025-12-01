@@ -42,6 +42,7 @@ const resultSlice = createSlice({
       const newResult = {
         ...action.payload,
         id: uuidv4(),
+        createdAt: new Date(),
       };
       state.results.push(newResult);
     },

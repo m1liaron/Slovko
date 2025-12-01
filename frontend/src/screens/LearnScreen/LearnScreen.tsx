@@ -259,13 +259,13 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
             />
           </View>
         ) : (
-          <>
+          <View style={{ padding: 20 }}>
             <View
               style={{
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                gap: 10,
+                gap: 20,
               }}
             >
               <Text
@@ -278,7 +278,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
                 {i18n.t('learnScreen.lessonCompleteTitle')}
               </Text>
 
-              <View style={{ marginBottom: 30 }}>
+              <View style={{ marginBottom: 30, gap: 10 }}>
                 <View
                   style={[
                     styles.resultItemContainer,
@@ -316,7 +316,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
               text={i18n.t('learnScreen.continueButton')}
               onPress={leaveStudy}
             />
-          </>
+          </View>
         )}
       </View>
     </ThemeBackground>

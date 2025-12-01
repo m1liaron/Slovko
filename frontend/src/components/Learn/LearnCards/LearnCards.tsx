@@ -55,7 +55,6 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
   const isTablet = width >= 600 && width < 1024;
 
   const handleFlipCard = (index: number) => {
-    if (typeMode) return;
     setFlippedCards((prevFlippedCards) => {
       if (prevFlippedCards[index]) {
         return prevFlippedCards;
@@ -148,11 +147,13 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         swiperRef.current?.swipeLeft();
         setPlaceholderColor('#ff1100');
       }
-    }, 500);
+      setValueAnswer('');
+    }, 1000);
 
-    setValueAnswer('');
     setIsHorizontalSwipe(false);
-    setPlaceholderColor(colors.primary);
+    setTimeout(() => {
+      setPlaceholderColor(colors.primary);
+    }, 1100);
   };
 
   const handleTypeModeChange = (newValue: boolean) => {
@@ -371,6 +372,8 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
       {typeMode && (
         <View
           style={{
+            position: 'absolute',
+            top: 720,
             paddingHorizontal: 20,
             paddingVertical: 20,
             flexDirection: 'row',
@@ -380,26 +383,29 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
             backgroundColor: colors.lightBackground,
           }}
         >
-          <AddInput
-            value={valueAnswer}
-            placeholderTextColor={placeholderColor}
-            onChangeText={setValueAnswer}
-            height={50}
-            placeholder={i18n.t('learnScreen.learnCards.answer')}
-          />
-          <ThemeText>
-            {valueAnswer.length}/
-            <Text
-              style={{
-                color:
-                  valueAnswer.length > cards[currentCardIndex]?.word.length
-                    ? 'red'
-                    : '',
-              }}
-            >
-              {cards[currentCardIndex]?.word?.length}
-            </Text>
-          </ThemeText>
+          <View>
+            <ThemeText style={{ fontSize: 20, fontWeight: 'bold' }}>
+              {valueAnswer.length}/
+              <Text
+                style={{
+                  color:
+                    valueAnswer.length >
+                    learningCards[currentCardIndex]?.word.length
+                      ? 'red'
+                      : '',
+                }}
+              >
+                {learningCards[currentCardIndex]?.word?.length}
+              </Text>
+            </ThemeText>
+            <AddInput
+              value={valueAnswer}
+              placeholderTextColor={placeholderColor}
+              onChangeText={setValueAnswer}
+              height={50}
+              placeholder={i18n.t('learnScreen.learnCards.answer')}
+            />
+          </View>
           <PressableButton
             text={i18n.t('learnScreen.learnCards.checkAnswer')}
             onPress={checkAnswer}
