@@ -104,6 +104,7 @@ const translations = {
       noSections: 'No Sections',
       noCardsLearned: 'No Cards',
       learned: 'Learned',
+      chooseModes: 'Choose how you want to learn',
       cardList: {
         addCardTitle: 'Add a Card!',
         oneCard: 'Single',
@@ -199,7 +200,7 @@ const translations = {
         swipeLeft: "Swipe to left if you don't know",
         swipeRight: 'ПSwipe to right if you know',
         answer: 'Type in Answer',
-        checkAnswer: 'Check answer'
+        checkAnswer: 'Check answer',
       },
     },
     chooseLanguageScreen: {
@@ -328,6 +329,7 @@ const translations = {
       noSections: 'Немає секцій',
       noCardsLearned: 'Немає Карток',
       learned: 'Вивчених',
+      chooseModes: 'Оберіть як ви хочете навчатися',
       cardList: {
         addCardTitle: 'Додайте Карточку!',
         oneCard: 'Одна',
@@ -426,7 +428,7 @@ const translations = {
         swipeLeft: 'Проведіть вліво, якщо не знаєте',
         swipeRight: 'Проведіть вправо, якщо не знаєте',
         answer: 'Напишіть відповідь',
-        checkAnswer: 'Перевірити відповідь'
+        checkAnswer: 'Перевірити відповідь',
       },
     },
   },

@@ -389,7 +389,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       handleClose={() => setShowAddModal(false)}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ padding: 24 }}>
+        <View>
           {/* Header */}
           <ThemeText
             style={{ fontSize: 24, fontWeight: '700', marginBottom: 24 }}

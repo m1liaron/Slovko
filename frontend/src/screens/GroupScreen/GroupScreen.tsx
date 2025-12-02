@@ -19,13 +19,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   Pressable,
   Text,
   View,
-  ScrollView,
   useWindowDimensions,
 } from 'react-native';
 import AddInput from '../../common/components/AddInput/AddInput';
@@ -41,7 +40,6 @@ import {
   getRepeatedCards,
   rangeCards,
   resetFilter,
-  sortCards,
 } from '../../redux/cardReducer/cardSlice';
 import {
   getGroup,
@@ -55,11 +53,34 @@ import { Select } from '@/common/components/Select/Select';
 import { LineLoader } from '@/common/components/LineLoader/LineLoader';
 import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
 import { FlatList } from 'react-native-gesture-handler';
+import AddButton from '@/common/components/AddButton/AddButton';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { AddCardModal } from '@/components/Modals/AddCardModal/AddCardModal';
+import Checkbox from 'expo-checkbox';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
   typeof AppPath.Group
 >;
+
+const LEARNING_MODES = [
+  {
+    id: 1,
+    name: 'FlashCards',
+  },
+  {
+    id: 2,
+    name: 'Quiz',
+  },
+  {
+    id: 3,
+    name: 'Guess Word',
+  },
+  {
+    id: 4,
+    name: 'Choose translations',
+  },
+];
 
 const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const {
@@ -81,6 +102,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     (section) => section.id !== activeSectionId,
   );
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [groupTitle, setGroupTitle] = useState<string>('');
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -91,8 +114,25 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [newSectionId, setNewSectionId] = useState<string>();
   const [showSectionList, setShowSectionList] = useState(false);
+  const [showModesModal, setShowModesModal] = useState(false);
   const [viewMode, setViewMode] = useState<'list' | 'cards'>('list');
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+
+  const [shownLearningModes, setShownLearningModes] = useState([
+    {
+      name: 'Quiz',
+      shown: true,
+    },
+    {
+      name: 'Guess Word',
+      shown: true,
+    },
+    {
+      name: 'Choose translations',
+      shown: true,
+    },
+  ]);
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
@@ -206,6 +246,28 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       setSelectedStatus(status);
       dispatch(filterCardsByStatus({ status }));
     }
+  };
+
+  const handleShowModesModal = () => {
+    bottomSheetRef.current?.snapToIndex(2);
+    setShowModesModal(true);
+  };
+
+  const navigateToLearn = () => {
+    if (wordsRangeNumber !== cards.length) {
+      dispatch(rangeCards(wordsRangeNumber));
+    }
+    navigation.navigate(AppPath.Learn, { groupId });
+    bottomSheetRef.current?.close();
+    setShowAddModal(false);
+  };
+
+  const onChangeLearningModeShown = (index: number) => {
+    setShownLearningModes((prev) =>
+      prev.map((mode, i) =>
+        i === index ? { ...mode, shown: !mode.shown } : mode,
+      ),
+    );
   };
 
   return (
@@ -399,8 +461,22 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       </View>
 
       {/* Cards List */}
-      <View style={{ paddingHorizontal: isDesktop ? 32 : 0 }}>
+      <View style={{ flex: 1, paddingHorizontal: isDesktop ? 32 : 0 }}>
         <CardList groupId={groupId} />
+      </View>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+        {cards.length > 1 && (
+          <PressableButton
+            onPress={handleShowModesModal}
+            text={i18n.t('group.cardList.learnButton')}
+            buttonStyle={{ flex: 1 }}
+          />
+        )}
+        <AddButton
+          viewStyles={{ position: 'static', right: 0 }}
+          onPress={() => setShowAddModal(true)}
+        />
       </View>
 
       {showFilterModal && (
@@ -586,6 +662,57 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           </View>
         </View>
       )}
+
+      {showModesModal && (
+        <BottomSheet
+          enablePanDownToClose={true}
+          snapPoints={[300, '40%']}
+          ref={bottomSheetRef}
+          style={{
+            backgroundColor: colors.lightBackground,
+          }}
+        >
+          <BottomSheetView
+            style={{ flex: 1, padding: 30, alignItems: 'center' }}
+          >
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+              {i18n.t('group.chooseModes')}
+            </Text>
+            <FlatList
+              data={shownLearningModes}
+              keyExtractor={(item) => item.name}
+              contentContainerStyle={{ marginBottom: 20 }}
+              renderItem={({ item, index }) => (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: 'row',
+                    gap: 10,
+                    alignItems: 'center',
+                  }}
+                >
+                  <Checkbox
+                    value={item.shown}
+                    onValueChange={() => onChangeLearningModeShown(index)}
+                  />
+                  <Text style={{ fontSize: 20 }}>{item.name}</Text>
+                </View>
+              )}
+            />
+            <PressableButton
+              onPress={navigateToLearn}
+              text={i18n.t('group.cardList.learnButton')}
+              buttonStyle={{ width: '100%' }}
+            />
+          </BottomSheetView>
+        </BottomSheet>
+      )}
+
+      <AddCardModal
+        showAddModal={showAddModal}
+        setShowAddModal={setShowAddModal}
+        groupId={groupId}
+      />
 
       <DefaultModal
         isVisible={showEditModal}
