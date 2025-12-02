@@ -373,7 +373,8 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         <View
           style={{
             position: 'absolute',
-            top: 720,
+            top: 0,
+            zIndex: 20,
             paddingHorizontal: 20,
             paddingVertical: 20,
             flexDirection: 'row',
@@ -381,6 +382,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
             alignItems: 'center',
             gap: 10,
             backgroundColor: colors.lightBackground,
+            borderRadius: 10
           }}
         >
           <View>

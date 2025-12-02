@@ -566,11 +566,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                 <PressableButton
                   text={i18n.t('group.cardList.importTxt')}
                   onPress={handleImportMobile}
-                  buttonStyle={{
-                    backgroundColor: colors.lightBackground,
-                    borderWidth: 2,
-                    borderColor: colors.primary,
-                  }}
                   textStyle={{ color: colors.primary }}
                 />
               )}

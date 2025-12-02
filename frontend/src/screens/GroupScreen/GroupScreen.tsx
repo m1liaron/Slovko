@@ -697,23 +697,43 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
               data={shownLearningModes}
               keyExtractor={(item) => item.text}
               contentContainerStyle={{ marginBottom: 20 }}
-              renderItem={({ item, index }) => (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: 'row',
-                    gap: 10,
-                    alignItems: 'center',
-                  }}
-                >
-                  <Checkbox
-                    value={item.shown}
-                    onValueChange={() => onChangeLearningModeShown(index)}
-                  />
-                  <MaterialIcons name={item.iconName} size={30} />
-                  <Text style={{ fontSize: 20 }}>{item.text}</Text>
-                </View>
-              )}
+              renderItem={({ item, index }) => {
+                if (item.sectionName === 'check' && filteredCards.length < 4) {
+                  return (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          gap: 10,
+                          alignItems: 'center',
+                        }}
+                      >
+                        <MaterialIcons name={item.iconName} size={30} />
+                        <Text style={{ fontSize: 20, textDecorationLine: 'line-through' }}>{item.text}</Text>
+                      </View>
+                      <Text>{i18n.t('group.cardList.atLeastFourWords')}</Text>
+                    </>
+                  )
+                }
+
+                return (
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: 'row',
+                        gap: 10,
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Checkbox
+                        value={item.shown}
+                        onValueChange={() => onChangeLearningModeShown(index)}
+                      />
+                      <MaterialIcons name={item.iconName} size={30} />
+                      <Text style={{ fontSize: 20 }}>{item.text}</Text>
+                    </View>
+                  )
+              }}
             />
             <PressableButton
               onPress={navigateToLearn}
@@ -735,27 +755,47 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           data={shownLearningModes}
           keyExtractor={(item) => item.text}
           contentContainerStyle={{ marginBottom: 20 }}
-          renderItem={({ item, index }) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: 'row',
-                gap: 10,
-                alignItems: 'center',
-              }}
-            >
-              <Checkbox
-                value={item.shown}
-                onValueChange={() => onChangeLearningModeShown(index)}
-              />
-              <MaterialIcons
-                name={item.iconName}
-                size={30}
-                color={colors.primary}
-              />
-              <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
-            </View>
-          )}
+          renderItem={({ item, index }) => {
+            if (item.sectionName === 'check' && filteredCards.length < 4) { 
+              return (
+                <>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      gap: 10,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <MaterialIcons name={item.iconName} size={30} color={colors.primary}/>
+                    <ThemeText style={{ fontSize: 20, textDecorationLine: 'line-through' }}>{item.text}</ThemeText>
+                  </View>
+                  <ThemeText style={{ fontWeight: 'bold' }}>{i18n.t('group.cardList.atLeastFourWords')}</ThemeText>
+                </>
+              )
+            }
+            
+            return (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  gap: 10,
+                  alignItems: 'center',
+                }}
+              >
+                <Checkbox
+                  value={item.shown}
+                  onValueChange={() => onChangeLearningModeShown(index)}
+                />
+                <MaterialIcons
+                  name={item.iconName}
+                  size={30}
+                  color={colors.primary}
+                />
+                <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
+              </View>
+            )
+          }}
         />
         <PressableButton
           onPress={navigateToLearn}

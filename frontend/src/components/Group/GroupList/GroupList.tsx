@@ -3,7 +3,7 @@ import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/Skeleto
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import React, { useState } from 'react';
-import { FlatList, Image, View, useWindowDimensions } from 'react-native';
+import { FlatList, Image, Pressable, View, useWindowDimensions } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { v4 as uuid } from 'uuid';
 import AddButton from '../../../common/components/AddButton/AddButton';
@@ -24,13 +24,11 @@ export const GroupList = () => {
   const { activeSectionId, sections } = useAppSelector(
     (state) => state.sections,
   );
+  const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState<string>('');
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { width } = useWindowDimensions();
-  const {
-    theme: { colors },
-  } = useAppTheme();
 
   const isDesktop = width >= 768;
 
@@ -39,17 +37,11 @@ export const GroupList = () => {
 
   const handleAddGroup = () => {
     if (!title.length) {
-      Toast.show({
-        type: 'error',
-        text1: i18n.t('mainScreen.groupList.enterTitle'),
-      });
+      setError(i18n.t('mainScreen.groupList.enterTitle'))
       return;
     }
     if (!activeSectionId || sections.length === 0) {
-      Toast.show({
-        type: 'error',
-        text1: i18n.t('mainScreen.groupList.pleaseCreate'),
-      });
+      setError(i18n.t('mainScreen.groupList.pleaseCreate'))
       return;
     }
     const newGroup = {
@@ -133,8 +125,14 @@ export const GroupList = () => {
           placeholderTextColor="#A0A0A0"
           value={title}
           onChangeText={setTitle}
+          height={70}
         />
-        <PressableButton onPress={handleAddGroup} text="Додати групу" />
+        {error && (
+          <Pressable onPress={() => { setError(null); setShowAddModal(false)} } style={{ backgroundColor: '#d16975', borderRadius: 10, padding: 10, marginVertical: 10 }}>
+            <ThemeText style={{ textTransform: "uppercase" }}>{error}!</ThemeText>
+          </Pressable>
+        )}
+        <PressableButton onPress={handleAddGroup} text="Додати групу" buttonStyle={{ marginTop: 20}}/>
       </DefaultModal>
     </View>
   );
