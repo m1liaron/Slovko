@@ -13,8 +13,8 @@ get("/:sectionId", getAllGroups);
 post("/", addGroup);
 
 remove("/:groupId/:sectionId", removeGroup);
-get("/:id", getGroup);
-patch("/:id", updateGroup);
+get("/:groupId/:sectionId", getGroup);
+patch("/:groupId", updateGroup);
 put("/:id", moveGroupToAnotherSection);
 
 export { router as groupRoute };
