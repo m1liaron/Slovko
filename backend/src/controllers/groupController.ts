@@ -60,12 +60,11 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
 
 const getGroup = async (req: AuthRequest, res: Response) => {
   const {
-    params: { id },
-    body: { sectionId },
+    params: { groupId, sectionId },
   } = req;
   try {
     const group = await Group.findOne({
-      where: { id, sectionId },
+      where: { id: groupId, sectionId },
       include: [
         {
           model: Card,
@@ -142,7 +141,7 @@ const addGroup = async (req: AuthRequest, res: Response) => {
 const updateGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      params: { id: groupId },
+      params: { groupId },
       body: { sectionId },
     } = req;
     const updatedGroup = await Group.update(req.body, {
@@ -181,7 +180,8 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
 
     await Card.destroy({ where: { groupId: groupId } });
     await group.destroy();
-    res.status(200).json({ id: group.id });
+    
+    res.status(StatusCodes.OK).json({ id: groupId });
   } catch (error) {
     sendError(res, error);
   }
