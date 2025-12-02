@@ -1,8 +1,8 @@
-import { SERVER_API_URL } from '@/common/enums/constants/server-api';
-import { logout } from '@/redux/userReducer/userSlice';
 import axios, { type AxiosInstance } from 'axios';
+import { SERVER_API_URL } from '@/common/enums/constants/server-api';
 import { getStorageItem } from '@/utils/storage';
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { triggerUnauthorized } from '@/redux/services/authEvents';
 
 /**
  * Creates an authorized Axios instance with a Bearer token.
@@ -24,7 +24,7 @@ export const createAuthorizedInstance = async (): Promise<AxiosInstance> => {
       (res) => res,
       (error) => {
         if (error.response?.status === 401) {
-          logout();
+          triggerUnauthorized();
         }
         return Promise.reject(error);
       },

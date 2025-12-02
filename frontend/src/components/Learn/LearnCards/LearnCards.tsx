@@ -1,7 +1,7 @@
 import type { ICard } from '@/common/enums/types/card.type';
 import { useAppSelector } from '@/hooks/redux.hooks';
 import * as Speech from 'expo-speech';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
   Pressable,
@@ -45,9 +45,10 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
   const [valueAnswer, setValueAnswer] = useState('');
   const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
 
-  const [shouldSwipeBack, setShouldSwipeBack] = useState(false);
   const [typeMode, setTypeMode] = useState(true);
+  const [isTranslateShow, setIsTranslateShow] = useState(false);
 
+  const timeoutRefs = useRef(null);
   const swiperRef = useRef<Swiper<ICard>>(null);
   const rotation = useSharedValue(0);
   const { width } = useWindowDimensions();
@@ -99,7 +100,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     setTimeout(() => setShowRightSwipeView(false), 1000);
     setCurrentIndexCardsFlipped();
     setFlashCards(learningCards[currentCardIndex], true);
-    setShouldSwipeBack(cards.length - 1 === currentCardIndex);
+    setIsTranslateShow((prev) => !prev);
   };
 
   const handleSwipeLeft = (index: number) => {
@@ -116,7 +117,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
 
     setCurrentIndexCardsFlipped();
     setFlashCards(learningCards[currentCardIndex], false);
-    setShouldSwipeBack(cards.length - 1 === currentCardIndex);
+    setIsTranslateShow((prev) => !prev);
   };
 
   const setCurrentIndexCardsFlipped = () => {
@@ -136,10 +137,10 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     setIsHorizontalSwipe(true);
     handleFlipCard(currentCardIndex || 0);
 
-    setTimeout(() => {
+    const checkTimer = setTimeout(() => {
       if (
         valueAnswer.trim().toLowerCase() ===
-        currentCard.translateWord.toLowerCase()
+        currentCard[isTranslateShow ? 'word' : 'translateWord'].toLowerCase()
       ) {
         swiperRef.current?.swipeRight();
         setPlaceholderColor('#62c485');
@@ -148,18 +149,23 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         setPlaceholderColor('#ff1100');
       }
       setValueAnswer('');
+      setIsHorizontalSwipe(false);
     }, 1000);
 
-    setIsHorizontalSwipe(false);
-    setTimeout(() => {
+    const resetTimer = setTimeout(() => {
       setPlaceholderColor(colors.primary);
     }, 1100);
+
+    return () => {
+      clearInterval(checkTimer);
+      clearInterval(resetTimer);
+    };
   };
 
   const handleTypeModeChange = (newValue: boolean) => {
     setTypeMode(newValue);
     setFlippedCards({});
-    rotation.value = 0;
+    setIsTranslateShow(false);
   };
 
   const cardWidth = isMobile ? '90%' : isTablet ? '70%' : '50%';
@@ -332,6 +338,10 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     </Pressable>
   );
 
+  const backCardAnswerLength = isTranslateShow
+    ? learningCards[currentCardIndex]?.word.length
+    : learningCards[currentCardIndex]?.translateWord.length;
+
   return (
     <>
       <View
@@ -361,8 +371,6 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         onSwipedLeft={handleSwipeLeft}
         onSwipedAll={onComplete}
         stackSize={3}
-        goBackToPreviousCardOnSwipeRight={shouldSwipeBack}
-        goBackToPreviousCardOnSwipeLeft={shouldSwipeBack}
         cardIndex={currentCardIndex}
         backgroundColor={'transparent'}
         verticalSwipe={false}
@@ -382,7 +390,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
             alignItems: 'center',
             gap: 10,
             backgroundColor: colors.lightBackground,
-            borderRadius: 10
+            borderRadius: 10,
           }}
         >
           <View>
@@ -390,14 +398,10 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
               {valueAnswer.length}/
               <Text
                 style={{
-                  color:
-                    valueAnswer.length >
-                    learningCards[currentCardIndex]?.word.length
-                      ? 'red'
-                      : '',
+                  color: valueAnswer.length > backCardAnswerLength ? 'red' : '',
                 }}
               >
-                {learningCards[currentCardIndex]?.word?.length}
+                {backCardAnswerLength}
               </Text>
             </ThemeText>
             <AddInput

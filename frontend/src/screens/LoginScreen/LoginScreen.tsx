@@ -77,6 +77,7 @@ const LoginScreen = () => {
           text1: 'Невдача',
           text2: message,
         });
+        console.log(error);
       });
   };
 

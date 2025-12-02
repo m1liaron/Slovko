@@ -115,8 +115,8 @@ const userSlice = createSlice({
         const payload = action.payload as RejectedPayload;
         state.status = DataStatus.ERROR;
         state.isLoading = false;
-        state.codeStatus = payload.status;
-        state.message = payload.message;
+        state.codeStatus = payload?.status;
+        state.message = payload?.message;
       });
   },
 });

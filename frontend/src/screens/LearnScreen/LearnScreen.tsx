@@ -90,7 +90,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     const nextSectionIndex = currentSectionIndex + 1;
 
     if (nextSectionIndex >= enabledModes.length) {
-      console.log('Finishing lesson...');
       finishLesson();
     } else {
       const nextSection = enabledModes[nextSectionIndex];
@@ -204,13 +203,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     resultsData.length > 0
       ? Math.floor((correctAnswersAmount / resultsData.length) * 100)
       : 0;
-
-  console.log(
-    'Render - isLessonOver:',
-    isLessonOver,
-    'currentSection:',
-    currentSection,
-  );
 
   return (
     <ThemeBackground>

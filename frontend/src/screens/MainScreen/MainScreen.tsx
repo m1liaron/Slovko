@@ -119,7 +119,6 @@ const MainScreen = () => {
     if (Notification.permission !== 'granted') {
       Notification.requestPermission().then((permission) => {
         if (repeatedCardsLength) {
-          console.log(`Permission: ${permission}`);
           if (permission === 'granted') {
             const appLogoUri = Image.resolveAssetSource(appLogo).uri;
             const notificationOptions = {
