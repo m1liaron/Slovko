@@ -208,7 +208,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     <ThemeBackground>
       <View>
         {!isLessonOver ? (
-          <View>
+          <View style={{ justifyContent: 'center', paddingHorizontal: 20 }}>
             <Pressable onPress={() => setShowExitModal(true)}>
               <Entypo name="cross" size={35} color={theme.colors.iconColor} />
             </Pressable>
@@ -217,28 +217,30 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
               <Loading />
             ) : (
               <View>
+                <View style={styles.centeredContainer}>
+                  {currentSection === 'quiz' && (
+                    <LearnQuiz
+                      onComplete={handleNextSection}
+                      handleSetData={handleSetData}
+                    />
+                  )}
+                  {currentSection === 'word' && (
+                    <LearnGuessWord
+                      onComplete={handleNextSection}
+                      handleSetData={handleSetData}
+                    />
+                  )}
+                  {currentSection === 'check' && (
+                    <LearnCheck
+                      onComplete={handleNextSection}
+                      handleSetData={handleSetData}
+                    />
+                  )}
+                </View>
                 {currentSection === 'cards' && (
                   <LearnCards
                     onComplete={handleNextSection}
                     setFlashCards={handleSetData}
-                  />
-                )}
-                {currentSection === 'quiz' && (
-                  <LearnQuiz
-                    onComplete={handleNextSection}
-                    handleSetData={handleSetData}
-                  />
-                )}
-                {currentSection === 'word' && (
-                  <LearnGuessWord
-                    onComplete={handleNextSection}
-                    handleSetData={handleSetData}
-                  />
-                )}
-                {currentSection === 'check' && (
-                  <LearnCheck
-                    onComplete={handleNextSection}
-                    handleSetData={handleSetData}
                   />
                 )}
               </View>

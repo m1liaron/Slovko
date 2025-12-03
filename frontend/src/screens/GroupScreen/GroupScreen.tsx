@@ -167,7 +167,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       },
       {
         title: i18n.t('group.reviewed'),
-        status: 'Learned',
+        status: 'Repeated',
         amount: group.repeatedCount || 0,
         color: '#62CBE9',
         icon: 'check-circle',
@@ -466,7 +466,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       <View
         style={{
           flexShrink: isDesktop ? 0 : 1,
-          height: isDesktop ? 500 : '',
+          height: isDesktop ? 500 : 'auto',
           paddingHorizontal: isDesktop ? 32 : 0,
         }}
       >
@@ -709,30 +709,37 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                         }}
                       >
                         <MaterialIcons name={item.iconName} size={30} />
-                        <Text style={{ fontSize: 20, textDecorationLine: 'line-through' }}>{item.text}</Text>
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            textDecorationLine: 'line-through',
+                          }}
+                        >
+                          {item.text}
+                        </Text>
                       </View>
                       <Text>{i18n.t('group.cardList.atLeastFourWords')}</Text>
                     </>
-                  )
+                  );
                 }
 
                 return (
-                    <View
-                      key={index}
-                      style={{
-                        flexDirection: 'row',
-                        gap: 10,
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Checkbox
-                        value={item.shown}
-                        onValueChange={() => onChangeLearningModeShown(index)}
-                      />
-                      <MaterialIcons name={item.iconName} size={30} />
-                      <Text style={{ fontSize: 20 }}>{item.text}</Text>
-                    </View>
-                  )
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: 'row',
+                      gap: 10,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Checkbox
+                      value={item.shown}
+                      onValueChange={() => onChangeLearningModeShown(index)}
+                    />
+                    <MaterialIcons name={item.iconName} size={30} />
+                    <Text style={{ fontSize: 20 }}>{item.text}</Text>
+                  </View>
+                );
               }}
             />
             <PressableButton
@@ -756,7 +763,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           keyExtractor={(item) => item.text}
           contentContainerStyle={{ marginBottom: 20 }}
           renderItem={({ item, index }) => {
-            if (item.sectionName === 'check' && filteredCards.length < 4) { 
+            if (item.sectionName === 'check' && filteredCards.length < 4) {
               return (
                 <>
                   <View
@@ -766,14 +773,27 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                       alignItems: 'center',
                     }}
                   >
-                    <MaterialIcons name={item.iconName} size={30} color={colors.primary}/>
-                    <ThemeText style={{ fontSize: 20, textDecorationLine: 'line-through' }}>{item.text}</ThemeText>
+                    <MaterialIcons
+                      name={item.iconName}
+                      size={30}
+                      color={colors.primary}
+                    />
+                    <ThemeText
+                      style={{
+                        fontSize: 20,
+                        textDecorationLine: 'line-through',
+                      }}
+                    >
+                      {item.text}
+                    </ThemeText>
                   </View>
-                  <ThemeText style={{ fontWeight: 'bold' }}>{i18n.t('group.cardList.atLeastFourWords')}</ThemeText>
+                  <ThemeText style={{ fontWeight: 'bold' }}>
+                    {i18n.t('group.cardList.atLeastFourWords')}
+                  </ThemeText>
                 </>
-              )
+              );
             }
-            
+
             return (
               <View
                 key={index}
@@ -794,7 +814,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                 />
                 <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
               </View>
-            )
+            );
           }}
         />
         <PressableButton
