@@ -1,4 +1,3 @@
-import noCardsImage from '@/assets/images/no-cards.png';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -42,7 +41,7 @@ type CardListProps = {
 };
 
 const CardList = ({ groupId }: CardListProps) => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height } = useWindowDimensions();
 
   const {
     theme: { colors },
@@ -52,7 +51,6 @@ const CardList = ({ groupId }: CardListProps) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
-  const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
     cards?.length || 2,
   );
@@ -76,10 +74,6 @@ const CardList = ({ groupId }: CardListProps) => {
     <View style={styles.container}>
       {isLoading ? (
         <ActivityIndicator color={colors.primary} />
-      ) : !cards?.length ? (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Image source={noCardsImage} />
-        </View>
       ) : (
         <FlatList
           data={cards}
@@ -96,40 +90,14 @@ const CardList = ({ groupId }: CardListProps) => {
             />
           )}
           keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
           contentContainerStyle={[
-            styles.listContainer,
             {
               padding: screenWidth < 620 ? 10 : 50,
-              paddingBottom: 80,
-              height: Platform.OS === 'web' ? 500 : 'auto',
+              paddingBottom: 20,
             },
           ]}
-          numColumns={1}
         />
       )}
-
-      <View style={{ marginHorizontal: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-          {cards.length > 1 && (
-            <PressableButton
-              onPress={navigateToLearn}
-              text={i18n.t('group.cardList.learnButton')}
-              buttonStyle={{ flex: 1 }}
-            />
-          )}
-          <AddButton
-            viewStyles={{ position: 'relative', right: 0, bottom: 10 }}
-            onPress={() => setShowAddModal(true)}
-          />
-        </View>
-      </View>
-
-      <AddCardModal
-        showAddModal={showAddModal}
-        setShowAddModal={setShowAddModal}
-        groupId={groupId}
-      />
     </View>
   );
 };

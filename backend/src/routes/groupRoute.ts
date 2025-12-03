@@ -12,9 +12,9 @@ import {
 get("/:sectionId", getAllGroups);
 post("/", addGroup);
 
-remove("/:id", removeGroup);
-get("/:id", getGroup);
-patch("/:id", updateGroup);
+remove("/:groupId/:sectionId", removeGroup);
+get("/:groupId/:sectionId", getGroup);
+patch("/:groupId", updateGroup);
 put("/:id", moveGroupToAnotherSection);
 
 export { router as groupRoute };

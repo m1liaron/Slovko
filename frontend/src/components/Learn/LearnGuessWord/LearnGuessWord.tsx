@@ -78,6 +78,7 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
       removeLetterFromScrambled(index);
       setCorrectAnswers((prevState) => [...prevState, true]);
       handleSetData(currentCard, true);
+      setShowTranslate(false);
     } else {
       highlightIncorrectLetter(index);
       handleSetData(currentCard, false);

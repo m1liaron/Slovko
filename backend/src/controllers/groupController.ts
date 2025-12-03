@@ -7,12 +7,49 @@ import {
 } from "../common/types/AuthRequest.type.js";
 import { Response } from "express";
 import { sendError } from "../helpers/index.js";
+import { literal } from "sequelize";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
   const { sectionId } = req.params;
   try {
     const groups = await Group.findAll({
       where: { sectionId },
+      attributes: {
+        include: [
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'To Learn'  
+          )`),
+            "toLearnCount",
+          ],
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'Repeated'  
+          )`),
+            "repeatedCount",
+          ],
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'Know' 
+          )`),
+            "knowCount",
+          ],
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM "Cards" AS c
+            WHERE c."groupId" = "Group"."id" and c."status" = 'Learned'
+          )`),
+            "learnedCount",
+          ],
+        ],
+      },
     });
 
     res.status(StatusCodes.OK).json(groups);
@@ -23,12 +60,11 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
 
 const getGroup = async (req: AuthRequest, res: Response) => {
   const {
-    params: { id },
-    body: { sectionId },
+    params: { groupId, sectionId },
   } = req;
   try {
     const group = await Group.findOne({
-      where: { id, sectionId },
+      where: { id: groupId, sectionId },
       include: [
         {
           model: Card,
@@ -105,7 +141,7 @@ const addGroup = async (req: AuthRequest, res: Response) => {
 const updateGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      params: { id: groupId },
+      params: { groupId },
       body: { sectionId },
     } = req;
     const updatedGroup = await Group.update(req.body, {
@@ -130,11 +166,10 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
 const removeGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      params: { id },
-      body: { sectionId },
+      params: { groupId, sectionId },
     } = req;
     const group = await Group.findOne({
-      where: { id, sectionId },
+      where: { id: groupId, sectionId },
     });
     if (!group) {
       res
@@ -143,9 +178,10 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    await Card.destroy({ where: { groupId: id } });
+    await Card.destroy({ where: { groupId: groupId } });
     await group.destroy();
-    res.status(200).json({ id: group.id });
+    
+    res.status(StatusCodes.OK).json({ id: groupId });
   } catch (error) {
     sendError(res, error);
   }

@@ -19,6 +19,7 @@ import { sharedGroupReducers } from './sharedGroupReducer/sharedGroupSlice';
 import { logout, userReducers } from './userReducer/userSlice';
 import { sectionReducers } from './sectionReducer/sectionSlice';
 import { languageReducers } from './languageReducer/languageSlice';
+import { registerUnauthorizedHandler } from './services/authEvents';
 
 const appReducer = combineReducers({
   user: userReducers,
@@ -71,6 +72,10 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
+});
+
+registerUnauthorizedHandler(() => {
+  store.dispatch(logout());
 });
 
 export const persistor = persistStore(store);

@@ -1,4 +1,4 @@
-import { FlatList, Pressable, View } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import styles from './CustomDrawerContent.styles';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
@@ -12,10 +12,13 @@ import Toast from 'react-native-toast-message';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import {
   addSection,
+  addStateSection,
   setActiveSectionId,
 } from '@/redux/sectionReducer/sectionSlice';
 import { getLanguages } from '@/redux/languageReducer/languageThunk';
 import { Language } from '@/common/enums/types/language.type';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   const {
@@ -25,6 +28,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   const { sections, activeSectionId } = useAppSelector(
     (state) => state.sections,
   );
+  const { width } = useWindowDimensions();
   const languages = useAppSelector((state) => state.languages.languages);
 
   const [showSectionModal, setShowSectionModal] = useState(false);
@@ -40,8 +44,10 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
       });
     }
 
-    dispatch(addSection({ title: newTitle }));
-    setNewTitle("");
+    dispatch(
+      enqueueOrDispatch(addSection, addStateSection, { title: newTitle }),
+    );
+    setNewTitle('');
   };
 
   const onAddSectionLanguage = () => {
@@ -63,7 +69,12 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      style={[
+        styles.container,
+        { width: width / 2, backgroundColor: colors.background },
+      ]}
+    >
       {showLanguages && languages.length > 0 ? (
         <View>
           <Pressable onPress={() => setShowLanguages(false)}>
@@ -94,12 +105,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
           />
 
           <PressableButton
-            text="Додати мову до вивчення"
-            buttonStyle={{
-              backgroundColor: 'transparent',
-              borderColor: colors.highlightColor,
-              borderWidth: 3,
-            }}
+            text={i18n.t('mainScreen.drawer.addLanguage')}
             onPress={onAddSectionLanguage}
           />
         </View>
@@ -116,26 +122,25 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
             </Pressable>
           </View>
 
-          <PressableButton
-            text="Вибрати мову"
-            buttonStyle={{
-              backgroundColor: 'transparent',
-              borderColor: colors.highlightDarkColor,
-              borderWidth: 3,
-            }}
-            onPress={() => setShowLanguages(true)}
-          />
+          {HAS_TOKEN && (
+            <>
+              <PressableButton
+                text={i18n.t('mainScreen.drawer.chooseLanguage')}
+                onPress={() => setShowLanguages(true)}
+              />
 
-          <View style={styles.divider} />
+              <View style={styles.divider} />
+            </>
+          )}
 
           <PressableButton
-            text="Створити секцію"
-            buttonStyle={{ backgroundColor: colors.highlightDarkColor }}  
+            text={i18n.t('mainScreen.drawer.createLanguage')}
             onPress={() => setShowSectionModal(true)}
           />
 
           <FlatList
             data={sections}
+            contentContainerStyle={{ margin: 10 }}
             renderItem={({ item }) => (
               <Pressable
                 style={{
@@ -163,11 +168,14 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
           >
             <View>
               <AddInput
-                placeholder="Назва секції"
+                placeholder={i18n.t('mainScreen.drawer.nameSection')}
                 value={newTitle}
                 onChangeText={setNewTitle}
               />
-              <PressableButton text="Додати" onPress={onAddSection} />
+              <PressableButton
+                text={i18n.t('mainScreen.drawer.add')}
+                onPress={onAddSection}
+              />
             </View>
           </DefaultModal>
         </View>

@@ -9,6 +9,7 @@ import {
   sendError,
 } from "../helpers/index.js";
 import { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
+import { unsplash } from "../api/unsplash.js";
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
   try {
@@ -178,7 +179,38 @@ const addCard = async (req: Request, res: Response) => {
         console.warn("Dictionary fetch failed:", dictionaryError.message);
       }
     }
-    const image = await Image.create({ url: imageUri });
+
+    let imageUrl = imageUri;
+
+    if (imageUri.length === 0) {
+      try {
+        const result = await unsplash.photos.getRandom({
+          query: word,
+          count: 1,
+        });
+
+        if (!result || result.errors) {
+          console.warn("Unsplash error:", result?.errors);
+        } else {
+          let photo = result.response;
+
+          if (Array.isArray(photo)) {
+            photo = photo[0];
+          }
+          // This URL is what you need
+
+          imageUrl = photo.urls.regular;
+          console.log("Random Unsplash image:", imageUrl);
+          // assign wherever you need
+        }
+      } catch (unsplashError) {
+        if (unsplashError instanceof Error) {
+          console.warn("Fetching random image failed:", unsplashError.message);
+        }
+      }
+    }
+
+    const image = await Image.create({ url: imageUrl });
     const newCard = await Card.create({
       imageId: image.id,
       word,

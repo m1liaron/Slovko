@@ -1,47 +1,119 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  container: {
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 12,
+    paddingTop: 30,
+    paddingBottom: 20,
+    margin: 'auto',
+  },
+  header: {
+    alignItems: 'center',
+  },
+  iconGradient: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  input: {
-    width: '100%',
-    maxWidth: 400,
-    height: 50,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: '#fff',
+  subtitle: {
     fontSize: 16,
-    borderWidth: 0,
+    textAlign: 'center',
   },
-  passwordContainer: {
-    maxWidth: 400,
-    width: '100%',
+  formContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 16,
+    marginBottom: 16,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
-  iconContainer: {
-    position: 'absolute',
-    right: 0,
-    top: 15,
-    paddingHorizontal: 10,
+  inputIconContainer: {
+    marginRight: 12,
   },
-  button: {
-    width: '100%',
-    marginBottom: 15,
+  input: {
+    flex: 1,
+    height: 56,
+    fontSize: 16,
   },
-  buttonText: {
+  eyeIcon: {
+    padding: 8,
+  },
+  signUpButton: {
+    marginTop: 8,
+    height: 56,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  dividerText: {
+    color: '#999',
+    paddingHorizontal: 16,
+    fontSize: 14,
+  },
+  guestButton: {
+    height: 56,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  guestButtonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 15,
+  },
+  footerLink: {
+    fontSize: 15,
     fontWeight: 'bold',
   },
 });

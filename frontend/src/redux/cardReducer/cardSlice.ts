@@ -20,11 +20,15 @@ import {
   updateCard,
   updateCardsAfterLearn,
 } from './cardThunk';
+
+export type LearningMode = 'cards' | 'quiz' | 'word' | 'check';
+
 interface InitialState {
   cards: ICard[];
   globalCards: ICard[];
   filteredCards: ICard[];
   repeatedCards: IRepeatedGroup[];
+  shownModes: Record<LearningMode, boolean>;
   lastFetchedSuccessfully: boolean;
   status: IDataStatus;
   error: undefined | null | string;
@@ -36,6 +40,12 @@ const initialState: InitialState = {
   globalCards: [],
   filteredCards: [],
   repeatedCards: [],
+  shownModes: {
+    cards: true, // always
+    quiz: true,
+    word: true,
+    check: true,
+  },
   lastFetchedSuccessfully: false,
   status: DataStatus.IDLE,
   error: null,
@@ -47,7 +57,10 @@ const cardSlice = createSlice({
   initialState,
   reducers: {
     addStateManyCards: (state, action) => {
-      state.cards.push(...action.payload.cards);
+      const data = action.payload.cards;
+      state.cards.push(...data);
+      state.globalCards.push(...data);
+      state.filteredCards.push(...data);
     },
     addStateCard: (state, action) => {
       const { card: newCard, tempId } = action.payload;
@@ -76,9 +89,11 @@ const cardSlice = createSlice({
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
     },
     rangeCards: (state, action) => {
-      state.isLoading = true;
       if (action.payload) {
-        state.cards = [...state.cards.slice(0, action.payload)];
+        const limit = action.payload;
+        const source =
+          limit > state.cards.length ? state.filteredCards : state.cards;
+        state.cards = source.slice(0, limit);
         state.isLoading = false;
       }
     },
@@ -101,9 +116,18 @@ const cardSlice = createSlice({
       );
     },
     resetFilter: (state) => {
-      state.isLoading = true;
       state.cards = [...state.filteredCards];
       state.isLoading = false;
+    },
+    addLearningMode: (
+      state,
+      action: PayloadAction<{ sectionName: LearningMode }>,
+    ) => {
+      const { sectionName } = action.payload;
+      if (!sectionName.length) return;
+
+      const prev = state.shownModes[sectionName];
+      state.shownModes[sectionName] = !prev;
     },
   },
   extraReducers: (builder) => {
@@ -144,22 +168,23 @@ const cardSlice = createSlice({
         // 	state.globalCards.push(card);
         // }
         state.cards.push(action.payload.card);
+        state.filteredCards.push(action.payload.card);
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
         if (action.payload.cards.length > 0) {
           state.cards.push(...action.payload.cards);
+          state.filteredCards.push(...action.payload.cards);
           state.globalCards.push(...action.payload.cards);
         }
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
-        state.cards = state.cards.filter((card) => card.id !== action.payload);
-        state.filteredCards = state.filteredCards.filter(
+        const filteredCards = state.cards.filter(
           (card) => card.id !== action.payload,
         );
-        state.globalCards = state.globalCards.filter(
-          (card) => card.id !== action.payload,
-        );
+        state.cards = filteredCards;
+        state.filteredCards = filteredCards;
+        state.globalCards = filteredCards;
       })
       // update card
       .addCase(updateCard.fulfilled, (state, action) => {
@@ -194,6 +219,7 @@ const cardSlice = createSlice({
       .addMatcher(isRejected, (state, action) => {
         state.status = DataStatus.ERROR;
         state.lastFetchedSuccessfully = false;
+        state.isLoading = false;
         const payload = action.payload as { message?: string } | undefined;
         state.error = payload?.message ?? action.error.message;
       });
@@ -209,6 +235,7 @@ export const {
   resetFilter,
   rangeCards,
   sortCards,
+  addLearningMode,
 } = cardSlice.actions;
 export const selectCard = (state: RootState) => state.cards.cards;
 export {

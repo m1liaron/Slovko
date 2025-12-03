@@ -37,6 +37,7 @@ import {
   getSections,
   setActiveSectionId,
 } from '@/redux/sectionReducer/sectionSlice';
+import { getAllGroups } from '@/redux/groupReducer/groupThunk';
 
 const MainScreen = () => {
   useLanguage();
@@ -63,15 +64,16 @@ const MainScreen = () => {
 
   useEffect(() => {
     dispatch(enqueueOrDispatch(getUser, {}));
-  }, []);
-
-  useEffect(() => {
     dispatch(getSections());
   }, []);
 
   useEffect(() => {
+    dispatch(getAllGroups(activeSectionId));
+  }, [activeSectionId]);
+
+  useEffect(() => {
     if (!activeSectionId) {
-      setActiveSectionId(sections[0]);
+      dispatch(setActiveSectionId(sections[0]));
     }
   }, []);
 
@@ -81,7 +83,7 @@ const MainScreen = () => {
         enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
       );
     }
-  }, [dispatch]);
+  }, [dispatch, activeSectionId]);
 
   useEffect(() => {
     if (Platform.OS === 'android' || Platform.OS === 'ios') {
@@ -130,7 +132,6 @@ const MainScreen = () => {
               notificationOptions,
             );
           } else {
-            alert(i18n.t('mainScreen.notificationPermissionDenied'));
             console.log('Повідомлення заблоковані користувачем.');
           }
         }
@@ -193,11 +194,11 @@ const MainScreen = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.3)', 
+            backgroundColor: 'rgba(0,0,0,0.3)',
             flexDirection: 'row',
             zIndex: 20,
           }}
-          onPress={() => setShowDrawerMenu(false)} 
+          onPress={() => setShowDrawerMenu(false)}
         >
           <CustomDrawerContent handleClose={() => setShowDrawerMenu(false)} />
         </Pressable>
@@ -241,7 +242,7 @@ const MainScreen = () => {
           ]}
           onPress={() => setShowRepeatedModal(true)}
         >
-          <Text style={{ color: colors.background, fontSize: 30 }}>
+          <Text style={{ color: colors.background, fontSize: 20 }}>
             {i18n.t('mainScreen.repeatWords')} - {repeatedCardsLength}
           </Text>
         </Pressable>

@@ -1,5 +1,3 @@
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import {
   LoginScreen,
   RegisterScreen,
@@ -7,24 +5,21 @@ import {
   ChooseLanguageScreen,
   ChooseWordsScreen,
 } from '@/screens';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   NavigationContainer,
+  useNavigation,
   type NavigationProp,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  AppPath,
-  AsyncStorageVariables,
-  DataStatus,
-  TypeAppPath,
-} from '../../common/enums/app/app';
+import React, { useEffect, useState } from 'react';
+import { AppPath, AsyncStorageVariables } from '../../common/enums/app/app';
 import Loading from '../../components/Loading';
-import { getUser, selectUser } from '../../redux/userReducer/userSlice';
 import MainStackNavigator from '../MainStackNavigator/MainStackNavigator';
 import { getStorageItem, setStorageItem } from '@/utils/storage';
 import { IAppPath } from '@/common/enums/app/AppPath';
+import { useAppDispatch } from '@/hooks/redux.hooks';
+import { getUser } from '@/redux/userReducer/userThunk';
+import { initToken } from '@/utils/storage/initToken';
 
 export type RootStackParamList = {
   [AppPath.Main]: undefined;
@@ -48,20 +43,40 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const ProtectedRoute = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [initialRoute, setInitialRoute] = useState<IAppPath[keyof IAppPath]>(
-    AppPath.Main,
+    AppPath.Home,
   );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    initToken();
+  }, []);
 
   useEffect(() => {
     (async () => {
       const firstLaunch = await getStorageItem(
         AsyncStorageVariables.FIRST_START,
       );
-      if (!firstLaunch) {
-        await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
-        setInitialRoute(AppPath.Welcome);
-      } else {
-        setInitialRoute(AppPath.Main);
+      const token = await getStorageItem(AsyncStorageVariables.TOKEN);
+
+      if (firstLaunch === undefined) {
+        setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
       }
+
+      if (firstLaunch === 'true') {
+        setInitialRoute(AppPath.Welcome);
+        setIsLoading(false);
+        return;
+      }
+
+      if (token) {
+        const result = await dispatch(getUser({}));
+        if (getUser.rejected.match(result) && result.payload?.status === 401) {
+          setInitialRoute(AppPath.Login);
+        } else {
+          setInitialRoute(AppPath.Main);
+        }
+      }
+
       setIsLoading(false);
     })();
   }, []);
@@ -75,7 +90,10 @@ const ProtectedRoute = () => {
   ) : (
     <NavigationContainer>
       <Stack.Navigator
-        screenOptions={{ headerShown: false }}
+        screenOptions={{
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
         initialRouteName={initialRoute}
       >
         <Stack.Screen name={AppPath.Home} component={MainStackNavigator} />

@@ -24,6 +24,7 @@ import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import LearnCards from '../../components/Learn/LearnCards/LearnCards';
 import LearnGuessWord from '../../components/Learn/LearnGuessWord/LearnGuessWord';
 import LearnQuiz from '../../components/Learn/LearnQuiz/LearnQuiz';
+import { LearnCrossWord } from '@/components/Learn/LearnCrossWord/LearnCrossWord';
 import Loading from '../../components/Loading';
 import ExitModal from '../../components/Modals/ExitModal/ExitModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
@@ -39,15 +40,7 @@ import {
 import { updateUserStreak } from '../../redux/userReducer/userSlice';
 import { formatTime } from '../../utils/formatTime/formatTime';
 
-type Section = 'cards' | 'quiz' | 'word' | 'check' | 'finish';
-
-interface SectionOption {
-  text: string;
-  iconName: keyof typeof MaterialIcons.glyphMap;
-  state: boolean;
-  changeState: React.Dispatch<React.SetStateAction<boolean>>;
-  sectionName: Section;
-}
+type Section = 'cards' | 'quiz' | 'word' | 'check';
 
 type LearnScreenProps = StackScreenProps<
   RootStackParamList,
@@ -60,50 +53,47 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const groups = useAppSelector(selectGroup);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
-  const { repeatedCards, cards, status } = useAppSelector(
+  const { repeatedCards, cards, status, shownModes } = useAppSelector(
     (state) => state.cards,
   );
+  const { activeSectionId } = useAppSelector((state) => state.sections);
+
+  // Cards mode is always shown first, then add other enabled modes (excluding cards)
+  const enabledModes: Section[] = [
+    'cards',
+    ...Object.entries(shownModes)
+      .filter(([mode, isEnabled]) => mode !== 'cards' && isEnabled)
+      .map(([mode, _]) => mode as Section),
+  ];
 
   // Section State
-  const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentSection, setCurrentSection] = useState<Section>('cards');
-  const [finishedSections, setFinishedSections] = useState<Section[]>([]);
+  const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
 
   // Modes Toggles
-  const [isQuizEnabled, setIsQuizEnabled] = useState<boolean>(true);
-  const [isGuessWordEnabled, setIsGuessWordEnabled] = useState<boolean>(true);
-  const [isCheckEnabled, setIsCheckEnabled] = useState<boolean>(true);
   const [showExitModal, setShowExitModal] = useState<boolean>(false);
-  const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
   // Cards State
   const [flashCards, setFlashCards] = useState<ResultsCard[]>([]);
   const [quizCards, setQuizCards] = useState<ResultsCard[]>([]);
   const [guessWordCards, setGuessWordCards] = useState<ResultsCard[]>([]);
+  const [checkCards, setCheckCards] = useState<ResultsCard[]>([]);
 
   // Timing State
-  const [startLearnDate, setStartLearnDate] = useState<Date>(new Date());
   const [elapsedTime, setElapsedTime] = useState<string>('');
 
+  const startLearnDate = new Date();
   const projectName = groups?.find((group) => group.id === groupId)?.title;
 
-  const toggleSwitch = (
-    changeFunction: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => changeFunction((previousState) => !previousState);
-
   const handleNextSection = () => {
-    const transitions: Record<Section, Section> = {
-      cards: isQuizEnabled ? 'quiz' : isGuessWordEnabled ? 'word' : 'finish',
-      quiz: isGuessWordEnabled ? 'word' : 'finish',
-      word: isCheckEnabled ? 'check' : 'finish',
-      check: 'finish',
-      finish: 'finish',
-    };
-    const nextSection = transitions[currentSection] || 'finish';
-    if (nextSection === 'finish') {
+    const nextSectionIndex = currentSectionIndex + 1;
+
+    if (nextSectionIndex >= enabledModes.length) {
       finishLesson();
     } else {
-      setFinishedSections((prev) => [...prev, currentSection]);
+      const nextSection = enabledModes[nextSectionIndex];
+      setCurrentSectionIndex(nextSectionIndex);
       setCurrentSection(nextSection);
     }
   };
@@ -144,27 +134,24 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
       updateOrAddCard(quizCards, setQuizCards);
     } else if (currentSection === 'word') {
       updateOrAddCard(guessWordCards, setGuessWordCards);
+    } else if (currentSection === 'check') {
+      updateOrAddCard(checkCards, setCheckCards);
     }
   };
 
   const handleSaveResults = () => {
     const resultData = {
-      title: projectName || new Date(),
+      title: projectName || new Date().toString(),
       flashCards,
       quiz: quizCards,
       guessWord: guessWordCards,
-      startedLearn: startLearnDate,
-      completionTime: new Date(),
+      startedLearn: startLearnDate.toISOString(), // Convert Date to string
+      completionTime: new Date().toISOString(), // Convert Date to string
     };
     dispatch(enqueueOrDispatch(saveResults, addStateResult, resultData));
   };
 
   const finishLesson = () => {
-    setIsQuizEnabled(true);
-    setIsGuessWordEnabled(true);
-    setShowSettingsModal(false);
-    setFinishedSections([]);
-    setCurrentSection('cards');
     setIsLessonOver(true);
 
     const endLearnDate = new Date().getTime();
@@ -177,7 +164,9 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     dispatch(enqueueOrDispatch(updateUserStreak, {}));
     handleSaveResults();
     if (repeatedCards.length) {
-      dispatch(enqueueOrDispatch(getRepeatedCards, {}));
+      dispatch(
+        enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
+      );
     }
   };
 
@@ -185,70 +174,10 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     navigation.navigate(AppPath.Main);
   };
 
-  const switchSection = (
-    changeState: React.Dispatch<React.SetStateAction<boolean>>,
-    sectionName: string,
-  ) => {
-    toggleSwitch(changeState);
-
-    if (currentSection === sectionName) {
-      handleNextSection();
-    }
-  };
-
-  const generateSectionContent = () => {
-    const sections: SectionOption[] = [
-      {
-        text: i18n.t('learnScreen.quizMode'),
-        iconName: 'quiz',
-        state: isQuizEnabled,
-        changeState: setIsQuizEnabled,
-        sectionName: 'quiz',
-      },
-      {
-        text: i18n.t('learnScreen.guessWordMode'),
-        iconName: 'wordpress',
-        state: isGuessWordEnabled,
-        changeState: setIsGuessWordEnabled,
-        sectionName: 'word',
-      },
-      {
-        text: i18n.t('learnScreen.checkTranslateMode'),
-        iconName: 'checklist',
-        state: isCheckEnabled,
-        changeState: setIsCheckEnabled,
-        sectionName: 'check',
-      },
-    ];
-
-    return sections.map(
-      ({ iconName, text, state, changeState, sectionName }) => (
-        <View style={styles.sectionContainer} key={text}>
-          <View style={styles.sectionContainer}>
-            <MaterialIcons
-              name={iconName}
-              size={30}
-              color={theme.colors.iconColor}
-            />
-            <Text style={{ color: theme.colors.primary }}>{text}</Text>
-          </View>
-          <Switch
-            trackColor={{ false: '#767577', true: '#81b0ff' }}
-            thumbColor={state ? '#f5dd4b' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={() => switchSection(changeState, sectionName)}
-            value={state}
-          />
-        </View>
-      ),
-    );
-  };
-
   if (Platform.OS === 'web') {
     useEffect(() => {
       const handleBeforeUnload = (event: BeforeUnloadEvent) => {
         event.preventDefault();
-
         return i18n.t('learnScreen.leaveStudyMessage');
       };
 
@@ -260,13 +189,20 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     }, []);
   }
 
-  const resultsData = [...flashCards, ...quizCards, ...guessWordCards];
+  // Include checkCards in results calculation
+  const resultsData = [
+    ...flashCards,
+    ...quizCards,
+    ...guessWordCards,
+    ...checkCards,
+  ];
   const correctAnswersAmount = resultsData.filter(
     (item) => item.mistakesAmount === 0,
   ).length;
-  const accuracy = Math.floor(
-    (correctAnswersAmount / resultsData.length) * 100,
-  );
+  const accuracy =
+    resultsData.length > 0
+      ? Math.floor((correctAnswersAmount / resultsData.length) * 100)
+      : 0;
 
   return (
     <ThemeBackground>
@@ -280,43 +216,33 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
             {status === DataStatus.PENDING ? (
               <Loading />
             ) : (
-              <View style={styles.centeredContainer}>
+              <View>
+                <View style={styles.centeredContainer}>
+                  {currentSection === 'quiz' && (
+                    <LearnQuiz
+                      onComplete={handleNextSection}
+                      handleSetData={handleSetData}
+                    />
+                  )}
+                  {currentSection === 'word' && (
+                    <LearnGuessWord
+                      onComplete={handleNextSection}
+                      handleSetData={handleSetData}
+                    />
+                  )}
+                  {currentSection === 'check' && (
+                    <LearnCheck
+                      onComplete={handleNextSection}
+                      handleSetData={handleSetData}
+                    />
+                  )}
+                </View>
                 {currentSection === 'cards' && (
                   <LearnCards
                     onComplete={handleNextSection}
                     setFlashCards={handleSetData}
                   />
                 )}
-                {currentSection === 'quiz' && isQuizEnabled && (
-                  <LearnQuiz
-                    onComplete={handleNextSection}
-                    handleSetData={handleSetData}
-                  />
-                )}
-                {currentSection === 'word' && isGuessWordEnabled && (
-                  <LearnGuessWord
-                    onComplete={handleNextSection}
-                    handleSetData={handleSetData}
-                  />
-                )}
-
-                {currentSection === 'check' && isCheckEnabled && (
-                  <LearnCheck
-                    onComplete={handleNextSection}
-                    handleSetData={handleSetData}
-                  />
-                )}
-
-                <Pressable
-                  onPress={() => toggleSwitch(setShowSettingsModal)}
-                  style={{ alignSelf: 'flex-start' }}
-                >
-                  <AntDesign
-                    name="setting"
-                    size={30}
-                    color={theme.colors.iconColor}
-                  />
-                </Pressable>
               </View>
             )}
 
@@ -325,29 +251,15 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
               handleClose={() => setShowExitModal(false)}
               text={i18n.t('learnScreen.leaveStudyMessage')}
             />
-
-            <DefaultModal
-              isVisible={showSettingsModal}
-              handleClose={() => toggleSwitch(setShowSettingsModal)}
-              modalStyle={{
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-                elevation: 5,
-              }}
-            >
-              {generateSectionContent()}
-            </DefaultModal>
           </View>
         ) : (
-          <>
+          <View style={{ padding: 20 }}>
             <View
               style={{
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                gap: 10,
+                gap: 20,
               }}
             >
               <Text
@@ -360,7 +272,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
                 {i18n.t('learnScreen.lessonCompleteTitle')}
               </Text>
 
-              <View style={{ marginBottom: 30 }}>
+              <View style={{ marginBottom: 30, gap: 10 }}>
                 <View
                   style={[
                     styles.resultItemContainer,
@@ -398,7 +310,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
               text={i18n.t('learnScreen.continueButton')}
               onPress={leaveStudy}
             />
-          </>
+          </View>
         )}
       </View>
     </ThemeBackground>

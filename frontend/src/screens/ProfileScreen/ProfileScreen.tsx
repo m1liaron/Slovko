@@ -34,7 +34,7 @@ import styles from './ProfileScreen.styles';
 import { persistor } from '@/redux/store';
 
 export default function ProfileScreen() {
-  const { user } = useAppSelector(selectUser);
+  const { user, isAuthenticated } = useAppSelector((state) => state.user);
   const { theme, toggleTheme } = useAppTheme();
   const colors = theme.colors;
   const navigation = useNavigation<StackNavigation>();
@@ -54,7 +54,7 @@ export default function ProfileScreen() {
       setUserEmail(user.email);
       setImage(user.image || '');
     }
-  }, [user]);
+  }, [user, isAuthenticated]);
 
   const handleLogout = async () => {
     if (Platform.OS === 'web') {

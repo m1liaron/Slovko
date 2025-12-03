@@ -33,7 +33,7 @@ const Select: React.FC<SelectProps> = ({
   const [showSelect, setShowSelect] = useState(false);
 
   return (
-    <View style={{ zIndex: 2 }}>
+    <View style={{ zIndex: 15, position: 'relative' }}>
       <View
         style={{
           flexDirection: 'row',
@@ -70,7 +70,7 @@ const Select: React.FC<SelectProps> = ({
       </View>
 
       {showSelect && (
-        <View style={{ position: 'absolute', top: 50 }}>
+        <View style={{ position: 'absolute', top: 50, zIndex: 10 }}>
           <FlatList
             data={data}
             renderItem={({ item }) => (

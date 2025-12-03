@@ -1,6 +1,6 @@
 const AsyncStorageVariables = {
   TOKEN: 'token',
-  FIRST_START: 'true',
+  FIRST_START: 'first_start',
   THEME: 'theme',
   PERSIST_ROOT: 'persist:root',
   LANGUAGE: 'language',

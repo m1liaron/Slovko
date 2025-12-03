@@ -50,38 +50,9 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(item.word);
   const [translate, setTranslate] = useState<string>(item.translateWord);
-  const [imageUri, setImageUri] = useState<string>('');
+  const [imageUri, setImageUri] = useState<string>(item?.image?.url || '');
 
   const dispatch = useAppDispatch();
-
-  const formatReviewTime = (reviewTime: Date) => {
-    const now = new Date().getTime();
-    const timeDifference = new Date(reviewTime).getTime() - now; // Now it's future time, so we subtract now from reviewTime
-
-    const oneDay = 24 * 60 * 60 * 1000;
-    const oneHour = 60 * 60 * 1000;
-    const oneMinute = 60 * 1000;
-
-    if (timeDifference <= 0) {
-      return 'Час повтору пройшов'; // If review time has passed
-    }
-
-    if (timeDifference < oneHour) {
-      const minutes = Math.ceil(timeDifference / oneMinute); // Use ceil to round up for future times
-      return `Через ${minutes} хвилин${minutes === 1 ? 'у' : minutes >= 3 && minutes <= 4 ? 'и' : ''}`;
-    }
-    if (timeDifference < oneDay) {
-      const hours = Math.floor(timeDifference / oneHour);
-      const minutes = Math.ceil((timeDifference % oneHour) / oneMinute);
-      return `Через ${hours} годин${hours === 1 ? 'у' : hours >= 3 ? 'и' : ''} та ${minutes} хвилин${minutes === 1 ? 'у' : minutes >= 3 && minutes <= 4 ? 'и' : ''}`;
-    }
-    const days = Math.floor(timeDifference / oneDay);
-    const time = new Date(reviewTime).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-    return `Через ${days} днів о ${time}`;
-  };
 
   const handleUpdateCard = () => {
     dispatch(
@@ -199,6 +170,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
         <PressableButton
           text="Виберіть зображення з галереї"
           onPress={() => pickImage(imageUri, setImageUri)}
+          buttonStyle={{ marginBottom: 20 }}
         />
         {imageUri !== '' && (
           <Image source={{ uri: imageUri }} style={styles.image} />

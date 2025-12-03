@@ -40,7 +40,7 @@ const updateUser = createAppAsyncThunk(
   'user/update',
   async ({ id, data }: { id: string; data: IUpdateUser }) => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.put(`/users/${id}`, data);
+    const response = await axiosInstance.patch(`/users/${id}`, data);
     return response.data;
   },
 );

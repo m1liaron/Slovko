@@ -10,12 +10,24 @@ import {
   getGroupStorage,
   moveGroupToAnotherSection,
 } from '@/redux/groupReducer/groupThunk';
-import { Entypo, Feather, FontAwesome } from '@expo/vector-icons';
+import {
+  Entypo,
+  Feather,
+  FontAwesome,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import type React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import AddInput from '../../common/components/AddInput/AddInput';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
@@ -25,10 +37,12 @@ import CardList from '../../components/Card/CardList/CardList';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import {
+  addLearningMode,
   filterCardsByStatus,
+  getRepeatedCards,
+  LearningMode,
   rangeCards,
   resetFilter,
-  sortCards,
 } from '../../redux/cardReducer/cardSlice';
 import {
   getGroup,
@@ -42,19 +56,34 @@ import { Select } from '@/common/components/Select/Select';
 import { LineLoader } from '@/common/components/LineLoader/LineLoader';
 import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
 import { FlatList } from 'react-native-gesture-handler';
+import AddButton from '@/common/components/AddButton/AddButton';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { AddCardModal } from '@/components/Modals/AddCardModal/AddCardModal';
+import Checkbox from 'expo-checkbox';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
   typeof AppPath.Group
 >;
 
+interface ShowModeLearning {
+  text: string;
+  iconName: string;
+  shown: boolean;
+  sectionName: LearningMode;
+}
+
 const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
+  const maxContentWidth = isDesktop ? 1200 : width;
+
   const { groupId } = route.params as { groupId: string };
   const { group, status } = useAppSelector((state) => state.groups);
-  const { cards, filteredCards, isLoading } = useAppSelector(
+  const { cards, filteredCards, isLoading, shownModes } = useAppSelector(
     (state) => state.cards,
   );
   const { sections, activeSectionId } = useAppSelector(
@@ -63,6 +92,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const showSections = sections.filter(
     (section) => section.id !== activeSectionId,
   );
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [groupTitle, setGroupTitle] = useState<string>('');
@@ -74,6 +105,33 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [newSectionId, setNewSectionId] = useState<string>();
   const [showSectionList, setShowSectionList] = useState(false);
+  const [showModesModal, setShowModesModal] = useState(false);
+  const [viewMode, setViewMode] = useState<'list' | 'cards'>('list');
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+
+  const [shownLearningModes, setShownLearningModes] = useState<
+    ShowModeLearning[]
+  >([
+    {
+      text: i18n.t('learnScreen.quizMode'),
+      iconName: 'quiz',
+      shown: shownModes?.quiz ?? true,
+      sectionName: 'quiz',
+    },
+    {
+      text: i18n.t('learnScreen.guessWordMode'),
+      iconName: 'wordpress',
+      shown: shownModes?.word ?? true,
+      sectionName: 'word',
+    },
+    {
+      text: i18n.t('learnScreen.checkTranslateMode'),
+      iconName: 'checklist',
+      shown: shownModes?.check ?? true,
+      sectionName: 'check',
+    },
+  ]);
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
@@ -83,10 +141,19 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   }
 
   useEffect(() => {
+    setWordsRangeNumber(filteredCards.length);
+  }, [filteredCards.length]);
+
+  useEffect(() => {
     if (!group || group.id !== groupId) {
       dispatch(enqueueOrDispatch(getGroupStorage, getGroup, { groupId }));
     }
   }, [group, groupId, dispatch]);
+
+  const totalCards = cards?.length || 0;
+  const learnedCards = group?.learnedCount || 0;
+  const progressPercentage =
+    totalCards > 0 ? (learnedCards / totalCards) * 100 : 0;
 
   const statusCardsButtons = useMemo(() => {
     if (!group) return [];
@@ -94,20 +161,23 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       {
         title: i18n.t('group.studying'),
         status: 'To Learn',
-        amount: group.learnToCardsAmount || 0,
+        amount: group.toLearnCount || 0,
         color: '#32C74D',
+        icon: 'radio-button-unchecked',
       },
       {
         title: i18n.t('group.reviewed'),
-        status: 'Learned',
-        amount: group.learnedCardsAmount || 0,
+        status: 'Repeated',
+        amount: group.repeatedCount || 0,
         color: '#62CBE9',
+        icon: 'check-circle',
       },
       {
         title: i18n.t('group.known'),
         status: 'Know',
-        amount: group.knowCardsAmount || 0,
+        amount: group.knowCount || 0,
         color: '#a8a800',
+        icon: 'refresh',
       },
     ];
   }, [group]);
@@ -124,17 +194,14 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     );
   };
 
-  const handleFilterCards = () => {
-    if (sort.length > 0) {
-      dispatch(sortCards(sortOrder));
-    }
-    if (wordsRangeNumber !== cards.length || wordsRangeNumber !== 2) {
-      dispatch(rangeCards(wordsRangeNumber));
-    }
-  };
-
   const handleRemoveGroup = () => {
-    dispatch(enqueueOrDispatch(removeGroup, removeStateGroup, groupId));
+    dispatch(
+      enqueueOrDispatch(removeGroup, removeStateGroup, {
+        groupId,
+        sectionId: activeSectionId,
+      }),
+    );
+    dispatch(getRepeatedCards({ sectionId: activeSectionId }));
     setShowEditModal(false);
     navigation.navigate(AppPath.Main);
   };
@@ -153,173 +220,615 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
   const onChangeCardsRange = useCallback((value: number) => {
     setWordsRangeNumber(value);
+    if (value !== cards.length || value !== 2) {
+      dispatch(rangeCards(Math.floor(value)));
+    }
   }, []);
 
   const decWordsRange = () => {
     if (wordsRangeNumber > 2) {
-      setWordsRangeNumber(wordsRangeNumber - 1);
+      onChangeCardsRange(wordsRangeNumber - 1);
     }
   };
 
   const incWordsRange = () => {
-    if (wordsRangeNumber < cards?.length) {
-      setWordsRangeNumber(wordsRangeNumber + 1);
+    if (wordsRangeNumber < filteredCards?.length) {
+      onChangeCardsRange(wordsRangeNumber + 1);
     }
   };
 
+  const handleStatusFilter = (status: string) => {
+    if (selectedStatus === status) {
+      setSelectedStatus(null);
+      dispatch(resetFilter());
+    } else {
+      setSelectedStatus(status);
+      dispatch(filterCardsByStatus({ status }));
+    }
+  };
+
+  const handleShowModesModal = () => {
+    bottomSheetRef.current?.snapToIndex(2);
+    setShowModesModal(true);
+  };
+
+  const navigateToLearn = () => {
+    if (wordsRangeNumber !== cards.length) {
+      dispatch(rangeCards(wordsRangeNumber));
+    }
+    navigation.navigate(AppPath.Learn, { groupId });
+    bottomSheetRef.current?.close();
+    setShowModesModal(false);
+  };
+
+  const onChangeLearningModeShown = (index: number) => {
+    setShownLearningModes((prev) =>
+      prev.map((mode, i) =>
+        i === index ? { ...mode, shown: !mode.shown } : mode,
+      ),
+    );
+    dispatch(
+      addLearningMode({ sectionName: shownLearningModes[index].sectionName }),
+    );
+  };
+
   return (
-    <ThemeBackground style={{ padding: 10 }}>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <BackButton />
-          <ThemeText style={{ fontSize: 30 }}>{group?.title}</ThemeText>
-        </View>
+    <ThemeBackground style={{ padding: 0, alignItems: 'center' }}>
+      <View style={{ width: '100%', maxWidth: maxContentWidth }}>
+        <View
+          style={{
+            padding: isDesktop ? 32 : 20,
+            paddingTop: isDesktop ? 32 : 40,
+            backgroundColor: colors.lightBackground,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: isDesktop ? 'row' : 'column',
+              justifyContent: 'space-between',
+              alignItems: isDesktop ? 'center' : 'flex-start',
+              gap: 16,
+            }}
+          >
+            <View style={{ flex: isDesktop ? 1 : undefined }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: isDesktop ? 0 : 8,
+                }}
+              >
+                <BackButton />
+                <ThemeText
+                  style={{
+                    fontSize: isDesktop ? 32 : 25,
+                    fontWeight: 'bold',
+                    marginLeft: 10,
+                  }}
+                >
+                  {group?.title}
+                </ThemeText>
+              </View>
+            </View>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View>
-            <Pressable onPress={() => setShowFilterModal((prev) => !prev)}>
-              {showFilterModal ? (
-                <FontAwesome name="filter" size={23.5} color={colors.primary} />
-              ) : (
-                <Feather name="filter" size={20} color={colors.primary} />
-              )}
-            </Pressable>
+            {/* View Mode Toggle */}
+            <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+              <Pressable
+                style={{
+                  borderRadius: 20,
+                  backgroundColor: showFilterModal
+                    ? colors.primary
+                    : colors.lightBackground,
+                  padding: 10,
+                }}
+                onPress={() => setShowFilterModal((prev) => !prev)}
+              >
+                <Feather
+                  name="filter"
+                  size={20}
+                  color={showFilterModal ? colors.background : colors.text}
+                />
+              </Pressable>
+
+              <Pressable
+                onPress={() => setViewMode('list')}
+                style={{
+                  backgroundColor:
+                    viewMode === 'list'
+                      ? colors.primary
+                      : colors.lightBackground,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <MaterialIcons
+                  name="view-list"
+                  size={20}
+                  color={viewMode === 'list' ? colors.background : colors.text}
+                />
+                <Text
+                  style={{
+                    color:
+                      viewMode === 'list' ? colors.background : colors.text,
+                    fontWeight: '600',
+                  }}
+                >
+                  List
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => setViewMode('cards')}
+                style={{
+                  backgroundColor:
+                    viewMode === 'cards'
+                      ? colors.primary
+                      : colors.lightBackground,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: 20,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 6,
+                }}
+              >
+                <MaterialIcons
+                  name="view-carousel"
+                  size={20}
+                  color={viewMode === 'cards' ? colors.background : colors.text}
+                />
+                <Text
+                  style={{
+                    color:
+                      viewMode === 'cards' ? colors.background : colors.text,
+                    fontWeight: '600',
+                  }}
+                >
+                  Cards
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => setShowEditModal(true)}
+                style={{
+                  padding: 10,
+                  backgroundColor: colors.lightBackground,
+                  borderRadius: 20,
+                }}
+              >
+                <Entypo
+                  name="dots-three-vertical"
+                  size={20}
+                  color={colors.iconColor}
+                />
+              </Pressable>
+            </View>
           </View>
+        </View>
+        {isLoading && <LineLoader />}
 
-          <Pressable onPress={() => setShowEditModal((prev) => !prev)}>
-            <Entypo
-              name="dots-three-vertical"
-              size={30}
-              color={colors.iconColor}
+        <View
+          style={{
+            backgroundColor: colors.background,
+            padding: isDesktop ? 32 : 20,
+            marginHorizontal: isDesktop ? 32 : 20,
+            marginTop: 20,
+            borderRadius: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginBottom: 12,
+            }}
+          >
+            <ThemeText style={{ fontSize: 18, fontWeight: '600' }}>
+              Progress
+            </ThemeText>
+            <ThemeText style={{ fontSize: 16 }}>
+              {learnedCards > 0
+                ? `${learnedCards}/${filteredCards.length}`
+                : i18n.t('group.noCardsLearned')}{' '}
+              {i18n.t('group.learned')}
+            </ThemeText>
+          </View>
+          <View
+            style={{
+              height: 12,
+              backgroundColor: colors.lightBackground,
+              borderRadius: 6,
+              overflow: 'hidden',
+            }}
+          >
+            <View
+              style={{
+                height: '100%',
+                width: `${progressPercentage}%`,
+                backgroundColor: colors.primary,
+                borderRadius: 6,
+              }}
             />
-          </Pressable>
+          </View>
         </View>
       </View>
 
-      {isLoading && <LineLoader />}
+      {/* Cards List */}
+      <View
+        style={{
+          flexShrink: isDesktop ? 0 : 1,
+          height: isDesktop ? 500 : 'auto',
+          paddingHorizontal: isDesktop ? 32 : 0,
+        }}
+      >
+        <CardList groupId={groupId} />
+      </View>
+
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 10,
+          padding: 20,
+        }}
+      >
+        {cards.length > 1 && (
+          <PressableButton
+            onPress={handleShowModesModal}
+            text={i18n.t('group.cardList.learnButton')}
+            buttonStyle={{ flex: 1, width: isDesktop ? 500 : 'auto' }}
+          />
+        )}
+        <AddButton
+          viewStyles={{ position: 'static', right: 0, bottom: 0 }}
+          onPress={() => setShowAddModal(true)}
+        />
+      </View>
 
       {showFilterModal && (
         <View
           style={{
             position: 'absolute',
+            top: isDesktop ? 60 : 130,
+            left: isDesktop ? '50%' : '0%',
             backgroundColor: colors.background,
-            top: 100,
-            right: 10,
-            borderRadius: 20,
-            padding: 20,
-            zIndex: 2,
-            borderColor: colors.lightBackground,
-            borderWidth: 3,
+            padding: isDesktop ? 32 : 20,
+            marginHorizontal: isDesktop ? 32 : 20,
+            marginTop: 20,
+            borderRadius: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+            opacity: 1,
           }}
         >
-          <ThemeText>Filter</ThemeText>
-          {cards.length > 1 && (
-            <View style={{ marginHorizontal: 20 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}
+          >
+            <Feather name="filter" size={20} color={colors.primary} />
+            <ThemeText
+              style={{ fontSize: 18, fontWeight: '600', marginLeft: 8 }}
+            >
+              Filters
+            </ThemeText>
+          </View>
+
+          <View style={{ gap: 24 }}>
+            {/* Cards to show slider */}
+            <View>
+              <ThemeText
+                style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}
+              >
+                Cards to show
+              </ThemeText>
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'center',
                   alignItems: 'center',
+                  gap: 16,
                 }}
               >
-                <Pressable onPress={decWordsRange}>
-                  <FontAwesome name="minus" color={colors.primary} size={40} />
-                </Pressable>
-                <View
+                <Pressable
+                  onPress={decWordsRange}
                   style={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    padding: 8,
+                    backgroundColor: colors.lightBackground,
+                    borderRadius: 8,
                   }}
                 >
-                  <ThemeText style={{ fontSize: 35 }}>
-                    {Math.floor(wordsRangeNumber)}
+                  <FontAwesome name="minus" color={colors.primary} size={16} />
+                </Pressable>
+                <View style={{ flex: 1, alignItems: 'center' }}>
+                  <ThemeText style={{ fontSize: 24, fontWeight: 'bold' }}>
+                    {Math.floor(wordsRangeNumber)}/{filteredCards.length}
                   </ThemeText>
                   <Slider
-                    style={{ width: 200, height: 40 }}
-                    minimumValue={2}
-                    maximumValue={cards.length}
+                    style={{ width: '100%', height: 40 }}
+                    disabled={filteredCards.length === 0}
+                    maximumValue={filteredCards.length}
                     value={wordsRangeNumber}
                     onSlidingComplete={onChangeCardsRange}
                     minimumTrackTintColor={colors.primary}
-                    maximumTrackTintColor={colors.background}
+                    maximumTrackTintColor={colors.lightBackground}
                   />
                 </View>
-
-                <Pressable onPress={incWordsRange}>
-                  <FontAwesome name="plus" color={colors.primary} size={40} />
+                <Pressable
+                  onPress={incWordsRange}
+                  style={{
+                    padding: 8,
+                    backgroundColor: colors.lightBackground,
+                    borderRadius: 8,
+                  }}
+                >
+                  <FontAwesome name="plus" color={colors.primary} size={16} />
                 </Pressable>
               </View>
             </View>
-          )}
 
-          <Select
-            placeholder={i18n.t('sharedGroupsScreen.sort')}
-            data={[
-              i18n.t('group.sortByDate'),
-              i18n.t('group.sortByName'),
-              i18n.t('group.sortByReviewDate'),
-            ]}
-            customStyle={{ width: '100%', paddingHorizontal: 20 }}
-            currentSelect={sort}
-            setCurrentSelect={setSort}
-            showSortIcon={true}
-            setSortOrder={setSortOrder}
-            sortOrder={sortOrder}
-          />
-
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            {statusCardsButtons.map(({ status, title, amount, color }) => (
-              <Pressable
-                key={title}
-                style={{
-                  padding: 10,
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: color,
-                  marginHorizontal: 10,
-                  alignItems: 'center',
-                }}
-                onPress={() => dispatch(filterCardsByStatus({ status }))}
+            {/* Sort by dropdown */}
+            <View>
+              <ThemeText
+                style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}
               >
-                <Text style={{ color, fontWeight: 'bold' }}>{amount}</Text>
-                <Text style={{ color, fontWeight: 'bold' }}>{title}</Text>
-              </Pressable>
-            ))}
+                Sort by
+              </ThemeText>
+              <Select
+                placeholder="Default order"
+                data={[
+                  i18n.t('group.sortByDate'),
+                  i18n.t('group.sortByName'),
+                  i18n.t('group.sortByReviewDate'),
+                ]}
+                customStyle={{ width: '100%' }}
+                currentSelect={sort}
+                setCurrentSelect={setSort}
+                showSortIcon={true}
+                setSortOrder={setSortOrder}
+                sortOrder={sortOrder}
+              />
+            </View>
+
+            {/* Status filters */}
+            <View>
+              <ThemeText
+                style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}
+              >
+                Status
+              </ThemeText>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+                {statusCardsButtons.map(({ status, title, icon, color }) => (
+                  <Pressable
+                    key={status}
+                    onPress={() => handleStatusFilter(status)}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 6,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                      borderRadius: 20,
+                      backgroundColor:
+                        selectedStatus === status
+                          ? colors.lightBackground
+                          : 'transparent',
+                      borderWidth: 1,
+                      borderColor:
+                        selectedStatus === status
+                          ? colors.primary
+                          : colors.lightBackground,
+                    }}
+                  >
+                    <MaterialIcons name={icon} size={18} color={color} />
+                    <Text style={{ color: colors.text, fontSize: 14 }}>
+                      {title}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <PressableButton
-              onPress={handleFilterCards}
-              buttonStyle={{ marginTop: 20, width: '60%' }}
-              text={i18n.t('sharedGroupsScreen.filter')}
-            />
+          <View style={{ marginTop: 20, gap: 12 }}>
+            <ThemeText style={{ fontSize: 14, opacity: 0.6 }}>
+              Showing {totalCards} of {filteredCards.length} words
+            </ThemeText>
+
             {filteredCards.length < cards.length && (
               <Pressable
-                style={{
-                  padding: 5,
-                  borderRadius: 10,
-                  borderWidth: 2,
-                  borderColor: '#bcbcbc',
-                  marginHorizontal: 10,
+                onPress={() => {
+                  dispatch(resetFilter());
+                  setSelectedStatus(null);
                 }}
-                onPress={() => dispatch(resetFilter())}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 8,
+                  alignSelf: 'flex-start',
+                  paddingVertical: 8,
+                }}
               >
-                <Entypo name="back-in-time" size={30} color="#bcbcbc" />
+                <Entypo name="back-in-time" size={18} color={colors.primary} />
+                <Text
+                  style={{
+                    color: colors.primary,
+                    fontSize: 14,
+                    fontWeight: '600',
+                  }}
+                >
+                  Reset filters
+                </Text>
               </Pressable>
             )}
           </View>
         </View>
       )}
 
-      <CardList groupId={groupId} />
+      {Platform.OS !== 'web' && showModesModal && (
+        <BottomSheet
+          enablePanDownToClose={true}
+          snapPoints={[300, '40%']}
+          ref={bottomSheetRef}
+          style={{
+            backgroundColor: colors.lightBackground,
+          }}
+        >
+          <BottomSheetView
+            style={{ flex: 1, padding: 30, alignItems: 'center' }}
+          >
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+              {i18n.t('group.chooseModes')}
+            </Text>
+            <FlatList
+              data={shownLearningModes}
+              keyExtractor={(item) => item.text}
+              contentContainerStyle={{ marginBottom: 20 }}
+              renderItem={({ item, index }) => {
+                if (item.sectionName === 'check' && filteredCards.length < 4) {
+                  return (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          gap: 10,
+                          alignItems: 'center',
+                        }}
+                      >
+                        <MaterialIcons name={item.iconName} size={30} />
+                        <Text
+                          style={{
+                            fontSize: 20,
+                            textDecorationLine: 'line-through',
+                          }}
+                        >
+                          {item.text}
+                        </Text>
+                      </View>
+                      <Text>{i18n.t('group.cardList.atLeastFourWords')}</Text>
+                    </>
+                  );
+                }
+
+                return (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: 'row',
+                      gap: 10,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Checkbox
+                      value={item.shown}
+                      onValueChange={() => onChangeLearningModeShown(index)}
+                    />
+                    <MaterialIcons name={item.iconName} size={30} />
+                    <Text style={{ fontSize: 20 }}>{item.text}</Text>
+                  </View>
+                );
+              }}
+            />
+            <PressableButton
+              onPress={navigateToLearn}
+              text={i18n.t('group.cardList.learnButton')}
+              buttonStyle={{ width: '100%' }}
+            />
+          </BottomSheetView>
+        </BottomSheet>
+      )}
+
+      <DefaultModal
+        isVisible={showModesModal && Platform.OS === 'web'}
+        handleClose={() => setShowModesModal(false)}
+      >
+        <ThemeText style={{ fontSize: 20, fontWeight: 'bold' }}>
+          {i18n.t('group.chooseModes')}
+        </ThemeText>
+        <FlatList
+          data={shownLearningModes}
+          keyExtractor={(item) => item.text}
+          contentContainerStyle={{ marginBottom: 20 }}
+          renderItem={({ item, index }) => {
+            if (item.sectionName === 'check' && filteredCards.length < 4) {
+              return (
+                <>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      gap: 10,
+                      alignItems: 'center',
+                    }}
+                  >
+                    <MaterialIcons
+                      name={item.iconName}
+                      size={30}
+                      color={colors.primary}
+                    />
+                    <ThemeText
+                      style={{
+                        fontSize: 20,
+                        textDecorationLine: 'line-through',
+                      }}
+                    >
+                      {item.text}
+                    </ThemeText>
+                  </View>
+                  <ThemeText style={{ fontWeight: 'bold' }}>
+                    {i18n.t('group.cardList.atLeastFourWords')}
+                  </ThemeText>
+                </>
+              );
+            }
+
+            return (
+              <View
+                key={index}
+                style={{
+                  flexDirection: 'row',
+                  gap: 10,
+                  alignItems: 'center',
+                }}
+              >
+                <Checkbox
+                  value={item.shown}
+                  onValueChange={() => onChangeLearningModeShown(index)}
+                />
+                <MaterialIcons
+                  name={item.iconName}
+                  size={30}
+                  color={colors.primary}
+                />
+                <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
+              </View>
+            );
+          }}
+        />
+        <PressableButton
+          onPress={navigateToLearn}
+          text={i18n.t('group.cardList.learnButton')}
+          buttonStyle={{ width: '100%' }}
+        />
+      </DefaultModal>
+
+      <AddCardModal
+        showAddModal={showAddModal}
+        setShowAddModal={setShowAddModal}
+        groupId={groupId}
+      />
 
       <DefaultModal
         isVisible={showEditModal}
@@ -344,35 +853,34 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         <View>
           {showSections.length > 0 && (
             <Pressable
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
               onPress={() => setShowSectionList((prev) => !prev)}
             >
               <ThemeText>{i18n.t('group.moveGroup')}</ThemeText>
               <Feather
                 name={showSectionList ? 'arrow-down' : 'arrow-right'}
                 color={colors.primary}
-                size={30}
+                size={24}
               />
             </Pressable>
           )}
 
           {showSectionList && showSections.length > 0 && (
-            <View>
+            <View style={{ marginTop: 16 }}>
               <FlatList
                 data={showSections}
                 contentContainerStyle={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
                   gap: 10,
-                  margin: 10,
                 }}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <Pressable
                     style={{
-                      padding: 10,
+                      padding: 12,
                       backgroundColor:
-                        newSectionId === item.id ? colors.highlightColor : '',
+                        newSectionId === item.id
+                          ? colors.highlightColor
+                          : colors.lightBackground,
                       borderRadius: 10,
                     }}
                     onPress={() => setNewSectionId(item.id)}
@@ -381,10 +889,12 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
                   </Pressable>
                 )}
               />
-              <PressableButton
-                text="Перемістити"
-                onPress={handleMoveGroupToAnotherSection}
-              />
+              <View style={{ marginTop: 16 }}>
+                <PressableButton
+                  text="Перемістити"
+                  onPress={handleMoveGroupToAnotherSection}
+                />
+              </View>
             </View>
           )}
         </View>

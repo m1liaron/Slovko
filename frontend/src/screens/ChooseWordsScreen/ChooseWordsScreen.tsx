@@ -8,10 +8,11 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   Text,
+  SafeAreaView,
 } from 'react-native';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '@/hooks/redux.hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { FlatList } from 'react-native-gesture-handler';
 import languagesJson from '@/assets/data/languages.json';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
@@ -21,6 +22,12 @@ import { AppPath } from '@/common/enums/app/AppPath';
 import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
 import { removeStorageItem, setStorageItem } from '@/utils/storage';
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
+import {
+  addSection,
+  addStateSection,
+} from '@/redux/sectionReducer/sectionSlice';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 
 type Word = {
   id: number;
@@ -56,6 +63,7 @@ const ChooseWordsScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const { width } = useWindowDimensions();
   const { theme } = useAppTheme();
+  const dispatch = useAppDispatch();
   const { selectedLanguage } = useAppSelector((state) => state.sections);
   const [words, setWords] = useState<Word[]>([]);
   const [chosenWords, setChosenWords] = useState<string[]>([]);
@@ -126,15 +134,24 @@ const ChooseWordsScreen = () => {
   const navigateToMain = async () => {
     await setStorageItem(AsyncStorageVariables.FIRST_START, 'false');
     navigation.navigate(AppPath.Home);
+    if (selectedLanguage) {
+      dispatch(
+        enqueueOrDispatch(addSection, addStateSection, {
+          title: selectedLanguage,
+        }),
+      );
+    }
   };
 
   return (
-    <ThemeBackground
+    <SafeAreaView
       style={{
+        flex: 1,
         paddingHorizontal: 20,
         paddingVertical: 30,
       }}
     >
+      <WelcomeThemeBackground />
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ alignItems: 'center' }}>
           <Image
@@ -146,21 +163,22 @@ const ChooseWordsScreen = () => {
             }}
             resizeMode="contain"
           />
-          <ThemeText style={{ fontWeight: 'bold', fontSize: 30 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff' }}>
             Slovko
-          </ThemeText>
+          </Text>
         </View>
-        <ThemeText
+        <Text
           style={{
             fontWeight: '700',
             textAlign: 'center',
             marginBottom: 40,
+            color: '#fff',
           }}
         >
           {showLevel
             ? i18n.t('chooseWordsScreen.slogan')
             : i18n.t('chooseWordsScreen.chooseWords')}
-        </ThemeText>
+        </Text>
 
         {showLevel ? (
           <>
@@ -265,9 +283,8 @@ const ChooseWordsScreen = () => {
               />
               <PressableButton
                 onPress={navigateToMain}
-                gradientColor={theme.colors.lightBackground}
+                gradientColor={theme.colors.highlightDarkColor}
                 text={i18n.t('chooseWordsScreen.withoutRegistration')}
-                buttonStyle={{ backgroundColor: theme.colors.lightBackground }}
               />
             </View>
           </>
@@ -294,9 +311,7 @@ const ChooseWordsScreen = () => {
                     activeOpacity={0.7}
                     onPress={() => handleSetChosenWord(item)}
                     style={{
-                      width: '45%',
                       minWidth: 150,
-                      maxWidth: 250,
                       marginBottom: 16,
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -362,7 +377,7 @@ const ChooseWordsScreen = () => {
           )}
         </View>
       )}
-    </ThemeBackground>
+    </SafeAreaView>
   );
 };
 

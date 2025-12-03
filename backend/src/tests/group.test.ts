@@ -17,14 +17,14 @@ describe("GROUP_ROUTES", () => {
   });
 
   it("GET_GROUPS", async () => {
-    const res = await authRequest("get", "/groups", { sectionId: testData.testSection.id });
+    const res = await authRequest("get", `/groups/${testData.testSection.id}`);
 
     expect(res.status).toBe(200);
     expect(res.body.length).toBe(1);
   });
 
   it("GET_GROUP", async () => {
-    const res = await authRequest("get", `/groups/${testData.testGroup.id}`, { sectionId: testData.testSection.id });
+    const res = await authRequest("get", `/groups/${testData.testGroup.id}/${testData.testSection.id}`);
 
     expect(res.status).toBe(200);
     expect(res.body.title).toBe(testData.testGroup.title);
@@ -41,7 +41,7 @@ describe("GROUP_ROUTES", () => {
   });
 
   it("DELETE_GROUP", async () => {
-    const res = await authRequest("delete", `/groups/${testData.testGroup.id}`, { sectionId: testData.testSection.id });
+    const res = await authRequest("delete", `/groups/${testData.testGroup.id}/${testData.testSection.id}`);
 
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(testData.testGroup.id);

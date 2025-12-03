@@ -1,5 +1,4 @@
 import type { IStreakDate, IUser } from '@/common/enums/types/user.type';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   createSlice,
   isFulfilled,
@@ -59,7 +58,7 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(login.rejected, (state) => {
@@ -67,7 +66,7 @@ const userSlice = createSlice({
       })
 
       .addCase(register.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.isAuthenticated = true;
       })
       .addCase(register.rejected, (state) => {
@@ -116,8 +115,8 @@ const userSlice = createSlice({
         const payload = action.payload as RejectedPayload;
         state.status = DataStatus.ERROR;
         state.isLoading = false;
-        state.codeStatus = payload.status;
-        state.message = payload.message;
+        state.codeStatus = payload?.status;
+        state.message = payload?.message;
       });
   },
 });

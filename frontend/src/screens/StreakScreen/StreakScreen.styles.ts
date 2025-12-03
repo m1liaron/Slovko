@@ -2,7 +2,6 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   calendarContainer: {
-    flex: 1,
     padding: 16,
     borderRadius: 12,
     margin: 16,
@@ -11,6 +10,8 @@ export default StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5, // Android shadow
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   frozenContainer: {
     marginTop: 24,

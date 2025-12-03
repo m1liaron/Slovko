@@ -27,6 +27,7 @@ interface AddInputProps
     | 'onFocus'
   > {
   height?: number;
+  multiline?: boolean
 }
 
 const AddInput = ({
@@ -36,6 +37,7 @@ const AddInput = ({
   onChangeText,
   onFocus,
   height,
+  multiline
 }: AddInputProps) => {
   const {
     theme: {
@@ -48,6 +50,7 @@ const AddInput = ({
         styles.input,
         { backgroundColor: lightBackground, color: primary, height },
       ]}
+      multiline={multiline}
       onFocus={onFocus}
       placeholder={placeholder}
       placeholderTextColor={placeholderTextColor || primary}

@@ -25,7 +25,7 @@ const PressableButton = ({
 }: PressableButtonProps) => {
   const {
     theme: {
-      colors: { highlightColor, highlightDarkColor },
+      colors: { highlightColor, highlightDarkColor, primary },
     },
   } = useAppTheme();
 
@@ -43,10 +43,7 @@ const PressableButton = ({
         colors={[gradientColor || highlightColor, highlightDarkColor]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[
-          styles.button,
-          { justifyContent: 'center', alignItems: 'center' },
-        ]}
+        style={[styles.button]}
       >
         {text ? (
           <Text style={[styles.buttonText, { color: '#fff' }, textStyle]}>

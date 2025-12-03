@@ -5,14 +5,8 @@ import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import {
-  AntDesign,
-  Feather,
-  FontAwesome,
-  FontAwesome6,
-  Ionicons,
-} from '@expo/vector-icons';
-import { Link, useNavigation } from '@react-navigation/native';
+import { AntDesign, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -70,6 +64,7 @@ const ResultsScreen = () => {
 
   const groupResultsByDay = (results: IResult[]): GroupedResults => {
     return results.reduce<GroupedResults>((groups, item) => {
+      if (!item.createdAt) return {};
       const date = new Date(item.createdAt).toISOString().split('T')[0]; // Format as YYYY-MM-DD
       if (!groups[date]) {
         groups[date] = [];

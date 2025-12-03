@@ -2,7 +2,7 @@ const translations = {
   en: {
     welcomeScreen: {
       welcome: 'Welcome to Slovko',
-      customize: "Let's customize your learning",
+      journey: "Let's start your learning path",
       start: 'Start',
       next: 'Next',
       back: 'Back',
@@ -18,6 +18,19 @@ const translations = {
       notificationPermissionDenied: 'Notificaitons are blocked by the user',
       saveUkraine: 'Save Ukraine!',
       sections: 'Sections',
+      groupList: {
+        addGroup: 'Add Group',
+        nameGroup: 'Name of Group',
+        pleaseCreate: 'You should create section at first',
+        enterTitle: 'Please enter title',
+      },
+      drawer: {
+        addLanguage: 'Add Language',
+        chooseLanguage: 'Choose Language',
+        createLanguage: 'Create Section',
+        nameSection: 'Name of section',
+        add: 'Add',
+      },
     },
     sharedGroupsScreen: {
       mySharedGroups: 'My shared groups',
@@ -89,11 +102,14 @@ const translations = {
       moveGroup: 'Move group to another section',
       changeButton: 'Change',
       noSections: 'No Sections',
+      noCardsLearned: 'No Cards',
+      learned: 'Learned',
+      chooseModes: 'Choose how you want to learn',
       cardList: {
         addCardTitle: 'Add a Card!',
         oneCard: 'Single',
-        manyCards: 'Multiple (NEW)',
-        fileTypes: 'Available file types: txt, text/plain, NEW: xlsx, xls',
+        manyCards: 'Multiple',
+        fileTypes: 'Available file types: txt, text/plain',
         importTxt: 'Import .txt',
         dataTitle: 'Data:',
         chooseImage: 'Choose image from gallery',
@@ -102,6 +118,7 @@ const translations = {
         validation: 'Validation:',
         addButton: 'Add',
         learnButton: 'Learn',
+        atLeastFourWords: 'At Least Fours Words',
       },
     },
     sharedGroup: {
@@ -137,13 +154,14 @@ const translations = {
       buyFreeze: 'Buy Freeze',
     },
     registerScreen: {
-      title: 'Registration',
+      title: '              Create your account to get started',
       namePlaceholder: 'Name',
       emailPlaceholder: 'Email',
       passwordPlaceholder: 'Password',
       confirmPasswordPlaceholder: 'Confirm Password',
       signUpButton: 'Sign Up',
-      switchText: 'Already have an account? Login',
+      signWithoutButton: 'Sign Up without account',
+      switchText: 'Already have an account?',
       errorMessage: {
         requiredFields: 'Fields must be filled!',
         passwordsDoNotMatch: 'Passwords do not match!',
@@ -151,11 +169,13 @@ const translations = {
       },
     },
     loginScreen: {
-      title: 'Login',
+      title: 'Login to get started',
       emailPlaceholder: 'Email',
       passwordPlaceholder: 'Password',
+      register: 'Register',
       loginButton: 'Login',
-      switchText: "Don't have an account? Sign Up",
+      signWithoutButton: 'Login without account ',
+      switchText: "Don't have an account?",
       errorMessage: {
         requiredFields: 'Fields must be filled!',
         loginFailed: 'Login failed',
@@ -165,6 +185,7 @@ const translations = {
       quizMode: 'Quiz mode',
       guessWordMode: 'Guess Word mode',
       checkTranslateMode: 'Check Translate mode',
+      crossWordMode: 'Crossword mode',
       leaveStudyMessage:
         'Are you sure you want to leave the study session and lose your progress?',
       lessonCompleteTitle: 'Well done! Great work!',
@@ -176,6 +197,13 @@ const translations = {
       timeSpent: 'Time Spent',
       totalScore: 'Total Score',
       accuracyPercentage: 'Accuracy Percentage',
+      learnCards: {
+        swipeLeft: "Swipe to left if you don't know",
+        swipeRight: 'ПSwipe to right if you know',
+        answer: 'Type in Answer',
+        checkAnswer: 'Check',
+        tapToFlip: 'Tap to Flip',
+      },
     },
     chooseLanguageScreen: {
       whichLanguage: 'Which language do you want to learn?',
@@ -192,7 +220,7 @@ const translations = {
   uk: {
     welcomeScreen: {
       welcome: 'Вітаю у Slovko',
-      customize: 'Давайте налаштуємо ваше навчання',
+      journey: 'Давайте почнемо ваше навчання',
       start: 'Почати',
       next: 'Наступне',
       back: 'Назад',
@@ -218,6 +246,19 @@ const translations = {
       notificationPermissionDenied: 'Повідомлення заблоковані користувачем.',
       saveUkraine: 'Save Ukraine!',
       sections: 'Секції',
+      groupList: {
+        addGroup: 'Додати групу',
+        nameGroup: 'Назва групи',
+        pleaseCreate: 'Вам слід додати секцію спочатку',
+        enterTitle: 'Будь ласка впишіть назву групи',
+      },
+      drawer: {
+        addLanguage: 'Додати мову',
+        chooseLanguage: 'Вибрати мову',
+        createLanguage: 'Створити секцію',
+        nameSection: 'Назва секції',
+        add: 'Додати',
+      },
     },
     sharedGroupsScreen: {
       mySharedGroups: 'Мої поширені групи',
@@ -288,11 +329,14 @@ const translations = {
       moveGroup: 'Перемістити групу в інший розділ',
       changeButton: 'Змінити',
       noSections: 'Немає секцій',
+      noCardsLearned: 'Немає Карток',
+      learned: 'Вивчених',
+      chooseModes: 'Оберіть як ви хочете навчатися',
       cardList: {
         addCardTitle: 'Додайте Карточку!',
         oneCard: 'Одна',
-        manyCards: 'Багато, НОВИНКА',
-        fileTypes: 'Доступні типи файлів: txt, text/plain, НОВИНКА: xlsx, xls',
+        manyCards: 'Багато',
+        fileTypes: 'Доступні типи файлів: txt, text/plain, xlsx, xls',
         importTxt: 'Імпортувати .txt',
         dataTitle: 'Дані:',
         chooseImage: 'Виберіть зображення з галереї',
@@ -301,6 +345,7 @@ const translations = {
         validation: 'Валідація:',
         addButton: 'Додати',
         learnButton: 'Вчитися',
+        atLeastFourWords: 'Принаймні 4 слова',
       },
       sortByDate: 'Сортувати за датою',
       sortByName: 'Сортувати за назвою',
@@ -339,13 +384,14 @@ const translations = {
       buyFreeze: 'Купити Заморозку',
     },
     registerScreen: {
-      title: 'Реєстрація',
+      title: 'Створіть акаунт для користування',
       namePlaceholder: "Ім'я",
       emailPlaceholder: 'Пошта',
       passwordPlaceholder: 'Пароль',
       confirmPasswordPlaceholder: 'Пітвердіть Пароль',
       signUpButton: 'Зареєструватися',
-      switchText: 'Вже маєте акаунт? Увійти',
+      signWithoutButton: 'Увійти без реєстрації',
+      switchText: 'Вже маєте акаунт?',
       errorMessage: {
         requiredFields: 'Поля мають бути заповнені!',
         passwordsDoNotMatch: 'Паролі не збігаються!',
@@ -353,11 +399,13 @@ const translations = {
       },
     },
     loginScreen: {
-      title: 'Вхід',
+      title: 'Увійдіть у акаунт для користування',
       emailPlaceholder: 'Пошта',
       passwordPlaceholder: 'Пароль',
+      register: 'Зареєструйтесь',
       loginButton: 'Увійти',
-      switchText: 'Не маєте акаунта? Зареєструйтеся',
+      signWithoutButton: 'Увійти без акаунта',
+      switchText: 'Не маєте акаунта?',
       errorMessage: {
         requiredFields: 'Поля мають бути заповнені!',
         loginFailed: 'Невдача',
@@ -367,6 +415,7 @@ const translations = {
       quizMode: 'Режим вікторини',
       guessWordMode: 'Режим вгадування слів',
       checkTranslateMode: 'Режим перевірки перекладу',
+      crossWordMode: 'Режим кросворду',
       leaveStudyMessage:
         'Ви дійсно хочете покинути навчання та втратити прогрес?',
       lessonCompleteTitle: 'Молодець! Гарно позаймався/лась',
@@ -378,6 +427,13 @@ const translations = {
       timeSpent: 'Час витрачено',
       totalScore: 'Загальний бал',
       accuracyPercentage: 'Відсоток точності',
+      learnCards: {
+        swipeLeft: 'Проведіть вліво, якщо не знаєте',
+        swipeRight: 'Проведіть вправо, якщо не знаєте',
+        answer: 'Напишіть відповідь',
+        checkAnswer: 'Перевірити',
+        tapToFlip: 'Натисніть, щоб перегорнути',
+      },
     },
   },
 };

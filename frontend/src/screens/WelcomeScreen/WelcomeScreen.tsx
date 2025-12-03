@@ -1,53 +1,121 @@
 import PressableButton from '@/common/components/PressableButton/PressableButton';
-import { Image, Text, useWindowDimensions, View } from 'react-native';
+import {
+  Image,
+  Text,
+  useWindowDimensions,
+  View,
+  StyleSheet,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import IconImage from '@/assets/images/favicon.png';
 import { i18n } from '@/localization/i18n';
 import { AppPath } from '@/common/enums/app/AppPath';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
+import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
+import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const { width } = useWindowDimensions();
 
   return (
-    <ThemeBackground
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: width < 720 ? 'column' : 'row',
-        alignItems: 'center',
-        gap: 20,
-      }}
-    >
-      <Image source={IconImage} style={{ width: 150, height: 150 }} />
-      <View style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <View>
-          <ThemeText
-            style={{
-              fontSize: 25,
-              fontWeight: 'bold',
-              textAlign: width < 720 ? 'center' : 'auto',
-            }}
-          >
-            {i18n.t('welcomeScreen.welcome')}
-          </ThemeText>
-          <ThemeText style={{ fontSize: 15 }}>
-            {i18n.t('welcomeScreen.customize')}
-          </ThemeText>
-        </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* static gradient background */}
+      <WelcomeThemeBackground />
 
-        <PressableButton
-          onPress={() => navigation.navigate(AppPath.ChooseLanguage)}
-          text={i18n.t('welcomeScreen.start')}
-          textStyle={{ color: '#fff' }}
+      {/* Floating background letters */}
+      {['A', 'B', 'C', 'Ä', 'Ü', 'Я'].map((char, i) => (
+        <Animated.Text
+          key={i}
+          entering={FadeInDown.delay(i * 500).duration(2000)}
+          style={[
+            styles.floatingLetter,
+            {
+              top: `${10 + i * 12}%`,
+              left: `${(i * 25) % 80}%`,
+              fontSize: 30 + (i % 3) * 10,
+            },
+          ]}
+        >
+          {char}
+        </Animated.Text>
+      ))}
+
+      {/* Main content */}
+      <View
+        style={[
+          styles.center,
+          { flexDirection: width < 720 ? 'column' : 'row' },
+        ]}
+      >
+        <Animated.Image
+          source={IconImage}
+          style={styles.logo}
+          entering={FadeInDown.duration(1000)}
         />
+        <Animated.View
+          style={[styles.glassBox, { width: width < 720 ? '85%' : 350 }]}
+          entering={FadeInUp.delay(300).duration(1000)}
+        >
+          <Text style={styles.title}>{i18n.t('welcomeScreen.welcome')} 👋</Text>
+          <Text style={styles.subtitle}>{i18n.t('welcomeScreen.journey')}</Text>
+
+          <PressableButton
+            onPress={() => navigation.navigate(AppPath.ChooseLanguage)}
+            text={i18n.t('welcomeScreen.start')}
+            buttonStyle={{ width: '100%' }}
+          />
+        </Animated.View>
       </View>
-    </ThemeBackground>
+    </SafeAreaView>
   );
 };
 
 export default WelcomeScreen;
+
+const styles = StyleSheet.create({
+  floatingLetter: {
+    position: 'absolute',
+    color: 'rgba(255,255,255,0.1)',
+    fontWeight: 'bold',
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 20,
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+  glassBox: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderColor: 'rgba(255,255,255,0.3)',
+    borderWidth: 1,
+    borderRadius: 25,
+    padding: 25,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#eee',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    padding: 10,
+    borderRadius: 14,
+    elevation: 3,
+  },
+});

@@ -285,32 +285,38 @@ const SharedGroupsScreen = () => {
           placeholder={i18n.t('sharedGroupsScreen.placeholder')}
         />
         {groups.length ? (
-          <FlatList
-            data={groups}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }: { item: IGroup }) => (
-              <Pressable
-                key={item.id}
-                onPress={() => addRemoveSelectedGroup(item)}
-              >
-                <ThemeText
-                  style={{
-                    borderColor:
-                      selectedGroup?.title === item.title
-                        ? '#007AFF'
-                        : colors.primary,
-                    borderWidth: 2,
-                    borderRadius: 10,
-                    fontSize: 30,
-                    padding: 10,
-                  }}
+          <>
+            <FlatList
+              data={groups}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }: { item: IGroup }) => (
+                <Pressable
+                  key={item.id}
+                  onPress={() => addRemoveSelectedGroup(item)}
                 >
-                  {item.title}
-                </ThemeText>
-              </Pressable>
-            )}
-            style={{ height: 400 }}
-          />
+                  <ThemeText
+                    style={{
+                      borderColor:
+                        selectedGroup?.title === item.title
+                          ? '#007AFF'
+                          : colors.primary,
+                      borderWidth: 2,
+                      borderRadius: 10,
+                      fontSize: 30,
+                      padding: 10,
+                    }}
+                  >
+                    {item.title}
+                  </ThemeText>
+                </Pressable>
+              )}
+              style={{ height: 400 }}
+            />
+            <PressableButton
+              text={i18n.t('sharedGroupsScreen.share')}
+              onPress={shareGroup}
+            />
+          </>
         ) : (
           <View>
             <ThemeText
@@ -327,10 +333,6 @@ const SharedGroupsScreen = () => {
             />
           </View>
         )}
-        <PressableButton
-          text={i18n.t('sharedGroupsScreen.share')}
-          onPress={shareGroup}
-        />
       </DefaultModal>
     </ThemeBackground>
   );
