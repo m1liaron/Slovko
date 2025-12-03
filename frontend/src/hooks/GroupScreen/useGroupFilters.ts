@@ -101,6 +101,7 @@ const useGroupFilters = (cards: ICard[], filteredCards: ICard[]) => {
     sort,
     sortOrder,
     selectedStatus,
+    setSelectedStatus,
     viewMode,
     statusCardsButtons,
     setSort,
