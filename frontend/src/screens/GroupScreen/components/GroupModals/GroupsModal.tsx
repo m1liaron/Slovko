@@ -25,10 +25,14 @@ interface ShowModeLearning {
 interface GroupModalsProps {
   groupId: string;
   group: IGroup;
+  groupTitle: string;
+  setGroupTitle: (title: string) => void;
   filteredCards: ICard[];
   showModesModal: boolean;
   showEditModal: boolean;
   showAddModal: boolean;
+  showSectionList: boolean;
+  toggleSectionList: () => void;
   shownLearningModes: ShowModeLearning[];
   onCloseModesModal: () => void;
   onCloseEditModal: () => void;
@@ -42,10 +46,14 @@ interface GroupModalsProps {
 
 export const GroupModals: React.FC<GroupModalsProps> = ({
   groupId,
+  groupTitle,
+  setGroupTitle,
   filteredCards,
   showModesModal,
   showEditModal,
   showAddModal,
+  showSectionList,
+  toggleSectionList,
   shownLearningModes,
   onCloseModesModal,
   onCloseEditModal,
@@ -66,9 +74,7 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
     (section) => section.id !== activeSectionId,
   );
 
-  const [groupTitle, setGroupTitle] = useState('');
   const [newSectionId, setNewSectionId] = useState<string>();
-  const [showSectionList, setShowSectionList] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const renderLearningModeItem = ({
@@ -212,7 +218,7 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
           {showSections.length > 0 && (
             <Pressable
               style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
-              onPress={() => setShowSectionList((prev) => !prev)}
+              onPress={toggleSectionList}
             >
               <ThemeText>{i18n.t('group.moveGroup')}</ThemeText>
               <Feather

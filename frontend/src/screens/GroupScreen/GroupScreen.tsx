@@ -112,10 +112,14 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       <GroupModals
         groupId={groupId}
         group={group}
+        groupTitle={navigationHandlers.groupTitle}
+        setGroupTitle={navigationHandlers.setGroupTitle}
         filteredCards={filteredCards}
         showModesModal={modalState.showModesModal}
         showEditModal={modalState.showEditModal}
         showAddModal={modalState.showAddModal}
+        showSectionList={navigationHandlers.showSectionList}
+        toggleSectionList={navigationHandlers.toggleSectionList}
         shownLearningModes={modalState.shownLearningModes}
         onCloseModesModal={modalState.closeModesModal}
         onCloseEditModal={modalState.closeEditModal}

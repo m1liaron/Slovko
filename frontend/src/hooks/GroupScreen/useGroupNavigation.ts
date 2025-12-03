@@ -23,6 +23,11 @@ const useGroupNavigation = (groupId: string) => {
 
   const [groupTitle, setGroupTitle] = useState('');
   const [newSectionId, setNewSectionId] = useState<string>();
+  const [showSectionList, setShowSectionList] = useState(false);
+
+  const toggleSectionList = useCallback(() => {
+    setShowSectionList((prev) => !prev);
+  }, []);
 
   const updateGroupTitle = useCallback(() => {
     if (!groupTitle) {
@@ -33,6 +38,7 @@ const useGroupNavigation = (groupId: string) => {
       enqueueOrDispatch(updateGroup, updateStateGroup, {
         id: groupId,
         title: groupTitle,
+        sectionId: activeSectionId,
       }),
     );
   }, [groupTitle, groupId, dispatch]);
@@ -77,6 +83,8 @@ const useGroupNavigation = (groupId: string) => {
     handleRemoveGroup,
     handleMoveGroup,
     navigateToLearn,
+    showSectionList,
+    toggleSectionList,
   };
 };
 
