@@ -1,7 +1,9 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../../db/sequelize.js";
 import { v4 as uuidv4 } from "uuid";
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel.js";
+
+import { sequelize } from "../../db/sequelize.js";
+import type { BaseAttributes, BaseCreationAttributes} from "../CustomModel.js";
+import { CustomModal } from "../CustomModel.js";
 
 interface SharedCardLikesAttributes extends BaseAttributes {
 	sharedGroupId: string;

@@ -1,16 +1,16 @@
-import { Language } from "./Language.js";
-import { User } from "./User.js";
-import { Section } from "./Section.js";
-import { Group } from "./Group.js";
 import { Card } from "./Card.js";
-import { Streak } from "./Streak.js";
+import { Group } from "./Group.js";
+import { Image } from "./Image.js";
+import { Language } from "./Language.js";
 import { Result } from "./Result/Result.js";
 import { ResultMode } from "./Result/ResultMode.js";
 import { WordResult } from "./Result/WordResult.js";
-import { SharedGroup } from "./SharedGroup/SharedGroup.js";
+import { Section } from "./Section.js";
 import { SharedCard } from "./SharedGroup/SharedCard.js";
 import { SharedCardLikes } from "./SharedGroup/SharedCardLikes.js";
-import { Image } from "./Image.js";
+import { SharedGroup } from "./SharedGroup/SharedGroup.js";
+import { Streak } from "./Streak.js";
+import { User } from "./User.js";
 
 // User - Section
 User.hasMany(Section, { foreignKey: "userId", as: "sections" });

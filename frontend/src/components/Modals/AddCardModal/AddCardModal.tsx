@@ -1,31 +1,33 @@
-import { getUnsplashPhotos } from '@/api/unsplash';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { i18n } from '@/localization/i18n';
-import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
-import { pickImage } from '@/utils';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
-import React, { type ChangeEvent, Dispatch, useState } from 'react';
+import { ScrollView } from 'moti';
+import pLimit from 'p-limit';
+import type { Dispatch} from 'react';
+import React, { type ChangeEvent, useState } from 'react';
 import { FlatList, Image, Platform, Pressable, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { v4 as uuid } from 'uuid';
 import * as XLSX from 'xlsx';
+
+import { getUnsplashPhotos } from '@/api/unsplash';
+import { type AddCardRequest } from '@/common/enums/types/card.type';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import { addStateManyCards } from '@/redux/cardReducer/cardSlice';
+import { addManyCards } from '@/redux/cardReducer/cardThunk';
+import { pickImage } from '@/utils';
+import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
+
 import AddInput from '../../../common/components/AddInput/AddInput';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
-
-import { type AddCardRequest } from '@/common/enums/types/card.type';
-import { addStateManyCards } from '@/redux/cardReducer/cardSlice';
-import { addManyCards } from '@/redux/cardReducer/cardThunk';
-import pLimit from 'p-limit';
-import { useAppDispatch } from '@/hooks/redux.hooks';
-import { ScrollView } from 'moti';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;

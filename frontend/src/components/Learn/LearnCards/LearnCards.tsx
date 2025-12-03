@@ -1,5 +1,4 @@
-import type { ICard } from '@/common/enums/types/card.type';
-import { useAppSelector } from '@/hooks/redux.hooks';
+import Checkbox from 'expo-checkbox';
 import * as Speech from 'expo-speech';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -16,14 +15,17 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useAppTheme } from '../../../contexts/ThemeProvider';
-import { selectCard } from '../../../redux/cardReducer/cardSlice';
-import { i18n } from '@/localization/i18n';
+import Toast from 'react-native-toast-message';
+
 import AddInput from '@/common/components/AddInput/AddInput';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
-import Toast from 'react-native-toast-message';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import Checkbox from 'expo-checkbox';
+import type { ICard } from '@/common/enums/types/card.type';
+import { useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+
+import { useAppTheme } from '../../../contexts/ThemeProvider';
+import { selectCard } from '../../../redux/cardReducer/cardSlice';
 
 interface LearnCardsProps {
   onComplete: () => void;

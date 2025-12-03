@@ -1,11 +1,14 @@
-import type { ICard } from '@/common/enums/types/card.type';
-import { useAppSelector } from '@/hooks/redux.hooks';
 import { Audio } from 'expo-av';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
+
+import type { ICard } from '@/common/enums/types/card.type';
+import { useAppSelector } from '@/hooks/redux.hooks';
+
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
+
 import styles from './LearnQuiz.styles';
 
 type QuizOption = {
@@ -28,7 +31,6 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
   const [quizOptions, setQuizOptions] = useState<QuizOption[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<QuizOption | null>(null);
-  const [isSoundPlayed, setIsSoundPlayed] = useState(false);
   const currentCard = cards[displayedQuizIndex];
 
   useEffect(() => {
@@ -73,7 +75,6 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
     setSelectedOption(option);
     if (option.isCorrect) {
       await playSuccessSound();
-      setIsSoundPlayed(true);
       setIsCorrect(true);
       moveToNextCard();
       handleSetData(currentCard, true);
@@ -99,9 +100,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
       await sound.playAsync();
     } catch (error) {
       console.error('Error playing sound', error);
-    } finally {
-      setIsSoundPlayed(false);
-    }
+    } 
   };
 
   return (

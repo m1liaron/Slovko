@@ -1,9 +1,10 @@
-import { i18n } from '@/localization/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getStorageItem } from '@/utils/storage';
+
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { i18n } from '@/localization/i18n';
+import { getStorageItem } from '@/utils/storage';
 
 type Language = 'en' | 'uk';
 

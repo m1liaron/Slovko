@@ -1,15 +1,15 @@
-import { Request, Response } from "express";
-import { Op } from "sequelize";
+import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { Op } from "sequelize";
 
-import { Card, Image, Group } from "../models/models.js";
+import { unsplash } from "../api/unsplash.js";
+import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 import {
   calculateNextReviewDate,
   getDictionaryData,
   sendError,
 } from "../helpers/index.js";
-import { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
-import { unsplash } from "../api/unsplash.js";
+import { Card, Image, Group } from "../models/models.js";
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
   try {

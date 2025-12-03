@@ -1,20 +1,17 @@
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
 import { useNavigation } from '@react-navigation/native';
 import React, { memo, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
-  Platform,
   useWindowDimensions,
   View,
 } from 'react-native';
-import AddButton from '../../../common/components/AddButton/AddButton';
-import PressableButton from '../../../common/components/PressableButton/PressableButton';
+
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
+
 import { AppPath } from '../../../common/enums/app/app';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
@@ -24,9 +21,9 @@ import {
   removeStateCard,
 } from '../../../redux/cardReducer/cardSlice';
 import CardItem from '../CardItem/CardItem';
+
 import styles from './CardList.styles';
 
-import { AddCardModal } from '@/components/Modals/AddCardModal/AddCardModal';
 
 const MemoCardItem = memo(CardItem);
 
@@ -41,7 +38,7 @@ type CardListProps = {
 };
 
 const CardList = ({ groupId }: CardListProps) => {
-  const { width: screenWidth, height } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
 
   const {
     theme: { colors },

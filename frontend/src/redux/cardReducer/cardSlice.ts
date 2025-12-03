@@ -1,4 +1,3 @@
-import type { ICard, IRepeatedGroup } from '@/common/enums/types/types';
 import {
   type PayloadAction,
   createSlice,
@@ -6,9 +5,13 @@ import {
   isPending,
   isRejected,
 } from '@reduxjs/toolkit';
+
+import type { ICard, IRepeatedGroup } from '@/common/enums/types/types';
+
 import { DataStatus, type IDataStatus } from '../../common/enums/app/app';
 import { handleUpdateState } from '../services/handleUpdateState';
 import type { RootState } from '../store';
+
 import {
   addCard,
   addManyCards,

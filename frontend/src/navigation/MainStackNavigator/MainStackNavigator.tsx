@@ -1,5 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+
 import { AppPath } from "../../common/enums/app/app";
 import {
 	GroupScreen,

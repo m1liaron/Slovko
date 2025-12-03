@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, View } from "react-native";
+
 import { useAppTheme } from "../../contexts/ThemeProvider";
+
 import styles from "./ProgressContainer.styles";
 
 /**

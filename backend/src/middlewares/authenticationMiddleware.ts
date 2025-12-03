@@ -1,7 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { User } from "../models/User.js";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import type { NextFunction, Request, Response } from "express";
+import type { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+
 import { EnvVariables } from "../common/enums/index.js";
+import { User } from "../models/User.js";
 
 interface AuthRequest extends Request {
 	user?: {

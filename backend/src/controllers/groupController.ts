@@ -1,13 +1,14 @@
-import { Card, Group } from "../models/models.js";
-import { sequelize } from "../db/sequelize.js";
+import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import {
+import { literal } from "sequelize";
+
+import type {
   AuthRequest,
   AuthRequestHandler,
 } from "../common/types/AuthRequest.type.js";
-import { Response } from "express";
+import { sequelize } from "../db/sequelize.js";
 import { sendError } from "../helpers/index.js";
-import { literal } from "sequelize";
+import { Card, Group } from "../models/models.js";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
   const { sectionId } = req.params;

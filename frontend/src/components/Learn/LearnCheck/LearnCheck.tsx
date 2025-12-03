@@ -1,5 +1,3 @@
-import type { ICard } from '@/common/enums/types/card.type';
-import { useAppSelector } from '@/hooks/redux.hooks';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
   Animated,
@@ -8,9 +6,14 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+
+import type { ICard } from '@/common/enums/types/card.type';
+import { useAppSelector } from '@/hooks/redux.hooks';
+
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
+
 import styles from './LearnCheck.styles';
 
 interface LearnCheckProps {
@@ -63,7 +66,6 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
   const newFadeAnim = useRef(new Animated.Value(1)).current;
 
   const maxWordLen = cards.map((card) => card.word.length);
-  const maxWordWidth = Math.max(...maxWordLen);
 
   const getNewWord = () => {
     const remainingWords = cards.filter(

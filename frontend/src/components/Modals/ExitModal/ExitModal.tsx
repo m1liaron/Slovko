@@ -1,10 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Text, View } from "react-native";
+
 import PressableButton from "../../../common/components/PressableButton/PressableButton";
 import ThemeText from "../../../common/components/ThemeText/ThemeText";
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 import DefaultModal from "../../DefaultModal/DefaultModal";
+
 import styles from "./ExitModal.styles";
 
 interface ExitModalProps {

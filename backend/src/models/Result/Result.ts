@@ -1,10 +1,12 @@
 import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
+
 import { sequelize } from "../../db/sequelize.js";
+import type { BaseAttributes, BaseCreationAttributes} from "../CustomModel.js";
+import { CustomModal } from "../CustomModel.js";
 import { User } from "../models.js";
 
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel.js";
-import { ResultMode } from "./ResultMode.js";
+import type { ResultMode } from "./ResultMode.js";
 
 interface ResultAttributes extends BaseAttributes {
 	title: string;

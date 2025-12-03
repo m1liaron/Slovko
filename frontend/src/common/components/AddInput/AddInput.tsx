@@ -5,7 +5,9 @@ import {
   ViewStyle,
   type TextInputProps,
 } from 'react-native';
+
 import { useAppTheme } from '../../../contexts/ThemeProvider';
+
 import styles from './AddInput.styles';
 
 /**

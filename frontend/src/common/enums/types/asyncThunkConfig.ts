@@ -1,5 +1,6 @@
-import type { AppDispatch, RootState } from "@/redux/store";
 import type { PersistState } from "redux-persist";
+
+import type { AppDispatch, RootState } from "@/redux/store";
 
 type RejectValue = {
 	status: number;

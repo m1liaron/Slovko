@@ -1,4 +1,31 @@
+import {
+  Entypo,
+  Feather,
+  FontAwesome,
+  MaterialIcons,
+} from '@expo/vector-icons';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import Slider from '@react-native-community/slider';
+import { useNavigation } from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
+import Checkbox from 'expo-checkbox';
+import type React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+
+import AddButton from '@/common/components/AddButton/AddButton';
+import { LineLoader } from '@/common/components/LineLoader/LineLoader';
+import { Select } from '@/common/components/Select/Select';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { AddCardModal } from '@/components/Modals/AddCardModal/AddCardModal';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -10,24 +37,8 @@ import {
   getGroupStorage,
   moveGroupToAnotherSection,
 } from '@/redux/groupReducer/groupThunk';
-import {
-  Entypo,
-  Feather,
-  FontAwesome,
-  MaterialIcons,
-} from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
-import type React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Alert,
-  Platform,
-  Pressable,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
+
 import AddInput from '../../common/components/AddInput/AddInput';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
@@ -36,11 +47,12 @@ import BackButton from '../../components/BackButton/BackButton';
 import CardList from '../../components/Card/CardList/CardList';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
+import type {
+  LearningMode} from '../../redux/cardReducer/cardSlice';
 import {
   addLearningMode,
   filterCardsByStatus,
   getRepeatedCards,
-  LearningMode,
   rangeCards,
   resetFilter,
 } from '../../redux/cardReducer/cardSlice';
@@ -51,15 +63,7 @@ import {
   updateGroup,
   updateStateGroup,
 } from '../../redux/groupReducer/groupSlice';
-import Slider from '@react-native-community/slider';
-import { Select } from '@/common/components/Select/Select';
-import { LineLoader } from '@/common/components/LineLoader/LineLoader';
-import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
-import { FlatList } from 'react-native-gesture-handler';
-import AddButton from '@/common/components/AddButton/AddButton';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { AddCardModal } from '@/components/Modals/AddCardModal/AddCardModal';
-import Checkbox from 'expo-checkbox';
+
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,

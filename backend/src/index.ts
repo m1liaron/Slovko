@@ -1,7 +1,14 @@
-import express, { Application } from "express";
 import cors from "cors";
+import type { Application } from "express";
+import express from "express";
 
+import { EnvVariables } from "./common/enums/index.js";
 import { connectDB, sequelize } from "./db/sequelize.js";
+import { validateEnvVariables } from "./helpers/db/index.js";
+import { ensureLanguages } from "./initFunctions/createLanguages.js";
+import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
+import { initializeLogger } from "./middlewares/initializeLogger.js";
+import { languageRoute } from "./routes/languageRoute.js";
 import {
   userRoute,
   cardRoute,
@@ -9,13 +16,7 @@ import {
   resultRoute,
   sharedGroupRoute,
 } from "./routes/routes.js";
-import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
-import { initializeLogger } from "./middlewares/initializeLogger.js";
-import { validateEnvVariables } from "./helpers/db/index.js";
-import { EnvVariables } from "./common/enums/index.js";
 import { sectionRoute } from "./routes/sectionRoute.js";
-import { ensureLanguages } from "./initFunctions/createLanguages.js";
-import { languageRoute } from "./routes/languageRoute.js";
 
 const app: Application = express();
 

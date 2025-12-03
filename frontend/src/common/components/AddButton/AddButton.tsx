@@ -1,8 +1,11 @@
 import React from 'react';
-import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
+import { Pressable, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from './AddButton.styles';
+
 import { useAppTheme } from '@/contexts/ThemeProvider';
+
+import styles from './AddButton.styles';
 
 /**
  * @param onPress {function} - react-native function for press on button

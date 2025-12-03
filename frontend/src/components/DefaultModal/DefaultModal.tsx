@@ -7,7 +7,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { useAppTheme } from '../../contexts/ThemeProvider';
+
 import styles from './styles';
 
 /**

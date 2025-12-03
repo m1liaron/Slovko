@@ -1,4 +1,3 @@
-import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useEffect, useRef } from 'react';
 import {
   Animated,
@@ -7,6 +6,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+
+import { useAppTheme } from '@/contexts/ThemeProvider';
 
 const LineLoader: React.FC = () => {
   const {

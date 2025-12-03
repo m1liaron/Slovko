@@ -1,10 +1,12 @@
-import { SERVER_API_URL } from '@/common/enums/constants/server-api';
-import type { IUpdateUser, RegisterUser } from '@/common/enums/types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { SERVER_API_URL } from '@/common/enums/constants/server-api';
+import type { IUpdateUser, RegisterUser } from '@/common/enums/types/types';
+
 import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
-import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 
 const login = createAppAsyncThunk(
   'user/login',

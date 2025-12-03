@@ -1,5 +1,6 @@
+import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Request, Response } from "express";
+
 import { sendError } from "../helpers/sendError.js";
 import { Language } from "../models/Language.js";
 

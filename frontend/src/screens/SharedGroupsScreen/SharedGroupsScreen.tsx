@@ -1,11 +1,3 @@
-import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import type { IGroup } from '@/common/enums/types/group.type';
-import type { ISharedGroup } from '@/common/enums/types/sharedGroup';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -14,14 +6,21 @@ import {
   FlatList,
   Image,
   Pressable,
-  Text,
   TextInput,
   View,
-  useWindowDimensions,
 } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
 import Toast from 'react-native-toast-message';
 import { v4 as uuid } from 'uuid';
+
+import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { IGroup } from '@/common/enums/types/group.type';
+import type { ISharedGroup } from '@/common/enums/types/sharedGroup';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+
 import AvatarImage from '../../../assets/images/avatar.png';
 import AddButton from '../../common/components/AddButton/AddButton';
 import AddInput from '../../common/components/AddInput/AddInput';
@@ -34,14 +33,9 @@ import { selectGroup } from '../../redux/groupReducer/groupSlice';
 import {
   addSharedGroup,
   addStateSharedGroup,
-  filterMySharedGroups,
-  filterSharedGroups,
   getAllSharedGroups,
-  removeSharedGroup,
-  removeStateSharedGroup,
-  resetSharedGroups,
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
-import { selectUser } from '../../redux/userReducer/userSlice';
+
 import styles from './SharedGroupsScreen.styles';
 
 const SharedGroupsScreen = () => {
@@ -60,8 +54,6 @@ const SharedGroupsScreen = () => {
     selectedGroup?.title,
   );
   const [showFilter, setShowFilter] = useState(false);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [filterValue, setFilterValue] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<
     'easy' | 'medium' | 'hard' | string
   >('');
@@ -157,21 +149,6 @@ const SharedGroupsScreen = () => {
         <ActivityIndicator size="large" color={colors.primary} />
       </View>
     ) : null;
-
-  const sortOptions = [
-    { label: i18n.t('sharedGroupsScreen.sortDate'), value: 'sortDate' },
-    { label: i18n.t('sharedGroupsScreen.sortName'), value: 'sortName' },
-    {
-      label: i18n.t('sharedGroupsScreen.sortWordsAmount'),
-      value: 'sortWordsAmount',
-    },
-  ];
-
-  const sortSelectStyle = {
-    color: colors.primary,
-    backgroundColor: colors.lightBackground,
-    ...styles.sortSelect,
-  };
 
   const difficulties = [
     `${i18n.t('sharedGroupsScreen.easy')}`,

@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
+import type { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
-import { Streak, User } from "../models/models.js";
-import { AuthRequest } from "../common/types/AuthRequest.type.js";
+
+import type { AuthRequest } from "../common/types/AuthRequest.type.js";
 import { sendError } from "../helpers/index.js";
+import { Streak, User } from "../models/models.js";
 
 const register = async (req: Request, res: Response) => {
   try {

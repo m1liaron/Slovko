@@ -1,4 +1,5 @@
-import { Model, Optional } from "sequelize";
+import type { Optional } from "sequelize";
+import { Model } from "sequelize";
 
 interface BaseAttributes {
     id: string;

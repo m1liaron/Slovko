@@ -1,6 +1,7 @@
 import React, { type ReactNode } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { useAppTheme } from "../../../contexts/ThemeProvider";
 
 interface ThemeBackgroundProps {

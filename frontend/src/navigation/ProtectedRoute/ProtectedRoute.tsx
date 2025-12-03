@@ -1,25 +1,27 @@
 import {
-  LoginScreen,
-  RegisterScreen,
-  WelcomeScreen,
-  ChooseLanguageScreen,
-  ChooseWordsScreen,
-} from '@/screens';
-import {
   NavigationContainer,
   useNavigation,
   type NavigationProp,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
+
+import type { IAppPath } from '@/common/enums/app/AppPath';
+import { useAppDispatch } from '@/hooks/redux.hooks';
+import { getUser } from '@/redux/userReducer/userThunk';
+import {
+  LoginScreen,
+  RegisterScreen,
+  WelcomeScreen,
+  ChooseLanguageScreen,
+  ChooseWordsScreen,
+} from '@/screens';
+import { getStorageItem, setStorageItem } from '@/utils/storage';
+import { initToken } from '@/utils/storage/initToken';
+
 import { AppPath, AsyncStorageVariables } from '../../common/enums/app/app';
 import Loading from '../../components/Loading';
 import MainStackNavigator from '../MainStackNavigator/MainStackNavigator';
-import { getStorageItem, setStorageItem } from '@/utils/storage';
-import { IAppPath } from '@/common/enums/app/AppPath';
-import { useAppDispatch } from '@/hooks/redux.hooks';
-import { getUser } from '@/redux/userReducer/userThunk';
-import { initToken } from '@/utils/storage/initToken';
 
 export type RootStackParamList = {
   [AppPath.Main]: undefined;

@@ -1,11 +1,14 @@
 import { DataTypes } from "sequelize";
+
 import { sequelize } from "../db/sequelize.js";
-import { Group } from "./Group.js";
-import {
+
+import type {
   BaseAttributes,
-  BaseCreationAttributes,
+  BaseCreationAttributes} from "./CustomModel.js";
+import {
   CustomModal,
 } from "./CustomModel.js";
+import type { Group } from "./Group.js";
 
 interface LanguageAttributes extends BaseAttributes {
   title: string;

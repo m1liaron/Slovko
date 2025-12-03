@@ -1,3 +1,5 @@
+import ChooseLanguageScreen from './ChooseLanguageScreen/ChooseLanguageScreen';
+import ChooseWordsScreen from './ChooseWordsScreen/ChooseWordsScreen';
 import GroupScreen from './GroupScreen/GroupScreen';
 import LearnScreen from './LearnScreen/LearnScreen';
 import LoginScreen from './LoginScreen/LoginScreen';
@@ -10,10 +12,7 @@ import SharedGroupDetailsScreen from './SharedGroupDetailsScreen/SharedGroupDeta
 import SharedGroupsScreen from './SharedGroupsScreen/SharedGroupsScreen';
 import StatisticsScreen from './StatisticsScreen/StatisticsScreen';
 import StreakScreen from './StreakScreen/StreakScreen';
-
-import ChooseLanguageScreen from './ChooseLanguageScreen/ChooseLanguageScreen';
 import WelcomeScreen from './WelcomeScreen/WelcomeScreen';
-import ChooseWordsScreen from './ChooseWordsScreen/ChooseWordsScreen';
 
 export {
   WelcomeScreen,

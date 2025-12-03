@@ -6,12 +6,14 @@ import React, {
   useState,
   type ReactNode,
 } from 'react';
+
+import { getStorageItem } from '@/utils/storage';
+
 import {
   AsyncStorageVariables,
   darkTheme,
   lightTheme,
 } from '../common/enums/app/app';
-import { getStorageItem } from '@/utils/storage';
 
 type Theme = typeof lightTheme;
 type ThemeContextType = {

@@ -1,10 +1,3 @@
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import type { IResult } from '@/common/enums/types/result.type';
-import { useLanguage } from '@/contexts/LanguageProvider';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { AntDesign, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
@@ -16,6 +9,17 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import RNPickerSelect from 'react-native-picker-select';
+
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { IResult } from '@/common/enums/types/result.type';
+import { useLanguage } from '@/contexts/LanguageProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import { AppPath } from '../../common/enums/app/app';
 import { useAppTheme } from '../../contexts/ThemeProvider';
@@ -25,9 +29,8 @@ import {
   resetResults,
   sortResults,
 } from '../../redux/resultReducer/resultSlice';
+
 import styles from './ResultsScreen.styles';
-import PressableButton from '@/common/components/PressableButton/PressableButton';
-import RNPickerSelect from 'react-native-picker-select';
 
 type GroupedResults = {
   [date: string]: IResult[];
@@ -99,11 +102,6 @@ const ResultsScreen = () => {
       );
       setPage(nextPage);
     }
-  };
-
-  const handleSort = () => {
-    dispatch(sortResults({ key: 'title', direction: sortOrder }));
-    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
 
   const renderFooter = () =>

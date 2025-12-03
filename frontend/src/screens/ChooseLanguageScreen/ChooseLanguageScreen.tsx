@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import {
   Image,
   Text,
@@ -6,22 +8,21 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import IconImage from '@/assets/images/favicon.png';
-import { i18n } from '@/localization/i18n';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import { SearchInput } from '@/common/components/SearchInput/SearchInput';
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
-import PressableButton from '@/common/components/PressableButton/PressableButton';
-import { useNavigation } from '@react-navigation/native';
-import { AppPath } from '@/common/enums/app/AppPath';
-import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import IconImage from '@/assets/images/favicon.png';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import { SearchInput } from '@/common/components/SearchInput/SearchInput';
+import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
+import { AppPath } from '@/common/enums/app/AppPath';
 import Loading from '@/components/Loading';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
 
 const languages = [
   { id: 1, title: 'English', flag: '🇬🇧' },

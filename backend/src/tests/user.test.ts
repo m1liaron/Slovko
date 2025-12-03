@@ -1,6 +1,8 @@
 import request from "supertest";
-import { app } from "../index.js";
+
 import { sequelize } from "../db/sequelize.js";
+import { app } from "../index.js";
+
 import { testData, changeTestData, authRequest } from "./testSetup.js";
 
 beforeAll(async () => {

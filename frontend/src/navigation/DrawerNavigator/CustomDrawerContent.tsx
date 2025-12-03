@@ -1,24 +1,26 @@
-import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
-import styles from './CustomDrawerContent.styles';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { Entypo, Feather } from '@expo/vector-icons';
-import { i18n } from '@/localization/i18n';
 import { useEffect, useState } from 'react';
-import PressableButton from '@/common/components/PressableButton/PressableButton';
-import DefaultModal from '@/components/DefaultModal/DefaultModal';
-import AddInput from '@/common/components/AddInput/AddInput';
+import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import Toast from 'react-native-toast-message';
+
+import AddInput from '@/common/components/AddInput/AddInput';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { Language } from '@/common/enums/types/language.type';
+import DefaultModal from '@/components/DefaultModal/DefaultModal';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import { getLanguages } from '@/redux/languageReducer/languageThunk';
 import {
   addSection,
   addStateSection,
   setActiveSectionId,
 } from '@/redux/sectionReducer/sectionSlice';
-import { getLanguages } from '@/redux/languageReducer/languageThunk';
-import { Language } from '@/common/enums/types/language.type';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { HAS_TOKEN } from '@/utils/storage/initToken';
+
+import styles from './CustomDrawerContent.styles';
 
 const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   const {

@@ -1,10 +1,16 @@
-import type React from 'react';
+
+import { AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
-import styles from './LearnScreen.styles';
+import type React from 'react';
+import { Platform, Pressable, Text, View } from 'react-native';
+import { Switch } from 'react-native-gesture-handler';
 
 import type { ResultsCard } from '@/common/enums/types/result.type';
 import type { ICard } from '@/common/enums/types/types';
 import LearnCheck from '@/components/Learn/LearnCheck/LearnCheck';
+import { LearnCrossWord } from '@/components/Learn/LearnCrossWord/LearnCrossWord';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -12,11 +18,7 @@ import type {
   RootStackParamList,
   StackNavigation,
 } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import type { StackScreenProps } from '@react-navigation/stack';
-import { Platform, Pressable, Text, View } from 'react-native';
-import { Switch } from 'react-native-gesture-handler';
+
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import { AppPath, DataStatus } from '../../common/enums/app/app';
@@ -24,7 +26,6 @@ import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import LearnCards from '../../components/Learn/LearnCards/LearnCards';
 import LearnGuessWord from '../../components/Learn/LearnGuessWord/LearnGuessWord';
 import LearnQuiz from '../../components/Learn/LearnQuiz/LearnQuiz';
-import { LearnCrossWord } from '@/components/Learn/LearnCrossWord/LearnCrossWord';
 import Loading from '../../components/Loading';
 import ExitModal from '../../components/Modals/ExitModal/ExitModal';
 import { useAppTheme } from '../../contexts/ThemeProvider';
@@ -39,6 +40,8 @@ import {
 } from '../../redux/resultReducer/resultSlice';
 import { updateUserStreak } from '../../redux/userReducer/userSlice';
 import { formatTime } from '../../utils/formatTime/formatTime';
+
+import styles from './LearnScreen.styles';
 
 type Section = 'cards' | 'quiz' | 'word' | 'check';
 

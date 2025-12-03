@@ -1,15 +1,18 @@
-import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
 import {
 	createSlice,
 	isFulfilled,
 	isPending,
 	isRejected,
 } from "@reduxjs/toolkit";
+
+import type { ISharedGroup } from "@/common/enums/types/sharedGroup";
+
 import {
 	DataStatus,
 	type IDataStatus,
 } from "../../common/enums/app/DataStatus";
 import type { RootState } from "../store";
+
 import {
 	addSharedGroup,
 	getAllSharedGroups,

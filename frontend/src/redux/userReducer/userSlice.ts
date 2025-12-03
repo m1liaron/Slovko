@@ -1,15 +1,20 @@
-import type { IStreakDate, IUser } from '@/common/enums/types/user.type';
 import {
   createSlice,
   isFulfilled,
   isPending,
   isRejected,
 } from '@reduxjs/toolkit';
+
+import type { RejectedPayload } from '@/common/enums/types/rejectedAction';
+import type { IStreakDate, IUser } from '@/common/enums/types/user.type';
+import { removeStorageItem } from '@/utils/storage';
+
 import {
   AsyncStorageVariables,
   DataStatus,
   type IDataStatus,
 } from '../../common/enums/app/app';
+
 import {
   buyFreeze,
   getUser,
@@ -19,8 +24,6 @@ import {
   updateUser,
   updateUserStreak,
 } from './userThunk';
-import { RejectedPayload } from '@/common/enums/types/rejectedAction';
-import { removeStorageItem } from '@/utils/storage';
 
 interface InitialState {
   user: IUser | null;
