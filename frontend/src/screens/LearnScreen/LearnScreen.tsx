@@ -208,7 +208,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     <ThemeBackground>
       <View>
         {!isLessonOver ? (
-          <View style={{ justifyContent: 'center', paddingHorizontal: 20 }}>
+          <View>
             <Pressable onPress={() => setShowExitModal(true)}>
               <Entypo name="cross" size={35} color={theme.colors.iconColor} />
             </Pressable>
@@ -216,7 +216,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
             {status === DataStatus.PENDING ? (
               <Loading />
             ) : (
-              <View style={styles.centeredContainer}>
+              <View>
                 {currentSection === 'cards' && (
                   <LearnCards
                     onComplete={handleNextSection}

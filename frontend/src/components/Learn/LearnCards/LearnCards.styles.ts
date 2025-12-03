@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
   },
 
   overlayLabelLeftTitle: {
-    color: '#fff',
     backgroundColor: '#ff6b6b',
     paddingVertical: 8,
     paddingHorizontal: 18,
@@ -105,7 +104,6 @@ const styles = StyleSheet.create({
   },
 
   overlayLabelRightTitle: {
-    color: '#fff',
     backgroundColor: '#1dd1a1',
     paddingVertical: 8,
     paddingHorizontal: 18,

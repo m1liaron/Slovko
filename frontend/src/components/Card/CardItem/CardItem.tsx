@@ -50,7 +50,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(item.word);
   const [translate, setTranslate] = useState<string>(item.translateWord);
-  const [imageUri, setImageUri] = useState<string>(item?.image?.url || "");
+  const [imageUri, setImageUri] = useState<string>(item?.image?.url || '');
 
   const dispatch = useAppDispatch();
 
@@ -157,18 +157,6 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
         handleClose={() => setShowEditModal(false)}
       >
         <View>
-          <Image
-                source={{
-                  uri:
-                    item.image?.url ||
-                    'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
-                }}
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 10,
-                }}
-          />
           <ThemeText>Оновити карточку!</ThemeText>
           <ThemeText>Слово</ThemeText>
           <AddInput value={title} onChangeText={setTitle} />

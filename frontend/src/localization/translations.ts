@@ -118,7 +118,7 @@ const translations = {
         validation: 'Validation:',
         addButton: 'Add',
         learnButton: 'Learn',
-        atLeastFourWords: 'At Least Fours Words'
+        atLeastFourWords: 'At Least Fours Words',
       },
     },
     sharedGroup: {
@@ -201,7 +201,7 @@ const translations = {
         swipeLeft: "Swipe to left if you don't know",
         swipeRight: 'ПSwipe to right if you know',
         answer: 'Type in Answer',
-        checkAnswer: 'Check answer',
+        checkAnswer: 'Check',
         tapToFlip: 'Tap to Flip',
       },
     },
@@ -345,7 +345,7 @@ const translations = {
         validation: 'Валідація:',
         addButton: 'Додати',
         learnButton: 'Вчитися',
-        atLeastFourWords: 'Принаймні 4 слова'
+        atLeastFourWords: 'Принаймні 4 слова',
       },
       sortByDate: 'Сортувати за датою',
       sortByName: 'Сортувати за назвою',
@@ -431,7 +431,7 @@ const translations = {
         swipeLeft: 'Проведіть вліво, якщо не знаєте',
         swipeRight: 'Проведіть вправо, якщо не знаєте',
         answer: 'Напишіть відповідь',
-        checkAnswer: 'Перевірити відповідь',
+        checkAnswer: 'Перевірити',
         tapToFlip: 'Натисніть, щоб перегорнути',
       },
     },

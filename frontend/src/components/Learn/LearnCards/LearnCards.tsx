@@ -48,7 +48,6 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
   const [typeMode, setTypeMode] = useState(true);
   const [isTranslateShow, setIsTranslateShow] = useState(false);
 
-  const timeoutRefs = useRef(null);
   const swiperRef = useRef<Swiper<ICard>>(null);
   const rotation = useSharedValue(0);
   const { width } = useWindowDimensions();
@@ -177,6 +176,7 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
       onPress={() => !typeMode && handleFlipCard(index)}
       disabled={typeMode}
       style={{
+        flex: 1,
         width: cardWidth,
         height: '100%',
         margin: 'auto',
@@ -343,12 +343,18 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
     : learningCards[currentCardIndex]?.translateWord.length;
 
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <View
         style={{
           position: 'absolute',
-          left: 20,
-          top: 20,
+          left: 40,
+          bottom: 5,
           zIndex: 10,
           flexDirection: 'row',
           alignItems: 'center',
@@ -381,29 +387,38 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
         <View
           style={{
             position: 'absolute',
+            width: cardWidth,
             top: 0,
             zIndex: 20,
             paddingHorizontal: 20,
             paddingVertical: 20,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
             gap: 10,
             backgroundColor: colors.lightBackground,
             borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          <View>
-            <ThemeText style={{ fontSize: 20, fontWeight: 'bold' }}>
-              {valueAnswer.length}/
-              <Text
-                style={{
-                  color: valueAnswer.length > backCardAnswerLength ? 'red' : '',
-                }}
-              >
-                {backCardAnswerLength}
-              </Text>
-            </ThemeText>
+          <ThemeText
+            style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}
+          >
+            {valueAnswer.length}/
+            <Text
+              style={{
+                color: valueAnswer.length > backCardAnswerLength ? 'red' : '',
+              }}
+            >
+              {backCardAnswerLength}
+            </Text>
+          </ThemeText>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 20,
+            }}
+          >
             <AddInput
               value={valueAnswer}
               placeholderTextColor={placeholderColor}
@@ -411,14 +426,14 @@ const LearnCards = ({ onComplete, setFlashCards }: LearnCardsProps) => {
               height={50}
               placeholder={i18n.t('learnScreen.learnCards.answer')}
             />
+            <PressableButton
+              text={i18n.t('learnScreen.learnCards.checkAnswer')}
+              onPress={checkAnswer}
+            />
           </View>
-          <PressableButton
-            text={i18n.t('learnScreen.learnCards.checkAnswer')}
-            onPress={checkAnswer}
-          />
         </View>
       )}
-    </>
+    </View>
   );
 };
 
