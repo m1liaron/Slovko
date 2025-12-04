@@ -21,3 +21,4 @@ export { ISection } from './section.type';
 export type { RejectedAction, RejectedPayload } from './rejectedAction';
 export { Language } from './language.type';
 export { AsyncStorageKey } from './asyncStorageKey';
+export { Section, LearnSessionData, ResultData } from './learn.types';

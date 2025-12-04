@@ -99,14 +99,14 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
               size={30}
               color={colors.primary}
             />
-            <ThemeText
+            <Text
               style={{
                 fontSize: 20,
                 textDecorationLine: 'line-through',
               }}
             >
               {item.text}
-            </ThemeText>
+            </Text>
           </View>
           <ThemeText style={{ fontWeight: 'bold' }}>
             {i18n.t('group.cardList.atLeastFourWords')}
@@ -128,8 +128,8 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
           value={item.shown}
           onValueChange={() => onChangeLearningMode(index)}
         />
-        <MaterialIcons name={item.iconName} size={30} color={colors.primary} />
-        <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
+        <MaterialIcons name={item.iconName} size={30} />
+        <Text style={{ fontSize: 20 }}>{item.text}</Text>
       </View>
     );
   };

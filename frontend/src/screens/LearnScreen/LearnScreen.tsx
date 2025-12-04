@@ -1,49 +1,19 @@
-
-import { AntDesign, Entypo, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
-import { useEffect, useState } from 'react';
 import type React from 'react';
-import { Platform, Pressable, Text, View } from 'react-native';
-import { Switch } from 'react-native-gesture-handler';
+import { View } from 'react-native';
 
-import type { ResultsCard } from '@/common/enums/types/result.type';
-import type { ICard } from '@/common/enums/types/types';
-import LearnCheck from '@/components/Learn/LearnCheck/LearnCheck';
-import { LearnCrossWord } from '@/components/Learn/LearnCrossWord/LearnCrossWord';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type {
-  RootStackParamList,
-  StackNavigation,
-} from '@/navigation/ProtectedRoute/ProtectedRoute';
-
-import PressableButton from '../../common/components/PressableButton/PressableButton';
-import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
-import { AppPath, DataStatus } from '../../common/enums/app/app';
-import DefaultModal from '../../components/DefaultModal/DefaultModal';
-import LearnCards from '../../components/Learn/LearnCards/LearnCards';
-import LearnGuessWord from '../../components/Learn/LearnGuessWord/LearnGuessWord';
-import LearnQuiz from '../../components/Learn/LearnQuiz/LearnQuiz';
-import Loading from '../../components/Loading';
-import ExitModal from '../../components/Modals/ExitModal/ExitModal';
-import { useAppTheme } from '../../contexts/ThemeProvider';
+import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import { AppPath } from '@/common/enums/app/app';
+import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import Loading from '@/components/Loading';
 import {
-  getRepeatedCards,
-  updateCardsAfterLearn,
-} from '../../redux/cardReducer/cardSlice';
-import { selectGroup } from '../../redux/groupReducer/groupSlice';
-import {
-  addStateResult,
-  saveResults,
-} from '../../redux/resultReducer/resultSlice';
-import { updateUserStreak } from '../../redux/userReducer/userSlice';
-import { formatTime } from '../../utils/formatTime/formatTime';
-
-import styles from './LearnScreen.styles';
-
-type Section = 'cards' | 'quiz' | 'word' | 'check';
+  useBeforeUnload,
+  useLearnScreen,
+  useLearnSession,
+} from '@/hooks/LearnScreen';
+import { LearnResults } from './components/LearnResults/LearnResults';
+import { LearnHeader } from './components/LearnHeader/LearnHeader';
+import { LearnContent } from './components/LearnContent/LearnContent';
 
 type LearnScreenProps = StackScreenProps<
   RootStackParamList,
@@ -51,269 +21,56 @@ type LearnScreenProps = StackScreenProps<
 >;
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
-  const { theme } = useAppTheme();
   const groupId = (route.params as { groupId?: string | undefined })?.groupId;
-  const groups = useAppSelector(selectGroup);
-  const dispatch = useAppDispatch();
-  const navigation = useNavigation<StackNavigation>();
-  const { repeatedCards, cards, status, shownModes } = useAppSelector(
-    (state) => state.cards,
-  );
-  const { activeSectionId } = useAppSelector((state) => state.sections);
 
-  // Cards mode is always shown first, then add other enabled modes (excluding cards)
-  const enabledModes: Section[] = [
-    'cards',
-    ...Object.entries(shownModes)
-      .filter(([mode, isEnabled]) => mode !== 'cards' && isEnabled)
-      .map(([mode, _]) => mode as Section),
-  ];
+  const {
+    status,
+    isLessonOver,
+    currentSection,
+    showExitModal,
+    sessionData,
+    elapsedTime,
+    setShowExitModal,
+    handleNextSection,
+    handleSetData,
+    leaveStudy,
+  } = useLearnScreen(groupId);
 
-  // Section State
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [currentSection, setCurrentSection] = useState<Section>('cards');
-  const [isLessonOver, setIsLessonOver] = useState<boolean>(false);
+  const { resultsData, accuracy, correctAnswersAmount } =
+    useLearnSession(sessionData);
 
-  // Modes Toggles
-  const [showExitModal, setShowExitModal] = useState<boolean>(false);
+  useBeforeUnload();
 
-  // Cards State
-  const [flashCards, setFlashCards] = useState<ResultsCard[]>([]);
-  const [quizCards, setQuizCards] = useState<ResultsCard[]>([]);
-  const [guessWordCards, setGuessWordCards] = useState<ResultsCard[]>([]);
-  const [checkCards, setCheckCards] = useState<ResultsCard[]>([]);
-
-  // Timing State
-  const [elapsedTime, setElapsedTime] = useState<string>('');
-
-  const startLearnDate = new Date();
-  const projectName = groups?.find((group) => group.id === groupId)?.title;
-
-  const handleNextSection = () => {
-    const nextSectionIndex = currentSectionIndex + 1;
-
-    if (nextSectionIndex >= enabledModes.length) {
-      finishLesson();
-    } else {
-      const nextSection = enabledModes[nextSectionIndex];
-      setCurrentSectionIndex(nextSectionIndex);
-      setCurrentSection(nextSection);
-    }
-  };
-
-  const handleSetData = (card: ICard, isCorrect: boolean) => {
-    const updateOrAddCard = (
-      cards: ResultsCard[],
-      setCards: React.Dispatch<React.SetStateAction<ResultsCard[]>>,
-    ) => {
-      const newCard = {
-        wordId: card.id,
-        word: card.word,
-        translateWord: card.translateWord,
-        mistakesAmount: isCorrect ? 0 : 1,
-      };
-
-      setCards((prev) => {
-        const existingCardIndex = prev.findIndex(
-          (item) => item.wordId === card.id,
-        );
-        if (existingCardIndex !== -1) {
-          if (isCorrect) return prev;
-          // If card exists, increment mistakesAmount
-          const updatedCards = [...prev];
-          updatedCards[existingCardIndex] = {
-            ...updatedCards[existingCardIndex],
-            mistakesAmount: updatedCards[existingCardIndex].mistakesAmount + 1,
-          };
-          return updatedCards;
-        }
-        return [...prev, newCard];
-      });
-    };
-
-    if (currentSection === 'cards') {
-      updateOrAddCard(flashCards, setFlashCards);
-    } else if (currentSection === 'quiz') {
-      updateOrAddCard(quizCards, setQuizCards);
-    } else if (currentSection === 'word') {
-      updateOrAddCard(guessWordCards, setGuessWordCards);
-    } else if (currentSection === 'check') {
-      updateOrAddCard(checkCards, setCheckCards);
-    }
-  };
-
-  const handleSaveResults = () => {
-    const resultData = {
-      title: projectName || new Date().toString(),
-      flashCards,
-      quiz: quizCards,
-      guessWord: guessWordCards,
-      startedLearn: startLearnDate.toISOString(), // Convert Date to string
-      completionTime: new Date().toISOString(), // Convert Date to string
-    };
-    dispatch(enqueueOrDispatch(saveResults, addStateResult, resultData));
-  };
-
-  const finishLesson = () => {
-    setIsLessonOver(true);
-
-    const endLearnDate = new Date().getTime();
-    const totalLearnedTime = endLearnDate - startLearnDate.getTime(); // in milliseconds
-    setElapsedTime(formatTime(totalLearnedTime));
-
-    const repeatedCardsIds = cards?.map((card) => card.id);
-    dispatch(enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds));
-
-    dispatch(enqueueOrDispatch(updateUserStreak, {}));
-    handleSaveResults();
-    if (repeatedCards.length) {
-      dispatch(
-        enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
-      );
-    }
-  };
-
-  const leaveStudy = () => {
-    navigation.navigate(AppPath.Main);
-  };
-
-  if (Platform.OS === 'web') {
-    useEffect(() => {
-      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-        event.preventDefault();
-        return i18n.t('learnScreen.leaveStudyMessage');
-      };
-
-      window.addEventListener('beforeunload', handleBeforeUnload);
-
-      return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }, []);
+  if (!groupId) {
+    return null;
   }
-
-  // Include checkCards in results calculation
-  const resultsData = [
-    ...flashCards,
-    ...quizCards,
-    ...guessWordCards,
-    ...checkCards,
-  ];
-  const correctAnswersAmount = resultsData.filter(
-    (item) => item.mistakesAmount === 0,
-  ).length;
-  const accuracy =
-    resultsData.length > 0
-      ? Math.floor((correctAnswersAmount / resultsData.length) * 100)
-      : 0;
 
   return (
     <ThemeBackground>
       <View>
         {!isLessonOver ? (
           <View style={{ justifyContent: 'center', paddingHorizontal: 20 }}>
-            <Pressable onPress={() => setShowExitModal(true)}>
-              <Entypo name="cross" size={35} color={theme.colors.iconColor} />
-            </Pressable>
+            <LearnHeader onExit={() => setShowExitModal(true)} />
 
-            {status === DataStatus.PENDING ? (
+            {status === 'pending' ? (
               <Loading />
             ) : (
-              <View>
-                <View style={styles.centeredContainer}>
-                  {currentSection === 'quiz' && (
-                    <LearnQuiz
-                      onComplete={handleNextSection}
-                      handleSetData={handleSetData}
-                    />
-                  )}
-                  {currentSection === 'word' && (
-                    <LearnGuessWord
-                      onComplete={handleNextSection}
-                      handleSetData={handleSetData}
-                    />
-                  )}
-                  {currentSection === 'check' && (
-                    <LearnCheck
-                      onComplete={handleNextSection}
-                      handleSetData={handleSetData}
-                    />
-                  )}
-                </View>
-                {currentSection === 'cards' && (
-                  <LearnCards
-                    onComplete={handleNextSection}
-                    setFlashCards={handleSetData}
-                  />
-                )}
-              </View>
+              <LearnContent
+                currentSection={currentSection}
+                onComplete={handleNextSection}
+                onSetData={handleSetData}
+                showExitModal={showExitModal}
+                onCloseExitModal={() => setShowExitModal(false)}
+              />
             )}
-
-            <ExitModal
-              modalVisible={showExitModal}
-              handleClose={() => setShowExitModal(false)}
-              text={i18n.t('learnScreen.leaveStudyMessage')}
-            />
           </View>
         ) : (
-          <View style={{ padding: 20 }}>
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: 20,
-              }}
-            >
-              <Text
-                style={{
-                  color: theme.colors.primary,
-                  textAlign: 'center',
-                  fontSize: 30,
-                }}
-              >
-                {i18n.t('learnScreen.lessonCompleteTitle')}
-              </Text>
-
-              <View style={{ marginBottom: 30, gap: 10 }}>
-                <View
-                  style={[
-                    styles.resultItemContainer,
-                    { borderColor: theme.colors.primary },
-                  ]}
-                >
-                  <Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-                    {elapsedTime}
-                  </Text>
-                </View>
-
-                <View
-                  style={[
-                    styles.resultItemContainer,
-                    { borderColor: theme.colors.primary },
-                  ]}
-                >
-                  <Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-                    {correctAnswersAmount * 10} {i18n.t('learnScreen.score')}
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    styles.resultItemContainer,
-                    { borderColor: theme.colors.primary },
-                  ]}
-                >
-                  <Text style={{ color: theme.colors.primary, fontSize: 30 }}>
-                    {accuracy}% {i18n.t('learnScreen.accuracy')}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <PressableButton
-              text={i18n.t('learnScreen.continueButton')}
-              onPress={leaveStudy}
-            />
-          </View>
+          <LearnResults
+            elapsedTime={elapsedTime}
+            correctAnswersAmount={correctAnswersAmount}
+            accuracy={accuracy}
+            onContinue={leaveStudy}
+          />
         )}
       </View>
     </ThemeBackground>
