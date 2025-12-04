@@ -1,7 +1,16 @@
-import { useState, useCallback, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { useState, useCallback, useEffect } from 'react';
+
+import { AppPath } from '@/common/enums/app/app';
+import type {
+  ICard,
+  LearnSessionData,
+  ResultsCard,
+  Section,
+} from '@/common/enums/types/types';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import {
   getRepeatedCards,
   updateCardsAfterLearn,
@@ -10,14 +19,6 @@ import { selectGroup } from '@/redux/groupReducer/groupSlice';
 import { addStateResult, saveResults } from '@/redux/resultReducer/resultSlice';
 import { updateUserStreak } from '@/redux/userReducer/userSlice';
 import { formatTime } from '@/utils/formatTime/formatTime';
-import { AppPath } from '@/common/enums/app/app';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import type {
-  ICard,
-  LearnSessionData,
-  ResultsCard,
-  Section,
-} from '@/common/enums/types/types';
 
 export const useLearnScreen = (groupId?: string) => {
   const dispatch = useAppDispatch();

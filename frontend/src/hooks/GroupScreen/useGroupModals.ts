@@ -1,9 +1,10 @@
-import { useState, useCallback, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { addLearningMode } from '@/redux/cardReducer/cardSlice';
-import { i18n } from '@/localization/i18n';
-import type { LearningMode } from '@/redux/cardReducer/cardSlice';
 import type BottomSheet from '@gorhom/bottom-sheet';
+import { useState, useCallback, useRef } from 'react';
+
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import { addLearningMode } from '@/redux/cardReducer/cardSlice';
+import type { LearningMode } from '@/redux/cardReducer/cardSlice';
 
 interface ShowModeLearning {
   text: string;
@@ -12,7 +13,7 @@ interface ShowModeLearning {
   sectionName: LearningMode;
 }
 
-const useGroupModals = (groupId: string, wordsRangeNumber: number) => {
+const useGroupModals = () => {
   const dispatch = useAppDispatch();
   const { shownModes } = useAppSelector((state) => state.cards);
   const bottomSheetRef = useRef<BottomSheet>(null);

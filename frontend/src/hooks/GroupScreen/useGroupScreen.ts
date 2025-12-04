@@ -1,10 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '../redux.hooks';
-import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { useEffect } from 'react';
+
 import { DataStatus } from '@/common/enums/app/DataStatus';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { getGroup, getGroupStorage } from '@/redux/groupReducer/groupThunk';
+
+import { useAppDispatch, useAppSelector } from '../redux.hooks';
 
 const useGroupScreen = (groupId: string) => {
   const dispatch = useAppDispatch();

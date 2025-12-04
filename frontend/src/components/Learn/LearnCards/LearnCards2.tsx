@@ -98,4 +98,4 @@ const LearnCards: React.FC<LearnCardsProps> = ({
   );
 };
 
-export default LearnCards;
+export { LearnCards };

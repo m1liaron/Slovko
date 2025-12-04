@@ -1,11 +1,12 @@
 import { View } from 'react-native';
+
+import type { ICard, Section } from '@/common/enums/types/types';
 import LearnCards from '@/components/Learn/LearnCards/LearnCards';
-import LearnQuiz from '@/components/Learn/LearnQuiz/LearnQuiz';
-import LearnGuessWord from '@/components/Learn/LearnGuessWord/LearnGuessWord';
 import LearnCheck from '@/components/Learn/LearnCheck/LearnCheck';
+import LearnGuessWord from '@/components/Learn/LearnGuessWord/LearnGuessWord';
+import LearnQuiz from '@/components/Learn/LearnQuiz/LearnQuiz';
 import ExitModal from '@/components/Modals/ExitModal/ExitModal';
 import { i18n } from '@/localization/i18n';
-import type { ICard, Section } from '@/common/enums/types/types';
 
 interface LearnContentProps {
   currentSection: Section;

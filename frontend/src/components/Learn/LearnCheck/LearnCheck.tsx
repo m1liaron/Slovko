@@ -65,8 +65,6 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
 
   const newFadeAnim = useRef(new Animated.Value(1)).current;
 
-  const maxWordLen = cards.map((card) => card.word.length);
-
   const getNewWord = () => {
     const remainingWords = cards.filter(
       (card) => !answeredWords.includes(card.word),

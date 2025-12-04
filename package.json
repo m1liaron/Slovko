@@ -23,15 +23,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/m1liaron/FlashCards.git"
+    "url": "git+https://github.com/m1liaron/Slovko.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/m1liaron/FlashCards/issues"
+    "url": "https://github.com/m1liaron/Slovko/issues"
   },
-  "homepage": "https://github.com/m1liaron/FlashCards#readme",
+  "homepage": "https://github.com/m1liaron/Slovko#readme",
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "@typescript-eslint/eslint-plugin": "^8.37.0",

@@ -1,8 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
 import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+
+import { AppPath } from '@/common/enums/app/app';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { getRepeatedCards, rangeCards } from '@/redux/cardReducer/cardSlice';
 import {
   updateGroup,
   updateStateGroup,
@@ -10,10 +14,7 @@ import {
   removeStateGroup,
 } from '@/redux/groupReducer/groupSlice';
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
-import { getRepeatedCards, rangeCards } from '@/redux/cardReducer/cardSlice';
 import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
-import { AppPath } from '@/common/enums/app/app';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 
 const useGroupNavigation = (groupId: string) => {
   const dispatch = useAppDispatch();

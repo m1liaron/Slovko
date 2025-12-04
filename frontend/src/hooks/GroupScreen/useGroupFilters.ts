@@ -1,12 +1,14 @@
-import { ICard } from '@/common/enums/types/card.type';
-import { useAppDispatch } from '../redux.hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import type { ICard } from '@/common/enums/types/card.type';
 import { i18n } from '@/localization/i18n';
 import {
   filterCardsByStatus,
   rangeCards,
   resetFilter,
 } from '@/redux/cardReducer/cardSlice';
+
+import { useAppDispatch } from '../redux.hooks';
 
 type ViewMode = 'list' | 'cards';
 type SortOrder = 'asc' | 'desc';

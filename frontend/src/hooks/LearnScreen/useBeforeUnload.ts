@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Platform } from 'react-native';
+
 import { i18n } from '@/localization/i18n';
 
 export const useBeforeUnload = () => {

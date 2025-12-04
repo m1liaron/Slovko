@@ -1,4 +1,5 @@
 import { View, Text } from 'react-native';
+
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { i18n } from '@/localization/i18n';

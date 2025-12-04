@@ -1,4 +1,4 @@
-import { Section } from '@/common/enums/types/learn.types';
+import type { Section } from '@/common/enums/types/learn.types';
 
 const getSectionDisplayName = (section: Section): string => {
   const sectionNames: Record<Section, string> = {

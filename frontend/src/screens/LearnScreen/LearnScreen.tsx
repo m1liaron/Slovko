@@ -3,17 +3,18 @@ import type React from 'react';
 import { View } from 'react-native';
 
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import { AppPath } from '@/common/enums/app/app';
-import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import type { AppPath } from '@/common/enums/app/app';
 import Loading from '@/components/Loading';
 import {
   useBeforeUnload,
   useLearnScreen,
   useLearnSession,
 } from '@/hooks/LearnScreen';
-import { LearnResults } from './components/LearnResults/LearnResults';
-import { LearnHeader } from './components/LearnHeader/LearnHeader';
+import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+
 import { LearnContent } from './components/LearnContent/LearnContent';
+import { LearnHeader } from './components/LearnHeader/LearnHeader';
+import { LearnResults } from './components/LearnResults/LearnResults';
 
 type LearnScreenProps = StackScreenProps<
   RootStackParamList,
@@ -36,8 +37,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
     leaveStudy,
   } = useLearnScreen(groupId);
 
-  const { resultsData, accuracy, correctAnswersAmount } =
-    useLearnSession(sessionData);
+  const { accuracy, correctAnswersAmount } = useLearnSession(sessionData);
 
   useBeforeUnload();
 

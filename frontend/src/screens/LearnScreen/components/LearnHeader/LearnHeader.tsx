@@ -1,5 +1,6 @@
-import { Pressable } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import { Pressable } from 'react-native';
+
 import { useAppTheme } from '@/contexts/ThemeProvider';
 
 interface LearnHeaderProps {

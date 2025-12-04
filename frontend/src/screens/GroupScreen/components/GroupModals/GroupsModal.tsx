@@ -1,18 +1,19 @@
-import { useState, useRef } from 'react';
-import { Platform, View, Text, Pressable } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Checkbox from 'expo-checkbox';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { useState, useRef } from 'react';
+import { Platform, View, Text, Pressable } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+
 import AddInput from '@/common/components/AddInput/AddInput';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { IGroup, ICard } from '@/common/enums/types/types';
 import DefaultModal from '@/components/DefaultModal/DefaultModal';
 import { AddCardModal } from '@/components/Modals/AddCardModal/AddCardModal';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
-import type { IGroup, ICard } from '@/common/enums/types/types';
 import type { LearningMode } from '@/redux/cardReducer/cardSlice';
 
 interface ShowModeLearning {

@@ -1,5 +1,6 @@
-import { LearnSessionData } from '@/common/enums/types/learn.types';
 import { useMemo } from 'react';
+
+import type { LearnSessionData } from '@/common/enums/types/learn.types';
 
 export const useLearnSession = (sessionData: LearnSessionData) => {
   const resultsData = useMemo(

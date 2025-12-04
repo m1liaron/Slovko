@@ -1,4 +1,3 @@
-import { View, Pressable, Text } from 'react-native';
 import {
   Entypo,
   Feather,
@@ -6,8 +5,10 @@ import {
   MaterialIcons,
 } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { View, Pressable, Text } from 'react-native';
+
 import { Select } from '@/common/components/Select/Select';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { i18n } from '@/localization/i18n';
 

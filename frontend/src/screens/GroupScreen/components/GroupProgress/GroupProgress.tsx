@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { i18n } from '@/localization/i18n';

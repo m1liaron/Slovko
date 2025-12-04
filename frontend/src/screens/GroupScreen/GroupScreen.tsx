@@ -1,6 +1,10 @@
+import type { StackScreenProps } from '@react-navigation/stack';
+import { View } from 'moti';
+
 import { LineLoader } from '@/common/components/LineLoader/LineLoader';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import { AppPath } from '@/common/enums/app/AppPath';
+import type { AppPath } from '@/common/enums/app/AppPath';
+import CardList from '@/components/Card/CardList/CardList';
 import { useResponsive } from '@/hooks';
 import {
   useGroupFilters,
@@ -8,15 +12,13 @@ import {
   useGroupNavigation,
   useGroupScreen,
 } from '@/hooks/GroupScreen';
-import { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { StackScreenProps } from '@react-navigation/stack';
-import { View } from 'moti';
-import { GroupHeader } from './components/GroupHeader/GroupHeader';
-import { GroupProgress } from './components/GroupProgress/GroupProgress';
-import CardList from '@/components/Card/CardList/CardList';
+import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+
 import { GroupActions } from './components/GroupActions/GroupActions';
 import { GroupFilters } from './components/GroupFilters/GroupFilters';
+import { GroupHeader } from './components/GroupHeader/GroupHeader';
 import { GroupModals } from './components/GroupModals/GroupsModal';
+import { GroupProgress } from './components/GroupProgress/GroupProgress';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -36,7 +38,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     isLoading,
     progressPercentage,
     learnedCards,
-    totalCards,
   } = useGroupScreen(groupId);
 
   const filterState = useGroupFilters(cards, filteredCards);

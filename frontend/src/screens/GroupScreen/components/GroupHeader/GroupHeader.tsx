@@ -1,9 +1,10 @@
-import { View, Pressable, Text } from 'react-native';
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
+import { View, Pressable, Text } from 'react-native';
+
 import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { IGroup } from '@/common/enums/types/group.type';
 import BackButton from '@/components/BackButton/BackButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
-import { IGroup } from '@/common/enums/types/group.type';
 import { useResponsive } from '@/hooks';
 
 interface GroupHeaderProps {
