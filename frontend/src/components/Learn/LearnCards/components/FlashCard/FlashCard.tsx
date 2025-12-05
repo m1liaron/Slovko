@@ -35,6 +35,8 @@ export const FlashCard: React.FC<FlashCardProps> = ({
     backgroundColor: colors.lightBackground,
     position: 'absolute' as const,
     borderRadius: 24,
+    width: '100%',
+    height: '100%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.15,
@@ -96,7 +98,7 @@ export const FlashCard: React.FC<FlashCardProps> = ({
         style={{
           position: 'relative',
           width: '100%',
-          height: getCardHeight(isMobile, isDesktop),
+          height: getCardHeight(isMobile),
         }}
       >
         {/* Front of card */}

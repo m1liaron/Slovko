@@ -41,8 +41,11 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   } = useGroupScreen(groupId);
 
   const filterState = useGroupFilters(cards, filteredCards);
-  const modalState = useGroupModals(groupId, filterState.wordsRangeNumber);
-  const navigationHandlers = useGroupNavigation(groupId);
+  const modalState = useGroupModals();
+  const navigationHandlers = useGroupNavigation(
+    groupId,
+    modalState.setShowModesModal,
+  );
 
   if (!group) {
     return (

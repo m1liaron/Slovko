@@ -9,7 +9,6 @@ import { i18n } from '@/localization/i18n';
 import { getCardWidth } from '@/utils/learn/learnCards.utill';
 
 interface AnswerInputProps {
-  cardWidth: string;
   valueAnswer: string;
   backCardAnswerLength: number;
   placeholderColor: string;
@@ -18,7 +17,6 @@ interface AnswerInputProps {
 }
 
 export const AnswerInput: React.FC<AnswerInputProps> = ({
-  cardWidth,
   valueAnswer,
   backCardAnswerLength,
   placeholderColor,

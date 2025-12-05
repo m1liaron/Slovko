@@ -16,7 +16,10 @@ import {
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
 import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
 
-const useGroupNavigation = (groupId: string) => {
+const useGroupNavigation = (
+  groupId: string,
+  setShowModesModal: (boolean) => void,
+) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
   const { cards } = useAppSelector((state) => state.cards);
@@ -71,6 +74,7 @@ const useGroupNavigation = (groupId: string) => {
         dispatch(rangeCards(wordsRangeNumber));
       }
       navigation.navigate(AppPath.Learn, { groupId });
+      setShowModesModal(false);
     },
     [cards.length, groupId, dispatch, navigation],
   );

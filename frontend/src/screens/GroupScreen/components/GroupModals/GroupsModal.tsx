@@ -150,9 +150,9 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
           <BottomSheetView
             style={{ flex: 1, padding: 30, alignItems: 'center' }}
           >
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+            <ThemeText style={{ fontSize: 20, fontWeight: 'bold' }}>
               {i18n.t('group.chooseModes')}
-            </Text>
+            </ThemeText>
             <FlatList
               data={shownLearningModes}
               keyExtractor={(item) => item.text}

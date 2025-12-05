@@ -86,7 +86,6 @@ const LearnCards: React.FC<LearnCardsProps> = ({
 
       {showTypeMode && (
         <AnswerInput
-          cardWidth={cardWidth}
           valueAnswer={valueAnswer}
           backCardAnswerLength={backCardAnswerLength}
           placeholderColor={placeholderColor}

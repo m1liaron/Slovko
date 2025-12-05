@@ -79,6 +79,7 @@ const useGroupModals = () => {
     showEditModal,
     showAddModal,
     showModesModal,
+    setShowModesModal,
     shownLearningModes,
     bottomSheetRef,
     openEditModal,
