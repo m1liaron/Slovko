@@ -1,8 +1,3 @@
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import type { ICard } from '@/common/enums/types/card.type';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch } from '@/hooks/redux.hooks';
-import { pickImage } from '@/utils';
 import { Entypo } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
@@ -14,11 +9,19 @@ import {
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
+
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { ICard } from '@/common/enums/types/card.type';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch } from '@/hooks/redux.hooks';
+import { pickImage } from '@/utils';
+
 import AddInput from '../../../common/components/AddInput/AddInput';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { updateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
+
 import styles from './Card.styles';
 
 /**

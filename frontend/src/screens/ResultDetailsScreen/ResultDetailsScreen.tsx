@@ -1,10 +1,4 @@
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import type { AppPath } from '@/common/enums/app/AppPath';
-import type { IResultMode, IWord, ModeName } from '@/common/enums/types/types';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { Entypo } from '@expo/vector-icons';
 import type { StackScreenProps } from '@react-navigation/stack';
 import { useEffect, useMemo, useState } from 'react';
 import type React from 'react';
@@ -15,6 +9,16 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { AppPath } from '@/common/enums/app/AppPath';
+import type { IResultMode, IWord, ModeName } from '@/common/enums/types/types';
+import CircularProgress from '@/components/CircularProgress/CircularProgress';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import BackButton from '../../components/BackButton/BackButton';
@@ -22,10 +26,9 @@ import Loading from '../../components/Loading';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import { getResultDetails } from '../../redux/resultReducer/resultSlice';
 import { formatDurationHHMMSS, formatMDYTime, formatTime } from '../../utils';
+
 import styles from './ResultDetailsScreen.styles';
-import { PieChart, ProgressChart } from 'react-native-chart-kit';
-import CircularProgress from '@/components/CircularProgress/CircularProgress';
-import { Entypo } from '@expo/vector-icons';
+
 
 type ResultDetailsScreenProps = StackScreenProps<
   RootStackParamList,
@@ -61,11 +64,6 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
   if (!result) {
     return <ActivityIndicator />;
   }
-
-  const resultTime =
-    new Date(result.completionTime).getTime() -
-    new Date(result.startedLearn).getTime();
-  const formattedTime = formatTime(resultTime);
 
   const calculateCorrectPercentage = (): number => {
     const words: IWord[] = modesMap[selectedMode]?.words || [];

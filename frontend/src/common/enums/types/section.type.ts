@@ -1,4 +1,4 @@
-import { Language } from './language.type';
+import type { Language } from './language.type';
 
 type ISection = {
   id: string;

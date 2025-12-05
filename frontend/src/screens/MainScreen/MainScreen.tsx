@@ -1,9 +1,3 @@
-import appLogo from '@/assets/images/favicon.png';
-import { useLanguage } from '@/contexts/LanguageProvider';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { Entypo, FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -16,6 +10,22 @@ import {
   Text,
   View,
 } from 'react-native';
+
+import appLogo from '@/assets/images/favicon.png';
+import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import { useLanguage } from '@/contexts/LanguageProvider';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import { CustomDrawerContent } from '@/navigation/DrawerNavigator/CustomDrawerContent';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { getAllGroups } from '@/redux/groupReducer/groupThunk';
+import {
+  getSections,
+  setActiveSectionId,
+} from '@/redux/sectionReducer/sectionSlice';
+
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import { AppPath } from '../../common/enums/app/app';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
@@ -29,15 +39,8 @@ import {
   requestNotificationPermission,
   scheduleNotification,
 } from '../../utils/notifications';
+
 import styles from './MainScreen.styles';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import { CustomDrawerContent } from '@/navigation/DrawerNavigator/CustomDrawerContent';
-import {
-  getSections,
-  setActiveSectionId,
-} from '@/redux/sectionReducer/sectionSlice';
-import { getAllGroups } from '@/redux/groupReducer/groupThunk';
 
 const MainScreen = () => {
   useLanguage();

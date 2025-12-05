@@ -1,4 +1,5 @@
 import { authRouter } from "./authRoute.js";
+
 const { router, get, put, post, patch } = authRouter();
 import {
   register,

@@ -1,4 +1,5 @@
-import PressableButton from '@/common/components/PressableButton/PressableButton';
+import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
   Text,
@@ -6,15 +7,15 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import IconImage from '@/assets/images/favicon.png';
-import { i18n } from '@/localization/i18n';
-import { AppPath } from '@/common/enums/app/AppPath';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import Animated, { FadeInUp, FadeInDown } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import IconImage from '@/assets/images/favicon.png';
+import PressableButton from '@/common/components/PressableButton/PressableButton';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
+import { AppPath } from '@/common/enums/app/AppPath';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigation>();

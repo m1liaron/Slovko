@@ -1,9 +1,12 @@
 import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
+
 import { sequelize } from "../db/sequelize.js";
-import { User } from "./User.js";
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "./CustomModel.js";
-import { Card } from "./Card.js";
+
+import type { Card } from "./Card.js";
+import type { BaseAttributes, BaseCreationAttributes} from "./CustomModel.js";
+import { CustomModal } from "./CustomModel.js";
+import type { User } from "./User.js";
 interface GroupAttributes extends BaseAttributes {
   title: string;
   sectionId: string;

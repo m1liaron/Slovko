@@ -1,13 +1,16 @@
-import type { ICard } from '@/common/enums/types/card.type';
-import { useAppSelector } from '@/hooks/redux.hooks';
 import { AntDesign } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList, Image, Platform, Pressable, Text, View } from 'react-native';
+
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { ICard } from '@/common/enums/types/card.type';
+import { useAppSelector } from '@/hooks/redux.hooks';
+
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
+
 import styles from './LearnGuessWord.styles';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 interface LetterColors {
   [key: number]: string;
@@ -27,9 +30,9 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
   const [currentGuess, setCurrentGuess] = useState<string[]>([]);
   const [scrambledWord, setScrambledWord] = useState<string[]>([]);
   const [letterColors, setLetterColors] = useState<LetterColors>({});
-  const [inCorrectLetter, setInCorrectLetter] = useState<string | null>(null);
+  const [_inCorrectLetter, setInCorrectLetter] = useState<string | null>(null);
   const [showTranslate, setShowTranslate] = useState<boolean>(false);
-  const [correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
+  const [_correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
   const currentCard = cards[currentIndex];
   const currentWord: string = currentCard?.word;
 

@@ -1,9 +1,10 @@
+import NetInfo from '@react-native-community/netinfo';
+import { useEffect, useRef } from 'react';
+
 import { useAppDispatch } from '@/hooks/redux.hooks';
 import { setIsConnected } from '@/redux/networkReducer/networkSlice';
 import { processOfflineQueue } from '@/redux/offlineQueueReducer/processOfflineQueue';
 import { hasToken } from '@/utils/storage';
-import NetInfo from '@react-native-community/netinfo';
-import { useEffect, useRef } from 'react';
 
 const ConnectivityListener = () => {
   const dispatch = useAppDispatch();

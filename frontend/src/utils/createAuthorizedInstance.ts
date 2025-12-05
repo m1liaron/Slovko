@@ -1,8 +1,9 @@
 import axios, { type AxiosInstance } from 'axios';
-import { SERVER_API_URL } from '@/common/enums/constants/server-api';
-import { getStorageItem } from '@/utils/storage';
+
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { SERVER_API_URL } from '@/common/enums/constants/server-api';
 import { triggerUnauthorized } from '@/redux/services/authEvents';
+import { getStorageItem } from '@/utils/storage';
 
 /**
  * Creates an authorized Axios instance with a Bearer token.

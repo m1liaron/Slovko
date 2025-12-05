@@ -1,13 +1,19 @@
+import { FontAwesome6 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { AppPath } from '@/common/enums/app/AppPath';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { RootStackParamList, StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import type { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { selectUser } from '@/redux/userReducer/userSlice';
+import { formatMDYTime } from '@/utils';
+
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import BackButton from '../../components/BackButton/BackButton';
@@ -17,11 +23,8 @@ import {
   getSharedGroup,
   removeSharedGroup,
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
+
 import styles from './SharedGroupDetailsScreen.styles';
-import { formatMDYTime } from '@/utils';
-import { selectUser } from '@/redux/userReducer/userSlice';
-import { FontAwesome6 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 
 /**
  * @param route { object: { params }}

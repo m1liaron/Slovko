@@ -1,7 +1,6 @@
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { i18n } from '@/localization/i18n';
-import IconImage from '@/assets/images/favicon.png';
+import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -10,24 +9,26 @@ import {
   Text,
   SafeAreaView,
 } from 'react-native';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { FlatList } from 'react-native-gesture-handler';
+
 import languagesJson from '@/assets/data/languages.json';
+import IconImage from '@/assets/images/favicon.png';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { AppPath } from '@/common/enums/app/AppPath';
-import { AntDesign, Entypo, EvilIcons } from '@expo/vector-icons';
-import { removeStorageItem, setStorageItem } from '@/utils/storage';
-import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
+import { AppPath } from '@/common/enums/app/AppPath';
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import {
   addSection,
   addStateSection,
 } from '@/redux/sectionReducer/sectionSlice';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { removeStorageItem, setStorageItem } from '@/utils/storage';
 
 type Word = {
   id: number;

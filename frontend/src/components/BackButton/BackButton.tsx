@@ -1,7 +1,9 @@
-import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Pressable } from "react-native";
+
+import type { StackNavigation } from "@/navigation/ProtectedRoute/ProtectedRoute";
+
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import { showConfirmAlert } from "../../utils/showConfirmAlert";
 

@@ -1,9 +1,10 @@
 import { StatusCodes } from "http-status-codes";
-import { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
+
+import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 import { sendError } from "../helpers/sendError.js";
-import { Section } from "../models/Section.js";
 import { Group } from "../models/Group.js";
 import { Language } from "../models/Language.js";
+import { Section } from "../models/Section.js";
 
 const getAllSections: AuthRequestHandler = async (req, res) => {
   const userId = req.user.id;

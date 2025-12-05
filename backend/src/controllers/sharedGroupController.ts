@@ -1,3 +1,8 @@
+import type { Request, Response } from "express";
+import { StatusCodes } from 'http-status-codes';
+
+import type { AuthRequest } from "../common/types/AuthRequest.type.js";
+import { sendError } from "../helpers/index.js";
 import {
 	SharedGroup,
 	SharedCard,
@@ -5,10 +10,6 @@ import {
 	Card,
 	User,
 } from "../models/models.js";
-import { StatusCodes } from 'http-status-codes';
-import { Request, Response } from "express";
-import { AuthRequest } from "../common/types/AuthRequest.type.js";
-import { sendError } from "../helpers/index.js";
 
 interface SharedGroupsQuery {
 	month: string;

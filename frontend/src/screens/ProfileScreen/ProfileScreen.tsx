@@ -1,12 +1,3 @@
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { AppPath } from '@/common/enums/app/AppPath';
-import { useLanguage } from '@/contexts/LanguageProvider';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
-import { pickImage } from '@/utils';
 import { Feather } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
@@ -24,14 +15,26 @@ import {
 } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { AppPath } from '@/common/enums/app/AppPath';
+import { useLanguage } from '@/contexts/LanguageProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { persistor } from '@/redux/store';
+import { pickImage } from '@/utils';
+import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
+
 import AvatarImage from '../../../assets/images/avatar.png';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import { useAppTheme } from '../../contexts/ThemeProvider';
 import { logout, selectUser } from '../../redux/userReducer/userSlice';
 import { updateUser } from '../../redux/userReducer/userThunk';
+
 import styles from './ProfileScreen.styles';
-import { persistor } from '@/redux/store';
 
 export default function ProfileScreen() {
   const { user, isAuthenticated } = useAppSelector((state) => state.user);

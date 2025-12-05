@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
+import { createApi } from "unsplash-js";
 
 import { EnvVariables } from "../common/enums/index.js";
-import { createApi } from "unsplash-js";
 
 dotenv.config();
 

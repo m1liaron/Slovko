@@ -1,8 +1,11 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../../db/sequelize.js";
 import { v4 as uuidv4 } from "uuid";
+
+import { sequelize } from "../../db/sequelize.js";
+import type { BaseAttributes, BaseCreationAttributes} from "../CustomModel.js";
+import { CustomModal } from "../CustomModel.js";
+
 import { SharedGroup } from "./SharedGroup.js";
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel.js";
 
 interface SharedCardAttributes extends BaseAttributes {
 	word: string;

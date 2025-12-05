@@ -1,5 +1,5 @@
+import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Response } from "express";
 
 function calculateCurMonthAndYearDate(month: number | string, year: number | string, res: Response): { startDate: Date;  endDate: Date } | any {
 	const intMonth = Number.parseInt(String(month), 10);

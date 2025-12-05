@@ -1,14 +1,17 @@
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
+
 import { DataStatus, type IDataStatus } from '@/common/enums/app/DataStatus';
 import type { IResult, IStatistics } from '@/common/enums/types/types';
-import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 import type { RootState } from '../store';
+
 import {
   getResultDetails,
   getResults,
   getResultsStatistics,
   saveResults,
 } from './resultThunk';
-import { v4 as uuidv4 } from 'uuid';
 
 interface InitialState {
   results: IResult[];

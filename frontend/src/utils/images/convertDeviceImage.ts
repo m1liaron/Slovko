@@ -1,4 +1,5 @@
 import { Platform } from "react-native";
+
 import { convertBlobToBase64 } from "./convertBlobToBase64";
 import { convertImageToBase64 } from "./convertImageToBase64";
 

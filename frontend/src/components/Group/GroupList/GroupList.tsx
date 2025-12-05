@@ -1,11 +1,16 @@
-import noGroupsImage from '@/assets/images/no_groups.png';
-import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import React, { useState } from 'react';
 import { FlatList, Image, Pressable, View, useWindowDimensions } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { v4 as uuid } from 'uuid';
+
+import noGroupsImage from '@/assets/images/no_groups.png';
+import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+
 import AddButton from '../../../common/components/AddButton/AddButton';
 import AddInput from '../../../common/components/AddInput/AddInput';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';
@@ -15,9 +20,6 @@ import {
 } from '../../../redux/groupReducer/groupSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import { i18n } from '@/localization/i18n';
 
 export const GroupList = () => {
   const { groups, isLoading } = useAppSelector((state) => state.groups);

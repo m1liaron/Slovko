@@ -1,7 +1,8 @@
-import type { RootState } from '@/redux/store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getStorageItem } from '@/utils/storage';
+
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import type { RootState } from '@/redux/store';
+import { getStorageItem } from '@/utils/storage';
 
 const persistOfflineQueue = async (getState: () => RootState) => {
   const state = getState();

@@ -1,5 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { type StyleProp, Text, type TextStyle } from 'react-native';
+
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 
 /**

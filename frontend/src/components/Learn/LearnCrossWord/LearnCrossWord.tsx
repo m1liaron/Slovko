@@ -1,10 +1,12 @@
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import { useAppSelector } from '@/hooks/redux.hooks';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+
+import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import type { ICard } from '@/common/enums/types/card.type';
+import { useAppSelector } from '@/hooks/redux.hooks';
+
 import styles from './LearnCrossWord.styles';
-import { ICard } from '@/common/enums/types/card.type';
 
 interface LearnCheckProps {
   onComplete: () => void;

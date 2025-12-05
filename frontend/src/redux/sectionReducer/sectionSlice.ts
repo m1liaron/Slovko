@@ -1,15 +1,18 @@
-import type { ICard, ISection } from '@/common/enums/types/types';
 
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
+
+import type { ICard, ISection } from '@/common/enums/types/types';
+
 import { DataStatus, type IDataStatus } from '../../common/enums/app/app';
 import type { RootState } from '../store';
+
 import {
   addSection,
   getSections,
   removeSection,
   updateSection,
 } from './sectionThunk';
-import { v4 as uuidv4 } from 'uuid';
 
 interface InitialState {
   sections: ISection[];

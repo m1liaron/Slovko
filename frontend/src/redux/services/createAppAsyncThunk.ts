@@ -1,5 +1,6 @@
-import type { AsyncThunkConfig } from "@/common/enums/types/asyncThunkConfig";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+
+import type { AsyncThunkConfig } from "@/common/enums/types/asyncThunkConfig";
 
 function createAppAsyncThunk<Returned, ThunkArg>(
 	typePrefix: string,

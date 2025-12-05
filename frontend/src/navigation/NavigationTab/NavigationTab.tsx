@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
+
 import { AppPath, TypeAppPath } from "../../common/enums/app/app";
 import { useAppTheme } from "../../contexts/ThemeProvider";
 import {

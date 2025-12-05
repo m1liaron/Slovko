@@ -1,57 +1,27 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
-import pluginReact from 'eslint-plugin-react';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactNative from 'eslint-plugin-react-native';
 
-/** @type {import('eslint').Linter.Config[]} */
 export default [
-  { files: ['**/*.{js,mjs,cjs,jsx}'] },
   {
-    settings: {
-      react: {
-        version: "detect",
-      },
-    },
-    ignores: [
-      '**/node_modules/**',
-      '**/.expo/**', // Ignore Expo-generated files
-      '**/.expo/**/*', // Ignore all subdirectories in .expo
-      '**/babel.config.js/**',
-    ],
-    rules: {
-      "react/react-in-jsx-scope": "off",
-      strict: "off", // equivalent to [0, "global"]
-      "func-names": "off",
-      "object-shorthand": "off",
-      "consistent-return": "off",
-      "prefer-template": "off",
-      "react/prop-types": "off",
-      "comma-dangle": [
-        "error",
-        {
-          arrays: "always-multiline",
-          objects: "always-multiline",
-          imports: "always-multiline",
-          exports: "always-multiline",
-          functions: "never",
-        },
-      ],
-      "no-undef": "off",// Prevents undefined variable errors
-    },
-  },
-  {
+    files: ['/**/*.{ts,tsx}'],
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node, // Add Node.js globals (fixes "module is not defined"),
-        $$require_external: "readonly",
-      },
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
+        project: './tsconfig.json',
+        tsconfigRootDir: import.meta.dirname,
       },
     },
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'react-native': reactNative,
+    },
+    settings: { react: { version: 'detect' } },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-native/no-unused-styles': 'warn',
+      'react-native/no-inline-styles': 'off',
+    },
   },
-  pluginJs.configs.recommended,
-  pluginReact.configs.flat.recommended,
 ];

@@ -10,16 +10,17 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
+
 import { cardReducers } from './cardReducer/cardSlice';
 import { groupReducers } from './groupReducer/groupSlice';
+import { languageReducers } from './languageReducer/languageSlice';
 import { networkReducer } from './networkReducer/networkSlice';
 import { offlineQueueReducer } from './offlineQueueReducer/offlineQueueSlice';
 import { resultReducers } from './resultReducer/resultSlice';
+import { sectionReducers } from './sectionReducer/sectionSlice';
+import { registerUnauthorizedHandler } from './services/authEvents';
 import { sharedGroupReducers } from './sharedGroupReducer/sharedGroupSlice';
 import { logout, userReducers } from './userReducer/userSlice';
-import { sectionReducers } from './sectionReducer/sectionSlice';
-import { languageReducers } from './languageReducer/languageSlice';
-import { registerUnauthorizedHandler } from './services/authEvents';
 
 const appReducer = combineReducers({
   user: userReducers,

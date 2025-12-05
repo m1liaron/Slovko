@@ -1,8 +1,10 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../../db/sequelize.js";
 import { v4 as uuidv4 } from "uuid";
+
+import { sequelize } from "../../db/sequelize.js";
+import type { BaseAttributes, BaseCreationAttributes} from "../CustomModel.js";
+import { CustomModal } from "../CustomModel.js";
 import { ResultMode } from "../models.js";
-import { BaseAttributes, BaseCreationAttributes, CustomModal } from "../CustomModel.js";
 
 interface WordResultAttributes extends BaseAttributes {
 	resultModeId: string;

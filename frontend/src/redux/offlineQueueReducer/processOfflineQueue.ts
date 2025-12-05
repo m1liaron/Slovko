@@ -18,6 +18,7 @@ import {
   updateUser,
   updateUserStreak,
 } from '../userReducer/userThunk';
+
 import { dequeueAction } from './offlineQueueSlice';
 
 const thunkMap: Record<string, Function> = {

@@ -1,11 +1,13 @@
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
 import { FontAwesome6 } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+
 import PressableButton from '../../common/components/PressableButton/PressableButton';
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import BackButton from '../../components/BackButton/BackButton';
@@ -15,6 +17,7 @@ import {
   buyFreeze,
   getUserStreakDates,
 } from '../../redux/userReducer/userThunk';
+
 import styles from './StreakScreen.styles';
 
 type DateType = {

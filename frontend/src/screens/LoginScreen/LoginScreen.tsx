@@ -1,8 +1,7 @@
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { i18n } from '@/localization/i18n';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ScrollView } from 'moti';
 import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
@@ -13,19 +12,23 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
+
+import PressableButton from '@/common/components/PressableButton/PressableButton';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
+import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { isValidEmail, isValidPassword } from '@/utils';
+import { initToken } from '@/utils/storage/initToken';
+
 import ThemeBackground from '../../common/components/ThemeBackground/Themebackground';
 import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
 import { login } from '../../redux/userReducer/userSlice';
+
 import styles from './LoginScreen.styles';
-import { isValidEmail, isValidPassword } from '@/utils';
-import PressableButton from '@/common/components/PressableButton/PressableButton';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import { ScrollView } from 'moti';
-import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
-import { initToken } from '@/utils/storage/initToken';
 
 const LoginScreen = () => {
   const { width: screenWidth } = useWindowDimensions();

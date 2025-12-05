@@ -1,8 +1,9 @@
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 import type { IGroup } from '@/common/enums/types/group.type';
+import { getStorageItem } from '@/utils/storage';
+
 import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
-import { getStorageItem } from '@/utils/storage';
-import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 
 export const getAllGroups = createAppAsyncThunk(
   'group/getAll',

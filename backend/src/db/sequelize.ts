@@ -1,6 +1,7 @@
-import { Sequelize } from "sequelize";
-import { EnvVariables } from "../common/enums/index.js";
 import { config } from "dotenv";
+import { Sequelize } from "sequelize";
+
+import { EnvVariables } from "../common/enums/index.js";
 config();
 
 const sequelize = new Sequelize(

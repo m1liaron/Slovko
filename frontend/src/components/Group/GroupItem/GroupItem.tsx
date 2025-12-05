@@ -1,10 +1,12 @@
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { Link } from '@react-navigation/native';
 import { useWindowDimensions, View, Pressable } from 'react-native';
-import { useAppTheme } from '../../../contexts/ThemeProvider';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { IGroup } from '@/common/enums/types/group.type';
+
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { IGroup } from '@/common/enums/types/group.type';
+
+import { useAppTheme } from '../../../contexts/ThemeProvider';
 
 interface GroupItemProps {
   item: IGroup;

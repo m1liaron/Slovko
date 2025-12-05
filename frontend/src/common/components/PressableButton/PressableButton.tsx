@@ -1,8 +1,12 @@
-import React, { ReactNode } from 'react';
-import { Pressable, Text, TextStyle, ViewStyle } from 'react-native';
-import styles from './PressableButton.styles';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 import { LinearGradient } from 'expo-linear-gradient';
+import type { ReactNode } from 'react';
+import React from 'react';
+import type { TextStyle, ViewStyle } from 'react-native';
+import { Pressable, Text } from 'react-native';
+
+import { useAppTheme } from '@/contexts/ThemeProvider';
+
+import styles from './PressableButton.styles';
 
 interface PressableButtonProps {
   text?: string;
@@ -25,7 +29,7 @@ const PressableButton = ({
 }: PressableButtonProps) => {
   const {
     theme: {
-      colors: { highlightColor, highlightDarkColor, primary },
+      colors: { highlightColor, highlightDarkColor },
     },
   } = useAppTheme();
 

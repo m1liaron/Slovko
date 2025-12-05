@@ -1,12 +1,13 @@
+import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 import type {
   AddCardRequest,
   ICard,
   UpdateCardRequst,
 } from '@/common/enums/types/types';
+import { getStorageItem } from '@/utils/storage';
+
 import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
-import { getStorageItem } from '@/utils/storage';
-import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 
 export const getCards = createAppAsyncThunk(
   'card/get-cards',

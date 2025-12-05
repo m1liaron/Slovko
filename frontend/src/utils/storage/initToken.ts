@@ -1,4 +1,5 @@
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+
 import { getStorageItem } from './asyncStorage.util';
 
 export let HAS_TOKEN = false;

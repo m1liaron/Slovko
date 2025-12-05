@@ -1,10 +1,14 @@
-import { View } from 'moti';
-import ThemeText from '../ThemeText/ThemeText';
-import { Pressable, FlatList, Text, ViewStyle } from 'react-native';
-import { useState } from 'react';
-import styles from './Select.styles';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 import { Entypo, Feather } from '@expo/vector-icons';
+import { View } from 'moti';
+import { useState } from 'react';
+import type { ViewStyle } from 'react-native';
+import { Pressable, FlatList, Text } from 'react-native';
+
+import { useAppTheme } from '@/contexts/ThemeProvider';
+
+import ThemeText from '../ThemeText/ThemeText';
+
+import styles from './Select.styles';
 
 interface SelectProps {
   placeholder?: string;

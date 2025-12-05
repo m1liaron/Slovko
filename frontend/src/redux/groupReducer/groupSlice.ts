@@ -1,4 +1,3 @@
-import type { IGroup } from '@/common/enums/types/group.type';
 import {
   type PayloadAction,
   createSlice,
@@ -7,11 +6,15 @@ import {
   isRejected,
 } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
+
+import type { IGroup } from '@/common/enums/types/group.type';
+
 import {
   DataStatus,
   type IDataStatus,
 } from '../../common/enums/app/DataStatus';
 import type { RootState } from '../store';
+
 import {
   addGroup,
   getAllGroups,

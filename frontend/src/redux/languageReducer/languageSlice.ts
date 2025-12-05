@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+
+import type { Language } from '@/common/enums/types/language.type';
+
 import { getLanguages } from './languageThunk';
-import { Language } from '@/common/enums/types/language.type';
 
 interface LanguagesState {
   languages: Language[];

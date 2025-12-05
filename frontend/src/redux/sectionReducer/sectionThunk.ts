@@ -1,6 +1,7 @@
+import type { ISection } from '@/common/enums/types/section.type';
 import { createAuthorizedInstance } from '@/utils';
+
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
-import { ISection } from '@/common/enums/types/section.type';
 
 const basicRoute = '/sections';
 

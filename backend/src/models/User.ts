@@ -1,11 +1,12 @@
-import { Model, DataTypes, Optional } from "sequelize";
-
-import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { sequelize } from "../db/sequelize.js";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import type { Optional } from "sequelize";
+import { Model, DataTypes } from "sequelize";
+import { v4 as uuidv4 } from "uuid";
+
 import { EnvVariables } from "../common/enums/index.js";
+import { sequelize } from "../db/sequelize.js";
 dotenv.config();
 
 interface UserAttributes {
@@ -20,7 +21,7 @@ interface UserAttributes {
   frozen: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+ 
 interface UserCreationAttributes
   extends Optional<
     UserAttributes,

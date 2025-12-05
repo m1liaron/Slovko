@@ -1,10 +1,12 @@
-import { enqueueAction } from '@/redux/offlineQueueReducer/offlineQueueSlice';
-import type { AppDispatch, RootState } from '@/redux/store';
 import type { ActionCreatorWithPayload, AsyncThunk } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
-import { persistOfflineQueue } from './persistOfflineQueue';
-import { getStorageItem } from '@/utils/storage';
+
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
+import { enqueueAction } from '@/redux/offlineQueueReducer/offlineQueueSlice';
+import type { AppDispatch, RootState } from '@/redux/store';
+import { getStorageItem } from '@/utils/storage';
+
+import { persistOfflineQueue } from './persistOfflineQueue';
 
 // Updated type to match AsyncThunk signature
 type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<

@@ -1,9 +1,10 @@
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import { i18n } from '@/localization/i18n';
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { useAppTheme } from '@/contexts/ThemeProvider';
+import { i18n } from '@/localization/i18n';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
