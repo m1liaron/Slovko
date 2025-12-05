@@ -18,7 +18,7 @@ import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
 
 const useGroupNavigation = (
   groupId: string,
-  setShowModesModal: (boolean) => void,
+  setShowModesModal: (item: boolean) => void,
 ) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
