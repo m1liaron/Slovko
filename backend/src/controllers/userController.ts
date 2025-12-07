@@ -7,6 +7,17 @@ import type { AuthRequest } from "../common/types/AuthRequest.type.js";
 import { sendError } from "../helpers/index.js";
 import { Streak, User } from "../models/models.js";
 
+const MILLISECONDS_IN_DAY = 86400000;
+
+const startOfDay = (d: Date) => {
+  const x = new Date(d);
+  x.setHours(0, 0, 0, 0);
+  x.setMinutes(0, 0, 0);
+  x.setSeconds(0, 0);
+  x.setMilliseconds(0);
+  return x;
+};
+
 const register = async (req: Request, res: Response) => {
   try {
     const { email, password, name, points } = req.body;
@@ -87,41 +98,48 @@ const getUser = async (req: AuthRequest, res: Response) => {
         .json({ error: true, message: "User does not exist" });
     }
 
+    // If user is existed, check his streak
+    const today = startOfDay(new Date());
+
     if (user.lastReviewAt) {
-      // If user is existed, check his streak
-      const lastReviewDate = user.lastReviewAt
-        ? new Date(user.lastReviewAt)
-        : null;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const lastReviewDate = startOfDay(new Date(user.lastReviewAt));
+      const diffDays = Math.round(
+        (today.getTime() - lastReviewDate.getTime()) / MILLISECONDS_IN_DAY,
+      );
 
-      const timeGone =
-        !lastReviewDate || lastReviewDate.getTime() !== today.getTime();
-      const goneTwoOrMoreDays = lastReviewDate
-        ? new Date(lastReviewDate).getDate() <= new Date().getDate() - 2
-        : null;
+      if (diffDays === 2) {
+        if (user.frozen) {
+          const yesterday = startOfDay(new Date());
+          yesterday.setDate(yesterday.getDate() - 1);
 
-      if ((timeGone && !user.frozen) || goneTwoOrMoreDays) {
-        user.streak = 1;
-        await Streak.create({
-          date: new Date(),
-          frozen: false,
-          userId: userId,
-        });
-      } else if (timeGone && user.frozen) {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
+          const existing = await Streak.findOne({
+            where: {
+              userId: user.id,
+              date: yesterday,
+            },
+          });
 
-        user.frozen = false;
-        await Streak.create({
-          date: yesterday,
-          frozen: true,
-          userId: userId,
-        });
+          if (!existing) {
+            await Streak.create({
+              date: yesterday,
+              frozen: true,
+              userId: user.id,
+            });
+          }
+        } else {
+          user.streak = 1;
+          await user.save();
+        }
+      } else if (diffDays >= 3) {
+        if (user.streak !== 1 || user.frozen !== false) {
+          user.streak = 1;
+          user.frozen = false;
+          await user.save();
+        }
       }
 
       user.lastReviewAt = today;
-      await user.save();
+      user.save();
     }
 
     const mainUserData = user.toJSON();
@@ -159,40 +177,48 @@ const updateUserStreak = async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.user;
     const user = await User.findByPk(id);
-    if (user) {
-      const isUserFrozen = user.frozen;
-      const lastReviewDate = user.lastReviewAt
-        ? new Date(user.lastReviewAt)
-        : null;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
 
-      if (
-        lastReviewDate &&
-        lastReviewDate.getTime() === today.getTime() - 86400000
-      ) {
-        // 86400000 ms in a day
-        user.streak += 1;
-      } else if (
-        !lastReviewDate ||
-        (lastReviewDate.getTime() !== today.getTime() && user.frozen)
-      ) {
-        user.frozen = false;
-      } else if (
-        !lastReviewDate ||
-        (lastReviewDate.getTime() !== today.getTime() && !user.frozen)
-      ) {
+    if (!user) {
+      return res.status(404).json({ error: true, message: "User not found" });
+    }
+
+    const today = startOfDay(new Date());
+    const last = user.lastReviewAt ? new Date(user.lastReviewAt) : null;
+    const isUserFrozen = user.frozen;
+
+    let diffDays = Infinity;
+
+    if (last) {
+      diffDays = Math.round(
+        (today.getTime() - last.getTime()) / MILLISECONDS_IN_DAY,
+      );
+    }
+
+    if (!last) {
+      // first ever review
+      user.streak = 1;
+    } else if (diffDays === 1) {
+      user.streak = (user.streak || 0) + 1;
+    } else if (diffDays === 2) {
+      if (user.frozen) {
+        user.frozen = false; // freeze consumed
+      } else {
         user.streak = 1;
       }
-      await Streak.create({
-        date: new Date(),
-        frozen: isUserFrozen,
-        userId: id,
-      });
-
-      user.lastReviewAt = today; // Update last review date
-      await user.save();
+    } else {
+      // missed 2+ days
+      user.streak = 1;
+      user.frozen = false;
     }
+
+    await Streak.create({
+      date: new Date(),
+      frozen: isUserFrozen,
+      userId: id,
+    });
+
+    user.lastReviewAt = today; // Update last review date
+    await user.save();
 
     const findUser = await User.findOne({
       where: { id },
