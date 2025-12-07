@@ -10,14 +10,23 @@
     "jsEngine": "jsc",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain"
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "We use photos for words",
+        "NSCameraUsageDescription": "We use the camera for your photos for words"
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.m1liaron.Slovko"
     },
     "android": {
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png"
       },

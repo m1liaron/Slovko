@@ -1,5 +1,5 @@
 {
-  "name": "flashcards",
+  "name": "Slovko",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "lint-staged": {
@@ -82,7 +82,6 @@
     "sharp": "^0.33.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "undefined": "\\",
     "unsplash-js": "^7.0.19",
     "uuid": "^11.1.0",
     "xlsx": "^0.18.5"
