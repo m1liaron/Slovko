@@ -60,7 +60,7 @@ const ProtectedRoute = () => {
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (firstLaunch === undefined) {
+      if (!firstLaunch) {
         setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
       }
 

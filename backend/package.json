@@ -16,7 +16,7 @@
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:migrate": "drizzle-kit migrate",
     "drizzle:studio": "drizzle-kit studio",
-    "insert:words" : ""
+    "insert:words" : "node --loader ts-node/esm ./src/db/scripts/jsonToDB.ts"
   },
   "keywords": [],
   "author": "",

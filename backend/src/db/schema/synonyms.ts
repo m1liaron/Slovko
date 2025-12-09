@@ -8,5 +8,5 @@ export const synonyms = pgTable("synonyms", {
   senseId: integer("sense_id")
     .references(() => senses.id, { onDelete: "cascade" })
     .notNull(),
-  word: text("word").notNull(),
+  synonym: text("synonym").notNull(),
 });
