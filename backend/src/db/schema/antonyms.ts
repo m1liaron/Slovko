@@ -3,7 +3,7 @@ import { pgTable } from "drizzle-orm/pg-core";
 
 import { senses } from "./senses";
 
-export const synonyms = pgTable("synonyms", {
+export const antonyms = pgTable("antonyms", {
   id: serial("id").primaryKey(),
   senseId: integer("sense_id")
     .references(() => senses.id, { onDelete: "cascade" })

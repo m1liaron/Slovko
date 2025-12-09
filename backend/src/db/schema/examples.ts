@@ -9,5 +9,6 @@ export const examples = pgTable("examples", {
     .references(() => senses.id, { onDelete: "cascade" })
     .notNull(),
 
-  example: text("example").notNull(),
+  sentence: text("sentence").notNull(),
+  definition: text("definition").notNull()
 });
