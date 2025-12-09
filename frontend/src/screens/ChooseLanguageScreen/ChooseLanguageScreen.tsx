@@ -125,11 +125,11 @@ const ChooseLanguageScreen = () => {
         <>
           <FlatList
             data={filteredLanguages}
+            numColumns={2}
             contentContainerStyle={{
               flexDirection: width < 720 ? 'column' : 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              flexWrap: 'wrap',
               gap: 16,
             }}
             renderItem={({ item }) => (

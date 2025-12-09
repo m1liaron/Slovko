@@ -11,7 +11,9 @@ import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
 const login = createAppAsyncThunk(
   'user/login',
   async (data: { email: string; password: string }) => {
+    console.log('sending request to backend: ', SERVER_API_URL);
     const response = await axios.post(`${SERVER_API_URL}/users/login`, data);
+    console.log(response);
     await AsyncStorage.setItem(
       AsyncStorageVariables.TOKEN,
       response.data.token,

@@ -33,7 +33,7 @@ const LineLoader: React.FC = () => {
           Animated.timing(lineWidth, {
             toValue: 0,
             duration: 0,
-            useNativeDriver: true,
+            useNativeDriver: false,
           }),
         ]),
       ]),
