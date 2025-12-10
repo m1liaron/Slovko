@@ -3,6 +3,7 @@ config();
 
 const EnvVariables = {
   PORT: (process.env.PORT as string) || 3000,
+  NODE_ENV: process.env.NODE_ENV || "localhost",
   DATABASE_USER_NAME: (process.env.DATABASE_USER_NAME as string) || "postgres",
   DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
   DATABASE_NAME: (process.env.DATABASE_NAME as string) || "slovko",
