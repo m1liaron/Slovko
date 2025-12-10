@@ -13,8 +13,12 @@ import ThemeBackground from '../../common/components/ThemeBackground/Themebackgr
 import BackButton from '../../components/BackButton/BackButton';
 import { selectResult } from '../../redux/resultReducer/resultSlice';
 import { getResultsStatistics } from '../../redux/resultReducer/resultThunk';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 
 const StatisticsScreen = () => {
+  const {
+    theme: { colors },
+  } = useAppTheme();
   const { statistics } = useAppSelector(selectResult);
   const [selectedMode, setSelectedMode] = useState<string>('flashCards');
   const [selectedWordsMode, setSelectedWordsMode] =
@@ -46,9 +50,9 @@ const StatisticsScreen = () => {
       return null;
     }
     const chartConfig = {
-      backgroundColor: '#011d65',
-      backgroundGradientFrom: '#002efb',
-      backgroundGradientTo: '#2643ff',
+      backgroundColor: colors.highlightColor,
+      backgroundGradientFrom: colors.highlightDarkColor,
+      backgroundGradientTo: colors.highlightColor,
       decimalPlaces: 2,
       color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
       labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -129,7 +133,7 @@ const StatisticsScreen = () => {
   };
 
   return (
-    <ThemeBackground>
+    <ThemeBackground style={{ padding: 10 }}>
       <BackButton />
 
       {statistics === null || statistics.resultsMonths.length <= 0 ? (

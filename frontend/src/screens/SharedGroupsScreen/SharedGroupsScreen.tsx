@@ -157,7 +157,7 @@ const SharedGroupsScreen = () => {
   ];
 
   return (
-    <ThemeBackground>
+    <ThemeBackground style={{ padding: 20 }}>
       <View
         style={[
           styles.searchContainer,
@@ -248,7 +248,18 @@ const SharedGroupsScreen = () => {
           ListFooterComponent={renderFooter}
         />
       ) : (
-        <ThemeText>{i18n.t('sharedGroupsScreen.noGroups')}</ThemeText>
+        <View
+          style={{
+            backgroundColor: colors.lightBackground,
+            borderRadius: 10,
+            padding: 20,
+            margin: 10,
+          }}
+        >
+          <ThemeText style={{ fontSize: 25, fontWeight: 'bold' }}>
+            {i18n.t('sharedGroupsScreen.noGroups')}
+          </ThemeText>
+        </View>
       )}
 
       <AddButton onPress={() => setShowModal(true)} />
