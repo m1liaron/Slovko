@@ -1,0 +1,206 @@
+{
+  "English": [
+    {
+      "id": 1,
+      "title": "cat",
+      "level": "A1"
+    },
+    {
+      "id": 2,
+      "title": "house",
+      "level": "A1"
+    },
+    {
+      "id": 3,
+      "title": "water",
+      "level": "A1"
+    },
+    {
+      "id": 4,
+      "title": "school",
+      "level": "A1"
+    },
+    {
+      "id": 5,
+      "title": "family",
+      "level": "A1"
+    },
+    {
+      "id": 6,
+      "title": "friend",
+      "level": "A1"
+    },
+    {
+      "id": 7,
+      "title": "computer",
+      "level": "A2"
+    },
+    {
+      "id": 8,
+      "title": "important",
+      "level": "A2"
+    },
+    {
+      "id": 9,
+      "title": "beautiful",
+      "level": "A2"
+    },
+    {
+      "id": 10,
+      "title": "expensive",
+      "level": "B1"
+    },
+    {
+      "id": 11,
+      "title": "environment",
+      "level": "B1"
+    },
+    {
+      "id": 12,
+      "title": "government",
+      "level": "B2"
+    },
+    {
+      "id": 13,
+      "title": "responsibility",
+      "level": "B2"
+    },
+    {
+      "id": 14,
+      "title": "opportunity",
+      "level": "B2"
+    },
+    {
+      "id": 15,
+      "title": "communication",
+      "level": "B2"
+    },
+    {
+      "id": 16,
+      "title": "development",
+      "level": "C1"
+    },
+    {
+      "id": 17,
+      "title": "architecture",
+      "level": "C1"
+    },
+    {
+      "id": 18,
+      "title": "psychology",
+      "level": "C1"
+    },
+    {
+      "id": 19,
+      "title": "entrepreneurship",
+      "level": "C2"
+    },
+    {
+      "id": 20,
+      "title": "sustainability",
+      "level": "C2"
+    }
+  ],
+  "German": [
+    {
+      "id": 1,
+      "title": "Katze",
+      "level": "A1"
+    },
+    {
+      "id": 2,
+      "title": "Haus",
+      "level": "A1"
+    },
+    {
+      "id": 3,
+      "title": "Wasser",
+      "level": "A1"
+    },
+    {
+      "id": 4,
+      "title": "Schule",
+      "level": "A1"
+    },
+    {
+      "id": 5,
+      "title": "Familie",
+      "level": "A1"
+    },
+    {
+      "id": 6,
+      "title": "Freund",
+      "level": "A1"
+    },
+    {
+      "id": 7,
+      "title": "Computer",
+      "level": "A2"
+    },
+    {
+      "id": 8,
+      "title": "wichtig",
+      "level": "A2"
+    },
+    {
+      "id": 9,
+      "title": "schön",
+      "level": "A2"
+    },
+    {
+      "id": 10,
+      "title": "teuer",
+      "level": "B1"
+    },
+    {
+      "id": 11,
+      "title": "Umwelt",
+      "level": "B1"
+    },
+    {
+      "id": 12,
+      "title": "Regierung",
+      "level": "B2"
+    },
+    {
+      "id": 13,
+      "title": "Verantwortung",
+      "level": "B2"
+    },
+    {
+      "id": 14,
+      "title": "Möglichkeit",
+      "level": "B2"
+    },
+    {
+      "id": 15,
+      "title": "Kommunikation",
+      "level": "B2"
+    },
+    {
+      "id": 16,
+      "title": "Entwicklung",
+      "level": "C1"
+    },
+    {
+      "id": 17,
+      "title": "Architektur",
+      "level": "C1"
+    },
+    {
+      "id": 18,
+      "title": "Psychologie",
+      "level": "C1"
+    },
+    {
+      "id": 19,
+      "title": "Unternehmertum",
+      "level": "C2"
+    },
+    {
+      "id": 20,
+      "title": "Nachhaltigkeit",
+      "level": "C2"
+    }
+  ]
+}

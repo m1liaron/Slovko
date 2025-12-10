@@ -1,0 +1,44 @@
+# — Node.js caches & logs —
+node_modules/**/__tests__/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# — Expo caches & build outputs —
+.expo/**
+.expo-shared/**
+web-build/**
+dist/**
+build/**
+.cache/
+coverage/
+
+# — Native output (if you let EAS prebuild on the server) —
+android/
+ios/
+android/**
+ios/**
+
+# — Editor & OS cruft —
+.vscode/**
+.idea/**
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+Thumbs.db
+
+# — Environment files —
+.env
+.env.local
+.env.*.local
+
+# — Test & docs (if not needed in build) —
+__tests__/
+*.md
+/docs/
+
+# — Uncomment to re-include a specific file —
+# !readme.md
