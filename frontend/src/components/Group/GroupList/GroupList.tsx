@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { FlatList, Image, Pressable, View, useWindowDimensions } from 'react-native';
-import Toast from 'react-native-toast-message';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { v4 as uuid } from 'uuid';
 
 import noGroupsImage from '@/assets/images/no_groups.png';
 import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/SkeletonGroupItem';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -39,11 +43,11 @@ export const GroupList = () => {
 
   const handleAddGroup = () => {
     if (!title.length) {
-      setError(i18n.t('mainScreen.groupList.enterTitle'))
+      setError(i18n.t('mainScreen.groupList.enterTitle'));
       return;
     }
     if (!activeSectionId || sections.length === 0) {
-      setError(i18n.t('mainScreen.groupList.pleaseCreate'))
+      setError(i18n.t('mainScreen.groupList.pleaseCreate'));
       return;
     }
     const newGroup = {
@@ -54,13 +58,11 @@ export const GroupList = () => {
     dispatch(enqueueOrDispatch(addGroup, addStateGroup, newGroup));
     setTitle('');
     setShowAddModal(false);
+    setError(null);
   };
 
   return (
     <View style={{ flex: 1, paddingHorizontal: isDesktop ? 32 : 20 }}>
-      <View style={{ zIndex: 5 }}>
-        <Toast />
-      </View>
       <View
         style={{ flex: 1, maxWidth: 1400, width: '100%', alignSelf: 'center' }}
       >
@@ -91,7 +93,7 @@ export const GroupList = () => {
               resizeMode="contain"
             />
             <ThemeText style={{ fontSize: 18, opacity: 0.6 }}>
-              No groups yet. Create your first one!
+              {i18n.t('loginScreen.noGroups')}
             </ThemeText>
           </View>
         ) : (
@@ -130,11 +132,28 @@ export const GroupList = () => {
           height={70}
         />
         {error && (
-          <Pressable onPress={() => { setError(null); setShowAddModal(false)} } style={{ backgroundColor: '#d16975', borderRadius: 10, padding: 10, marginVertical: 10 }}>
-            <ThemeText style={{ textTransform: "uppercase" }}>{error}!</ThemeText>
+          <Pressable
+            onPress={() => {
+              setError(null);
+              setShowAddModal(false);
+            }}
+            style={{
+              backgroundColor: '#d16975',
+              borderRadius: 10,
+              padding: 10,
+              marginVertical: 10,
+            }}
+          >
+            <ThemeText style={{ textTransform: 'uppercase' }}>
+              {error}!
+            </ThemeText>
           </Pressable>
         )}
-        <PressableButton onPress={handleAddGroup} text="Додати групу" buttonStyle={{ marginTop: 20}}/>
+        <PressableButton
+          onPress={handleAddGroup}
+          text="Додати групу"
+          buttonStyle={{ marginTop: 20 }}
+        />
       </DefaultModal>
     </View>
   );

@@ -1,5 +1,10 @@
 const translations = {
   en: {
+    common: {
+      sorry: 'Sorry',
+      notAvailableUnAuthorized:
+        'This feature not available for unauthorized users',
+    },
     welcomeScreen: {
       welcome: 'Welcome to Slovko',
       journey: "Let's start your learning path",
@@ -18,6 +23,8 @@ const translations = {
       notificationPermissionDenied: 'Notificaitons are blocked by the user',
       saveUkraine: 'Save Ukraine!',
       sections: 'Sections',
+      unAuthorized:
+        'You are not in account. Your data not going to be synchronized',
       groupList: {
         addGroup: 'Add Group',
         nameGroup: 'Name of Group',
@@ -38,7 +45,7 @@ const translations = {
       filterButton: 'Filter',
       reset: 'Reset',
       noGroups: 'No shared groups',
-      noUserGroups: 'No groups',
+      noUserGroups: 'No groups to share',
       createGroup: 'Create group',
       share: 'Share',
       placeholder: 'Group name',
@@ -59,6 +66,7 @@ const translations = {
       filterButton: 'Filter',
       resetButton: 'Reset',
       yourStats: 'Your statistics',
+      noResults: "No lessons this month yet. Now it's best time to start!",
       monthNames: [
         'January',
         'February',
@@ -176,6 +184,7 @@ const translations = {
       loginButton: 'Login',
       signWithoutButton: 'Login without account ',
       switchText: "Don't have an account?",
+      noGroups: "It's sad here without groups. Create first",
       errorMessage: {
         requiredFields: 'Fields must be filled!',
         loginFailed: 'Login failed',
@@ -218,6 +227,11 @@ const translations = {
     },
   },
   uk: {
+    common: {
+      sorry: 'Вибачте',
+      notAvailableUnAuthorized:
+        'Ця функція не доступна для не зареєстрованих користувачів.',
+    },
     welcomeScreen: {
       welcome: 'Вітаю у Slovko',
       journey: 'Давайте почнемо ваше навчання',
@@ -246,6 +260,8 @@ const translations = {
       notificationPermissionDenied: 'Повідомлення заблоковані користувачем.',
       saveUkraine: 'Save Ukraine!',
       sections: 'Секції',
+      unAuthorized:
+        'Ви не ввійшли в обліковий запис. Ваші дані не будуть синхронізовані',
       groupList: {
         addGroup: 'Додати групу',
         nameGroup: 'Назва групи',
@@ -266,7 +282,7 @@ const translations = {
       filterButton: 'Фільтрувати',
       reset: 'Скинути',
       noGroups: 'Немає пошеренних груп',
-      noUserGroups: 'Немає груп',
+      noUserGroups: 'Немає груп для поширення',
       createGroup: 'Створити групу',
       share: 'Поширити',
       placeholder: 'Назва групи',
@@ -286,6 +302,8 @@ const translations = {
       filterButton: 'Фільтрувати',
       resetButton: 'Скинути',
       yourStats: 'Ваша статистика',
+      noResults:
+        'Ще немає результатів за цей місяць. Зараз найкращий час почати!',
       monthNames: [
         'Січень',
         'Лютий',
@@ -404,6 +422,7 @@ const translations = {
       passwordPlaceholder: 'Пароль',
       register: 'Зареєструйтесь',
       loginButton: 'Увійти',
+      noGroups: 'Тут сумно без груп. Створіть одну.',
       signWithoutButton: 'Увійти без акаунта',
       switchText: 'Не маєте акаунта?',
       errorMessage: {
