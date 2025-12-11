@@ -27,6 +27,7 @@ import {
 
 interface InitialState {
   user: IUser | null;
+  token: string | null;
   streakDates: IStreakDate[];
   isAuthenticated: boolean;
   status: IDataStatus;
@@ -37,6 +38,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   user: null,
+  token: null,
   streakDates: [],
   isAuthenticated: false,
   status: DataStatus.IDLE,
@@ -55,6 +57,7 @@ const userSlice = createSlice({
       state.streakDates = [];
       state.message = '';
       state.status = DataStatus.IDLE;
+      state.token = null;
       removeStorageItem(AsyncStorageVariables.TOKEN);
     },
   },
@@ -62,6 +65,7 @@ const userSlice = createSlice({
     builder
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
+        state.token = action.payload.user.token;
         state.isAuthenticated = true;
       })
       .addCase(login.rejected, (state) => {
@@ -70,6 +74,7 @@ const userSlice = createSlice({
 
       .addCase(register.fulfilled, (state, action) => {
         state.user = action.payload.user;
+        state.token = action.payload.user.token;
         state.isAuthenticated = true;
       })
       .addCase(register.rejected, (state) => {

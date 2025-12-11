@@ -250,4 +250,4 @@ export {
   getRepeatedCards,
   getRepeatedCardsFromIds,
 } from './cardThunk';
-export const cardReducers = cardSlice.reducer;
+export const cardReducer = cardSlice.reducer;

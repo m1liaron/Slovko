@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { memo, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,10 +8,8 @@ import {
 
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
 
-import { AppPath } from '../../../common/enums/app/app';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   getCards,
@@ -23,7 +20,6 @@ import {
 import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
-
 
 const MemoCardItem = memo(CardItem);
 
@@ -46,9 +42,8 @@ const CardList = ({ groupId }: CardListProps) => {
   const { group } = useAppSelector((state) => state.groups);
   const { cards = [], isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation<StackNavigation>();
 
-  const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
+  const [_wordsRangeNumber, setWordsRangeNumber] = useState<number>(
     cards?.length || 2,
   );
 
@@ -59,13 +54,6 @@ const CardList = ({ groupId }: CardListProps) => {
   useEffect(() => {
     dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId }));
   }, [group, groupId]);
-
-  const navigateToLearn = () => {
-    if (wordsRangeNumber !== cards.length) {
-      dispatch(rangeCards(wordsRangeNumber));
-    }
-    navigation.navigate(AppPath.Learn, { groupId });
-  };
 
   return (
     <View style={styles.container}>
