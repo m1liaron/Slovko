@@ -12,7 +12,7 @@ const useGroupScreen = (groupId: string) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
-  const { group, status } = useAppSelector((state) => state.groups);
+  const { group, status, groups } = useAppSelector((state) => state.groups);
   const { cards, filteredCards, isLoading } = useAppSelector(
     (state) => state.cards,
   );
@@ -36,6 +36,7 @@ const useGroupScreen = (groupId: string) => {
 
   return {
     group,
+    groups,
     cards,
     filteredCards,
     isLoading,

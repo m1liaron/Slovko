@@ -1,4 +1,4 @@
-import { Entypo } from '@expo/vector-icons';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   Image,
@@ -159,22 +159,35 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
         isVisible={showEditModal}
         handleClose={() => setShowEditModal(false)}
       >
-        <View>
-          <ThemeText>Оновити карточку!</ThemeText>
-          <ThemeText>Слово</ThemeText>
-          <AddInput value={title} onChangeText={setTitle} />
+        <ThemeText
+          style={{ fontWeight: 'bold', textAlign: 'center', fontSize: 25 }}
+        >
+          Оновити карточку!
+        </ThemeText>
+        <View style={{ marginVertical: 20 }}>
+          <ThemeText style={{ fontSize: 20 }}>Слово</ThemeText>
+          <AddInput height={40} value={title} onChangeText={setTitle} />
         </View>
 
-        <View>
-          <ThemeText>Переклад</ThemeText>
-          <AddInput value={translate} onChangeText={setTranslate} />
+        <View style={{ marginBottom: 15 }}>
+          <ThemeText style={{ fontSize: 20 }}>Переклад</ThemeText>
+          <AddInput height={40} value={translate} onChangeText={setTranslate} />
         </View>
 
-        <PressableButton
-          text="Виберіть зображення з галереї"
+        <Pressable
           onPress={() => pickImage(imageUri, setImageUri)}
-          buttonStyle={{ marginBottom: 20 }}
-        />
+          style={{
+            backgroundColor: colors.lightBackground,
+            padding: 20,
+            marginVertical: 10,
+            borderRadius: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <AntDesign name="download" color={colors.primary} size={30} />
+          <ThemeText>Виберіть зображення з галереї</ThemeText>
+        </Pressable>
         {imageUri !== '' && (
           <Image source={{ uri: imageUri }} style={styles.image} />
         )}
