@@ -198,11 +198,21 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
 
       {/* Edit Group Modal */}
       <DefaultModal isVisible={showEditModal} handleClose={onCloseEditModal}>
-        <ThemeText>{i18n.t('group.changeTitle')}</ThemeText>
+        <ThemeText
+          style={{
+            fontSize: 25,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            marginBottom: 20,
+          }}
+        >
+          {i18n.t('group.changeTitle')}
+        </ThemeText>
         <AddInput
           value={groupTitle}
           onChangeText={setGroupTitle}
           placeholder={i18n.t('group.inputPlaceholder')}
+          height={50}
         />
 
         <PressableButton
@@ -212,7 +222,7 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
         />
 
         <Pressable onPress={onRemoveGroup}>
-          <Entypo name="trash" size={30} color={colors.primary} />
+          <Entypo name="trash" size={30} color={colors.danger} />
         </Pressable>
 
         <View>

@@ -59,10 +59,10 @@ const groupSlice = createSlice({
   initialState,
   reducers: {
     addStateGroup: (state, action) => {
-      const existinGroup = state.groups.find(
+      const existingGroup = state.groups.find(
         (group) => group.title === action.payload.title,
       );
-      if (existinGroup) {
+      if (existingGroup) {
         throw new Error('Group with this name already exist');
       }
       const newGroup = {
@@ -70,11 +70,12 @@ const groupSlice = createSlice({
         ...action.payload,
       };
       state.groups.push(newGroup);
+      state.group = newGroup;
     },
     updateStateGroup: handleUpdateGroup,
     removeStateGroup: (state, action) => {
       state.groups = state.groups.filter(
-        (group) => group.id !== action.payload,
+        (group) => group.id !== action.payload.groupId,
       );
     },
   },

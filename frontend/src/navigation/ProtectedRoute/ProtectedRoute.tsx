@@ -60,11 +60,8 @@ const ProtectedRoute = () => {
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (firstLaunch === undefined) {
-        setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
-      }
-
-      if (firstLaunch === 'true') {
+      if (!firstLaunch) {
+        await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
         setInitialRoute(AppPath.Welcome);
         setIsLoading(false);
         return;

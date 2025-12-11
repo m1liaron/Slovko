@@ -7,6 +7,7 @@ import type { AppDispatch, RootState } from '@/redux/store';
 import { getStorageItem } from '@/utils/storage';
 
 import { persistOfflineQueue } from './persistOfflineQueue';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 // Updated type to match AsyncThunk signature
 type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<
@@ -57,12 +58,13 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
   args: ThunkArg,
 ) {
   return async (dispatch: AppDispatch, getState: () => RootState) => {
-    const { network } = getState();
+    const { network, user } = getState();
     const isOffline = !network.isConnected;
-    const isFetchLike = actionCreator.typePrefix.toLowerCase().includes('get');
     const token = await getStorageItem(AsyncStorageVariables.TOKEN);
+    const isAuthenticated = HAS_TOKEN || token || user.isAuthenticated;
+    const isFetchLike = actionCreator.typePrefix.toLowerCase().includes('get');
 
-    if (!token) {
+    if (!isAuthenticated) {
       if (actionStateCreator) {
         dispatch(actionStateCreator(args as any));
         return;

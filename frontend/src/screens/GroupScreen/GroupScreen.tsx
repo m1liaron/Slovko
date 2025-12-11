@@ -19,6 +19,8 @@ import { GroupFilters } from './components/GroupFilters/GroupFilters';
 import { GroupHeader } from './components/GroupHeader/GroupHeader';
 import { GroupModals } from './components/GroupModals/GroupsModal';
 import { GroupProgress } from './components/GroupProgress/GroupProgress';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import BackButton from '@/components/BackButton/BackButton';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -32,13 +34,22 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const maxContentWidth = isDesktop ? 1200 : width;
 
   const {
-    group,
+    group: groupData,
+    groups,
     cards,
     filteredCards,
     isLoading,
     progressPercentage,
     learnedCards,
   } = useGroupScreen(groupId);
+
+  let group = groupData;
+  if (!group) {
+    const findGroup = groups.find((group) => group.id === groupId);
+    if (findGroup) {
+      group = findGroup;
+    }
+  }
 
   const filterState = useGroupFilters(cards, filteredCards);
   const modalState = useGroupModals();
@@ -49,8 +60,9 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
   if (!group) {
     return (
-      <ThemeBackground style={{ padding: 0, alignItems: 'center' }}>
-        <LineLoader />
+      <ThemeBackground>
+        <BackButton />
+        <ThemeText>I am so sorry, your group was not found</ThemeText>
       </ThemeBackground>
     );
   }
