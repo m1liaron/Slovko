@@ -35,6 +35,7 @@ import { logout, selectUser } from '../../redux/userReducer/userSlice';
 import { updateUser } from '../../redux/userReducer/userThunk';
 
 import styles from './ProfileScreen.styles';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 export default function ProfileScreen() {
   const { user, isAuthenticated } = useAppSelector((state) => state.user);
@@ -49,6 +50,8 @@ export default function ProfileScreen() {
   const [isThemeDark, setThemeDark] = useState(theme.dark === true);
   const [isEditing, setIsEditing] = useState(false);
 
+  const isNotAuthenticated = !HAS_TOKEN || !isAuthenticated;
+
   const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
@@ -60,12 +63,17 @@ export default function ProfileScreen() {
   }, [user, isAuthenticated]);
 
   const handleLogout = async () => {
+    if (isNotAuthenticated) {
+      navigation.navigate(AppPath.Login);
+      return;
+    }
+
     if (Platform.OS === 'web') {
       const answer = confirm('Are you sure you want to log out?');
       if (answer) {
         dispatch(logout());
         await persistor.purge();
-        navigation.navigate(AppPath.Register);
+        navigation.navigate(AppPath.Login);
       }
     } else {
       Alert.alert(
@@ -116,32 +124,31 @@ export default function ProfileScreen() {
 
   return (
     <ThemeBackground style={{ paddingHorizontal: 40 }}>
-      <ThemeText style={styles.title}>
-        {i18n.t('profileScreen.profileTitle')}
-      </ThemeText>
-
       <ScrollView>
         <View>
-          {!isEditing ? (
-            <View style={{ alignSelf: 'center' }}>
-              <Image
-                style={styles.avatarPhoto}
-                source={image ? { uri: image } : AvatarImage}
-              />
-            </View>
-          ) : (
-            <Pressable
-              onPress={() => pickImage(image, setImage)}
-              style={{ alignSelf: 'center' }}
-            >
-              <Image
-                style={styles.avatarPhoto}
-                source={image ? { uri: image } : AvatarImage}
-              />
-            </Pressable>
-          )}
           {user ? (
             <View>
+              <ThemeText style={styles.title}>
+                {i18n.t('profileScreen.profileTitle')}
+              </ThemeText>
+              {!isEditing ? (
+                <View style={{ alignSelf: 'center' }}>
+                  <Image
+                    style={styles.avatarPhoto}
+                    source={image ? { uri: image } : AvatarImage}
+                  />
+                </View>
+              ) : (
+                <Pressable
+                  onPress={() => pickImage(image, setImage)}
+                  style={{ alignSelf: 'center' }}
+                >
+                  <Image
+                    style={styles.avatarPhoto}
+                    source={image ? { uri: image } : AvatarImage}
+                  />
+                </Pressable>
+              )}
               {!isEditing && (
                 <View
                   style={{
@@ -293,7 +300,9 @@ export default function ProfileScreen() {
                     color={colors.iconColor}
                   />
                   <ThemeText style={styles.keyName}>
-                    {i18n.t('profileScreen.logout')}
+                    {isNotAuthenticated
+                      ? i18n.t('loginScreen.loginButton')
+                      : i18n.t('profileScreen.logout')}
                   </ThemeText>
                 </View>
                 <AntDesign

@@ -32,11 +32,11 @@ import { useAppTheme } from '../../contexts/ThemeProvider';
 import { selectGroup } from '../../redux/groupReducer/groupSlice';
 import {
   addSharedGroup,
-  addStateSharedGroup,
   getAllSharedGroups,
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 
 import styles from './SharedGroupsScreen.styles';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const SharedGroupsScreen = () => {
   const {
@@ -44,8 +44,11 @@ const SharedGroupsScreen = () => {
   } = useAppTheme();
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
-  const { sharedGroups, haveMoreSharedGroups, isLoading, status, error } =
-    useAppSelector((state) => state.sharedGroups);
+  const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
+    (state) => state.sharedGroups,
+  );
+  const { isConnected } = useAppSelector((state) => state.network);
+  const { isAuthenticated } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
 
   const [showAddModal, setShowModal] = useState(false);
@@ -90,21 +93,9 @@ const SharedGroupsScreen = () => {
           createdAt: new Date(),
         },
       };
-      dispatch(
-        enqueueOrDispatch(addSharedGroup, addStateSharedGroup, sharedGroupData),
-      );
+      dispatch(enqueueOrDispatch(addSharedGroup, sharedGroupData));
     }
   };
-
-  useEffect(() => {
-    if (status === DataStatus.ERROR && error) {
-      Toast.show({
-        type: 'error',
-        text1: 'Failed',
-        text2: error,
-      });
-    }
-  }, [error, status]);
 
   const renderItem = ({ item }: { item: ISharedGroup }) => (
     <Pressable
@@ -150,6 +141,26 @@ const SharedGroupsScreen = () => {
       </View>
     ) : null;
 
+  const onShowModalOrToast = () => {
+    if (!isConnected || !isAuthenticated || !HAS_TOKEN) {
+      Toast.show({
+        type: 'error',
+        text1: i18n.t('common.sorry'),
+        text2: i18n.t('common.notAvailableUnAuthorized'),
+      });
+      return;
+    }
+
+    if (groups.length > 0) {
+      setShowModal(true);
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: i18n.t('sharedGroupsScreen.noUserGroups'),
+      });
+    }
+  };
+
   const difficulties = [
     `${i18n.t('sharedGroupsScreen.easy')}`,
     `${i18n.t('sharedGroupsScreen.medium')}`,
@@ -157,7 +168,7 @@ const SharedGroupsScreen = () => {
   ];
 
   return (
-    <ThemeBackground>
+    <ThemeBackground style={{ padding: 20 }}>
       <View
         style={[
           styles.searchContainer,
@@ -248,16 +259,28 @@ const SharedGroupsScreen = () => {
           ListFooterComponent={renderFooter}
         />
       ) : (
-        <ThemeText>{i18n.t('sharedGroupsScreen.noGroups')}</ThemeText>
+        <View
+          style={{
+            backgroundColor: colors.lightBackground,
+            borderRadius: 10,
+            padding: 20,
+            margin: 10,
+          }}
+        >
+          <ThemeText style={{ fontSize: 25, fontWeight: 'bold' }}>
+            {i18n.t('sharedGroupsScreen.noGroups')}
+          </ThemeText>
+        </View>
       )}
 
-      <AddButton onPress={() => setShowModal(true)} />
+      <AddButton onPress={onShowModalOrToast} />
       <DefaultModal
         isVisible={showAddModal}
         handleClose={() => setShowModal(false)}
       >
         <AddInput
           value={sharedGroupTitle}
+          height={60}
           onChangeText={setSharedGroupTitle}
           placeholder={i18n.t('sharedGroupsScreen.placeholder')}
         />
@@ -298,7 +321,8 @@ const SharedGroupsScreen = () => {
           <View>
             <ThemeText
               style={{
-                fontSize: 30,
+                fontSize: 20,
+                textAlign: 'center',
               }}
             >
               {i18n.t('sharedGroupsScreen.noUserGroups')}

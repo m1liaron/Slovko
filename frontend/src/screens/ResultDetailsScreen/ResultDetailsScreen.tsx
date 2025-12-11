@@ -29,7 +29,6 @@ import { formatDurationHHMMSS, formatMDYTime, formatTime } from '../../utils';
 
 import styles from './ResultDetailsScreen.styles';
 
-
 type ResultDetailsScreenProps = StackScreenProps<
   RootStackParamList,
   typeof AppPath.ResultDetails
@@ -94,11 +93,12 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
         <PressableButton
           key={modeOption.key}
           text={modeOption.label}
+          gradientColor={
+            selectedMode === modeOption.key
+              ? colors.highlightDarkColor
+              : colors.highlightColor
+          }
           buttonStyle={{
-            backgroundColor:
-              selectedMode === modeOption.key
-                ? '#000bff'
-                : colors.highlightColor,
             padding: 4,
           }}
           onPress={() => setSelectedMode(modeOption.key)}

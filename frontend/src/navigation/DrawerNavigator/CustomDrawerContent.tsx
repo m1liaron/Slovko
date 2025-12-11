@@ -44,6 +44,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
         type: 'error',
         text1: 'Min Length of title is two',
       });
+      return;
     }
 
     dispatch(
@@ -124,7 +125,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
             </Pressable>
           </View>
 
-          {HAS_TOKEN && (
+          {HAS_TOKEN && languages.length > 0 && (
             <>
               <PressableButton
                 text={i18n.t('mainScreen.drawer.chooseLanguage')}
@@ -168,11 +169,12 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
             isVisible={showSectionModal}
             handleClose={() => setShowSectionModal(false)}
           >
-            <View>
+            <View style={{ gap: 20 }}>
               <AddInput
                 placeholder={i18n.t('mainScreen.drawer.nameSection')}
                 value={newTitle}
                 onChangeText={setNewTitle}
+                height={60}
               />
               <PressableButton
                 text={i18n.t('mainScreen.drawer.add')}

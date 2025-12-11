@@ -11,6 +11,7 @@ import { LanguageProvider } from './src/contexts/LanguageProvider';
 import { ThemeProvider } from './src/contexts/ThemeProvider';
 import ProtectedRoute from './src/navigation/ProtectedRoute/ProtectedRoute';
 import { persistor, store } from './src/redux/store';
+import Toast from 'react-native-toast-message';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <PersistGate loading={<Loading />} persistor={persistor}>
               <ConnectivityListener />
               <ProtectedRoute />
+              <Toast />
             </PersistGate>
           </LanguageProvider>
         </ThemeProvider>

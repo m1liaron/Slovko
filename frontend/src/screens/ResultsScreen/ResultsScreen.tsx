@@ -156,7 +156,7 @@ const ResultsScreen = () => {
   ];
 
   return (
-    <ThemeBackground>
+    <ThemeBackground style={{ padding: 20 }}>
       <View style={{ justifyContent: 'center' }}>
         <View style={styles.header}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -269,60 +269,77 @@ const ResultsScreen = () => {
         buttonStyle={{ margin: 10 }}
       />
 
-      <FlatList
-        data={Object.entries(groupedResults)}
-        contentContainerStyle={{ maxHeight: 500 }}
-        keyExtractor={(item) => item[0]}
-        renderItem={({ item }: { item: [string, IResult[]] }) => (
-          <View style={{ marginBottom: 20 }}>
-            <Text
-              style={{
-                fontSize: 25,
-                color: colors.lightText,
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}
-            >
-              {item[0]} {/* Date */}
-            </Text>
-            {item[1].map((result) => (
-              <Pressable
-                key={result.id}
-                style={[
-                  styles.itemContainer,
-                  { backgroundColor: colors.lightBackground },
-                ]}
-                onPress={() =>
-                  navigation.navigate(AppPath.ResultDetails, {
-                    resultId: result.id,
-                  })
-                }
+      {Object.entries(groupedResults).length > 0 ? (
+        <FlatList
+          data={Object.entries(groupedResults)}
+          contentContainerStyle={{ maxHeight: 500 }}
+          keyExtractor={(item) => item[0]}
+          renderItem={({ item }: { item: [string, IResult[]] }) => (
+            <View style={{ marginBottom: 20 }}>
+              <Text
+                style={{
+                  fontSize: 25,
+                  color: colors.lightText,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}
               >
-                <View style={styles.flex}>
-                  <ThemeText
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: 30,
-                    }}
-                  >
-                    {result.title}
-                  </ThemeText>
-                  <Text style={{ color: colors.lightText, fontSize: 25 }}>
-                    {`${i18n.t('resultsScreen.completed')} ${new Date(
-                      result.createdAt,
-                    )
-                      .toLocaleTimeString()
-                      .slice(0, 5)}`}
-                  </Text>
-                </View>
-              </Pressable>
-            ))}
-          </View>
-        )}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter}
-      />
+                {item[0]} {/* Date */}
+              </Text>
+              {item[1].map((result) => (
+                <Pressable
+                  key={result.id}
+                  style={[
+                    styles.itemContainer,
+                    { backgroundColor: colors.lightBackground },
+                  ]}
+                  onPress={() =>
+                    navigation.navigate(AppPath.ResultDetails, {
+                      resultId: result.id,
+                    })
+                  }
+                >
+                  <View style={styles.flex}>
+                    <ThemeText
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: 30,
+                      }}
+                    >
+                      {result.title}
+                    </ThemeText>
+                    <Text style={{ color: colors.lightText, fontSize: 25 }}>
+                      {`${i18n.t('resultsScreen.completed')} ${new Date(
+                        result.createdAt,
+                      )
+                        .toLocaleTimeString()
+                        .slice(0, 5)}`}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))}
+            </View>
+          )}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={renderFooter}
+        />
+      ) : (
+        <View
+          style={{
+            backgroundColor: colors.lightBackground,
+            padding: 20,
+            margin: 20,
+            borderRadius: 10,
+          }}
+        >
+          <ThemeText
+            style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}
+          >
+            {i18n.t('resultsScreen.noResults')}
+          </ThemeText>
+        </View>
+      )}
     </ThemeBackground>
   );
 };

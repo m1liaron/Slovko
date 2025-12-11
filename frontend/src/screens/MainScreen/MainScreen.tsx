@@ -41,6 +41,8 @@ import {
 } from '../../utils/notifications';
 
 import styles from './MainScreen.styles';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const MainScreen = () => {
   useLanguage();
@@ -50,6 +52,7 @@ const MainScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { isAuthenticated } = useAppSelector((state) => state.user);
   const repeatedGroupsIds = useAppSelector(
     (state) => state.cards.repeatedCards,
   );
@@ -177,6 +180,10 @@ const MainScreen = () => {
     navigateToLearn();
   };
 
+  const navigateToLogin = () => {
+    navigate.navigate(AppPath.Login);
+  };
+
   const isStreakFire = !user
     ? false
     : new Date(user?.lastReviewAt).toDateString() ===
@@ -231,6 +238,45 @@ const MainScreen = () => {
           </Text>
         </Pressable>
       </View>
+
+      {(!HAS_TOKEN || !isAuthenticated) && (
+        <View
+          style={{
+            backgroundColor: colors.lightBackground,
+            padding: 20,
+            borderRadius: 10,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginHorizontal: 20,
+          }}
+        >
+          {Platform.OS === 'web' ? (
+            <>
+              <ThemeText>{i18n.t('mainScreen.unAuthorized')}</ThemeText>
+
+              <Pressable onPress={navigateToLogin}>
+                <Text
+                  style={{ color: colors.highlightColor, fontWeight: 'bold' }}
+                >
+                  {` ${i18n.t('loginScreen.loginButton')}`}
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <ThemeText>
+              {i18n.t('mainScreen.unAuthorized')}
+
+              <Pressable onPress={navigateToLogin}>
+                <Text
+                  style={{ color: colors.highlightColor, fontWeight: 'bold' }}
+                >
+                  {` ${i18n.t('loginScreen.loginButton')}`}
+                </Text>
+              </Pressable>
+            </ThemeText>
+          )}
+        </View>
+      )}
 
       <Text style={styles.timePassedText}>
         {i18n.t('mainScreen.alreadyPassed')} {daysPassed}{' '}
