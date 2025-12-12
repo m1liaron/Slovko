@@ -1,15 +1,16 @@
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, uuid } from "drizzle-orm/pg-core";
 
 import { headwords } from "../headwords";
 
 import { decks } from "./decks";
 
 export const deckWords = pgTable("deck_words", {
-  id: serial("id").primaryKey(),
-  deckId: integer("deck_id")
-    .references(() => decks.id)
+  id: uuid("id").defaultRandom().primaryKey(),
+  deckId: uuid("deck_id")
+    .references(() => decks.id, { onDelete: "cascade" })
     .notNull(),
   headwordId: integer("headword_id")
     .references(() => headwords.id, { onDelete: "cascade" })
     .notNull(),
+  orderIndex: integer("order_index").notNull(),
 });
