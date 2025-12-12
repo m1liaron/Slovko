@@ -16,6 +16,8 @@
     "drizzle:migrate": "drizzle-kit migrate",
     "drizzle:studio": "drizzle-kit studio",
     "insert:words": "node --loader ts-node/esm ./src/db/scripts/jsonToDB.ts",
+    "generate:words": "node --loader ts-node/esm ./src/db/scripts/ollamaScript.ts",
+    "generate:seeds": "node --loader ts-node/esm ./src/db/scripts/generateSeeds.ts",
     "prepare": "husky"
   },
   "keywords": [],
@@ -27,6 +29,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "csv-parse": "^6.1.0",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.45.0",
     "express": "^4.19.2",
@@ -35,6 +38,7 @@
     "husky": "^9.1.7",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "^3.3.2",
+    "p-limit": "^7.2.0",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "postgres": "^3.4.7",
@@ -42,7 +46,8 @@
     "sequelize-typescript": "^2.1.6",
     "unsplash-js": "^7.0.19",
     "uuid": "^10.0.0",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

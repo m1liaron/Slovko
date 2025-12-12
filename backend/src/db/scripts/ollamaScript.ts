@@ -1,10 +1,12 @@
-import fs, { read } from "fs";
+import fs from "fs";
 import readline from "readline";
 
 import fetch from "node-fetch";
 
+const dbFolder = "../backend/src/db/data";
 const OLLAMA_URL = "http://localhost:11434/api/generate";
-const OUTPUT_FILE = "words.json";
+const OUTPUT_FILE = `${dbFolder}/words.json`;
+const INPUT_FILE_WORDS = `${dbFolder}/oxford-3000.csv`;
 
 async function ask(question: string) {
   const res = await fetch(OLLAMA_URL, {
@@ -19,20 +21,22 @@ async function ask(question: string) {
 
   const text = await res.text();
 
-  const jsonStart = text.indexOf("{");
-  if (jsonStart === -1) {
-    throw new Error("Invalid Ollama response");
-  }
+  const start = text.indexOf("{");
+  if (start === -1) throw new Error("Invalid response");
 
-  const parsed = JSON.parse(text.slice(jsonStart));
-  return parsed.response;
+  return JSON.parse(text.slice(start)).response;
 }
 
 async function processCSV(csvPath: string) {
   let results = [];
+  const processedWords = new Set();
 
   if (fs.existsSync(OUTPUT_FILE)) {
     results = JSON.parse(fs.readFileSync(OUTPUT_FILE, "utf8"));
+    for (const entry of results) {
+      processedWords.add(entry.headword.toLowerCase());
+    }
+    console.log(`Already processed ${processedWords.size} words.`);
   }
 
   const rl = readline.createInterface({
@@ -40,39 +44,43 @@ async function processCSV(csvPath: string) {
     crlfDelay: Infinity,
   });
 
-  let first = true;
+  let isFirstLine = true;
 
   for await (const line of rl) {
-    if (first) {
-      first = false;
+    if (isFirstLine) {
+      isFirstLine = false;
       continue;
     }
     if (!line.trim()) continue;
 
     const [word, cls, level] = line.split(",");
-    if (!word) continue;
+    if (!word || processedWords.has(word.toLowerCase())) {
+      continue;
+    }
 
-    console.log("Processing: ", word);
+    const startTime = Date.now();
+
+    console.log(`Processing: ${word}`);
 
     const prompt = `
-      Generate JSON ONLY. No explanation. Structure MUST be:
+      Generate JSON ONLY. No explanation.
 
       {
         "definition": "",
-        "collocations": [...],
+        "collocations": [],
         "examples": [{
           "sentence": "",
-          "definition: ""
+          "definition": ""
         }],
-        "synonyms": [...],
-        "antonyms": [...],
+        "synonyms": [],
+        "antonyms": [],
         "idioms": [{
           "idiom": "",
-          "definition: ""
+          "definition": ""
         }],
         "phrases": [{
           "phrase": "",
-          "definition: ""
+          "definition": ""
         }]
       }
 
@@ -103,20 +111,25 @@ async function processCSV(csvPath: string) {
 
     const { word: _dummyWord, _partOfSpeech, ...usefulData } = json;
 
-    results.push({
+    const entry = {
       headword: word,
       pos: cls,
       level,
       senses: [usefulData],
-    });
+    };
 
+    results.push(entry);
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(results, null, 2));
-    await new Promise((r) => setTimeout(r, 300));
 
-    console.log(`Done with word: ${word}`);
+    const elapsedSeconds = ((Date.now() - startTime) / 1000).toFixed(2);
+    console.log(
+      `Done: ${word} (Processed in ${elapsedSeconds} seconds). ${processedWords.size + 1}th word`,
+    );
+
+    await new Promise((r) => setTimeout(r, 300));
   }
 
-  console.log("Done");
+  console.log("All words processed.");
 }
 
-processCSV("oxford-3000-test.csv");
+processCSV(INPUT_FILE_WORDS);

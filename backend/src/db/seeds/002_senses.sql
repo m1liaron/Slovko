@@ -1,0 +1,17 @@
+INSERT INTO senses (id, headword_id, definition) VALUES
+('1', '1', 'To leave completely and definitively; to give up utterly.'),
+('2', '2', 'The power or capacity to do something or act in a certain way'),
+('3', '3', 'Having the ability or power to do something.'),
+('4', '4', 'Concerning a particular subject or topic; approximately; near'),
+('5', '5', 'concerning or relating to; approximately'),
+('6', '6', 'higher in position or more distant from a reference point; higher in rank or importance'),
+('7', '7', 'higher in position or more elevated than something else; superior in some way'),
+('8', '8', 'In or to a foreign country or any place outside one''s own country.'),
+('9', '9', 'complete, total, or utter'),
+('10', '10', 'Very completely; entirely; totally'),
+('11', '11', 'Relating to education or learning, especially at a university level.'),
+('12', '12', 'Relating to education, learning, or research; of a scholarly nature.'),
+('13', '13', 'to receive or take willingly; to acknowledge as right or true; to agree to have or do'),
+('14', '14', 'fit to be received or endured; satisfactory'),
+('15', '15', 'The ability or right to approach, enter, or use something; permission or authorization.'),
+('16', '16', 'An unexpected and unintentional event occurring by chance or through mistake.');

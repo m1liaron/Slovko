@@ -5,53 +5,45 @@
     "level": "b2",
     "senses": [
       {
-        "definition": "To leave something or someone completely and without intending to return; to give up completely.",
+        "definition": "To leave completely and definitively; to give up utterly.",
         "collocations": [
-          "abandon hope",
+          "abandon all hope",
           "abandon ship",
           "abandon a project",
           "abandon a baby"
         ],
         "examples": [
           {
-            "sentence": "He was so upset that he decided to abandon his plans for the vacation.",
-            "definition": "He gave up his plans for the vacation because he was too upset."
+            "sentence": "After realizing the futility of their cause, they chose to abandon it entirely.",
+            "definition": "They decided to give up on their project because it was not going well."
           },
           {
-            "sentence": "The crew had no choice but to abandon ship when the storm hit.",
-            "definition": "The crew had to leave the ship when the storm arrived."
+            "sentence": "When the storm struck, the crew had no choice but to abandon ship.",
+            "definition": "The sailors were forced to leave the sinking boat."
           }
         ],
         "synonyms": [
-          "leave",
-          "desert",
           "forsake",
-          "renounce"
+          "desert",
+          "renounce",
+          "forswear"
         ],
         "antonyms": [
-          "persist",
-          "stick with",
-          "keep",
-          "continue"
+          "adopt",
+          "take up",
+          "pursue",
+          "persist"
         ],
         "idioms": [
           {
-            "idiom": "abandon ship",
-            "definition": "To leave a sinking ship, especially in a panic or without concern for others."
-          },
-          {
-            "idiom": "abandon hope",
-            "definition": "To give up all hope or expectation of success; to despair."
+            "idiom": "abandon all hope",
+            "definition": "To give up entirely; to have no further chance of success."
           }
         ],
         "phrases": [
           {
             "phrase": "to abandon oneself to something",
-            "definition": "to let oneself be carried away by something, especially a strong feeling such as pleasure or passion"
-          },
-          {
-            "phrase": "to abandon a child",
-            "definition": "to leave a child without parental care or protection"
+            "definition": "To let oneself be completely controlled by something, often in a carefree or unrestrained manner."
           }
         ]
       }
@@ -65,52 +57,839 @@
       {
         "definition": "The power or capacity to do something or act in a certain way",
         "collocations": [
-          "abilities of a person",
-          "ability level",
-          "special abilities",
-          "hone one's abilities"
+          "abilities",
+          "abilities and strengths",
+          "lack of ability",
+          "develop one's abilities"
         ],
         "examples": [
           {
-            "sentence": "His ability to solve complex math problems impresses everyone.",
-            "definition": "His capacity or skill in solving difficult mathematical equations leaves others amazed."
+            "sentence": "He has the ability to play multiple musical instruments.",
+            "definition": "He has the power or capacity to play multiple musical instruments."
           },
           {
-            "sentence": "She lacks the ability to learn foreign languages quickly.",
-            "definition": "She struggles to acquire fluency in new languages as fast as others do."
+            "sentence": "She lacked the ability to understand complex mathematical concepts.",
+            "definition": "She did not have the power or capacity to understand complex mathematical concepts."
           }
         ],
         "synonyms": [
-          "talent",
           "capability",
-          "potential",
           "skill",
-          "knack"
+          "talent",
+          "expertise"
         ],
         "antonyms": [
           "inability",
-          "impossibility",
-          "unskillfulness",
-          "incapacity"
+          "ineptitude",
+          "weakness",
+          "lack"
         ],
         "idioms": [
           {
-            "idiom": "an ability to turn the tables",
-            "definition": "The power or skill to make a sudden change in a situation so that one gains advantage over others."
+            "idiom": "able-bodied",
+            "definition": "Healthy and strong; physically fit."
           },
           {
-            "idiom": "be above someone's head",
-            "definition": "To be too difficult or complicated for someone to understand, beyond their ability level."
+            "idiom": "not able to lift a finger",
+            "definition": "Unable to do any work or help at all."
           }
         ],
         "phrases": [
           {
-            "phrase": "She has the ability to persuade anyone.",
-            "definition": "She possesses the power to convince anyone with her arguments and charisma."
+            "phrase": "ability to adapt",
+            "definition": "The power or capacity to change or modify in order to survive or fit new conditions."
           },
           {
-            "phrase": "His abilities have greatly improved over time.",
-            "definition": "There has been a significant increase in his skills and competencies throughout his development."
+            "phrase": "within one's ability",
+            "definition": "Within one's powers, capabilities, or resources."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "able",
+    "pos": "adjective",
+    "level": "a2",
+    "senses": [
+      {
+        "definition": "Having the ability or power to do something.",
+        "collocations": [
+          "able-bodied",
+          "able-minded",
+          "unable to",
+          "capable of",
+          "not able to"
+        ],
+        "examples": [
+          {
+            "sentence": "He is able to speak several languages fluently.",
+            "definition": "He has the ability or power to speak several languages fluently."
+          },
+          {
+            "sentence": "She was unable to open the door due to the lock being jammed.",
+            "definition": "She did not have the ability or power to open the door because the lock was jammed."
+          }
+        ],
+        "synonyms": [
+          "capable",
+          "competent",
+          "skillful"
+        ],
+        "antonyms": [
+          "incapable",
+          "incompetent",
+          "unskillful"
+        ],
+        "idioms": [
+          {
+            "idiom": "can't see the forest for the trees",
+            "definition": "Unable to see the big picture due to being focused on small details."
+          },
+          {
+            "idiom": "able-bodied seaman",
+            "definition": "A strong and healthy sailor."
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "more than able",
+            "definition": "Having more ability or power than necessary."
+          },
+          {
+            "phrase": "beyond one's abilities",
+            "definition": "Too difficult for someone to do because they lack the required ability or power."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "about",
+    "pos": "adverb",
+    "level": "a1",
+    "senses": [
+      {
+        "definition": "Concerning a particular subject or topic; approximately; near",
+        "collocations": [
+          "be about to",
+          "talk about",
+          "find out about",
+          "discuss about",
+          "write about",
+          "around about",
+          "roughly about"
+        ],
+        "examples": [
+          {
+            "sentence": "She was talking about her recent vacation in Paris.",
+            "definition": "She was discussing details related to her recent trip to Paris."
+          },
+          {
+            "sentence": "I'm about to leave for work.",
+            "definition": "I am preparing to depart for work shortly."
+          },
+          {
+            "sentence": "Can you find out about the meeting schedule?",
+            "definition": "Could you discover the details regarding the meeting schedule?"
+          }
+        ],
+        "synonyms": [
+          "regarding",
+          "in relation to",
+          "concerning",
+          "approximately"
+        ],
+        "antonyms": [
+          "away from",
+          "distant from",
+          "far from"
+        ],
+        "idioms": [
+          {
+            "idiom": "It's about time",
+            "definition": "It is long past the appropriate or expected time"
+          },
+          {
+            "idiom": "On a shoestring (and about)",
+            "definition": "Living with minimal resources or budget"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "Around about",
+            "definition": "Approximately; roughly"
+          },
+          {
+            "phrase": "In about an hour",
+            "definition": "Approximately one hour from now"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "about",
+    "pos": "preposition",
+    "level": "a1",
+    "senses": [
+      {
+        "definition": "concerning or relating to; approximately",
+        "collocations": [
+          "about time",
+          "around about",
+          "approximately",
+          "nearly",
+          "somewhat"
+        ],
+        "examples": [
+          {
+            "sentence": "I'll be there about 5 o'clock.",
+            "definition": "I will arrive at approximately 5 o'clock"
+          },
+          {
+            "sentence": "She lives around about here.",
+            "definition": "She resides in this general area"
+          }
+        ],
+        "synonyms": [
+          "approximately",
+          "nearly",
+          "almost",
+          "roughly"
+        ],
+        "antonyms": [],
+        "idioms": [
+          {
+            "idiom": "it's about time",
+            "definition": "It is long past the appropriate or expected moment"
+          },
+          {
+            "idiom": "on the one hand... on the other hand",
+            "definition": "Expressing two contrasting aspects or points of view"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "What's about?",
+            "definition": "What is happening or being planned?"
+          },
+          {
+            "phrase": "Around about",
+            "definition": "In or near the general area; approximately"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "above",
+    "pos": "adverb",
+    "level": "a1",
+    "senses": [
+      {
+        "definition": "higher in position or more distant from a reference point; higher in rank or importance",
+        "collocations": [
+          "above average",
+          "above the line",
+          "above all",
+          "above suspicion"
+        ],
+        "examples": [
+          {
+            "sentence": "The clouds were above the mountain peak.",
+            "definition": "The clouds were higher than the top of the mountain."
+          },
+          {
+            "sentence": "Her grades were well above average.",
+            "definition": "Her grades were better than most students in her class."
+          }
+        ],
+        "synonyms": [
+          "up",
+          "over",
+          "on top",
+          "superior"
+        ],
+        "antonyms": [
+          "below",
+          "under",
+          "inferior"
+        ],
+        "idioms": [
+          {
+            "idiom": "look down on someone",
+            "definition": "to regard someone with scorn or superiority"
+          },
+          {
+            "idiom": "above board",
+            "definition": "honest, straightforward, and legal"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "a bird in the air above",
+            "definition": "an expression used to describe a situation or problem that has been resolved"
+          },
+          {
+            "phrase": "keep an eye above",
+            "definition": "to keep a watchful lookout for potential problems or opportunities"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "above",
+    "pos": "preposition",
+    "level": "a1",
+    "senses": [
+      {
+        "definition": "higher in position or more elevated than something else; superior in some way",
+        "collocations": [
+          "above average",
+          "look above",
+          "the water is above my head"
+        ],
+        "examples": [
+          {
+            "sentence": "Her test scores were above average.",
+            "definition": "She scored higher than the typical student."
+          },
+          {
+            "sentence": "I can't reach the top shelf, it's above my head.",
+            "definition": "The top shelf is too high for me to reach."
+          }
+        ],
+        "synonyms": [
+          "higher",
+          "superior",
+          "upward"
+        ],
+        "antonyms": [
+          "below",
+          "lower",
+          "inferior"
+        ],
+        "idioms": [
+          {
+            "idiom": "look above one's boots",
+            "definition": "to think too highly of oneself"
+          },
+          {
+            "idiom": "above board",
+            "definition": "open and honest; not secret or dishonest"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "above all else",
+            "definition": "more important than anything else"
+          },
+          {
+            "phrase": "above the fold",
+            "definition": "a position on a newspaper or website that is easily visible when it is first opened, before any pages are scrolled"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "abroad",
+    "pos": "adverb",
+    "level": "a2",
+    "senses": [
+      {
+        "definition": "In or to a foreign country or any place outside one's own country.",
+        "collocations": [
+          "go abroad",
+          "work abroad",
+          "study abroad"
+        ],
+        "examples": [
+          {
+            "sentence": "He is going abroad for a month-long vacation.",
+            "definition": "He is traveling to a foreign country for a one-month trip."
+          },
+          {
+            "sentence": "She decided to work abroad after graduation.",
+            "definition": "After completing her education, she chose to find employment in another country."
+          }
+        ],
+        "synonyms": [
+          "overseas",
+          "foreign",
+          "outside one's own land"
+        ],
+        "antonyms": [
+          "at home",
+          "in one's own country"
+        ],
+        "idioms": [
+          {
+            "idiom": "broad as the road",
+            "definition": "Very common or widespread; well known."
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "Abroad and at home",
+            "definition": "Someone who is widely accepted and respected in many different countries."
+          },
+          {
+            "phrase": "Set sail abroad",
+            "definition": "To leave one's own country by ship for a foreign land."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "absolute",
+    "pos": "adjective",
+    "level": "b2",
+    "senses": [
+      {
+        "definition": "complete, total, or utter",
+        "collocations": [
+          "absolute control",
+          "an absolute truth",
+          "an absolute necessity"
+        ],
+        "examples": [
+          {
+            "sentence": "She has an absolute right to make her own decisions.",
+            "definition": "She is allowed to do whatever she wants without any restrictions."
+          },
+          {
+            "sentence": "The mathematical proof was considered as an absolute truth.",
+            "definition": "It was considered as completely accurate and undeniable."
+          }
+        ],
+        "synonyms": [
+          "total",
+          "complete",
+          "utmost",
+          "unconditional"
+        ],
+        "antonyms": [
+          "relative",
+          "partial",
+          "conditionally",
+          "qualified"
+        ],
+        "idioms": [
+          {
+            "idiom": "absolute rubbish",
+            "definition": "meaningless or worthless statements, ideas, or actions"
+          },
+          {
+            "idiom": "in absolute awe",
+            "definition": "extremely impressed and filled with admiration"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "an absolute beginner",
+            "definition": "someone who has no experience or knowledge about something"
+          },
+          {
+            "phrase": "absolutely necessary",
+            "definition": "something that is essential, crucial, or indispensable"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "absolutely",
+    "pos": "adverb",
+    "level": "b1",
+    "senses": [
+      {
+        "definition": "Very completely; entirely; totally",
+        "collocations": [
+          "absolutely wonderful",
+          "absolutely necessary",
+          "absolutely true",
+          "absolutely amazing"
+        ],
+        "examples": [
+          {
+            "sentence": "I absolutely love this new movie.",
+            "definition": "I very completely and entirely love this new movie."
+          },
+          {
+            "sentence": "You must absolutely not tell anyone about our secret.",
+            "definition": "You should very completely and entirely not tell anyone about our secret."
+          }
+        ],
+        "synonyms": [
+          "totally",
+          "completely",
+          "entirely",
+          "utterly"
+        ],
+        "antonyms": [
+          "not at all",
+          "not in the slightest",
+          "not even a little bit",
+          "not by any means"
+        ],
+        "idioms": [
+          {
+            "idiom": "absolutely nowhere",
+            "definition": "In no place, not anywhere"
+          },
+          {
+            "idiom": "absolutely nothing",
+            "definition": "Nothing at all"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "absolutely fine",
+            "definition": "Very well, completely alright"
+          },
+          {
+            "phrase": "absolutely no chance",
+            "definition": "There is absolutely no possibility, there is not the slightest chance"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "academic",
+    "pos": "adjective",
+    "level": "b1",
+    "senses": [
+      {
+        "definition": "Relating to education or learning, especially at a university level.",
+        "collocations": [
+          "achievement",
+          "paper",
+          "conference",
+          "journal",
+          "discussion",
+          "debate",
+          "dissertation"
+        ],
+        "examples": [
+          {
+            "sentence": "She excelled academically in school and won numerous awards.",
+            "definition": "She was very intelligent and successful in her studies."
+          },
+          {
+            "sentence": "He published an academic paper on the topic of climate change.",
+            "definition": "He wrote a scientific research article about climate change."
+          }
+        ],
+        "synonyms": [
+          "scholarly",
+          "educated",
+          "erudite",
+          "intellectual"
+        ],
+        "antonyms": [
+          "uneducated",
+          "ignorant",
+          "illiterate"
+        ],
+        "idioms": [
+          {
+            "idiom": "academic exercise",
+            "definition": "A pointless or theoretical activity that has no practical value."
+          },
+          {
+            "idiom": "academic freedom",
+            "definition": "The right of teachers, students, and scholars to express their opinions without fear of censorship or retribution."
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "an academic year",
+            "definition": "The period between the start and end of a school or university's teaching sessions."
+          },
+          {
+            "phrase": "an academic qualification",
+            "definition": "A degree or other formal recognition of educational achievement."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "academic",
+    "pos": "noun",
+    "level": "b2",
+    "senses": [
+      {
+        "definition": "Relating to education, learning, or research; of a scholarly nature.",
+        "collocations": [
+          "academic year",
+          "academic integrity",
+          "academic achievement",
+          "academic journal"
+        ],
+        "examples": [
+          {
+            "sentence": "She is an academic who specializes in medieval literature.",
+            "definition": "A person who holds a high degree from a university and conducts research, especially in a specific subject."
+          },
+          {
+            "sentence": "His academic interests lie in the field of astrophysics.",
+            "definition": "The areas or subjects that someone is particularly interested in learning about or studying."
+          },
+          {
+            "sentence": "The university offers a wide range of academic programs.",
+            "definition": "Courses of study that are taught at a college or university."
+          }
+        ],
+        "synonyms": [
+          "scholarly",
+          "intellectual",
+          "educated",
+          "erudite"
+        ],
+        "antonyms": [
+          "practical",
+          "unlearned",
+          "ignorant"
+        ],
+        "idioms": [],
+        "phrases": []
+      }
+    ]
+  },
+  {
+    "headword": "accept",
+    "pos": "verb",
+    "level": "a2",
+    "senses": [
+      {
+        "definition": "to receive or take willingly; to acknowledge as right or true; to agree to have or do",
+        "collocations": [
+          "accept an offer",
+          "accept responsibility",
+          "accept the consequences"
+        ],
+        "examples": [
+          {
+            "sentence": "She accepted his invitation to dinner.",
+            "definition": "She agreed to go to dinner with him."
+          },
+          {
+            "sentence": "He has finally accepted that he cannot change the past.",
+            "definition": "He has acknowledged and come to terms with the fact that he cannot alter what has already happened."
+          }
+        ],
+        "synonyms": [
+          "acknowledge",
+          "agree",
+          "consent",
+          "assent"
+        ],
+        "antonyms": [
+          "reject",
+          "refuse",
+          "deny",
+          "oppose"
+        ],
+        "idioms": [
+          {
+            "idiom": "accept with open arms",
+            "definition": "to welcome someone or something enthusiastically"
+          },
+          {
+            "idiom": "it's not up for debate/discussion; it's accepted fact",
+            "definition": "something is widely known to be true and no further discussion is needed or appropriate"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "in good faith, I accept",
+            "definition": "I am making this agreement honestly and with the intention of keeping my word"
+          },
+          {
+            "phrase": "accept no substitutes",
+            "definition": "do not settle for anything less than the original or best"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "acceptable",
+    "pos": "adjective",
+    "level": "b2",
+    "senses": [
+      {
+        "definition": "fit to be received or endured; satisfactory",
+        "collocations": [
+          "within acceptable limits",
+          "an acceptable level of risk",
+          "an acceptable solution"
+        ],
+        "examples": [
+          {
+            "sentence": "The temperature is now within acceptable limits.",
+            "definition": "The temperature is now between a range that can be considered normal and comfortable."
+          },
+          {
+            "sentence": "I will only consider an offer if it meets my acceptable level of compensation.",
+            "definition": "I will only consider an offer if the proposed payment or benefits satisfy my minimum requirements."
+          }
+        ],
+        "synonyms": [
+          "tolerable",
+          "satisfactory",
+          "adequate"
+        ],
+        "antonyms": [
+          "unacceptable",
+          "intolerable",
+          "unbearable"
+        ],
+        "idioms": [
+          {
+            "idiom": "be beyond the pale",
+            "definition": "to be outside acceptable or proper limits"
+          },
+          {
+            "idiom": "accept no substitutes",
+            "definition": "insist on having something specific, with no alternatives considered"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "accept the challenge",
+            "definition": "to agree to do something difficult or risky that someone has proposed"
+          },
+          {
+            "phrase": "accept in good faith",
+            "definition": "to believe and trust something is true without questioning it"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "access",
+    "pos": "noun",
+    "level": "b1",
+    "senses": [
+      {
+        "definition": "The ability or right to approach, enter, or use something; permission or authorization.",
+        "collocations": [
+          "grant access",
+          "need access",
+          "deny access",
+          "have access to"
+        ],
+        "examples": [
+          {
+            "sentence": "She requested access to the restricted area.",
+            "definition": "She asked for permission to enter the limited-access zone."
+          },
+          {
+            "sentence": "The password gives you access to the computer system.",
+            "definition": "The password allows you to use the computer system."
+          },
+          {
+            "sentence": "He was denied access to the meeting room due to lack of invitation.",
+            "definition": "He was not allowed to enter the meeting room because he did not receive an invitation."
+          }
+        ],
+        "synonyms": [
+          "admit",
+          "enter",
+          "approach",
+          "utilize"
+        ],
+        "antonyms": [
+          "deny",
+          "bar",
+          "prohibit",
+          "refuse"
+        ],
+        "idioms": [
+          {
+            "idiom": "have an open door policy",
+            "definition": "Have a welcoming and inviting attitude that encourages people to approach or enter."
+          },
+          {
+            "idiom": "keep someone at arm's length",
+            "definition": "Maintain a distance, both physically and emotionally, from someone."
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "have an access to something",
+            "definition": "Have the ability or permission to use or approach something."
+          },
+          {
+            "phrase": "grant someone access to something",
+            "definition": "Permit someone to approach, enter, or use something."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "headword": "accident",
+    "pos": "noun",
+    "level": "a2",
+    "senses": [
+      {
+        "definition": "An unexpected and unintentional event occurring by chance or through mistake.",
+        "collocations": [
+          "car accident",
+          "road accident",
+          "workplace accident",
+          "freak accident",
+          "avoidable accident"
+        ],
+        "examples": [
+          {
+            "sentence": "I was involved in a car accident on my way home last night.",
+            "definition": "The speaker had an unexpected event that caused damage to their vehicle while driving."
+          },
+          {
+            "sentence": "He tripped and accidentally broke the vase.",
+            "definition": "The man fell and unintentionally damaged a delicate object."
+          }
+        ],
+        "synonyms": [
+          "mishap",
+          "incident",
+          "accidentality",
+          "mistake",
+          "blunder"
+        ],
+        "antonyms": [
+          "intentionality",
+          "purposeful",
+          "planned"
+        ],
+        "idioms": [
+          {
+            "idiom": "by accident",
+            "definition": "unintentionally, accidentally"
+          },
+          {
+            "idiom": "accidents will happen",
+            "definition": "unfortunate events are unavoidable"
+          }
+        ],
+        "phrases": [
+          {
+            "phrase": "a narrow escape",
+            "definition": "an event in which one avoids a dangerous or potentially harmful situation by a small margin"
+          },
+          {
+            "phrase": "to have an accident-prone personality",
+            "definition": "to frequently experience accidents due to carelessness or clumsiness"
           }
         ]
       }

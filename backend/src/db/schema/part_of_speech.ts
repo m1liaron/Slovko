@@ -10,4 +10,5 @@ export const partOfSpeechEnum = pgEnum("part_of_speech", [
   "conjunction",
   "interjection",
   "article",
+  "determiner",
 ]);

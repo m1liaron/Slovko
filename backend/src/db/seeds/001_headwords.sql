@@ -1,0 +1,17 @@
+INSERT INTO headwords (id, word, pos, level) VALUES
+('1', 'abandon', 'verb', 'b2'),
+('2', 'ability', 'noun', 'a2'),
+('3', 'able', 'adjective', 'a2'),
+('4', 'about', 'adverb', 'a1'),
+('5', 'about', 'preposition', 'a1'),
+('6', 'above', 'adverb', 'a1'),
+('7', 'above', 'preposition', 'a1'),
+('8', 'abroad', 'adverb', 'a2'),
+('9', 'absolute', 'adjective', 'b2'),
+('10', 'absolutely', 'adverb', 'b1'),
+('11', 'academic', 'adjective', 'b1'),
+('12', 'academic', 'noun', 'b2'),
+('13', 'accept', 'verb', 'a2'),
+('14', 'acceptable', 'adjective', 'b2'),
+('15', 'access', 'noun', 'b1'),
+('16', 'accident', 'noun', 'a2');
