@@ -1,4 +1,3 @@
-import * as Speech from 'expo-speech';
 import { useState, useCallback } from 'react';
 import {
   interpolate,
@@ -25,11 +24,6 @@ export const useCardFlip = (cards: ICard[]) => {
         rotation.value = withTiming(rotation.value === 0 ? 180 : 0, {
           duration: 500,
         });
-
-        const cardToSpeak = cards[index];
-        if (cardToSpeak?.word) {
-          Speech.speak(cardToSpeak.word);
-        }
 
         return { ...prevFlippedCards, [index]: true };
       });
