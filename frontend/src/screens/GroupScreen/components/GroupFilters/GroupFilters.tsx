@@ -204,7 +204,7 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
 
       <View style={{ marginTop: 20, gap: 12 }}>
         <ThemeText style={{ fontSize: 14, opacity: 0.6 }}>
-          Showing {filteredCardsLength} of {cardsLength} words
+          Showing {cardsLength} of {filteredCardsLength} words
         </ThemeText>
 
         {filteredCardsLength < cardsLength && (

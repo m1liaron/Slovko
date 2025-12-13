@@ -101,6 +101,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
       <GroupActions
         hasCards={cards.length > 1}
+        isLoading={isLoading}
         onLearn={modalState.openModesModal}
         onAddCard={modalState.openAddModal}
       />

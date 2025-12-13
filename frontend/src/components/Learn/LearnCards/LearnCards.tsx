@@ -53,9 +53,12 @@ const LearnCards: React.FC<LearnCardsProps> = ({
     checkAnswer,
   } = useTypeMode(learningCards, currentCardIndex, swiperRef, handleFlipCard);
 
-  const backCardAnswerLength =
-    learningCards[currentCardIndex]?.[showTypeMode ? 'word' : 'translateWord']
-      ?.length || 0;
+  const backCardAnswer =
+    learningCards[currentCardIndex]?.[
+      currentCardIndex % 2 === 0 ? 'translateWord' : 'word'
+    ];
+  const backCardAnswerLength = backCardAnswer?.length || 0;
+  console.log(backCardAnswer);
 
   return (
     <View
