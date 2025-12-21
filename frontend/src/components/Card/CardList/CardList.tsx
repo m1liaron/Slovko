@@ -43,14 +43,6 @@ const CardList = ({ groupId }: CardListProps) => {
   const { cards = [], isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
 
-  const [_wordsRangeNumber, setWordsRangeNumber] = useState<number>(
-    cards?.length || 2,
-  );
-
-  useEffect(() => {
-    setWordsRangeNumber(cards?.length);
-  }, [cards?.length]);
-
   useEffect(() => {
     dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId }));
   }, [group, groupId]);

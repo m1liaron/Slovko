@@ -90,7 +90,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
       ? screenWidth * 0.95
       : screenWidth < 640
         ? screenWidth * 0.88
-        : screenWidth < 780
+        : screenWidth < 880
           ? screenWidth * 0.75
           : Platform.OS === 'web'
             ? screenWidth * 0.5

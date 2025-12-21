@@ -147,6 +147,9 @@ const cardSlice = createSlice({
 
         state.globalCards = [...state.globalCards, ...newCards];
       })
+      .addCase(getCards.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(getCardsStorage.fulfilled, (state, action) => {
         if (action.payload) {
           state.cards = action.payload;
@@ -218,6 +221,7 @@ const cardSlice = createSlice({
         state.status = DataStatus.SUCCESS;
         state.error = null;
         state.lastFetchedSuccessfully = true;
+        state.isLoading = false;
       })
       .addMatcher(isRejected, (state, action) => {
         state.status = DataStatus.ERROR;
