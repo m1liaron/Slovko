@@ -56,10 +56,10 @@ const MainScreen = () => {
   const repeatedGroupsIds = useAppSelector(
     (state) => state.cards.repeatedCards,
   );
-  const repeatedCardsLength = repeatedGroupsIds.reduce(
-    (prev, curr) => prev + curr.cards.length,
-    0,
-  );
+  const repeatedCardsLength =
+    repeatedGroupsIds.length > 0
+      ? repeatedGroupsIds.reduce((prev, curr) => prev + curr.cards.length, 0)
+      : 0;
   const { sections, activeSectionId } = useAppSelector(
     (state) => state.sections,
   );
@@ -239,7 +239,7 @@ const MainScreen = () => {
         </Pressable>
       </View>
 
-      {(!HAS_TOKEN || !isAuthenticated) && (
+      {!isAuthenticated && (
         <View
           style={{
             backgroundColor: colors.lightBackground,

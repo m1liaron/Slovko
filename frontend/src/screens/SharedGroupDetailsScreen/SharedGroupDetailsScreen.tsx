@@ -2,7 +2,13 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect } from 'react';
-import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 import ThemeText from '@/common/components/ThemeText/ThemeText';
@@ -10,7 +16,10 @@ import { AppPath } from '@/common/enums/app/AppPath';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
-import type { RootStackParamList, StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import type {
+  RootStackParamList,
+  StackNavigation,
+} from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { selectUser } from '@/redux/userReducer/userSlice';
 import { formatMDYTime } from '@/utils';
 
@@ -41,7 +50,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
-   const navigation = useNavigation<StackNavigation>();
+  const navigation = useNavigation<StackNavigation>();
   const { sharedGroupId } = route.params as { sharedGroupId: string };
   const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
   const { user } = useAppSelector(selectUser);
@@ -78,14 +87,10 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
   const handleRemoveSharedGroup = () => {
     dispatch(removeSharedGroup(sharedGroup.id));
     navigation.navigate(AppPath.SharedGroup);
-  }
+  };
 
   return (
     <ThemeBackground style={{ padding: 20 }}>
-      <View style={{ zIndex: 100 }}>
-        <Toast />
-      </View>
-
       <View>
         <View
           style={{

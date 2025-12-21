@@ -78,7 +78,7 @@ export const GroupList = () => {
             }
             contentContainerStyle={{ paddingVertical: 20 }}
           />
-        ) : !groups.length ? (
+        ) : !groups?.length ? (
           <View
             style={{
               flex: 1,

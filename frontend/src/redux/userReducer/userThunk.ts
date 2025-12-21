@@ -1,17 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
-import { SERVER_API_URL } from '@/common/enums/constants/server-api';
 import type { IUpdateUser, RegisterUser } from '@/common/enums/types/types';
 
-import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
-import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
+import {
+  createAuthorizedInstance,
+  createAxiosInstance,
+} from '../../utils/createAuthorizedInstance';
+import {
+  createAppAsyncThunk,
+  createAuthAppAsyncThunk,
+} from '../services/createAppAsyncThunk';
 
-const login = createAppAsyncThunk(
+const login = createAuthAppAsyncThunk(
   'user/login',
   async (data: { email: string; password: string }) => {
-    const response = await axios.post(`${SERVER_API_URL}/users/login`, data);
+    const axiosInstance = await createAxiosInstance();
+    const response = await axiosInstance.post(`/users/login`, data);
     await AsyncStorage.setItem(
       AsyncStorageVariables.TOKEN,
       response.data.token,
@@ -20,10 +25,11 @@ const login = createAppAsyncThunk(
   },
 );
 
-const register = createAppAsyncThunk(
+const register = createAuthAppAsyncThunk(
   'user/register',
   async (data: RegisterUser) => {
-    const response = await axios.post(`${SERVER_API_URL}/users/register`, data);
+    const axiosInstance = await createAxiosInstance();
+    const response = await axiosInstance.post(`/users/register`, data);
     await AsyncStorage.setItem(
       AsyncStorageVariables.TOKEN,
       response.data.token,
