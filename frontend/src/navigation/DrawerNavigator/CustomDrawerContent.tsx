@@ -68,7 +68,9 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   };
 
   useEffect(() => {
-    dispatch(getLanguages());
+    if (languages.length === 0) {
+      dispatch(getLanguages(null));
+    }
   }, []);
 
   return (

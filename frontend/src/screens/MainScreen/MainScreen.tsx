@@ -53,13 +53,13 @@ const MainScreen = () => {
     theme: { colors },
   } = useAppTheme();
   const { isAuthenticated } = useAppSelector((state) => state.user);
-  // const repeatedGroupsIds = useAppSelector(
-  //   (state) => state.cards.repeatedCards,
-  // );
-  // const repeatedCardsLength = repeatedGroupsIds.length > 0 ? repeatedGroupsIds.reduce(
-  //   (prev, curr) => prev + curr.cards.length,
-  //   0,
-  // ) : 0;
+  const repeatedGroupsIds = useAppSelector(
+    (state) => state.cards.repeatedCards,
+  );
+  const repeatedCardsLength =
+    repeatedGroupsIds.length > 0
+      ? repeatedGroupsIds.reduce((prev, curr) => prev + curr.cards.length, 0)
+      : 0;
   const { sections, activeSectionId } = useAppSelector(
     (state) => state.sections,
   );
@@ -103,46 +103,46 @@ const MainScreen = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (Platform.OS === 'android' || Platform.OS === 'ios') {
-  //     if (repeatedGroupsIds.length > 0) {
-  //       scheduleNotification(
-  //         i18n.t('mainScreen.notificationTitle'),
-  //         i18n.t('mainScreen.notificationBody', { count: repeatedCardsLength }),
-  //         null,
-  //       );
-  //     }
-  //   } else {
-  //     sendNotification();
-  //   }
-  // }, [repeatedGroupsIds, repeatedCardsLength]);
+  useEffect(() => {
+    if (Platform.OS === 'android' || Platform.OS === 'ios') {
+      if (repeatedGroupsIds.length > 0) {
+        scheduleNotification(
+          i18n.t('mainScreen.notificationTitle'),
+          i18n.t('mainScreen.notificationBody', { count: repeatedCardsLength }),
+          null,
+        );
+      }
+    } else {
+      sendNotification();
+    }
+  }, [repeatedGroupsIds, repeatedCardsLength]);
 
   const sendNotification = () => {
     if (!('Notification' in window)) {
       throw new Error('Ваш браузер не підтримує повідомлення');
     }
 
-    // if (Notification.permission !== 'granted') {
-    //   Notification.requestPermission().then((permission) => {
-    //     if (repeatedCardsLength) {
-    //       if (permission === 'granted') {
-    //         const appLogoUri = Image.resolveAssetSource(appLogo).uri;
-    //         const notificationOptions = {
-    //           body: i18n.t('mainScreen.notificationBody', {
-    //             count: repeatedCardsLength,
-    //           }),
-    //           icon: appLogoUri,
-    //         };
-    //         new Notification(
-    //           i18n.t('mainScreen.notificationTitle'),
-    //           notificationOptions,
-    //         );
-    //       } else {
-    //         console.log('Повідомлення заблоковані користувачем.');
-    //       }
-    //     }
-    //   });
-    // }
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission().then((permission) => {
+        if (repeatedCardsLength) {
+          if (permission === 'granted') {
+            const appLogoUri = Image.resolveAssetSource(appLogo).uri;
+            const notificationOptions = {
+              body: i18n.t('mainScreen.notificationBody', {
+                count: repeatedCardsLength,
+              }),
+              icon: appLogoUri,
+            };
+            new Notification(
+              i18n.t('mainScreen.notificationTitle'),
+              notificationOptions,
+            );
+          } else {
+            console.log('Повідомлення заблоковані користувачем.');
+          }
+        }
+      });
+    }
   };
 
   const daysSince = useCallback((dateString: string) => {
@@ -166,14 +166,14 @@ const MainScreen = () => {
     setShowRepeatedModal(false);
   };
 
-  // const learnAllRepeatedCards = () => {
-  //   const allIds =
-  //     repeatedGroupsIds.length > 1
-  //       ? repeatedGroupsIds.flatMap((group) => group.cards.map((id) => id))
-  //       : repeatedGroupsIds[0].cards;
-  //   dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, allIds));
-  //   navigateToLearn();
-  // };
+  const learnAllRepeatedCards = () => {
+    const allIds =
+      repeatedGroupsIds.length > 1
+        ? repeatedGroupsIds.flatMap((group) => group.cards.map((id) => id))
+        : repeatedGroupsIds[0].cards;
+    dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, allIds));
+    navigateToLearn();
+  };
 
   const learnGroupRepeatedCards = (cardsIds: string[]) => {
     dispatch(enqueueOrDispatch(getRepeatedCardsFromIds, cardsIds));
@@ -239,7 +239,7 @@ const MainScreen = () => {
         </Pressable>
       </View>
 
-      {(!HAS_TOKEN || !isAuthenticated) && (
+      {!isAuthenticated && (
         <View
           style={{
             backgroundColor: colors.lightBackground,
@@ -283,7 +283,7 @@ const MainScreen = () => {
         {i18n.t('mainScreen.daysPassed')}
       </Text>
 
-      {/* {repeatedGroupsIds.length ? (
+      {repeatedGroupsIds.length ? (
         <Pressable
           style={[
             styles.repeatButton,
@@ -295,7 +295,7 @@ const MainScreen = () => {
             {i18n.t('mainScreen.repeatWords')} - {repeatedCardsLength}
           </Text>
         </Pressable>
-      ) : null} */}
+      ) : null}
 
       <GroupList />
 
@@ -305,7 +305,7 @@ const MainScreen = () => {
         </Pressable>
       </View>
 
-      {/* <DefaultModal
+      <DefaultModal
         isVisible={showRepeatedModal}
         handleClose={() => setShowRepeatedModal(!showRepeatedModal)}
       >
@@ -332,7 +332,7 @@ const MainScreen = () => {
           text={i18n.t('mainScreen.repeatAll')}
           onPress={learnAllRepeatedCards}
         />
-      </DefaultModal> */}
+      </DefaultModal>
     </ThemeBackground>
   );
 };

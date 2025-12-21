@@ -39,6 +39,7 @@ const createAuthAppAsyncThunk = <Returned, ThunkArg>(
     typePrefix,
     async (arg, { rejectWithValue }) => {
       try {
+        console.log(`Send requests of course`);
         const data = await requestFn(arg);
         return data;
       } catch (err: any) {

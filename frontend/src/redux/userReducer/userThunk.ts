@@ -25,7 +25,7 @@ const login = createAuthAppAsyncThunk(
   },
 );
 
-const register = createAppAsyncThunk(
+const register = createAuthAppAsyncThunk(
   'user/register',
   async (data: RegisterUser) => {
     const axiosInstance = await createAxiosInstance();
