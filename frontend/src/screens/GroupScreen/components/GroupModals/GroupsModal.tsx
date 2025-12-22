@@ -26,9 +26,9 @@ interface ShowModeLearning {
 interface GroupModalsProps {
   groupId: string;
   group: IGroup;
+  shownCards: ICard[];
   groupTitle: string;
   setGroupTitle: (title: string) => void;
-  filteredCards: ICard[];
   showModesModal: boolean;
   showEditModal: boolean;
   showAddModal: boolean;
@@ -47,9 +47,9 @@ interface GroupModalsProps {
 
 export const GroupModals: React.FC<GroupModalsProps> = ({
   groupId,
+  shownCards,
   groupTitle,
   setGroupTitle,
-  filteredCards,
   showModesModal,
   showEditModal,
   showAddModal,
@@ -85,7 +85,7 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
     item: ShowModeLearning;
     index: number;
   }) => {
-    if (item.sectionName === 'check' && filteredCards.length < 4) {
+    if (item.sectionName === 'check' && shownCards.length < 4) {
       return (
         <>
           <View

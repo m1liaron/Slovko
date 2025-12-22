@@ -20,6 +20,7 @@ import {
 import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
+import { selectVisibleCards } from '@/redux/cardReducer/cardSelector';
 
 const MemoCardItem = memo(CardItem);
 
@@ -39,8 +40,9 @@ const CardList = ({ groupId }: CardListProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const cards = useAppSelector(selectVisibleCards);
   const { group } = useAppSelector((state) => state.groups);
-  const { cards = [], isLoading } = useAppSelector((state) => state.cards);
+  const { isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

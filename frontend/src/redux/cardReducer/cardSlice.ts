@@ -8,7 +8,11 @@ import {
 
 import type { ICard, IRepeatedGroup } from '@/common/enums/types/types';
 
-import { DataStatus, type IDataStatus } from '../../common/enums/app/app';
+import {
+  CardFields,
+  DataStatus,
+  type IDataStatus,
+} from '../../common/enums/app/app';
 import { handleUpdateState } from '../services/handleUpdateState';
 import type { RootState } from '../store';
 
@@ -27,10 +31,13 @@ import {
 export type LearningMode = 'cards' | 'quiz' | 'word' | 'check';
 
 interface InitialState {
-  cards: ICard[];
   globalCards: ICard[];
-  filteredCards: ICard[];
+  cards: ICard[];
   repeatedCards: IRepeatedGroup[];
+  sortOrder: 'asc' | 'desc';
+  sortValue: keyof typeof CardFields;
+  filterValue: string;
+  rangeLimit: number;
   shownModes: Record<LearningMode, boolean>;
   lastFetchedSuccessfully: boolean;
   status: IDataStatus;
@@ -39,10 +46,13 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-  cards: [],
   globalCards: [],
-  filteredCards: [],
+  cards: [],
   repeatedCards: [],
+  sortOrder: 'asc',
+  sortValue: 'word',
+  filterValue: '',
+  rangeLimit: 0,
   shownModes: {
     cards: true, // always
     quiz: true,
@@ -61,9 +71,7 @@ const cardSlice = createSlice({
   reducers: {
     addStateManyCards: (state, action) => {
       const data = action.payload.cards;
-      state.cards.push(...data);
       state.globalCards.push(...data);
-      state.filteredCards.push(...data);
     },
     addStateCard: (state, action) => {
       const { card: newCard, tempId } = action.payload;
@@ -78,48 +86,42 @@ const cardSlice = createSlice({
         id: tempId,
         ...newCard,
       };
-      state.cards.push(newCardData);
       state.globalCards.push(newCardData);
     },
     updateStateCard: (state, action) =>
       handleUpdateState(state, action, 'cards'),
     removeStateCard: (state, action) => {
       const id = action.payload;
-      state.cards = state.cards.filter((card) => card.id !== id);
-      state.filteredCards = state.filteredCards.filter(
-        (card) => card.id !== id,
-      );
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
     },
     rangeCards: (state, action) => {
-      if (action.payload) {
-        const limit = action.payload;
-        const source =
-          limit > state.cards.length ? state.filteredCards : state.cards;
-        state.cards = source.slice(0, limit);
-        state.isLoading = false;
-      }
-    },
-    sortCards: (state, action: PayloadAction<'asc' | 'desc'>) => {
-      state.isLoading = true;
-      state.cards.sort((a, b) => {
-        const timeA = new Date(a.nextReviewAt).getTime();
-        const timeB = new Date(b.nextReviewAt).getTime();
-
-        if (action.payload === 'asc') {
-          return timeA - timeB; // Ascending order
-        }
-        return timeB - timeA;
-      });
+      state.rangeLimit = Math.floor(action.payload);
       state.isLoading = false;
     },
+    sortCards: (
+      state,
+      action: PayloadAction<{ sort: keyof typeof CardFields }>,
+    ) => {
+      const { sort } = action.payload;
+
+      state.isLoading = true;
+      state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
+      state.sortValue = sort;
+
+      state.isLoading = false;
+    },
+    toggleCardsSortOrder: (state) => {
+      state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
+    },
     filterCardsByStatus: (state, action) => {
-      state.cards = state.filteredCards.filter(
-        (card) => card.status === action.payload.status,
-      );
+      state.filterValue = action.payload.status;
     },
     resetFilter: (state) => {
-      state.cards = [...state.filteredCards];
+      state.filterValue = '';
+      state.sortOrder = 'asc';
+      state.sortValue = 'word';
+      state.rangeLimit = state.cards.length;
+
       state.isLoading = false;
     },
     addLearningMode: (
@@ -137,60 +139,35 @@ const cardSlice = createSlice({
     builder
       .addCase(getCards.fulfilled, (state, action) => {
         const fresh = action.payload;
+        state.globalCards = fresh;
         state.cards = fresh;
-        state.filteredCards = fresh;
-
-        const existingIds = new Set(state.globalCards.map((c) => c.id));
-        const newCards = fresh.filter(
-          (card: ICard) => !existingIds.has(card.id),
-        );
-
-        state.globalCards = [...state.globalCards, ...newCards];
       })
       .addCase(getCards.pending, (state, action) => {
         state.isLoading = true;
       })
       .addCase(getCardsStorage.fulfilled, (state, action) => {
         if (action.payload) {
+          state.globalCards = action.payload;
           state.cards = action.payload;
         }
       })
       .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
         state.cards = action.payload;
-        state.filteredCards = action.payload;
       })
       .addCase(addCard.fulfilled, (state, action) => {
-        // const { tempId, card } = action.payload;
-        // if (tempId) {
-        // 	state.cards = state.cards.filter((card) => card.id !== tempId);
-        // 	state.filteredCards = state.filteredCards.filter(
-        // 		(card) => card.id !== tempId,
-        // 	);
-        // 	state.globalCards = state.globalCards.filter(
-        // 		(card) => String(card.id) !== String(tempId),
-        // 	);
-
-        // 	state.cards.push(card);
-        // 	state.globalCards.push(card);
-        // }
+        state.globalCards.push(action.payload.card);
         state.cards.push(action.payload.card);
-        state.filteredCards.push(action.payload.card);
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
         if (action.payload.cards.length > 0) {
-          state.cards.push(...action.payload.cards);
-          state.filteredCards.push(...action.payload.cards);
           state.globalCards.push(...action.payload.cards);
+          state.cards.push(...action.payload.cards);
         }
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
-        const filteredCards = state.cards.filter(
-          (card) => card.id !== action.payload,
-        );
-        state.cards = filteredCards;
-        state.filteredCards = filteredCards;
-        state.globalCards = filteredCards;
+        state.globalCards.filter((card) => card.id !== action.payload);
+        state.cards.filter((card) => card.id !== action.payload);
       })
       // update card
       .addCase(updateCard.fulfilled, (state, action) => {
@@ -199,10 +176,7 @@ const cardSlice = createSlice({
           (card) => card.id === updatedCard.id,
         );
         if (index !== -1) {
-          state.cards[index] = updatedCard;
-          state.filteredCards[index] = updatedCard;
-          state.cards = [...state.cards];
-          state.filteredCards = [...state.filteredCards];
+          state.globalCards[index] = updatedCard;
         }
       })
       // get repeated cards
@@ -242,6 +216,7 @@ export const {
   resetFilter,
   rangeCards,
   sortCards,
+  toggleCardsSortOrder,
   addLearningMode,
 } = cardSlice.actions;
 export const selectCard = (state: RootState) => state.cards.cards;

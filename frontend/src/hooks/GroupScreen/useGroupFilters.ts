@@ -6,25 +6,29 @@ import {
   filterCardsByStatus,
   rangeCards,
   resetFilter,
+  sortCards,
 } from '@/redux/cardReducer/cardSlice';
 
-import { useAppDispatch } from '../redux.hooks';
+import { CardFields } from '../../common/enums/app/app';
+import { useAppDispatch, useAppSelector } from '../redux.hooks';
+import { KeyOfCardFields } from '@/common/enums/types/cardFields.type';
 
 type ViewMode = 'list' | 'cards';
 type SortOrder = 'asc' | 'desc';
 
-const useGroupFilters = (cards: ICard[], filteredCards: ICard[]) => {
+const useGroupFilters = (cards: ICard[]) => {
   const dispatch = useAppDispatch();
+  const { rangeLimit, sortValue, sortOrder } = useAppSelector(
+    (state) => state.cards,
+  );
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [wordsRangeNumber, setWordsRangeNumber] = useState(cards?.length || 2);
-  const [sort, setSort] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   useEffect(() => {
-    setWordsRangeNumber(filteredCards.length);
-  }, [filteredCards.length]);
+    setWordsRangeNumber(cards.length);
+  }, [cards.length]);
 
   const statusCardsButtons = useMemo(
     () => [
@@ -55,25 +59,22 @@ const useGroupFilters = (cards: ICard[], filteredCards: ICard[]) => {
 
   const onChangeCardsRange = useCallback(
     (value: number) => {
-      setWordsRangeNumber(value);
-      if (value !== cards.length && value >= 2) {
-        dispatch(rangeCards(Math.floor(value)));
-      }
+      dispatch(rangeCards(value));
     },
     [cards.length, dispatch],
   );
 
   const decWordsRange = useCallback(() => {
-    if (wordsRangeNumber > 2) {
-      onChangeCardsRange(wordsRangeNumber - 1);
+    if (rangeLimit > 2) {
+      onChangeCardsRange(rangeLimit - 1);
     }
-  }, [wordsRangeNumber, onChangeCardsRange]);
+  }, [rangeLimit, onChangeCardsRange]);
 
   const incWordsRange = useCallback(() => {
-    if (wordsRangeNumber < filteredCards.length) {
-      onChangeCardsRange(wordsRangeNumber + 1);
+    if (rangeLimit < cards.length) {
+      onChangeCardsRange(rangeLimit + 1);
     }
-  }, [wordsRangeNumber, filteredCards.length, onChangeCardsRange]);
+  }, [rangeLimit, cards.length, onChangeCardsRange]);
 
   const handleStatusFilter = useCallback(
     (status: string) => {
@@ -100,14 +101,12 @@ const useGroupFilters = (cards: ICard[], filteredCards: ICard[]) => {
   return {
     showFilterModal,
     wordsRangeNumber,
-    sort,
+    sort: sortValue,
     sortOrder,
     selectedStatus,
     setSelectedStatus,
     viewMode,
     statusCardsButtons,
-    setSort,
-    setSortOrder,
     setViewMode,
     toggleFilters,
     onChangeCardsRange,
