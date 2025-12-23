@@ -35,7 +35,6 @@ interface GroupFiltersProps {
   onChangeCardsRange: (value: number) => void;
   onDecrement: () => void;
   onIncrement: () => void;
-  onSortOrderChange: (value: 'asc' | 'desc') => void;
   onStatusFilter: (status: string) => void;
   onResetFilters: () => void;
 }
@@ -50,7 +49,6 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
   onChangeCardsRange,
   onDecrement,
   onIncrement,
-  onSortOrderChange,
   onStatusFilter,
   onResetFilters,
 }) => {
@@ -176,7 +174,6 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
             customStyle={{ width: '100%' }}
             setCurrentSelect={(value) => dispatch(sortCards({ sort: value }))}
             showSortIcon={true}
-            setSortOrder={onSortOrderChange}
           />
         </View>
 

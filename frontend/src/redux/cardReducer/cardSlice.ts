@@ -33,6 +33,7 @@ export type LearningMode = 'cards' | 'quiz' | 'word' | 'check';
 interface InitialState {
   globalCards: ICard[];
   cards: ICard[];
+  filteredCards: ICard[];
   repeatedCards: IRepeatedGroup[];
   sortOrder: 'asc' | 'desc';
   sortValue: keyof typeof CardFields;
@@ -48,6 +49,7 @@ interface InitialState {
 const initialState: InitialState = {
   globalCards: [],
   cards: [],
+  filteredCards: [],
   repeatedCards: [],
   sortOrder: 'asc',
   sortValue: 'word',
@@ -72,6 +74,8 @@ const cardSlice = createSlice({
     addStateManyCards: (state, action) => {
       const data = action.payload.cards;
       state.globalCards.push(...data);
+      state.cards.push(...data);
+      state.rangeLimit = data.length;
     },
     addStateCard: (state, action) => {
       const { card: newCard, tempId } = action.payload;
@@ -87,12 +91,16 @@ const cardSlice = createSlice({
         ...newCard,
       };
       state.globalCards.push(newCardData);
+      state.cards.push(newCardData);
     },
     updateStateCard: (state, action) =>
       handleUpdateState(state, action, 'cards'),
     removeStateCard: (state, action) => {
       const id = action.payload;
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
+    },
+    setRangeLimit: (state, action) => {
+      state.rangeLimit = action.payload;
     },
     rangeCards: (state, action) => {
       state.rangeLimit = Math.floor(action.payload);
@@ -177,6 +185,7 @@ const cardSlice = createSlice({
         );
         if (index !== -1) {
           state.globalCards[index] = updatedCard;
+          state.cards[index] = updatedCard;
         }
       })
       // get repeated cards
@@ -214,6 +223,7 @@ export const {
   removeStateCard,
   filterCardsByStatus,
   resetFilter,
+  setRangeLimit,
   rangeCards,
   sortCards,
   toggleCardsSortOrder,

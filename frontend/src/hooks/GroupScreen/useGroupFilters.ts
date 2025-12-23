@@ -6,15 +6,13 @@ import {
   filterCardsByStatus,
   rangeCards,
   resetFilter,
+  setRangeLimit,
   sortCards,
 } from '@/redux/cardReducer/cardSlice';
 
-import { CardFields } from '../../common/enums/app/app';
 import { useAppDispatch, useAppSelector } from '../redux.hooks';
-import { KeyOfCardFields } from '@/common/enums/types/cardFields.type';
 
 type ViewMode = 'list' | 'cards';
-type SortOrder = 'asc' | 'desc';
 
 const useGroupFilters = (cards: ICard[]) => {
   const dispatch = useAppDispatch();
@@ -22,13 +20,14 @@ const useGroupFilters = (cards: ICard[]) => {
     (state) => state.cards,
   );
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [wordsRangeNumber, setWordsRangeNumber] = useState(cards?.length || 2);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   useEffect(() => {
-    setWordsRangeNumber(cards.length);
-  }, [cards.length]);
+    if (rangeLimit === 0) {
+      setRangeLimit();
+    }
+  }, []);
 
   const statusCardsButtons = useMemo(
     () => [
@@ -100,7 +99,6 @@ const useGroupFilters = (cards: ICard[]) => {
 
   return {
     showFilterModal,
-    wordsRangeNumber,
     sort: sortValue,
     sortOrder,
     selectedStatus,
@@ -114,6 +112,7 @@ const useGroupFilters = (cards: ICard[]) => {
     incWordsRange,
     handleStatusFilter,
     resetFilters,
+    rangeLimit,
   };
 };
 

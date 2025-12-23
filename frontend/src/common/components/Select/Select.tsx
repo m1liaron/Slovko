@@ -24,7 +24,6 @@ interface SelectProps<T> {
   showSortIcon?: boolean;
   sortOrder?: 'asc' | 'desc';
   toggleOrder?: () => void;
-  setSortOrder?: (order: 'asc' | 'desc') => void;
 }
 
 const Select = <T,>({
@@ -36,7 +35,6 @@ const Select = <T,>({
   showSortIcon,
   toggleOrder,
   sortOrder,
-  setSortOrder,
 }: SelectProps<T>) => {
   const {
     theme: { colors },
@@ -67,7 +65,7 @@ const Select = <T,>({
           />
         </Pressable>
 
-        {showSortIcon && typeof setSortOrder === 'function' && (
+        {showSortIcon && (
           <Pressable onPress={toggleOrder}>
             <Feather
               name={sortOrder === 'asc' ? 'arrow-down' : 'arrow-up'}
