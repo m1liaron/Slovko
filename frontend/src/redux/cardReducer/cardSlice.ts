@@ -47,9 +47,9 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-  globalCards: [],
-  cards: [],
-  filteredCards: [],
+  globalCards: [], // true state of all cards
+  cards: [], // cards for particular group
+  filteredCards: [], // cards shown in UI
   repeatedCards: [],
   sortOrder: 'asc',
   sortValue: 'word',
@@ -67,6 +67,48 @@ const initialState: InitialState = {
   isLoading: false,
 };
 
+const applyTransformation = ({
+  cards,
+  filterValue,
+  sortValue,
+  sortOrder,
+  rangeLimit,
+}: InitialState) => {
+  let result = [...cards];
+
+  if (filterValue) {
+    result = result.filter((c) => c.status === filterValue);
+  }
+
+  if (
+    sortValue === CardFields.createdAt ||
+    sortValue === CardFields.nextReviewAt
+  ) {
+    result.sort((a, b) => {
+      const timeA = new Date(a[sortValue]).getTime();
+      const timeB = new Date(b[sortValue]).getTime();
+      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
+    });
+  } else if (sortValue === CardFields.word) {
+    result.sort((a, b) => {
+      const comparison = a.word.localeCompare(b.word);
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+  } else if (sortValue === CardFields.reviewCount) {
+    result.sort((a, b) => {
+      const comparison = a.reviewCount - b.reviewCount;
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+  }
+
+  // 3. Apply range
+  if (rangeLimit && rangeLimit < result.length) {
+    result = result.slice(0, rangeLimit);
+  }
+
+  return result;
+};
+
 const cardSlice = createSlice({
   name: 'cards',
   initialState,
@@ -76,6 +118,16 @@ const cardSlice = createSlice({
       state.globalCards.push(...data);
       state.cards.push(...data);
       state.rangeLimit = data.length;
+    },
+    getStateCards: (state, action) => {
+      const { groupId } = action.payload;
+      if (action.payload.groupId) {
+        const groupCards = state.globalCards.filter(
+          (globalCard) => globalCard.groupId === groupId,
+        );
+        state.cards = groupCards;
+        state.rangeLimit = groupCards.length;
+      }
     },
     addStateCard: (state, action) => {
       const { card: newCard, tempId } = action.payload;
@@ -149,14 +201,19 @@ const cardSlice = createSlice({
         const fresh = action.payload;
         state.globalCards = fresh;
         state.cards = fresh;
+        state.filteredCards = applyTransformation(state);
       })
-      .addCase(getCards.pending, (state, action) => {
+      .addCase(getCards.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(getCardsStorage.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.globalCards = action.payload;
-          state.cards = action.payload;
+        const { groupId } = action.payload;
+        if (action.payload.groupId) {
+          const groupCards = state.globalCards.filter(
+            (globalCard) => globalCard.groupId !== groupId,
+          );
+          state.cards = groupCards;
+          state.filteredCards = applyTransformation(state);
         }
       })
       .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
@@ -165,11 +222,13 @@ const cardSlice = createSlice({
       .addCase(addCard.fulfilled, (state, action) => {
         state.globalCards.push(action.payload.card);
         state.cards.push(action.payload.card);
+        state.filteredCards = applyTransformation(state);
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
         if (action.payload.cards.length > 0) {
           state.globalCards.push(...action.payload.cards);
           state.cards.push(...action.payload.cards);
+          state.filteredCards = applyTransformation(state);
         }
       })
       // remove card
@@ -217,6 +276,7 @@ const cardSlice = createSlice({
 });
 
 export const {
+  getStateCards,
   addStateCard,
   addStateManyCards,
   updateStateCard,

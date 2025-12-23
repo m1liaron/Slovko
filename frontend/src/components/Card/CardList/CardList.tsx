@@ -13,6 +13,7 @@ import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   getCards,
+  getStateCards,
   rangeCards,
   removeCard,
   removeStateCard,
@@ -40,13 +41,13 @@ const CardList = ({ groupId }: CardListProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const cards = useAppSelector(selectVisibleCards);
   const { group } = useAppSelector((state) => state.groups);
+  const { cards } = useAppSelector((state) => state.cards);
   const { isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId }));
+    dispatch(enqueueOrDispatch(getCards, getStateCards, { groupId }));
   }, [group, groupId]);
 
   return (

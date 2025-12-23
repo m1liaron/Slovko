@@ -24,9 +24,11 @@ import {
 } from '../../../redux/groupReducer/groupSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
+import { selectSectionGroups } from '@/redux/groupReducer/groupSelector';
 
 export const GroupList = () => {
-  const { groups, isLoading } = useAppSelector((state) => state.groups);
+  const groups = useAppSelector(selectSectionGroups);
+  const { isLoading } = useAppSelector((state) => state.groups);
   const { activeSectionId, sections } = useAppSelector(
     (state) => state.sections,
   );
