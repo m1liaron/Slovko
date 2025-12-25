@@ -23,3 +23,4 @@ export { Language } from './language.type';
 export { AsyncStorageKey } from './asyncStorageKey';
 export { Section, LearnSessionData, ResultData } from './learn.types';
 export { KeyOfCardFields } from './cardFields.type';
+export { LearnProps } from './learnProps.type';

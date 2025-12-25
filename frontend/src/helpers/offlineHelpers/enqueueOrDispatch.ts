@@ -66,7 +66,6 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 
     if (!isAuthenticated) {
       if (actionStateCreator) {
-        console.log('Action state creator 1');
         dispatch(actionStateCreator(args as any));
         return;
       }
@@ -74,7 +73,6 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
 
     if (isOffline) {
       if (actionStateCreator) {
-        console.log('Action state creator 2');
         dispatch(actionStateCreator(args as any));
       }
 
@@ -104,7 +102,6 @@ function buildThunk<Returned, ThunkArg, PayloadType = ThunkArg>(
       await persistOfflineQueue(getState);
 
       if (actionStateCreator) {
-        console.log('Action state creator 3');
         dispatch(actionStateCreator(args as any));
       }
 

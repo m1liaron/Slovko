@@ -35,9 +35,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const dispatch = useAppDispatch();
   const { rangeLimit } = useAppSelector((state) => state.cards);
   const { groupId } = route.params as { groupId: string };
-  const { cards } = useAppSelector((state) => state.cards);
+  const { cards, filteredCards } = useAppSelector((state) => state.cards);
   const { isDesktop, width } = useResponsive();
-  const shownCards = useAppSelector(selectVisibleCards);
 
   const maxContentWidth = isDesktop ? 1200 : width;
 
@@ -67,7 +66,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
   useEffect(() => {
     if (rangeLimit === 0) {
-      dispatch(setRangeLimit(shownCards.length));
+      dispatch(setRangeLimit(filteredCards.length));
     }
   }, []);
 
@@ -96,7 +95,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
         <GroupProgress
           learnedCards={learnedCards}
-          shownCardsLength={shownCards.length}
+          shownCardsLength={filteredCards.length}
           progressPercentage={progressPercentage}
           isDesktop={isDesktop}
         />
@@ -109,11 +108,11 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           paddingHorizontal: isDesktop ? 32 : 0,
         }}
       >
-        <CardList groupId={groupId} />
+        <CardList shownCards={filteredCards} groupId={groupId} />
       </View>
 
       <GroupActions
-        hasCards={shownCards.length > 1}
+        hasCards={filteredCards.length > 1}
         isLoading={isLoading}
         onLearn={modalState.openModesModal}
         onAddCard={modalState.openAddModal}
@@ -122,7 +121,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       {filterState.showFilterModal && (
         <GroupFilters
           cardsLength={cards.length}
-          shownCards={shownCards}
+          shownCards={filteredCards}
           sort={filterState.sort}
           sortOrder={filterState.sortOrder}
           selectedStatus={filterState.selectedStatus}
@@ -137,8 +136,10 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
 
       <GroupModals
         groupId={groupId}
+        newSectionId={navigationHandlers.newSectionId}
+        setNewSectionId={navigationHandlers.setNewSectionId}
         group={group}
-        shownCards={cards}
+        shownCards={filteredCards}
         groupTitle={navigationHandlers.groupTitle}
         setGroupTitle={navigationHandlers.setGroupTitle}
         showModesModal={modalState.showModesModal}

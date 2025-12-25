@@ -6,22 +6,17 @@ import type { ICard } from '@/common/enums/types/card.type';
 import { useResponsive } from '@/hooks';
 import { useCardFlip, useLearnCards, useTypeMode } from '@/hooks/LearnCards';
 import { useAppSelector } from '@/hooks/redux.hooks';
-import { selectCard } from '@/redux/cardReducer/cardSlice';
 
 import { AnswerInput } from './components/AnswerInput.tsx/AnswerInput';
 import { CardSwiper } from './components/CardSwiper/CardSwiper';
 import { TypeModeToggle } from './components/TypeModeToggle/TypeModeToggle';
+import { LearnProps } from '@/common/enums/types/learnProps.type';
 
-interface LearnCardsProps {
-  onComplete: () => void;
-  setFlashCards: (card: ICard, isCorrect: boolean) => void;
-}
-
-const LearnCards: React.FC<LearnCardsProps> = ({
+const LearnCards: React.FC<LearnProps> = ({
+  learningCards: shownCards,
   onComplete,
-  setFlashCards,
+  handleSetData,
 }) => {
-  const cards = useAppSelector(selectCard);
   const swiperRef = useRef<Swiper<ICard>>(null);
 
   const { isMobile, isDesktop } = useResponsive();
@@ -30,12 +25,13 @@ const LearnCards: React.FC<LearnCardsProps> = ({
   const cardHeight = isMobile ? '70%' : '75%';
 
   const {
+    learnedWordsIdes,
     learningCards,
     currentCardIndex,
     isHorizontalSwipe,
     handleSwipeRight,
     handleSwipeLeft,
-  } = useLearnCards(cards, setFlashCards);
+  } = useLearnCards(shownCards, handleSetData);
 
   const {
     flippedCards,
@@ -58,7 +54,6 @@ const LearnCards: React.FC<LearnCardsProps> = ({
       currentCardIndex % 2 === 0 ? 'translateWord' : 'word'
     ];
   const backCardAnswerLength = backCardAnswer?.length || 0;
-  console.log(backCardAnswer);
 
   return (
     <View
@@ -68,7 +63,12 @@ const LearnCards: React.FC<LearnCardsProps> = ({
         alignItems: 'center',
       }}
     >
-      <TypeModeToggle typeMode={showTypeMode} onToggle={toggleTypeMode} />
+      <TypeModeToggle
+        typeMode={showTypeMode}
+        onToggle={toggleTypeMode}
+        index={learnedWordsIdes.length + 1}
+        length={shownCards.length}
+      />
 
       <CardSwiper
         ref={swiperRef}

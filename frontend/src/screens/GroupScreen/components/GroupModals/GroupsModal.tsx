@@ -1,7 +1,7 @@
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Checkbox from 'expo-checkbox';
-import { useState, useRef } from 'react';
+import { useRef, SetStateAction, Dispatch } from 'react';
 import { Platform, View, Text, Pressable } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -25,6 +25,8 @@ interface ShowModeLearning {
 
 interface GroupModalsProps {
   groupId: string;
+  newSectionId: string | undefined;
+  setNewSectionId: Dispatch<SetStateAction<string | undefined>>;
   group: IGroup;
   shownCards: ICard[];
   groupTitle: string;
@@ -47,6 +49,8 @@ interface GroupModalsProps {
 
 export const GroupModals: React.FC<GroupModalsProps> = ({
   groupId,
+  newSectionId,
+  setNewSectionId,
   shownCards,
   groupTitle,
   setGroupTitle,
@@ -75,7 +79,6 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
     (section) => section.id !== activeSectionId,
   );
 
-  const [newSectionId, setNewSectionId] = useState<string>();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const renderLearningModeItem = ({
@@ -100,14 +103,14 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
               size={30}
               color={colors.primary}
             />
-            <Text
+            <ThemeText
               style={{
                 fontSize: 20,
                 textDecorationLine: 'line-through',
               }}
             >
               {item.text}
-            </Text>
+            </ThemeText>
           </View>
           <ThemeText style={{ fontWeight: 'bold' }}>
             {i18n.t('group.cardList.atLeastFourWords')}
@@ -129,8 +132,8 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
           value={item.shown}
           onValueChange={() => onChangeLearningMode(index)}
         />
-        <MaterialIcons name={item.iconName} size={30} />
-        <Text style={{ fontSize: 20 }}>{item.text}</Text>
+        <MaterialIcons name={item.iconName} size={30} color={colors.primary} />
+        <ThemeText style={{ fontSize: 20 }}>{item.text}</ThemeText>
       </View>
     );
   };
@@ -260,7 +263,7 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
                     }}
                     onPress={() => setNewSectionId(item.id)}
                   >
-                    <ThemeText>{item.title}</ThemeText>
+                    <ThemeText>{item.title || item.Language?.title}</ThemeText>
                   </Pressable>
                 )}
               />

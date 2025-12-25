@@ -7,48 +7,43 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
-import type { ICard } from '@/common/enums/types/card.type';
-import { useAppSelector } from '@/hooks/redux.hooks';
-
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
-import { selectCard } from '../../../redux/cardReducer/cardSlice';
 
 import styles from './LearnCheck.styles';
+import { LearnProps } from '@/common/enums/types/learnProps.type';
 
-interface LearnCheckProps {
-  onComplete: () => void;
-  handleSetData: (card: ICard, isCorrect: boolean) => void;
-}
-
-const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
+const LearnCheck = ({
+  learningCards,
+  onComplete,
+  handleSetData,
+}: LearnProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const cards = useAppSelector(selectCard);
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    if (cards.length <= 4) {
+    if (learningCards.length <= 4) {
       onComplete();
     }
-  }, [cards.length, onComplete]);
+  }, [learningCards.length, onComplete]);
 
   const initialWords = useMemo(
     () =>
-      cards
+      learningCards
         .map((card) => card.word)
         .slice(0, 4)
         .sort(() => Math.random() - 0.5),
-    [cards],
+    [learningCards],
   );
   const initialAnswers = useMemo(
     () =>
-      cards
+      learningCards
         .map((card) => card.translateWord)
         .slice(0, 4)
         .sort(() => Math.random() - 0.5),
-    [cards],
+    [learningCards],
   );
 
   const [selectedWord, setSelectedWord] = useState<string | null>(null);
@@ -66,7 +61,7 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
   const newFadeAnim = useRef(new Animated.Value(1)).current;
 
   const getNewWord = () => {
-    const remainingWords = cards.filter(
+    const remainingWords = learningCards.filter(
       (card) => !answeredWords.includes(card.word),
     );
     if (remainingWords.length === 0) return null; // Avoid infinite loop
@@ -77,9 +72,11 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
   const checkSelectedWordCorrect = (translation: string) => {
     if (!selectedWord) return;
 
-    const currentCard = cards.find((card) => card.word === selectedWord);
+    const currentCard = learningCards.find(
+      (card) => card.word === selectedWord,
+    );
     if (currentCard) {
-      const correctTranslation = cards.find(
+      const correctTranslation = learningCards.find(
         (card) => card.word === selectedWord,
       )?.translateWord;
 
@@ -127,14 +124,16 @@ const LearnCheck = ({ onComplete, handleSetData }: LearnCheckProps) => {
   };
 
   useEffect(() => {
-    if (learnedWords.length === cards.length) {
+    if (learnedWords.length === learningCards.length) {
       onComplete();
     }
-  }, [learnedWords, cards.length, onComplete]);
+  }, [learnedWords, learningCards.length, onComplete]);
 
-  const isAllCardsLearned = answeredWords.length === cards.length;
+  const isAllCardsLearned = answeredWords.length === learningCards.length;
   const isTranslateDisappear = (item: string) => {
-    const word = cards.find((card) => card.translateWord === item)?.word;
+    const word = learningCards.find(
+      (card) => card.translateWord === item,
+    )?.word;
     return learnedWords.includes(word || '');
   };
 

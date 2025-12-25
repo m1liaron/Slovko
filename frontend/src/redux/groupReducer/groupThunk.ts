@@ -9,8 +9,10 @@ export const getAllGroups = createAppAsyncThunk(
   'group/getAll',
   async (sectionId: string) => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.get(`/groups/${sectionId}`);
-    return response.data;
+    if (sectionId) {
+      const response = await axiosInstance.get(`/groups/${sectionId}`);
+      return response.data;
+    }
   },
 );
 
@@ -72,6 +74,7 @@ export const moveGroupToAnotherSection = createAppAsyncThunk(
   'group/moveToSection',
   async ({ sectionId, groupId }: { sectionId: string; groupId: string }) => {
     const axiosInstance = await createAuthorizedInstance();
+    console.log(`Moving group: ${groupId}`);
     const response = await axiosInstance.put(`/groups/${groupId}`, {
       sectionId,
     });

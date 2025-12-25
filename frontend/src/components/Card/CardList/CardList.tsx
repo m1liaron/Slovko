@@ -22,6 +22,7 @@ import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
 import { selectVisibleCards } from '@/redux/cardReducer/cardSelector';
+import { ICard } from '@/common/enums/types/card.type';
 
 const MemoCardItem = memo(CardItem);
 
@@ -32,17 +33,17 @@ const MemoCardItem = memo(CardItem);
  */
 
 type CardListProps = {
+  shownCards: ICard[];
   groupId: string;
 };
 
-const CardList = ({ groupId }: CardListProps) => {
+const CardList = ({ shownCards, groupId }: CardListProps) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const {
     theme: { colors },
   } = useAppTheme();
   const { group } = useAppSelector((state) => state.groups);
-  const { cards } = useAppSelector((state) => state.cards);
   const { isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
 
@@ -56,7 +57,7 @@ const CardList = ({ groupId }: CardListProps) => {
         <ActivityIndicator color={colors.primary} />
       ) : (
         <FlatList
-          data={cards}
+          data={shownCards}
           renderItem={({ item }) => (
             <MemoCardItem
               key={item.id}

@@ -57,7 +57,7 @@ const updateUserStreak = createAppAsyncThunk(
   'user/updateUserStreak',
   async () => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.patch('/users/streak');
+    const response = await axiosInstance.post('/users/streak');
     return response.data;
   },
 );

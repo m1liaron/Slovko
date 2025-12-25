@@ -42,7 +42,6 @@ import {
 
 import styles from './MainScreen.styles';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const MainScreen = () => {
   useLanguage();

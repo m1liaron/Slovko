@@ -19,6 +19,7 @@ export const useTypeMode = (
   const [showTypeMode, setShowTypeMode] = useState(true);
   const [valueAnswer, setValueAnswer] = useState('');
   const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
+  const [isTranslateShow, setIsTranslateShow] = useState(false);
 
   const checkTimerRef = useRef<NodeJS.Timeout>();
   const resetTimerRef = useRef<NodeJS.Timeout>();
@@ -59,7 +60,10 @@ export const useTypeMode = (
 
     checkTimerRef.current = setTimeout(() => {
       const correctAnswer =
-        currentCard[showTypeMode ? 'word' : 'translateWord'];
+        currentCard[isTranslateShow ? 'word' : 'translateWord'];
+      console.log(
+        `Correct answer: ${correctAnswer}, valueAnswer: ${valueAnswer.trim().toLowerCase()}`,
+      );
       const isCorrect =
         valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
 
@@ -74,6 +78,7 @@ export const useTypeMode = (
       setValueAnswer('');
     }, 1000);
 
+    setIsTranslateShow((prev) => !prev);
     resetTimerRef.current = setTimeout(() => {
       setPlaceholderColor(colors.primary);
     }, 1100);

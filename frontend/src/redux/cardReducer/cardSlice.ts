@@ -118,6 +118,8 @@ const cardSlice = createSlice({
       state.globalCards.push(...data);
       state.cards.push(...data);
       state.rangeLimit = data.length;
+      state.filteredCards = applyTransformation(state);
+      state.rangeLimit = state.filteredCards.length;
     },
     getStateCards: (state, action) => {
       const { groupId } = action.payload;
@@ -144,18 +146,26 @@ const cardSlice = createSlice({
       };
       state.globalCards.push(newCardData);
       state.cards.push(newCardData);
+      state.filteredCards = applyTransformation(state);
+      state.rangeLimit = state.filteredCards.length;
     },
-    updateStateCard: (state, action) =>
-      handleUpdateState(state, action, 'cards'),
+    updateStateCard: (state, action) => {
+      state.filteredCards = applyTransformation(state);
+      handleUpdateState(state, action, 'cards');
+    },
     removeStateCard: (state, action) => {
       const id = action.payload;
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
+      state.filteredCards = applyTransformation(state);
+      state.rangeLimit = state.filteredCards.length;
     },
     setRangeLimit: (state, action) => {
       state.rangeLimit = action.payload;
     },
     rangeCards: (state, action) => {
       state.rangeLimit = Math.floor(action.payload);
+      state.filteredCards = applyTransformation(state);
+      state.rangeLimit = state.filteredCards.length;
       state.isLoading = false;
     },
     sortCards: (
@@ -168,13 +178,17 @@ const cardSlice = createSlice({
       state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
       state.sortValue = sort;
 
+      state.filteredCards = applyTransformation(state);
       state.isLoading = false;
     },
     toggleCardsSortOrder: (state) => {
       state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
+      state.filteredCards = applyTransformation(state);
     },
     filterCardsByStatus: (state, action) => {
       state.filterValue = action.payload.status;
+      state.filteredCards = applyTransformation(state);
+      state.rangeLimit = state.filteredCards.length;
     },
     resetFilter: (state) => {
       state.filterValue = '';
@@ -182,6 +196,7 @@ const cardSlice = createSlice({
       state.sortValue = 'word';
       state.rangeLimit = state.cards.length;
 
+      state.filteredCards = applyTransformation(state);
       state.isLoading = false;
     },
     addLearningMode: (
@@ -202,6 +217,7 @@ const cardSlice = createSlice({
         state.globalCards = fresh;
         state.cards = fresh;
         state.filteredCards = applyTransformation(state);
+        state.rangeLimit = state.filteredCards.length;
       })
       .addCase(getCards.pending, (state) => {
         state.isLoading = true;
@@ -214,6 +230,7 @@ const cardSlice = createSlice({
           );
           state.cards = groupCards;
           state.filteredCards = applyTransformation(state);
+          state.rangeLimit = state.filteredCards.length;
         }
       })
       .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
@@ -223,18 +240,22 @@ const cardSlice = createSlice({
         state.globalCards.push(action.payload.card);
         state.cards.push(action.payload.card);
         state.filteredCards = applyTransformation(state);
+        state.rangeLimit = state.filteredCards.length;
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
         if (action.payload.cards.length > 0) {
           state.globalCards.push(...action.payload.cards);
           state.cards.push(...action.payload.cards);
           state.filteredCards = applyTransformation(state);
+          state.rangeLimit = state.filteredCards.length;
         }
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
         state.globalCards.filter((card) => card.id !== action.payload);
         state.cards.filter((card) => card.id !== action.payload);
+        state.filteredCards = applyTransformation(state);
+        state.rangeLimit = state.filteredCards.length;
       })
       // update card
       .addCase(updateCard.fulfilled, (state, action) => {
@@ -254,6 +275,7 @@ const cardSlice = createSlice({
       // get repeated cards
       .addCase(getRepeatedCardsFromIds.fulfilled, (state, action) => {
         state.cards = action.payload;
+        state.filteredCards = action.payload;
       })
 
       .addMatcher(isPending, (state) => {
