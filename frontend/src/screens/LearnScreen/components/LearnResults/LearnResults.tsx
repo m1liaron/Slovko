@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { i18n } from '@/localization/i18n';
+import { ICard } from '@/common/enums/types/card.type';
 
 interface LearnResultsProps {
   elapsedTime: string;

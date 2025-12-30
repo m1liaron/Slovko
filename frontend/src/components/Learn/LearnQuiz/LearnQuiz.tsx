@@ -10,19 +10,18 @@ import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
 
 import styles from './LearnQuiz.styles';
+import { LearnProps } from '@/common/enums/types/learnProps.type';
 
 type QuizOption = {
   text: string;
   isCorrect: boolean;
 };
 
-interface LearnQuizProps {
-  onComplete: () => void;
-  handleSetData: (card: ICard, isCorrect: boolean) => void;
-}
-
-const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
-  const cards = useAppSelector(selectCard);
+const LearnQuiz = ({
+  learningCards,
+  onComplete,
+  handleSetData,
+}: LearnProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
@@ -31,7 +30,8 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
   const [quizOptions, setQuizOptions] = useState<QuizOption[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<QuizOption | null>(null);
-  const currentCard = cards[displayedQuizIndex];
+  const [isSoundPlayed, setIsSoundPlayed] = useState(false);
+  const currentCard = learningCards[displayedQuizIndex];
 
   useEffect(() => {
     generateQuizOption();
@@ -49,7 +49,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
   };
 
   const getIncorrectOptions = () => {
-    return cards
+    return learningCards
       .filter((item, index) => index !== displayedQuizIndex)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
@@ -61,7 +61,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
   };
 
   const moveToNextCard = () => {
-    if (displayedQuizIndex < cards.length - 1) {
+    if (displayedQuizIndex < learningCards.length - 1) {
       setTimeout(() => {
         setDisplayedQuizIndex(displayedQuizIndex + 1);
         setIsCorrect(null);
@@ -76,8 +76,12 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
     if (option.isCorrect) {
       await playSuccessSound();
       setIsCorrect(true);
-      moveToNextCard();
-      handleSetData(currentCard, true);
+
+      setTimeout(() => {
+        moveToNextCard();
+        handleSetData(currentCard, true);
+        setIsSoundPlayed(false);
+      }, 1000);
     } else {
       setIsCorrect(false);
       handleSetData(currentCard, false);
@@ -90,6 +94,8 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
 
   const playSuccessSound = async () => {
     try {
+      if (isSoundPlayed) return;
+      setIsSoundPlayed(true);
       const { sound } = await Audio.Sound.createAsync(
         require('../../../assets/audio/success.mp3'),
         { positionMillis: 0 },
@@ -100,12 +106,15 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
       await sound.playAsync();
     } catch (error) {
       console.error('Error playing sound', error);
-    } 
+    }
   };
 
   return (
     <>
-      <ProgressContainer index={displayedQuizIndex} length={cards.length} />
+      <ProgressContainer
+        index={displayedQuizIndex}
+        length={learningCards.length}
+      />
       <View style={styles.card}>
         <Text
           style={[
@@ -127,9 +136,7 @@ const LearnQuiz = ({ onComplete, handleSetData }: LearnQuizProps) => {
                   selectedOption === item
                     ? isCorrect === true
                       ? '#81DC9F'
-                      : isCorrect === false
-                        ? '#FC8277'
-                        : colors.lightText
+                      : '#FC8277'
                     : colors.lightBackground,
               },
             ]}

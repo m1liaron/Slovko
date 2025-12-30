@@ -11,6 +11,11 @@ import { Select } from '@/common/components/Select/Select';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { i18n } from '@/localization/i18n';
+import { CardFields } from '@/common/enums/app/CardFields';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { useResponsive } from '@/hooks';
+import { sortCards, toggleCardsSortOrder } from '@/redux/cardReducer/cardSlice';
+import { ICard } from '@/common/enums/types/card.type';
 
 interface StatusButton {
   title: string;
@@ -21,10 +26,8 @@ interface StatusButton {
 }
 
 interface GroupFiltersProps {
-  isDesktop: boolean;
-  wordsRangeNumber: number;
-  filteredCardsLength: number;
   cardsLength: number;
+  shownCards: ICard[];
   sort: string;
   sortOrder: 'asc' | 'desc';
   selectedStatus: string | null;
@@ -32,32 +35,29 @@ interface GroupFiltersProps {
   onChangeCardsRange: (value: number) => void;
   onDecrement: () => void;
   onIncrement: () => void;
-  onSortChange: (value: string) => void;
-  onSortOrderChange: (value: 'asc' | 'desc') => void;
   onStatusFilter: (status: string) => void;
   onResetFilters: () => void;
 }
 
 export const GroupFilters: React.FC<GroupFiltersProps> = ({
-  isDesktop,
-  wordsRangeNumber,
-  filteredCardsLength,
-  cardsLength,
   sort,
   sortOrder,
   selectedStatus,
   statusButtons,
+  cardsLength,
+  shownCards,
   onChangeCardsRange,
   onDecrement,
   onIncrement,
-  onSortChange,
-  onSortOrderChange,
   onStatusFilter,
   onResetFilters,
 }) => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { isDesktop } = useResponsive();
+  const { rangeLimit } = useAppSelector((state) => state.cards);
+  const dispatch = useAppDispatch();
 
   return (
     <View
@@ -117,14 +117,14 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
             </Pressable>
             <View style={{ flex: 1, alignItems: 'center' }}>
               <ThemeText style={{ fontSize: 24, fontWeight: 'bold' }}>
-                {Math.floor(wordsRangeNumber)}/{filteredCardsLength}
+                {Math.floor(rangeLimit)}/{cardsLength}
               </ThemeText>
               <Slider
                 style={{ width: '100%', height: 40 }}
-                disabled={filteredCardsLength === 0}
-                maximumValue={filteredCardsLength}
+                disabled={cardsLength === 0}
+                maximumValue={cardsLength}
                 minimumValue={2}
-                value={wordsRangeNumber}
+                value={rangeLimit}
                 onSlidingComplete={onChangeCardsRange}
                 minimumTrackTintColor={colors.primary}
                 maximumTrackTintColor={colors.lightBackground}
@@ -144,23 +144,36 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
         </View>
 
         {/* Sort by dropdown */}
-        <View>
+        <View style={{ zIndex: 1 }}>
           <ThemeText style={{ fontSize: 14, marginBottom: 12, opacity: 0.7 }}>
             Sort by
           </ThemeText>
           <Select
             placeholder="Default order"
             data={[
-              i18n.t('group.sortByDate'),
-              i18n.t('group.sortByName'),
-              i18n.t('group.sortByReviewDate'),
+              {
+                item: i18n.t('group.sortByDate'),
+                value: CardFields.createdAt,
+              },
+              {
+                item: i18n.t('group.sortByName'),
+                value: CardFields.word,
+              },
+              {
+                item: i18n.t('group.sortByReviewDate'),
+                value: CardFields.nextReviewAt,
+              },
+              {
+                item: i18n.t('group.sortByReviewCount'),
+                value: CardFields.reviewCount,
+              },
             ]}
-            customStyle={{ width: '100%' }}
-            currentSelect={sort}
-            setCurrentSelect={onSortChange}
-            showSortIcon={true}
-            setSortOrder={onSortOrderChange}
             sortOrder={sortOrder}
+            toggleOrder={() => dispatch(toggleCardsSortOrder())}
+            activeItem={sort}
+            customStyle={{ width: '100%' }}
+            setCurrentSelect={(value) => dispatch(sortCards({ sort: value }))}
+            showSortIcon={true}
           />
         </View>
 
@@ -204,10 +217,10 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
 
       <View style={{ marginTop: 20, gap: 12 }}>
         <ThemeText style={{ fontSize: 14, opacity: 0.6 }}>
-          Showing {cardsLength} of {filteredCardsLength} words
+          Showing {shownCards.length} of {cardsLength} words
         </ThemeText>
 
-        {filteredCardsLength < cardsLength && (
+        {shownCards.length < cardsLength && (
           <Pressable
             onPress={onResetFilters}
             style={{

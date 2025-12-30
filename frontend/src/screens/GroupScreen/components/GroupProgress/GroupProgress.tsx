@@ -6,14 +6,14 @@ import { i18n } from '@/localization/i18n';
 
 interface GroupProgressProps {
   learnedCards: number;
-  filteredCardsLength: number;
+  shownCardsLength: number;
   progressPercentage: number;
   isDesktop: boolean;
 }
 
 export const GroupProgress: React.FC<GroupProgressProps> = ({
   learnedCards,
-  filteredCardsLength,
+  shownCardsLength,
   progressPercentage,
   isDesktop,
 }) => {
@@ -48,7 +48,7 @@ export const GroupProgress: React.FC<GroupProgressProps> = ({
         </ThemeText>
         <ThemeText style={{ fontSize: 16 }}>
           {learnedCards > 0
-            ? `${learnedCards}/${filteredCardsLength}`
+            ? `${learnedCards}/${shownCardsLength}`
             : i18n.t('group.noCardsLearned')}{' '}
           {i18n.t('group.learned')}
         </ThemeText>

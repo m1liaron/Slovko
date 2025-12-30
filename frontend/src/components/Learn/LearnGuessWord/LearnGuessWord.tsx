@@ -11,21 +11,20 @@ import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
 
 import styles from './LearnGuessWord.styles';
+import { LearnProps } from '@/common/enums/types/learnProps.type';
 
 interface LetterColors {
   [key: number]: string;
 }
 
-interface LearnGuessWordProps {
-  onComplete: () => void;
-  handleSetData: (card: ICard, isCorrect: boolean) => void;
-}
-
-const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
+const LearnGuessWord = ({
+  learningCards,
+  onComplete,
+  handleSetData,
+}: LearnProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const cards = useAppSelector(selectCard);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [currentGuess, setCurrentGuess] = useState<string[]>([]);
   const [scrambledWord, setScrambledWord] = useState<string[]>([]);
@@ -33,7 +32,7 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
   const [_inCorrectLetter, setInCorrectLetter] = useState<string | null>(null);
   const [showTranslate, setShowTranslate] = useState<boolean>(false);
   const [_correctAnswers, setCorrectAnswers] = useState<boolean[]>([]);
-  const currentCard = cards[currentIndex];
+  const currentCard = learningCards[currentIndex];
   const currentWord: string = currentCard?.word;
 
   useEffect(() => {
@@ -108,14 +107,20 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
 
   useEffect(() => {
     if (currentGuess.join('') === currentWord) {
-      if (currentIndex < cards.length - 1) {
+      if (currentIndex < learningCards.length - 1) {
         setCurrentIndex(currentIndex + 1);
         resetGameState();
       } else {
         onComplete();
       }
     }
-  }, [currentGuess, currentWord, currentIndex, onComplete, cards.length]);
+  }, [
+    currentGuess,
+    currentWord,
+    currentIndex,
+    onComplete,
+    learningCards.length,
+  ]);
 
   const resetGameState = () => {
     setCurrentGuess([]);
@@ -170,7 +175,7 @@ const LearnGuessWord = ({ onComplete, handleSetData }: LearnGuessWordProps) => {
   }
   return (
     <>
-      <ProgressContainer index={currentIndex} length={cards.length} />
+      <ProgressContainer index={currentIndex} length={learningCards.length} />
       <Text style={{ fontSize: 50, fontWeight: 'bold', color: colors.primary }}>
         {currentGuess.join(' ')}
       </Text>

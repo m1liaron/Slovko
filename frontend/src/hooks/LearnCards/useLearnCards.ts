@@ -6,6 +6,7 @@ const useLearnCards = (
   initialCards: ICard[],
   setFlashCards: (card: ICard, isCorrect: boolean) => void,
 ) => {
+  const [learnedWordsIdes, setLearnedWordsIdes] = useState<number[]>([]);
   const [learningCards, setLearningCards] = useState<ICard[]>([
     ...initialCards,
   ]);
@@ -26,6 +27,9 @@ const useLearnCards = (
     incrementCardIndex();
     setFlashCards(learningCards[currentCardIndex], true);
     setIsTranslateShow((prev) => !prev);
+    if (!learnedWordsIdes.includes(currentCardIndex)) {
+      setLearnedWordsIdes((prev) => [...prev, currentCardIndex]);
+    }
   }, [currentCardIndex, learningCards, setFlashCards, incrementCardIndex]);
 
   const handleSwipeLeft = useCallback(
@@ -44,6 +48,7 @@ const useLearnCards = (
   );
 
   return {
+    learnedWordsIdes,
     learningCards,
     currentCardIndex,
     isHorizontalSwipe,

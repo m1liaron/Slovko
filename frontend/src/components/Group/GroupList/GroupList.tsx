@@ -26,7 +26,8 @@ import DefaultModal from '../../DefaultModal/DefaultModal';
 import { GroupItem } from '../GroupItem/GroupItem';
 
 export const GroupList = () => {
-  const { groups, isLoading } = useAppSelector((state) => state.groups);
+  const { groups } = useAppSelector((state) => state.groups);
+  const { isLoading } = useAppSelector((state) => state.groups);
   const { activeSectionId, sections } = useAppSelector(
     (state) => state.sections,
   );

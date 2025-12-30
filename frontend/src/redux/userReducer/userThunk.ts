@@ -38,7 +38,7 @@ const register = createAuthAppAsyncThunk(
   },
 );
 
-const getUser = createAppAsyncThunk('user/get', async () => {
+const getUser = createAuthAppAsyncThunk('user/get', async () => {
   const axiosInstance = await createAuthorizedInstance();
   const response = await axiosInstance.get('/users');
   return response.data.user;
@@ -57,7 +57,7 @@ const updateUserStreak = createAppAsyncThunk(
   'user/updateUserStreak',
   async () => {
     const axiosInstance = await createAuthorizedInstance();
-    const response = await axiosInstance.patch('/users/streak');
+    const response = await axiosInstance.post('/users/streak');
     return response.data;
   },
 );
