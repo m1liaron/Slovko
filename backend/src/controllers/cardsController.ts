@@ -1,9 +1,13 @@
+import { eq } from "drizzle-orm";
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
 import { unsplash } from "../api/unsplash.js";
 import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
+import { db } from "../db/index.js";
+import { headwords } from "../db/schema/headwords.js";
+import { senses } from "../db/schema/senses.js";
 import {
   calculateNextReviewDate,
   getDictionaryData,
@@ -151,7 +155,14 @@ const updateCardsAfterReview = async (req: Request, res: Response) => {
 };
 
 const addCard = async (req: Request, res: Response) => {
-  const { imageUri, word, translateWord, groupId } = req.body;
+  const {
+    imageUri,
+    word,
+    translateWord,
+    groupId,
+    example: customExample,
+    definition: customDefinition,
+  } = req.body;
   try {
     const findCard = await Card.findOne({
       where: {
@@ -167,16 +178,33 @@ const addCard = async (req: Request, res: Response) => {
         .send({ error: true, message: "Картка з цим словом вже існує" });
     }
 
-    let definition = "";
-    let example = "";
+    const headwordResult = await db
+      .select()
+      .from(headwords)
+      .where(eq(headwords.word, word))
+      .limit(1);
 
-    try {
-      const dictionaryData = await getDictionaryData(word);
-      definition = dictionaryData.definition || "";
-      example = dictionaryData.example || "";
-    } catch (dictionaryError) {
-      if (dictionaryError instanceof Error) {
-        console.warn("Dictionary fetch failed:", dictionaryError.message);
+    const headword = headwordResult[0];
+
+    const senseResult = await db
+      .select()
+      .from(senses)
+      .where(eq(senses.headwordId, headword.id))
+      .limit(1);
+    const sense = senseResult[0];
+
+    let definition = customExample;
+    let example = customDefinition;
+
+    if (definition.length === 0 || example.length === 0) {
+      try {
+        const dictionaryData = await getDictionaryData(word);
+        definition = dictionaryData.definition || "";
+        example = dictionaryData.example || "";
+      } catch (dictionaryError) {
+        if (dictionaryError instanceof Error) {
+          console.warn("Dictionary fetch failed:", dictionaryError.message);
+        }
       }
     }
 
@@ -218,6 +246,7 @@ const addCard = async (req: Request, res: Response) => {
       groupId,
       definition,
       example,
+      senseId: sense.id,
     });
 
     const card = await Card.findOne({
