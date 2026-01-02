@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 
 import { Client } from "pg";
 
-import { EnvVariables } from "../../common/enums/envVariables.js";
+import { EnvVariables } from "../../common/enums/envVariables";
 
 type Phrase = {
   phrase: string;
@@ -53,8 +53,8 @@ const client = new Client({
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// const filePath = "D:\\Programming\\projects\\Slovko\\backend\\src\\db\\data\\words.json";
-const filePath = path.normalize(path.join(__dirname, "../data/words.json"));
+// const filePath = "D:\\Programming\\projects\\Slovko\\backend\\src\\db\\data\\wordson";
+const filePath = path.normalize(path.join(__dirname, "../data/wordson"));
 
 const languagesData: LanguageData[] = [{ code: "en", name: "English" }];
 async function insertWord(entry: Entry) {

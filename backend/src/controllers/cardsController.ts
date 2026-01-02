@@ -5,9 +5,9 @@ import { Op } from "sequelize";
 
 import { unsplash } from "../api/unsplash.js";
 import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
-import { db } from "../db/index.js";
-import { headwords } from "../db/schema/headwords.js";
-import { senses } from "../db/schema/senses.js";
+import { db } from "../drizzle/index.js";
+import { headwords } from "../drizzle/schema/headwords.js";
+import { senses } from "../drizzle/schema/senses.js";
 import {
   calculateNextReviewDate,
   getDictionaryData,

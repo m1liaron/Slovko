@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 const words = JSON.parse(
-  fs.readFileSync("../backend/src/db/data/words.json", "utf-8"),
+  fs.readFileSync("../backend/src/db/data/wordson", "utf-8"),
 );
 
 // Create folder for seeds if not exists

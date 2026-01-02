@@ -1,7 +1,7 @@
 import { serial, integer, text } from "drizzle-orm/pg-core";
 import { pgTable } from "drizzle-orm/pg-core";
 
-import { senses } from "./senses.js";
+import { senses } from "./senses";
 
 export const antonyms = pgTable("antonyms", {
   id: serial("id").primaryKey(),

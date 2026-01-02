@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import { senses } from "../db/schema/senses.js";
 import { sequelize } from "../db/sequelize.js";
+import { senses } from "../drizzle/schema/senses.js";
 
 import type { BaseAttributes, BaseCreationAttributes } from "./CustomModel.js";
 import { CustomModal } from "./CustomModel.js";

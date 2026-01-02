@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 
 const dbFolder = "../backend/src/db/data";
 const OLLAMA_URL = "http://localhost:11434/api/generate";
-const OUTPUT_FILE = `${dbFolder}/words.json`;
+const OUTPUT_FILE = `${dbFolder}/wordson`;
 const INPUT_FILE_WORDS = `${dbFolder}/oxford-3000.csv`;
 
 async function ask(question: string) {

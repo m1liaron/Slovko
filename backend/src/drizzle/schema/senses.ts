@@ -1,7 +1,7 @@
 import { serial, integer, text } from "drizzle-orm/pg-core";
 import { pgTable } from "drizzle-orm/pg-core";
 
-import { headwords } from "./headwords.js";
+import { headwords } from "./headwords";
 
 export const senses = pgTable("senses", {
   id: serial("id").primaryKey(),

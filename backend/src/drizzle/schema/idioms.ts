@@ -1,6 +1,6 @@
 import { pgTable, serial, integer, text } from "drizzle-orm/pg-core";
 
-import { senses } from "./senses.js";
+import { senses } from "./senses";
 
 export const idioms = pgTable("idioms", {
   id: serial("id").primaryKey(),
