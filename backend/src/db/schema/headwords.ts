@@ -1,7 +1,7 @@
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
-import { languages } from "./languages";
-import { partOfSpeechEnum } from "./part_of_speech";
+import { languages } from "./languages.js";
+import { partOfSpeechEnum } from "./part_of_speech.js";
 
 export const headwords = pgTable("headwords", {
   id: serial("id").primaryKey(),
@@ -10,5 +10,5 @@ export const headwords = pgTable("headwords", {
     .notNull(),
   word: text("word").notNull(),
   pos: partOfSpeechEnum("pos").notNull(),
-  level: text("level").notNull()
+  level: text("level").notNull(),
 });

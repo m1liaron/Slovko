@@ -1,6 +1,6 @@
 import { pgTable, serial, integer, text } from "drizzle-orm/pg-core";
 
-import { senses } from "./senses";
+import { senses } from "./senses.js";
 
 export const examples = pgTable("examples", {
   id: serial("id").primaryKey(),
@@ -10,5 +10,5 @@ export const examples = pgTable("examples", {
     .notNull(),
 
   sentence: text("sentence").notNull(),
-  definition: text("definition").notNull()
+  definition: text("definition").notNull(),
 });
