@@ -7,12 +7,14 @@ import { i18n } from '@/localization/i18n';
 
 interface GroupActionsProps {
   hasCards: boolean;
+  isLoading: boolean;
   onLearn: () => void;
   onAddCard: () => void;
 }
 
 const GroupActions: React.FC<GroupActionsProps> = ({
   hasCards,
+  isLoading,
   onLearn,
   onAddCard,
 }) => {
@@ -27,7 +29,7 @@ const GroupActions: React.FC<GroupActionsProps> = ({
         padding: 20,
       }}
     >
-      {hasCards && (
+      {hasCards && !isLoading && (
         <PressableButton
           onPress={onLearn}
           text={i18n.t('group.cardList.learnButton')}

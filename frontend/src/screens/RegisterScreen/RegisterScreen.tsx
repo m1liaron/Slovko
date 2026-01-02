@@ -101,7 +101,6 @@ const RegisterScreen = () => {
 
   return (
     <ThemeBackground>
-      <Toast />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}

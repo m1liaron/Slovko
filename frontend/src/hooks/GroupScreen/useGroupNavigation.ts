@@ -12,6 +12,7 @@ import {
   updateStateGroup,
   removeGroup,
   removeStateGroup,
+  moveStateGroupToAnotherSection,
 } from '@/redux/groupReducer/groupSlice';
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
 import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
@@ -63,9 +64,15 @@ const useGroupNavigation = (
       Alert.alert('Please select section to move group');
       return;
     }
-    dispatch(moveGroupToAnotherSection({ groupId, sectionId: newSectionId }));
+    dispatch(
+      enqueueOrDispatch(
+        moveGroupToAnotherSection,
+        moveStateGroupToAnotherSection,
+        { groupId, sectionId: newSectionId },
+      ),
+    );
     dispatch(setActiveSectionId(null));
-    navigation.navigate(AppPath.Home);
+    navigation.navigate(AppPath.Main);
   }, [newSectionId, groupId, dispatch, navigation]);
 
   const navigateToLearn = useCallback(

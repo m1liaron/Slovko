@@ -24,6 +24,9 @@ export const useLearnScreen = (groupId?: string) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
+  const { filteredCards: learningCards } = useAppSelector(
+    (state) => state.cards,
+  );
   const groups = useAppSelector(selectGroup);
   const { repeatedCards, cards, status, shownModes } = useAppSelector(
     (state) => state.cards,
@@ -170,6 +173,7 @@ export const useLearnScreen = (groupId?: string) => {
   }, [navigation]);
 
   return {
+    learningCards,
     status,
     currentSection,
     isLessonOver,

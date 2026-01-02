@@ -11,7 +11,7 @@ import {
   persistStore,
 } from 'redux-persist';
 
-import { cardReducers } from './cardReducer/cardSlice';
+import { cardReducer } from './cardReducer/cardSlice';
 import { groupReducers } from './groupReducer/groupSlice';
 import { languageReducers } from './languageReducer/languageSlice';
 import { networkReducer } from './networkReducer/networkSlice';
@@ -28,7 +28,7 @@ const appReducer = combineReducers({
   sections: sectionReducers,
   groups: groupReducers,
   sharedGroups: sharedGroupReducers,
-  cards: cardReducers,
+  cards: cardReducer,
   results: resultReducers,
   network: networkReducer,
   offlineQueue: offlineQueueReducer,

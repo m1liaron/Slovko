@@ -10,27 +10,32 @@ import ThemeText from '../ThemeText/ThemeText';
 
 import styles from './Select.styles';
 
-interface SelectProps {
-  placeholder?: string;
-  data: string[];
-  customStyle?: ViewStyle;
-  currentSelect: string;
-  setCurrentSelect: (item: string) => void;
-  showSortIcon?: boolean;
-  sortOrder?: 'asc' | 'desc';
-  setSortOrder?: (order: 'asc' | 'desc') => void;
+interface SelectData<T> {
+  item: string;
+  value: T;
 }
 
-const Select: React.FC<SelectProps> = ({
+interface SelectProps<T> {
+  placeholder?: string;
+  activeItem: string;
+  data: SelectData<T>[];
+  customStyle?: ViewStyle;
+  setCurrentSelect: (item: T) => void;
+  showSortIcon?: boolean;
+  sortOrder?: 'asc' | 'desc';
+  toggleOrder?: () => void;
+}
+
+const Select = <T,>({
   placeholder,
   data,
+  activeItem,
   customStyle,
-  currentSelect,
   setCurrentSelect,
   showSortIcon,
+  toggleOrder,
   sortOrder,
-  setSortOrder,
-}) => {
+}: SelectProps<T>) => {
   const {
     theme: { colors },
   } = useAppTheme();
@@ -52,7 +57,7 @@ const Select: React.FC<SelectProps> = ({
           ]}
           onPress={() => setShowSelect((prev) => !prev)}
         >
-          <ThemeText>{placeholder || data[0]}</ThemeText>
+          <ThemeText>{placeholder || data[0].item}</ThemeText>
           <Feather
             name={showSelect ? 'arrow-down' : 'arrow-up'}
             size={25}
@@ -60,10 +65,8 @@ const Select: React.FC<SelectProps> = ({
           />
         </Pressable>
 
-        {showSortIcon && typeof setSortOrder === 'function' && (
-          <Pressable
-            onPress={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-          >
+        {showSortIcon && (
+          <Pressable onPress={toggleOrder}>
             <Feather
               name={sortOrder === 'asc' ? 'arrow-down' : 'arrow-up'}
               size={25}
@@ -74,7 +77,9 @@ const Select: React.FC<SelectProps> = ({
       </View>
 
       {showSelect && (
-        <View style={{ position: 'absolute', top: 50, zIndex: 10 }}>
+        <View
+          style={{ position: 'absolute', top: 50, zIndex: 10, width: '100%' }}
+        >
           <FlatList
             data={data}
             renderItem={({ item }) => (
@@ -83,15 +88,15 @@ const Select: React.FC<SelectProps> = ({
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}
-                onPress={() => setCurrentSelect(item)}
+                onPress={() => setCurrentSelect(item.value)}
               >
-                <Text style={{ color: colors.lightText }}>{item}</Text>
-                {currentSelect === item && (
+                <Text style={{ color: colors.lightText }}>{item.item}</Text>
+                {activeItem === item.value && (
                   <Entypo name="check" size={15} color={colors.lightText} />
                 )}
               </Pressable>
             )}
-            keyExtractor={(item) => item}
+            keyExtractor={(item) => item.item}
             contentContainerStyle={[
               styles.selectModal,
               { backgroundColor: colors.lightBackground },

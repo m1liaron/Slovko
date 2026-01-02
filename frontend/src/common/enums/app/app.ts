@@ -2,3 +2,4 @@ export { AppPath, TypeAppPath } from './AppPath';
 export { lightTheme, darkTheme } from './themes';
 export { DataStatus, type IDataStatus } from './DataStatus';
 export { AsyncStorageVariables } from './asyncStorageVariables';
+export { CardFields } from './CardFields';

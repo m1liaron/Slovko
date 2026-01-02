@@ -7,11 +7,15 @@ import { i18n } from '@/localization/i18n';
 interface TypeModeToggleProps {
   typeMode: boolean;
   onToggle: (value: boolean) => void;
+  index: number;
+  length: number;
 }
 
 export const TypeModeToggle: React.FC<TypeModeToggleProps> = ({
   typeMode,
   onToggle,
+  index,
+  length,
 }) => {
   return (
     <View
@@ -27,6 +31,9 @@ export const TypeModeToggle: React.FC<TypeModeToggleProps> = ({
     >
       <Checkbox value={typeMode} onValueChange={onToggle} />
       <ThemeText>{i18n.t('learnScreen.learnCards.answer')}</ThemeText>
+      <ThemeText>
+        {index}/{length}
+      </ThemeText>
     </View>
   );
 };

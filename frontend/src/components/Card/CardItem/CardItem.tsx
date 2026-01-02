@@ -19,7 +19,10 @@ import { pickImage } from '@/utils';
 import AddInput from '../../../common/components/AddInput/AddInput';
 import PressableButton from '../../../common/components/PressableButton/PressableButton';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
-import { updateCard } from '../../../redux/cardReducer/cardSlice';
+import {
+  updateCard,
+  updateStateCard,
+} from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 
 import styles from './Card.styles';
@@ -59,7 +62,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
 
   const handleUpdateCard = () => {
     dispatch(
-      enqueueOrDispatch(updateCard, {
+      enqueueOrDispatch(updateCard, updateStateCard, {
         id: item.id,
         word: title,
         translateWord: translate,
@@ -87,7 +90,7 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
       ? screenWidth * 0.95
       : screenWidth < 640
         ? screenWidth * 0.88
-        : screenWidth < 780
+        : screenWidth < 880
           ? screenWidth * 0.75
           : Platform.OS === 'web'
             ? screenWidth * 0.5

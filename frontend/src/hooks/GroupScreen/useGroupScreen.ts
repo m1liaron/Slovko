@@ -13,9 +13,7 @@ const useGroupScreen = (groupId: string) => {
   const navigation = useNavigation<StackNavigation>();
 
   const { group, status, groups } = useAppSelector((state) => state.groups);
-  const { cards, filteredCards, isLoading } = useAppSelector(
-    (state) => state.cards,
-  );
+  const { cards, isLoading } = useAppSelector((state) => state.cards);
 
   useEffect(() => {
     if (!groupId && status === DataStatus.ERROR) {
@@ -38,7 +36,6 @@ const useGroupScreen = (groupId: string) => {
     group,
     groups,
     cards,
-    filteredCards,
     isLoading,
     totalCards,
     learnedCards,

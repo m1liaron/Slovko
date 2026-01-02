@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { memo, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,13 +8,12 @@ import {
 
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
 
-import { AppPath } from '../../../common/enums/app/app';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   getCards,
+  getStateCards,
   rangeCards,
   removeCard,
   removeStateCard,
@@ -23,7 +21,8 @@ import {
 import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
-
+import { selectVisibleCards } from '@/redux/cardReducer/cardSelector';
+import { ICard } from '@/common/enums/types/card.type';
 
 const MemoCardItem = memo(CardItem);
 
@@ -34,38 +33,23 @@ const MemoCardItem = memo(CardItem);
  */
 
 type CardListProps = {
+  shownCards: ICard[];
   groupId: string;
 };
 
-const CardList = ({ groupId }: CardListProps) => {
+const CardList = ({ shownCards, groupId }: CardListProps) => {
   const { width: screenWidth } = useWindowDimensions();
 
   const {
     theme: { colors },
   } = useAppTheme();
   const { group } = useAppSelector((state) => state.groups);
-  const { cards = [], isLoading } = useAppSelector((state) => state.cards);
+  const { isLoading } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation<StackNavigation>();
-
-  const [wordsRangeNumber, setWordsRangeNumber] = useState<number>(
-    cards?.length || 2,
-  );
 
   useEffect(() => {
-    setWordsRangeNumber(cards?.length);
-  }, [cards?.length]);
-
-  useEffect(() => {
-    dispatch(enqueueOrDispatch(getCards, getCardsStorage, { groupId }));
+    dispatch(enqueueOrDispatch(getCards, getStateCards, { groupId }));
   }, [group, groupId]);
-
-  const navigateToLearn = () => {
-    if (wordsRangeNumber !== cards.length) {
-      dispatch(rangeCards(wordsRangeNumber));
-    }
-    navigation.navigate(AppPath.Learn, { groupId });
-  };
 
   return (
     <View style={styles.container}>
@@ -73,7 +57,7 @@ const CardList = ({ groupId }: CardListProps) => {
         <ActivityIndicator color={colors.primary} />
       ) : (
         <FlatList
-          data={cards}
+          data={shownCards}
           renderItem={({ item }) => (
             <MemoCardItem
               key={item.id}

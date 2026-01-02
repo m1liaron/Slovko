@@ -9,6 +9,7 @@ import ExitModal from '@/components/Modals/ExitModal/ExitModal';
 import { i18n } from '@/localization/i18n';
 
 interface LearnContentProps {
+  learningCards: ICard[];
   currentSection: Section;
   onComplete: () => void;
   onSetData: (card: ICard, isCorrect: boolean) => void;
@@ -17,6 +18,7 @@ interface LearnContentProps {
 }
 
 export const LearnContent: React.FC<LearnContentProps> = ({
+  learningCards,
   currentSection,
   onComplete,
   onSetData,
@@ -27,20 +29,36 @@ export const LearnContent: React.FC<LearnContentProps> = ({
     <View>
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         {currentSection === 'quiz' && (
-          <LearnQuiz onComplete={onComplete} handleSetData={onSetData} />
+          <LearnQuiz
+            learningCards={learningCards}
+            onComplete={onComplete}
+            handleSetData={onSetData}
+          />
         )}
 
         {currentSection === 'word' && (
-          <LearnGuessWord onComplete={onComplete} handleSetData={onSetData} />
+          <LearnGuessWord
+            learningCards={learningCards}
+            onComplete={onComplete}
+            handleSetData={onSetData}
+          />
         )}
 
         {currentSection === 'check' && (
-          <LearnCheck onComplete={onComplete} handleSetData={onSetData} />
+          <LearnCheck
+            learningCards={learningCards}
+            onComplete={onComplete}
+            handleSetData={onSetData}
+          />
         )}
       </View>
 
       {currentSection === 'cards' && (
-        <LearnCards onComplete={onComplete} setFlashCards={onSetData} />
+        <LearnCards
+          learningCards={learningCards}
+          onComplete={onComplete}
+          handleSetData={onSetData}
+        />
       )}
 
       <ExitModal

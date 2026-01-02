@@ -25,6 +25,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const groupId = (route.params as { groupId?: string | undefined })?.groupId;
 
   const {
+    learningCards,
     status,
     isLessonOver,
     currentSection,
@@ -41,10 +42,6 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
 
   useBeforeUnload();
 
-  if (!groupId) {
-    return null;
-  }
-
   return (
     <ThemeBackground>
       <View>
@@ -56,6 +53,7 @@ const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
               <Loading />
             ) : (
               <LearnContent
+                learningCards={learningCards}
                 currentSection={currentSection}
                 onComplete={handleNextSection}
                 onSetData={handleSetData}

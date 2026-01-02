@@ -78,6 +78,16 @@ const groupSlice = createSlice({
         (group) => group.id !== action.payload.groupId,
       );
     },
+    moveStateGroupToAnotherSection: (state, action) => {
+      const { groupId, sectionId: newSectionId } = action.payload;
+
+      if (newSectionId) {
+        const groupIndex = state.groups.findIndex(
+          (group) => group.id === groupId,
+        );
+        state.groups[groupIndex].sectionId = newSectionId;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -134,8 +144,12 @@ const groupSlice = createSlice({
   },
 });
 
-export const { addStateGroup, updateStateGroup, removeStateGroup } =
-  groupSlice.actions;
+export const {
+  addStateGroup,
+  updateStateGroup,
+  removeStateGroup,
+  moveStateGroupToAnotherSection,
+} = groupSlice.actions;
 export const selectGroup = (state: RootState) => state.groups.groups;
 export {
   getAllGroups,

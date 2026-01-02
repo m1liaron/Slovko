@@ -1,6 +1,5 @@
 import {
   NavigationContainer,
-  useNavigation,
   type NavigationProp,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -60,7 +59,7 @@ const ProtectedRoute = () => {
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (!firstLaunch) {
+      if (firstLaunch !== 'false') {
         await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
         setInitialRoute(AppPath.Welcome);
         setIsLoading(false);

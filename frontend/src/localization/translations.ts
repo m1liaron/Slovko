@@ -128,6 +128,10 @@ const translations = {
         learnButton: 'Learn',
         atLeastFourWords: 'At Least Fours Words',
       },
+      sortByDate: 'Sort by date',
+      sortByName: 'Sort by name',
+      sortByReviewDate: 'Sort by date review',
+      sortByReviewCount: 'Sort by amount of reviews',
     },
     sharedGroup: {
       sharedOn: 'Shared On',
@@ -368,6 +372,7 @@ const translations = {
       sortByDate: 'Сортувати за датою',
       sortByName: 'Сортувати за назвою',
       sortByReviewDate: 'Сортувати за датою перевірки',
+      sortByReviewCount: 'Сортувати за кількістю перевірок',
     },
     sharedGroup: {
       sharedOn: 'Поширено',

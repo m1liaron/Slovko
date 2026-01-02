@@ -10,6 +10,7 @@ type ICard = {
   learnedAt: Date;
   nextReviewAt: Date;
   reviewCount: number;
+  createdAt: Date;
 };
 
 type CardImage = {
