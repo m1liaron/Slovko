@@ -67,10 +67,7 @@ const login = async (req: Request, res: Response) => {
         .json({ error: true, message: "User with this email not found" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(
-      requestPassword,
-      user.password,
-    );
+    const isPasswordCorrect = await user.comparePassword(requestPassword);
     if (!isPasswordCorrect) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
