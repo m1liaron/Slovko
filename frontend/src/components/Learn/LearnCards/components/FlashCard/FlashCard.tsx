@@ -88,7 +88,7 @@ export const FlashCard: React.FC<FlashCardProps> = ({
       style={{
         flex: 1,
         width: getCardWidth(isMobile, isDesktop),
-        height: '100%',
+        height: '50%',
         margin: 'auto',
         justifyContent: 'center',
         alignItems: 'center',
@@ -97,7 +97,7 @@ export const FlashCard: React.FC<FlashCardProps> = ({
       <View
         style={{
           position: 'relative',
-          width: '100%',
+          width: getCardWidth(isMobile, isDesktop),
           height: getCardHeight(isMobile),
         }}
       >

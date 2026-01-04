@@ -5,7 +5,6 @@ import type Swiper from 'react-native-deck-swiper';
 import type { ICard } from '@/common/enums/types/card.type';
 import { useResponsive } from '@/hooks';
 import { useCardFlip, useLearnCards, useTypeMode } from '@/hooks/LearnCards';
-import { useAppSelector } from '@/hooks/redux.hooks';
 
 import { AnswerInput } from './components/AnswerInput.tsx/AnswerInput';
 import { CardSwiper } from './components/CardSwiper/CardSwiper';
