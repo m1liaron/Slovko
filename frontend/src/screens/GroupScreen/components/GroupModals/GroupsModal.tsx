@@ -72,9 +72,8 @@ export const GroupModals: React.FC<GroupModalsProps> = ({
   const {
     theme: { colors },
   } = useAppTheme();
-  const { sections, activeSectionId } = useAppSelector(
-    (state) => state.sections,
-  );
+  const { sections, activeSection } = useAppSelector((state) => state.sections);
+  const activeSectionId = activeSection?.id;
   const showSections = sections.filter(
     (section) => section.id !== activeSectionId,
   );

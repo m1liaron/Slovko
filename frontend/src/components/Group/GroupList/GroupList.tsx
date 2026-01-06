@@ -28,9 +28,8 @@ import { GroupItem } from '../GroupItem/GroupItem';
 export const GroupList = () => {
   const { groups } = useAppSelector((state) => state.groups);
   const { isLoading } = useAppSelector((state) => state.groups);
-  const { activeSectionId, sections } = useAppSelector(
-    (state) => state.sections,
-  );
+  const { activeSection, sections } = useAppSelector((state) => state.sections);
+  const activeSectionId = activeSection?.id;
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState<string>('');
   const [showAddModal, setShowAddModal] = useState<boolean>(false);

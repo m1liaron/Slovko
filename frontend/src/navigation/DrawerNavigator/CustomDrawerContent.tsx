@@ -16,7 +16,7 @@ import { getLanguages } from '@/redux/languageReducer/languageThunk';
 import {
   addSection,
   addStateSection,
-  setActiveSectionId,
+  setActiveSection,
 } from '@/redux/sectionReducer/sectionSlice';
 import { HAS_TOKEN } from '@/utils/storage/initToken';
 
@@ -27,9 +27,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     theme: { colors },
   } = useAppTheme();
   const dispatch = useAppDispatch();
-  const { sections, activeSectionId } = useAppSelector(
-    (state) => state.sections,
-  );
+  const { sections, activeSection } = useAppSelector((state) => state.sections);
   const { width } = useWindowDimensions();
   const languages = useAppSelector((state) => state.languages.languages);
 
@@ -150,7 +148,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
               <Pressable
                 style={{
                   borderColor:
-                    activeSectionId === item.id
+                    activeSection?.id === item.id
                       ? colors.highlightColor
                       : colors.lightBackground,
                   borderWidth: 2,
@@ -158,7 +156,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                   padding: 20,
                   marginBottom: 20,
                 }}
-                onPress={() => dispatch(setActiveSectionId(item.id))}
+                onPress={() => dispatch(setActiveSection(item))}
               >
                 <ThemeText>
                   {item.Language?.symbol} {item.title || item.Language?.title}

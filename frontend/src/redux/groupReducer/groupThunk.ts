@@ -74,7 +74,6 @@ export const moveGroupToAnotherSection = createAppAsyncThunk(
   'group/moveToSection',
   async ({ sectionId, groupId }: { sectionId: string; groupId: string }) => {
     const axiosInstance = await createAuthorizedInstance();
-    console.log(`Moving group: ${groupId}`);
     const response = await axiosInstance.put(`/groups/${groupId}`, {
       sectionId,
     });

@@ -31,7 +31,8 @@ export const useLearnScreen = (groupId?: string) => {
   const { repeatedCards, cards, status, shownModes } = useAppSelector(
     (state) => state.cards,
   );
-  const { activeSectionId } = useAppSelector((state) => state.sections);
+  const { activeSection } = useAppSelector((state) => state.sections);
+  const activeSectionId = activeSection?.id;
 
   // Derive enabled modes from shownModes
   const enabledModes: Section[] = [
@@ -142,7 +143,7 @@ export const useLearnScreen = (groupId?: string) => {
 
     saveResultsData();
 
-    if (repeatedCards.length) {
+    if (repeatedCards.length && activeSectionId) {
       dispatch(
         enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
       );

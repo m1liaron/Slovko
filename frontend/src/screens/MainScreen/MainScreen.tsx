@@ -23,7 +23,7 @@ import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute
 import { getAllGroups } from '@/redux/groupReducer/groupThunk';
 import {
   getSections,
-  setActiveSectionId,
+  setActiveSection,
 } from '@/redux/sectionReducer/sectionSlice';
 
 import PressableButton from '../../common/components/PressableButton/PressableButton';
@@ -59,9 +59,8 @@ const MainScreen = () => {
     repeatedGroupsIds.length > 0
       ? repeatedGroupsIds.reduce((prev, curr) => prev + curr.cards.length, 0)
       : 0;
-  const { sections, activeSectionId } = useAppSelector(
-    (state) => state.sections,
-  );
+  const { sections, activeSection } = useAppSelector((state) => state.sections);
+  const activeSectionId = activeSection?.id;
 
   const [daysPassed, setDaysPassed] = useState('');
   const [showRepeatedModal, setShowRepeatedModal] = useState<boolean>(false);
@@ -73,14 +72,16 @@ const MainScreen = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllGroups(activeSectionId));
+    if (activeSectionId) {
+      dispatch(getAllGroups(activeSection.id));
+    }
   }, [activeSectionId]);
 
   useEffect(() => {
-    if (!activeSectionId) {
-      dispatch(setActiveSectionId(sections[0]));
+    if (!activeSectionId && sections.length !== 0) {
+      dispatch(setActiveSection(sections[0]));
     }
-  }, []);
+  }, [activeSectionId, sections.length]);
 
   useEffect(() => {
     if (activeSectionId) {
@@ -220,9 +221,15 @@ const MainScreen = () => {
           paddingHorizontal: 20,
         }}
       >
-        <Pressable onPress={() => setShowDrawerMenu((prev) => !prev)}>
-          <Entypo name="menu" size={30} color={colors.primary} />
-        </Pressable>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+          <Pressable onPress={() => setShowDrawerMenu((prev) => !prev)}>
+            <Entypo name="menu" size={30} color={colors.primary} />
+          </Pressable>
+          <ThemeText style={{ fontSize: 25, fontWeight: 'bold' }}>
+            {activeSection?.title || activeSection?.Language?.title}{' '}
+            {activeSection?.Language?.symbol}
+          </ThemeText>
+        </View>
         <Pressable
           onPress={() => navigate.navigate(AppPath.Streak)}
           style={{ flexDirection: 'row', alignItems: 'center' }}

@@ -15,7 +15,7 @@ import {
   moveStateGroupToAnotherSection,
 } from '@/redux/groupReducer/groupSlice';
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
-import { setActiveSectionId } from '@/redux/sectionReducer/sectionSlice';
+import { setActiveSection } from '@/redux/sectionReducer/sectionSlice';
 
 const useGroupNavigation = (
   groupId: string,
@@ -24,7 +24,8 @@ const useGroupNavigation = (
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
   const { cards } = useAppSelector((state) => state.cards);
-  const { activeSectionId } = useAppSelector((state) => state.sections);
+  const { activeSection } = useAppSelector((state) => state.sections);
+  const activeSectionId = activeSection?.id;
 
   const [groupTitle, setGroupTitle] = useState('');
   const [newSectionId, setNewSectionId] = useState<string>();
@@ -39,24 +40,28 @@ const useGroupNavigation = (
       console.error('Provide title');
       return;
     }
-    dispatch(
-      enqueueOrDispatch(updateGroup, updateStateGroup, {
-        id: groupId,
-        title: groupTitle,
-        sectionId: activeSectionId,
-      }),
-    );
+    if (activeSectionId) {
+      dispatch(
+        enqueueOrDispatch(updateGroup, updateStateGroup, {
+          id: groupId,
+          title: groupTitle,
+          sectionId: activeSectionId,
+        }),
+      );
+    }
   }, [groupTitle, groupId, dispatch]);
 
   const handleRemoveGroup = useCallback(() => {
-    dispatch(
-      enqueueOrDispatch(removeGroup, removeStateGroup, {
-        groupId,
-        sectionId: activeSectionId,
-      }),
-    );
-    dispatch(getRepeatedCards({ sectionId: activeSectionId }));
-    navigation.navigate(AppPath.Main);
+    if (activeSectionId) {
+      dispatch(
+        enqueueOrDispatch(removeGroup, removeStateGroup, {
+          groupId,
+          sectionId: activeSectionId,
+        }),
+      );
+      dispatch(getRepeatedCards({ sectionId: activeSectionId }));
+      navigation.navigate(AppPath.Main);
+    }
   }, [groupId, activeSectionId, dispatch, navigation]);
 
   const handleMoveGroup = useCallback(() => {
@@ -71,7 +76,6 @@ const useGroupNavigation = (
         { groupId, sectionId: newSectionId },
       ),
     );
-    dispatch(setActiveSectionId(null));
     navigation.navigate(AppPath.Main);
   }, [newSectionId, groupId, dispatch, navigation]);
 
