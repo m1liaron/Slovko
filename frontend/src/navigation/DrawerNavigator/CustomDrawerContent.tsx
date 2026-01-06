@@ -95,7 +95,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                     chosenLanguage?.id === item.id
                       ? colors.highlightColor
                       : colors.primary,
-                  borderWidth: 2,
+                  borderWidth: 5,
                   borderRadius: 20,
                   padding: 20,
                   marginBottom: 20,

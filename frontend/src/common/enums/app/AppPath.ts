@@ -6,6 +6,7 @@ interface IAppPath {
   Welcome: string;
   ChooseLanguage: string;
   ChooseWords: string;
+  HomeNavigation: string;
   Home: string;
   Main: string;
   Profile: string;
@@ -29,6 +30,7 @@ const AppPath: IAppPath = {
   Welcome: 'welcome',
   ChooseLanguage: 'choose-language',
   ChooseWords: 'choose-words',
+  HomeNavigation: 'home-navigation',
   Home: 'home',
   Main: 'main',
   Profile: 'profile',

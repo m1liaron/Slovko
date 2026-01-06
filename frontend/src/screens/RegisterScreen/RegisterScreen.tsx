@@ -17,7 +17,7 @@ import Toast from 'react-native-toast-message';
 
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
-import { useAppDispatch } from '@/hooks/redux.hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { isValidEmail, isValidPassword } from '@/utils';
@@ -28,6 +28,7 @@ import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
 import { register } from '../../redux/userReducer/userSlice';
 import styles from '../LoginScreen/LoginScreen.styles';
+import Loading from '@/components/Loading';
 
 const RegisterScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -36,6 +37,7 @@ const RegisterScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { isLoading } = useAppSelector((state) => state.user);
 
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -236,11 +238,15 @@ const RegisterScreen = () => {
             </View>
 
             {/* Sign Up Button */}
-            <PressableButton
-              text={i18n.t('registerScreen.signUpButton')}
-              buttonStyle={styles.signUpButton}
-              onPress={handleSubmit}
-            />
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <PressableButton
+                text={i18n.t('registerScreen.signUpButton')}
+                buttonStyle={styles.signUpButton}
+                onPress={handleSubmit}
+              />
+            )}
 
             {/* Divider */}
             <View style={styles.divider}>

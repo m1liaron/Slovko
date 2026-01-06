@@ -68,6 +68,9 @@ const userSlice = createSlice({
         state.token = action.payload.user.token;
         state.isAuthenticated = true;
       })
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(login.rejected, (state) => {
         state.isAuthenticated = false;
       })
@@ -76,6 +79,9 @@ const userSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.user.token;
         state.isAuthenticated = true;
+      })
+      .addCase(register.pending, (state) => {
+        state.isLoading = true;
       })
       .addCase(register.rejected, (state) => {
         state.isAuthenticated = false;
