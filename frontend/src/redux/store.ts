@@ -76,7 +76,11 @@ export const store = configureStore({
 });
 
 registerUnauthorizedHandler(() => {
-  store.dispatch(logout());
+  const { network, user } = store.getState();
+  if (network.isConnected && user.isAuthenticated) {
+    persistor.purge();
+    store.dispatch(logout());
+  }
 });
 
 export const persistor = persistStore(store);

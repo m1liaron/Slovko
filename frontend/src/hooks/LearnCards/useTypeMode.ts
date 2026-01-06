@@ -61,9 +61,6 @@ export const useTypeMode = (
     checkTimerRef.current = setTimeout(() => {
       const correctAnswer =
         currentCard[isTranslateShow ? 'word' : 'translateWord'];
-      console.log(
-        `Correct answer: ${correctAnswer}, valueAnswer: ${valueAnswer.trim().toLowerCase()}`,
-      );
       const isCorrect =
         valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
 

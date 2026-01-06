@@ -117,9 +117,7 @@ const cardSlice = createSlice({
       const data = action.payload.cards;
       state.globalCards.push(...data);
       state.cards.push(...data);
-      state.rangeLimit = data.length;
       state.filteredCards = applyTransformation(state);
-      state.rangeLimit = state.filteredCards.length;
     },
     getStateCards: (state, action) => {
       const { groupId } = action.payload;

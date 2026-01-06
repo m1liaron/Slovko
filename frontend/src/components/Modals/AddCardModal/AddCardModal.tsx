@@ -4,7 +4,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import { ScrollView } from 'moti';
 import pLimit from 'p-limit';
-import type { Dispatch} from 'react';
+import type { Dispatch } from 'react';
 import React, { type ChangeEvent, useState } from 'react';
 import { FlatList, Image, Platform, Pressable, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -17,7 +17,10 @@ import { type AddCardRequest } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
-import { addStateManyCards } from '@/redux/cardReducer/cardSlice';
+import {
+  addStateManyCards,
+  setRangeLimit,
+} from '@/redux/cardReducer/cardSlice';
 import { addManyCards } from '@/redux/cardReducer/cardThunk';
 import { pickImage } from '@/utils';
 import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
@@ -278,6 +281,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
         }),
       ),
     );
+
+    dispatch(setRangeLimit(batches.length));
   }
 
   function convertTextToObject(input: string) {
