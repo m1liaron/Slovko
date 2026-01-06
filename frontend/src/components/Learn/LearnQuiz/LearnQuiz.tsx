@@ -69,8 +69,6 @@ const LearnQuiz = ({
   };
 
   const handleOptionPress = async (option: QuizOption) => {
-    if (selectedOption) return;
-
     setSelectedOption(option);
 
     if (option.isCorrect) {

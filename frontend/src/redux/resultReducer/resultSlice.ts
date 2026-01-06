@@ -47,7 +47,16 @@ const resultSlice = createSlice({
         id: uuidv4(),
         createdAt: new Date(),
       };
+      console.log(action.payload);
       state.results.push(newResult);
+    },
+    getStateResult: (state, action) => {
+      const { resultId } = action.payload;
+
+      const findResult = state.results.find((result) => result.id === resultId);
+      if (findResult) {
+        state.result = findResult;
+      }
     },
     filterResults: (state, action) => {
       state.results = state.filteredResults.filter((item) =>
@@ -143,8 +152,13 @@ const resultSlice = createSlice({
   },
 });
 
-export const { addStateResult, filterResults, sortResults, resetResults } =
-  resultSlice.actions;
+export const {
+  addStateResult,
+  getStateResult,
+  filterResults,
+  sortResults,
+  resetResults,
+} = resultSlice.actions;
 export const selectResult = (state: RootState) => state.results;
 export {
   saveResults,

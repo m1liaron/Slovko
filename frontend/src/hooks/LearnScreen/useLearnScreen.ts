@@ -127,6 +127,7 @@ export const useLearnScreen = (groupId?: string) => {
       completionTime: new Date().toISOString(),
     };
 
+    console.log(resultData);
     dispatch(enqueueOrDispatch(saveResults, addStateResult, resultData));
   }, [projectName, sessionData, startLearnDate, dispatch]);
 

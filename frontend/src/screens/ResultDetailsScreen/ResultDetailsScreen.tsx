@@ -24,7 +24,10 @@ import ThemeBackground from '../../common/components/ThemeBackground/Themebackgr
 import BackButton from '../../components/BackButton/BackButton';
 import Loading from '../../components/Loading';
 import { useAppTheme } from '../../contexts/ThemeProvider';
-import { getResultDetails } from '../../redux/resultReducer/resultSlice';
+import {
+  getResultDetails,
+  getStateResult,
+} from '../../redux/resultReducer/resultSlice';
 import { formatDurationHHMMSS, formatMDYTime, formatTime } from '../../utils';
 
 import styles from './ResultDetailsScreen.styles';
@@ -45,7 +48,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getResultDetails, resultId));
+    dispatch(enqueueOrDispatch(getResultDetails, getStateResult, { resultId }));
   }, [resultId]);
 
   const modesMap = useMemo((): Partial<Record<ModeName, IResultMode>> => {
@@ -162,6 +165,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
       <View style={{ marginHorizontal: width < 640 ? 10 : 50 }}>
         <View style={styles.buttonsContainer}>{renderModeButtons()}</View>
         {isLoading && <Loading />}
+
         {modesMap[selectedMode] && (
           <FlatList
             style={{ height: 400, width: '100%' }}
