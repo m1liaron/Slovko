@@ -6,7 +6,11 @@ import { AppPath } from '@/common/enums/app/app';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { getRepeatedCards, rangeCards } from '@/redux/cardReducer/cardSlice';
+import {
+  getRepeatedCards,
+  rangeCards,
+  removeStateGroupCards,
+} from '@/redux/cardReducer/cardSlice';
 import {
   updateGroup,
   updateStateGroup,
@@ -15,7 +19,7 @@ import {
   moveStateGroupToAnotherSection,
 } from '@/redux/groupReducer/groupSlice';
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
-import { setActiveSection } from '@/redux/sectionReducer/sectionSlice';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const useGroupNavigation = (
   groupId: string,
@@ -25,6 +29,8 @@ const useGroupNavigation = (
   const navigation = useNavigation<StackNavigation>();
   const { cards } = useAppSelector((state) => state.cards);
   const { activeSection } = useAppSelector((state) => state.sections);
+  const { isConnected } = useAppSelector((state) => state.network);
+
   const activeSectionId = activeSection?.id;
 
   const [groupTitle, setGroupTitle] = useState('');
@@ -59,6 +65,9 @@ const useGroupNavigation = (
           sectionId: activeSectionId,
         }),
       );
+      if (!isConnected || !HAS_TOKEN) {
+        dispatch(removeStateGroupCards({ groupId }));
+      }
       dispatch(getRepeatedCards({ sectionId: activeSectionId }));
       navigation.navigate(AppPath.Main);
     }

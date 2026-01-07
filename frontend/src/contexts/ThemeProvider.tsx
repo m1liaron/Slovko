@@ -28,11 +28,11 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const loadTheme = async () => {
-      const savedTheme = await getStorageItem(AsyncStorageVariables.LANGUAGE);
+      const savedTheme = await getStorageItem(AsyncStorageVariables.THEME);
       if (savedTheme === 'dark') {
         setTheme(darkTheme);
       } else if (!savedTheme) {
-        await AsyncStorage.setItem(AsyncStorageVariables.LANGUAGE, 'light');
+        await AsyncStorage.setItem(AsyncStorageVariables.THEME, 'light');
       }
     };
     loadTheme();
@@ -42,7 +42,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const newTheme = theme === lightTheme ? darkTheme : lightTheme;
     setTheme(newTheme);
     await AsyncStorage.setItem(
-      AsyncStorageVariables.LANGUAGE,
+      AsyncStorageVariables.THEME,
       newTheme === darkTheme ? 'dark' : 'light',
     );
   };

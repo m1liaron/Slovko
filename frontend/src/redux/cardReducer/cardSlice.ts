@@ -5,6 +5,7 @@ import {
   isPending,
   isRejected,
 } from '@reduxjs/toolkit';
+import { v4 as uuid } from 'uuid';
 
 import type { ICard, IRepeatedGroup } from '@/common/enums/types/types';
 
@@ -114,7 +115,11 @@ const cardSlice = createSlice({
   initialState,
   reducers: {
     addStateManyCards: (state, action) => {
-      const data = action.payload.cards;
+      const data = action.payload.cards.map((card: ICard) => ({
+        ...card,
+        id: uuid(),
+      }));
+
       state.globalCards.push(...data);
       state.cards.push(...data);
       state.filteredCards = applyTransformation(state);
@@ -156,6 +161,11 @@ const cardSlice = createSlice({
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
       state.filteredCards = applyTransformation(state);
       state.rangeLimit = state.filteredCards.length;
+    },
+    removeStateGroupCards: (state, action) => {
+      const { groupId } = action.payload;
+      state.filteredCards = [];
+      state.globalCards.filter((card) => card.groupId !== groupId);
     },
     setRangeLimit: (state, action) => {
       state.rangeLimit = action.payload;
@@ -301,6 +311,7 @@ export const {
   addStateManyCards,
   updateStateCard,
   removeStateCard,
+  removeStateGroupCards,
   filterCardsByStatus,
   resetFilter,
   setRangeLimit,

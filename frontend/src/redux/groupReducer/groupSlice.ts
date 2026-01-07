@@ -77,6 +77,7 @@ const groupSlice = createSlice({
       state.groups = state.groups.filter(
         (group) => group.id !== action.payload.groupId,
       );
+      state.group = null;
     },
     moveStateGroupToAnotherSection: (state, action) => {
       const { groupId, sectionId: newSectionId } = action.payload;

@@ -27,6 +27,7 @@ export const useLearnScreen = (groupId?: string) => {
   const { filteredCards: learningCards } = useAppSelector(
     (state) => state.cards,
   );
+  const { user } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
   const { repeatedCards, cards, status, shownModes } = useAppSelector(
     (state) => state.cards,
@@ -119,6 +120,7 @@ export const useLearnScreen = (groupId?: string) => {
   const saveResultsData = useCallback(() => {
     const resultData = {
       title: projectName || new Date().toString(),
+      userId: user?.id,
       flashCards: sessionData.flashCards,
       quiz: sessionData.quizCards,
       guessWord: sessionData.guessWordCards,
@@ -127,7 +129,6 @@ export const useLearnScreen = (groupId?: string) => {
       completionTime: new Date().toISOString(),
     };
 
-    console.log(resultData);
     dispatch(enqueueOrDispatch(saveResults, addStateResult, resultData));
   }, [projectName, sessionData, startLearnDate, dispatch]);
 

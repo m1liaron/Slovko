@@ -29,7 +29,7 @@ type IResult = {
   createdAt: string;
 };
 
-type ModeName = 'flashCards' | 'quiz' | 'guessWord' | 'check';
+type ModeName = 'flashCards' | 'quiz' | 'guessWord' | 'checkTranslate';
 
 type IStatistics = {
   resultsMonths: string[];

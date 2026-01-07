@@ -282,7 +282,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       ),
     );
 
-    dispatch(setRangeLimit(batches.length));
+    dispatch(setRangeLimit(cards.length));
   }
 
   function convertTextToObject(input: string) {
