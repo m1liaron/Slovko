@@ -247,7 +247,7 @@ const cardSlice = createSlice({
       .addCase(addCard.fulfilled, (state, action) => {
         state.globalCards.push(action.payload.card);
         state.cards.push(action.payload.card);
-        state.filteredCards = applyTransformation(state);
+        state.filteredCards.push(action.payload.card);
         state.rangeLimit = state.filteredCards.length;
       })
       .addCase(addManyCards.fulfilled, (state, action) => {

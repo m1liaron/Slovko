@@ -2,7 +2,6 @@ import { AntDesign, Entypo } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   Image,
-  PixelRatio,
   Platform,
   Pressable,
   useWindowDimensions,
@@ -40,12 +39,6 @@ interface CardItemProps {
   onRemove: () => void;
   groupId: string;
 }
-
-const scaleFont = (width: number, size: number) => {
-  const MIN_SCREEN_SIZE = 375;
-  const scale = width / MIN_SCREEN_SIZE;
-  return Math.round(PixelRatio.roundToNearestPixel(size * scale));
-};
 
 const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
   const {
@@ -107,21 +100,22 @@ const CardItem = ({ item, onRemove, groupId }: CardItemProps) => {
       >
         <View style={styles.titleContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-            <View style={{ marginTop: 10 }}>
-              <Image
-                source={{
-                  uri:
-                    item.image?.url ||
-                    'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
-                }}
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 10,
-                }}
-              />
-            </View>
-
+            {screenWidth > 380 && (
+              <View style={{ marginTop: 10 }}>
+                <Image
+                  source={{
+                    uri:
+                      item.image?.url ||
+                      'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
+                  }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 10,
+                  }}
+                />
+              </View>
+            )}
             <View>
               <ThemeText style={[styles.title, { fontSize }]}>
                 {item.word}

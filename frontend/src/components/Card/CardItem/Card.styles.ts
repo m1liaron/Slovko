@@ -5,8 +5,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     padding: 16,
     borderRadius: 10,
-    marginRight: 30,
-    marginBottom: 10,
     alignSelf: 'center',
 
     shadowColor: '#000',

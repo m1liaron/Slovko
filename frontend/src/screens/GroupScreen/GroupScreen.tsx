@@ -104,8 +104,8 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       <View
         style={{
           flexShrink: isDesktop ? 0 : 1,
-          height: isDesktop ? 500 : 'auto',
-          paddingHorizontal: isDesktop ? 32 : 0,
+          flex: 1,
+          paddingHorizontal: isDesktop ? 32 : 20,
         }}
       >
         <CardList shownCards={filteredCards} groupId={groupId} />

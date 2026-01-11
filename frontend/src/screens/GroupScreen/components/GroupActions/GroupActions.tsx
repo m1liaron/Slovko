@@ -2,7 +2,6 @@ import { View } from 'react-native';
 
 import AddButton from '@/common/components/AddButton/AddButton';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
-import { useResponsive } from '@/hooks';
 import { i18n } from '@/localization/i18n';
 
 interface GroupActionsProps {
@@ -18,8 +17,6 @@ const GroupActions: React.FC<GroupActionsProps> = ({
   onLearn,
   onAddCard,
 }) => {
-  const { isDesktop } = useResponsive();
-
   return (
     <View
       style={{
@@ -33,7 +30,6 @@ const GroupActions: React.FC<GroupActionsProps> = ({
         <PressableButton
           onPress={onLearn}
           text={i18n.t('group.cardList.learnButton')}
-          buttonStyle={{ flex: 1, width: isDesktop ? 500 : 'auto' }}
         />
       )}
       <AddButton
