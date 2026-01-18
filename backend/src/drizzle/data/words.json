@@ -145050,7 +145050,7 @@
   },
   {
     "headword": "seem",
-    "pos": "linking verb",
+    "pos": "verb",
     "level": "a2",
     "senses": [
       {
@@ -173026,60 +173026,6 @@
           {
             "phrase": "The writing is on the wall",
             "definition": "refers to a situation or event that is inevitable and will surely occur"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "headword": "to",
-    "pos": "infinitive marker",
-    "level": "a1",
-    "senses": [
-      {
-        "definition": "Preposition, conjunction, or verb used to indicate relationship, direction, time, etc.",
-        "collocations": [
-          "to be",
-          "to have",
-          "to go",
-          "to make",
-          "to do",
-          "to take"
-        ],
-        "examples": [
-          {
-            "sentence": "She is going to the store to buy groceries.",
-            "definition": "She will travel by foot or vehicle to a location called 'the store' in order to purchase food items."
-          },
-          {
-            "sentence": "I have to finish my homework before I can play video games.",
-            "definition": "In order for me to engage in the activity of playing video games, I must first complete my assigned homework."
-          }
-        ],
-        "synonyms": [
-          "toward",
-          "towards",
-          "for"
-        ],
-        "antonyms": [],
-        "idioms": [
-          {
-            "idiom": "to the manor born",
-            "definition": "Someone who has always lived in a grand or wealthy manner, implying that they were accustomed to it from birth."
-          },
-          {
-            "idiom": "the whole nine yards",
-            "definition": "To do something completely; to use every resource available."
-          }
-        ],
-        "phrases": [
-          {
-            "phrase": "to and fro",
-            "definition": "Moving back and forth repeatedly, often in a slow or rhythmic manner."
-          },
-          {
-            "phrase": "to the best of my knowledge",
-            "definition": "As far as I know or can determine based on available information."
           }
         ]
       }

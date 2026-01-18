@@ -163,29 +163,29 @@ const addCard = async (req: Request, res: Response) => {
     example: customExample,
     definition: customDefinition,
   } = req.body;
+
   try {
-    const findCard = await Card.findOne({
+    const existingCard = await Card.findOne({
       where: {
-        groupId: groupId,
-        word: {
-          [Op.iLike]: word,
-        },
+        groupId,
+        word: { [Op.iLike]: word },
       },
     });
-    if (findCard) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send({ error: true, message: "Картка з цим словом вже існує" });
+
+    if (existingCard) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: true,
+        message: "Card with this word already exists",
+      });
     }
 
     const headwordResult = await db
       .select()
       .from(headwords)
-      .where(sql`lower(${headwords.word}::text) = lower(${word})`)
+      .where(sql`lower(${headwords.word}) = lower(${word})`)
       .limit(1);
 
     const headword = headwordResult[0];
-
     if (!headword) {
       return res.status(StatusCodes.NOT_FOUND).json({
         error: true,
@@ -197,55 +197,39 @@ const addCard = async (req: Request, res: Response) => {
       .select()
       .from(senses)
       .where(eq(senses.headwordId, headword.id))
+      .orderBy(senses.id)
       .limit(1);
+
     const sense = senseResult[0];
+    if (!sense) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: true,
+        message: `No sense found for "${word}"`,
+      });
+    }
 
     let definition = customDefinition;
     let example = customExample;
 
-    if (definition.length === 0 || example.length === 0) {
-      try {
-        const dictionaryData = await getDictionaryData(word);
-        definition = dictionaryData.definition || "";
-        example = dictionaryData.example || "";
-      } catch (dictionaryError) {
-        if (dictionaryError instanceof Error) {
-          console.warn("Dictionary fetch failed:", dictionaryError.message);
-        }
-      }
+    if (!definition || !example) {
+      const dictionaryData = await getDictionaryData(word);
+      definition ||= dictionaryData.definition ?? "";
+      example ||= dictionaryData.example ?? "";
     }
 
     let imageUrl = imageUri;
 
-    if (imageUri.length === 0) {
-      try {
-        const result = await unsplash.photos.getRandom({
-          query: word,
-          count: 1,
-        });
+    if (!imageUrl) {
+      const result = await unsplash.photos.getRandom({ query: word, count: 1 });
+      const photo = Array.isArray(result.response)
+        ? result.response[0]
+        : result.response;
 
-        if (!result || result.errors) {
-          console.warn("Unsplash error:", result?.errors);
-        } else {
-          let photo = result.response;
-
-          if (Array.isArray(photo)) {
-            photo = photo[0];
-          }
-          // This URL is what you need
-
-          imageUrl = photo.urls.regular;
-          console.log("Random Unsplash image:", imageUrl);
-          // assign wherever you need
-        }
-      } catch (unsplashError) {
-        if (unsplashError instanceof Error) {
-          console.warn("Fetching random image failed:", unsplashError.message);
-        }
-      }
+      imageUrl = photo?.urls?.regular ?? "";
     }
 
     const image = await Image.create({ url: imageUrl });
+
     const newCard = await Card.create({
       imageId: image.id,
       word,
