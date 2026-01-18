@@ -3,9 +3,9 @@ import readline from "readline";
 
 import fetch from "node-fetch";
 
-const dbFolder = "../backend/src/db/data";
+const dbFolder = "src/drizzle/data";
 const OLLAMA_URL = "http://localhost:11434/api/generate";
-const OUTPUT_FILE = `${dbFolder}/wordson`;
+const OUTPUT_FILE = `${dbFolder}/words-test.json`;
 const INPUT_FILE_WORDS = `${dbFolder}/oxford-3000.csv`;
 
 async function ask(question: string) {
@@ -63,28 +63,49 @@ async function processCSV(csvPath: string) {
     console.log(`Processing: ${word}`);
 
     const prompt = `
-      Generate JSON ONLY. No explanation.
+      Generate JSON ONLY. No explanations, no markdown, no comments.
+
+      You MUST follow this exact structure:
 
       {
-        "definition": "",
-        "collocations": [],
-        "examples": [{
-          "sentence": "",
-          "definition": ""
-        }],
-        "synonyms": [],
-        "antonyms": [],
-        "idioms": [{
-          "idiom": "",
-          "definition": ""
-        }],
-        "phrases": [{
-          "phrase": "",
-          "definition": ""
-        }]
+        "senses": [
+          {
+            "partOfSpeech": "<one of the allowed values>",
+            "definition": "<short, clear definition>",
+            "collocations": [],
+            "examples": [],
+            "synonyms": [],
+            "antonyms": [],
+            "idioms": [],
+            "phrases": []
+          }
+        ]
       }
 
-      Generate natural, correct English content for the word: "${word}".
+      Rules you MUST follow:
+
+      1. "senses" MUST be an array.
+      2. If the word has multiple meanings, create MULTIPLE objects inside "senses".
+      3. Each sense MUST have exactly ONE part of speech.
+      4. The "partOfSpeech" value MUST be ONE of the following and NOTHING else:
+
+      - noun
+      - verb
+      - adjective
+      - adverb
+      - pronoun
+      - determiner
+      - preposition
+      - conjunction
+      - interjection
+
+      5. Do NOT invent new parts of speech.
+      6. Do NOT use labels like "modal verb", "auxiliary", "phrasal verb", etc.
+      7. All arrays must exist, even if empty.
+      8. Output MUST be valid JSON and parseable.
+
+      Word to generate data for: "${word}"
+
     `;
 
     let response;
@@ -109,13 +130,13 @@ async function processCSV(csvPath: string) {
       continue;
     }
 
-    const { word: _dummyWord, _partOfSpeech, ...usefulData } = json;
+    const { headWord: _dummyWord, _pos, ...restData } = json;
 
     const entry = {
       headword: word,
       pos: cls,
       level,
-      senses: [usefulData],
+      senses: [restData],
     };
 
     results.push(entry);

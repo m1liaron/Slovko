@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
@@ -181,10 +181,17 @@ const addCard = async (req: Request, res: Response) => {
     const headwordResult = await db
       .select()
       .from(headwords)
-      .where(eq(headwords.word, word))
+      .where(sql`lower(${headwords.word}::text) = lower(${word})`)
       .limit(1);
 
     const headword = headwordResult[0];
+
+    if (!headword) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: true,
+        message: `Headword "${word}" not found`,
+      });
+    }
 
     const senseResult = await db
       .select()
@@ -193,8 +200,8 @@ const addCard = async (req: Request, res: Response) => {
       .limit(1);
     const sense = senseResult[0];
 
-    let definition = customExample;
-    let example = customDefinition;
+    let definition = customDefinition;
+    let example = customExample;
 
     if (definition.length === 0 || example.length === 0) {
       try {
