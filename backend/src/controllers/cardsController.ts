@@ -165,6 +165,12 @@ const addCard = async (req: Request, res: Response) => {
   } = req.body;
 
   try {
+    if (!word.length || !translateWord.length) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: true,
+        message: "Word and translate must be filled",
+      });
+    }
     const existingCard = await Card.findOne({
       where: {
         groupId,
@@ -179,34 +185,28 @@ const addCard = async (req: Request, res: Response) => {
       });
     }
 
-    const headwordResult = await db
-      .select()
-      .from(headwords)
-      .where(sql`lower(${headwords.word}) = lower(${word})`)
-      .limit(1);
+    const headwordResult = await db.execute<{
+      id: number;
+      language_id: number;
+      word: string;
+      pos: string;
+      level: string;
+    }>(
+      sql`
+        SELECT id, language_id, word, pos, level
+        FROM headwords
+        WHERE word = ${word.toLowerCase()}
+      `,
+    );
 
-    const headword = headwordResult[0];
-    if (!headword) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        error: true,
-        message: `Headword "${word}" not found`,
-      });
-    }
-
+    const headword = headwordResult.rows[0];
     const senseResult = await db
       .select()
       .from(senses)
       .where(eq(senses.headwordId, headword.id))
-      .orderBy(senses.id)
-      .limit(1);
+      .orderBy(senses.id);
 
     const sense = senseResult[0];
-    if (!sense) {
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        error: true,
-        message: `No sense found for "${word}"`,
-      });
-    }
 
     let definition = customDefinition;
     let example = customExample;
@@ -228,20 +228,25 @@ const addCard = async (req: Request, res: Response) => {
       imageUrl = photo?.urls?.regular ?? "";
     }
 
-    const image = await Image.create({ url: imageUrl });
+    let image = null;
+    if (imageUrl.length > 0) {
+      image = await Image.create({ url: imageUrl });
+    }
+
+    const imageId = image && image.id ? image.id : null;
 
     const newCard = await Card.create({
-      imageId: image.id,
+      imageId,
       word,
       translateWord,
       groupId,
       definition,
       example,
-      senseId: sense.id,
+      senseId: sense.id ?? null,
     });
 
     const card = await Card.findOne({
-      where: { id: newCard.id, groupId },
+      where: { id: newCard.dataValues.id, groupId },
       include: [{ model: Image, as: "image" }],
     });
 

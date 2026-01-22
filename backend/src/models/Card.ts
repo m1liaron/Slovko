@@ -28,6 +28,7 @@ class Card
   extends CustomModal<CardAttributes, CardCreationAttributes>
   implements CardAttributes
 {
+  public id!: string;
   public word!: string;
   public translateWord!: string;
   public groupId!: string;
@@ -44,8 +45,9 @@ Card.init(
   {
     id: {
       type: DataTypes.UUID,
-      defaultValue: uuidv4,
+      defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+      field: "id",
     },
     word: {
       type: DataTypes.STRING,
@@ -91,7 +93,7 @@ Card.init(
     },
     senseId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     status: {
       type: DataTypes.ENUM("To Learn", "Repeated", "Know", "Learned"),

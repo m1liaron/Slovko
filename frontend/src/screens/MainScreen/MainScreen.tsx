@@ -71,7 +71,9 @@ const MainScreen = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(getAllGroups(activeSectionId));
+    if (activeSectionId) {
+      dispatch(getAllGroups(activeSectionId));
+    }
   }, [activeSectionId]);
 
   useEffect(() => {
