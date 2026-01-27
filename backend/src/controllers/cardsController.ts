@@ -24,6 +24,7 @@ const getRepeatedCards: AuthRequestHandler = async (req, res) => {
         sectionId,
       },
       attributes: ["id", "title"],
+      raw: true,
     });
     const repeatedCardsData = await Promise.all(
       groups.map(async (group) => {
@@ -34,6 +35,7 @@ const getRepeatedCards: AuthRequestHandler = async (req, res) => {
               [Op.lte]: new Date(), // Cards ready for review
             },
           },
+          raw: true,
           attributes: ["id"], // Fetch only card IDs
         });
 
@@ -68,6 +70,7 @@ const getCardsFromIds = async (req: Request, res: Response) => {
           [Op.in]: cardsIds, // Match any of the IDs in the array
         },
       },
+      raw: true,
       include: [{ model: Image, as: "image" }],
     });
 

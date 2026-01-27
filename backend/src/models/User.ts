@@ -131,7 +131,6 @@ User.init(
 
 User.beforeCreate(async (userData: User) => {
   const user = userData.get();
-  console.log("User: ", user);
   if (!user.password) {
     throw new Error("Password is required");
   }
