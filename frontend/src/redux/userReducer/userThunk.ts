@@ -11,12 +11,14 @@ import {
   createAppAsyncThunk,
   createAuthAppAsyncThunk,
 } from '../services/createAppAsyncThunk';
+import axios from 'axios';
+import { SERVER_API_URL } from '@/common/enums/constants';
 
 const login = createAuthAppAsyncThunk(
   'user/login',
   async (data: { email: string; password: string }) => {
-    const axiosInstance = await createAxiosInstance();
-    const response = await axiosInstance.post(`/users/login`, data);
+    const response = await axios.post(`${SERVER_API_URL}/users/login`, data);
+    console.log(response);
     await AsyncStorage.setItem(
       AsyncStorageVariables.TOKEN,
       response.data.token,

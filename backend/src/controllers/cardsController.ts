@@ -1,9 +1,13 @@
+import { eq, sql } from "drizzle-orm";
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
 import { unsplash } from "../api/unsplash.js";
 import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
+import { db } from "../drizzle/index.js";
+import { headwords } from "../drizzle/schema/headwords.js";
+import { senses } from "../drizzle/schema/senses.js";
 import {
   calculateNextReviewDate,
   getDictionaryData,
@@ -20,6 +24,7 @@ const getRepeatedCards: AuthRequestHandler = async (req, res) => {
         sectionId,
       },
       attributes: ["id", "title"],
+      raw: true,
     });
     const repeatedCardsData = await Promise.all(
       groups.map(async (group) => {
@@ -30,6 +35,7 @@ const getRepeatedCards: AuthRequestHandler = async (req, res) => {
               [Op.lte]: new Date(), // Cards ready for review
             },
           },
+          raw: true,
           attributes: ["id"], // Fetch only card IDs
         });
 
@@ -64,6 +70,7 @@ const getCardsFromIds = async (req: Request, res: Response) => {
           [Op.in]: cardsIds, // Match any of the IDs in the array
         },
       },
+      raw: true,
       include: [{ model: Image, as: "image" }],
     });
 
@@ -151,77 +158,98 @@ const updateCardsAfterReview = async (req: Request, res: Response) => {
 };
 
 const addCard = async (req: Request, res: Response) => {
-  const { imageUri, word, translateWord, groupId } = req.body;
+  const {
+    imageUri,
+    word,
+    translateWord,
+    groupId,
+    example: customExample,
+    definition: customDefinition,
+  } = req.body;
+
   try {
-    const findCard = await Card.findOne({
+    if (!word.length || !translateWord.length) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: true,
+        message: "Word and translate must be filled",
+      });
+    }
+    const existingCard = await Card.findOne({
       where: {
-        groupId: groupId,
-        word: {
-          [Op.iLike]: word,
-        },
+        groupId,
+        word: { [Op.iLike]: word },
       },
     });
-    if (findCard) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .send({ error: true, message: "Картка з цим словом вже існує" });
+
+    if (existingCard) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: true,
+        message: "Card with this word already exists",
+      });
     }
 
-    let definition = "";
-    let example = "";
+    const headwordResult = await db.execute<{
+      id: number;
+      language_id: number;
+      word: string;
+      pos: string;
+      level: string;
+    }>(
+      sql`
+        SELECT id, language_id, word, pos, level
+        FROM headwords
+        WHERE word = ${word.toLowerCase()}
+      `,
+    );
 
-    try {
+    const headword = headwordResult.rows[0];
+    const senseResult = await db
+      .select()
+      .from(senses)
+      .where(eq(senses.headwordId, headword.id))
+      .orderBy(senses.id);
+
+    const sense = senseResult[0];
+
+    let definition = customDefinition;
+    let example = customExample;
+
+    if (!definition || !example) {
       const dictionaryData = await getDictionaryData(word);
-      definition = dictionaryData.definition || "";
-      example = dictionaryData.example || "";
-    } catch (dictionaryError) {
-      if (dictionaryError instanceof Error) {
-        console.warn("Dictionary fetch failed:", dictionaryError.message);
-      }
+      definition ||= dictionaryData.definition ?? "";
+      example ||= dictionaryData.example ?? "";
     }
 
     let imageUrl = imageUri;
 
-    if (imageUri.length === 0) {
-      try {
-        const result = await unsplash.photos.getRandom({
-          query: word,
-          count: 1,
-        });
+    if (!imageUrl) {
+      const result = await unsplash.photos.getRandom({ query: word, count: 1 });
+      const photo = Array.isArray(result.response)
+        ? result.response[0]
+        : result.response;
 
-        if (!result || result.errors) {
-          console.warn("Unsplash error:", result?.errors);
-        } else {
-          let photo = result.response;
-
-          if (Array.isArray(photo)) {
-            photo = photo[0];
-          }
-          // This URL is what you need
-
-          imageUrl = photo.urls.regular;
-          console.log("Random Unsplash image:", imageUrl);
-          // assign wherever you need
-        }
-      } catch (unsplashError) {
-        if (unsplashError instanceof Error) {
-          console.warn("Fetching random image failed:", unsplashError.message);
-        }
-      }
+      imageUrl = photo?.urls?.regular ?? "";
     }
 
-    const image = await Image.create({ url: imageUrl });
+    let image = null;
+    if (imageUrl.length > 0) {
+      image = await Image.create({ url: imageUrl });
+    }
+
+    const imageId = image && image.id ? image.id : null;
+
     const newCard = await Card.create({
-      imageId: image.id,
+      imageId,
       word,
       translateWord,
       groupId,
       definition,
       example,
+      senseId: sense.id ?? null,
     });
 
     const card = await Card.findOne({
-      where: { id: newCard.id, groupId },
+      where: { id: newCard.dataValues.id, groupId },
       include: [{ model: Image, as: "image" }],
     });
 
