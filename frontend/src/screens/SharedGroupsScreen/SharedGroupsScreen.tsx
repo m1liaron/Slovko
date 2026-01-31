@@ -37,11 +37,13 @@ import {
 
 import styles from './SharedGroupsScreen.styles';
 import { HAS_TOKEN } from '@/utils/storage/initToken';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 const SharedGroupsScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
+  useLanguage();
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
   const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(

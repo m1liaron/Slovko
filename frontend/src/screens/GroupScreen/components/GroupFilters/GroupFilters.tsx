@@ -239,7 +239,7 @@ export const GroupFilters: React.FC<GroupFiltersProps> = ({
                 fontWeight: '600',
               }}
             >
-              Reset filters
+              {i18n.t('group.resetFilters')}
             </Text>
           </Pressable>
         )}

@@ -65,7 +65,7 @@ const useGroupNavigation = (
           sectionId: activeSectionId,
         }),
       );
-      if (!isConnected || !HAS_TOKEN) {
+      if (!isConnected) {
         dispatch(removeStateGroupCards({ groupId }));
       }
       dispatch(getRepeatedCards({ sectionId: activeSectionId }));
