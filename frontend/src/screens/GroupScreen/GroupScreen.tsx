@@ -101,15 +101,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         />
       </View>
 
-      <View
-        style={{
-          flexShrink: isDesktop ? 0 : 1,
-          flex: 1,
-          paddingHorizontal: isDesktop ? 32 : 20,
-        }}
-      >
-        <CardList shownCards={filteredCards} groupId={groupId} />
-      </View>
+      <CardList shownCards={filteredCards} groupId={groupId} />
 
       <GroupActions
         hasCards={filteredCards.length > 1}
