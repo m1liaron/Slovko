@@ -83,7 +83,9 @@ const ChooseWordsScreen = () => {
   };
 
   const userLevel = () => {
-    if (chosenWords.length === 0) return null;
+    if (chosenWords.length === 0) {
+      return 'A0';
+    }
 
     // Find the highest level where user knows at least 80% of words
     const levelOrder: Word['level'][] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -276,7 +278,9 @@ const ChooseWordsScreen = () => {
                     size={20}
                     color={theme.colors.iconColor}
                   />
-                  <ThemeText>Learning Language</ThemeText>
+                  <ThemeText>
+                    {i18n.t('chooseWordsScreen.learningLanguage')}
+                  </ThemeText>
                 </View>
                 <View
                   style={{
@@ -391,11 +395,18 @@ const ChooseWordsScreen = () => {
             onPress={handleBack}
             text={i18n.t('welcomeScreen.back')}
           />
-          {chosenWords.length >= 1 && (
+          {chosenWords.length >= 1 ? (
             <PressableButton
               buttonStyle={{ flex: 1 }}
               onPress={() => setShowLevel(true)}
               text={i18n.t('welcomeScreen.next')}
+            />
+          ) : (
+            <PressableButton
+              buttonStyle={{ flex: 1 }}
+              onPress={() => setShowLevel(true)}
+              text={i18n.t('welcomeScreen.noKnow')}
+              gradientColor={theme.colors.danger}
             />
           )}
         </View>

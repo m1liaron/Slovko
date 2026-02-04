@@ -13,6 +13,7 @@ const translations = {
       back: 'Back',
       chooseWords: 'Now select words, which translate you know',
       skip: 'Skip explanation',
+      noKnow: "Don't know any",
     },
     mainScreen: {
       alreadyPassed: 'It has been',
@@ -231,6 +232,7 @@ const translations = {
       changeLanguage: 'Change language',
       withoutRegistration: 'Continue without Registration',
       withRegistration: 'Continue with Registration',
+      learningLanguage: 'Learning Language',
     },
   },
   uk: {
@@ -246,6 +248,7 @@ const translations = {
       next: 'Наступне',
       back: 'Назад',
       skip: 'Пропустити пояснення',
+      noKnow: 'Не знаю жодного',
     },
     chooseLanguageScreen: {
       whichLanguage: 'Яку мову ви хочете вивчати?',
@@ -257,6 +260,7 @@ const translations = {
       changeLanguage: 'Змінить мову',
       withoutRegistration: 'Продовжити без реєстрації',
       withRegistration: 'Продовжити з реєстрацією',
+      learningLanguage: 'Мова вивчення',
     },
     mainScreen: {
       alreadyPassed: 'Вже минуло',
