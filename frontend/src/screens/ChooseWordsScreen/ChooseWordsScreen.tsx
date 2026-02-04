@@ -30,7 +30,6 @@ import {
 import { removeStorageItem, setStorageItem } from '@/utils/storage';
 
 type Word = {
-  id: number;
   title: string;
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 };
@@ -179,7 +178,7 @@ const ChooseWordsScreen = () => {
               style={{
                 fontWeight: 'bold',
                 fontSize: isSmallScreenWidth ? 20 : 30,
-                color: theme.colors.primary,
+                color: '#fff',
               }}
             >
               Slovko
@@ -190,7 +189,7 @@ const ChooseWordsScreen = () => {
                 flexShrink: 1,
                 textAlign: isSmallScreenWidth ? 'left' : 'center',
                 marginBottom: 40,
-                color: theme.colors.primary,
+                color: '#fff',
                 fontSize: isSmallScreenWidth ? 14 : 30,
               }}
             >
@@ -322,7 +321,7 @@ const ChooseWordsScreen = () => {
             {words?.length > 0 && (
               <FlatList
                 data={words}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(_item, index) => index.toString()}
                 contentContainerStyle={{
                   justifyContent: 'center',
                   flexDirection: 'row',

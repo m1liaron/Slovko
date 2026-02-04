@@ -13,8 +13,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import IconImage from '@/assets/images/favicon.png';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import { SearchInput } from '@/common/components/SearchInput/SearchInput';
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 import { AppPath } from '@/common/enums/app/AppPath';
 import Loading from '@/components/Loading';
@@ -27,23 +25,23 @@ import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
 const languages = [
   { id: 1, title: 'English', flag: '🇬🇧' },
   { id: 2, title: 'German', flag: '🇩🇪' },
-  // { id: 3, title: 'Spanish', flag: '🇪🇸' },
-  // { id: 4, title: 'French', flag: '🇫🇷' },
-  // { id: 5, title: 'Italian', flag: '🇮🇹' },
-  // { id: 6, title: 'Portuguese', flag: '🇵🇹' },
-  // { id: 8, title: 'Chinese', flag: '🇨🇳' },
-  // { id: 9, title: 'Japanese', flag: '🇯🇵' },
-  // { id: 10, title: 'Korean', flag: '🇰🇷' },
-  // { id: 11, title: 'Dutch', flag: '🇳🇱' },
-  // { id: 12, title: 'Swedish', flag: '🇸🇪' },
-  // { id: 13, title: 'Norwegian', flag: '🇳🇴' },
-  // { id: 14, title: 'Danish', flag: '🇩🇰' },
-  // { id: 15, title: 'Finnish', flag: '🇫🇮' },
-  // { id: 16, title: 'Polish', flag: '🇵🇱' },
-  // { id: 17, title: 'Turkish', flag: '🇹🇷' },
-  // { id: 18, title: 'Arabic', flag: '🇸🇦' },
-  // { id: 19, title: 'Hindi', flag: '🇮🇳' },
-  // { id: 20, title: 'Ukrainian', flag: '🇺🇦' },
+  { id: 3, title: 'Spanish', flag: '🇪🇸' },
+  { id: 4, title: 'French', flag: '🇫🇷' },
+  { id: 5, title: 'Italian', flag: '🇮🇹' },
+  { id: 6, title: 'Portuguese', flag: '🇵🇹' },
+  { id: 8, title: 'Chinese', flag: '🇨🇳' },
+  { id: 9, title: 'Japanese', flag: '🇯🇵' },
+  { id: 10, title: 'Korean', flag: '🇰🇷' },
+  { id: 11, title: 'Dutch', flag: '🇳🇱' },
+  { id: 12, title: 'Swedish', flag: '🇸🇪' },
+  { id: 13, title: 'Norwegian', flag: '🇳🇴' },
+  { id: 14, title: 'Danish', flag: '🇩🇰' },
+  { id: 15, title: 'Finnish', flag: '🇫🇮' },
+  { id: 16, title: 'Polish', flag: '🇵🇱' },
+  { id: 17, title: 'Turkish', flag: '🇹🇷' },
+  { id: 18, title: 'Arabic', flag: '🇸🇦' },
+  { id: 19, title: 'Hindi', flag: '🇮🇳' },
+  { id: 20, title: 'Ukrainian', flag: '🇺🇦' },
 ];
 
 const ChooseLanguageScreen = () => {
@@ -125,12 +123,12 @@ const ChooseLanguageScreen = () => {
         <>
           <FlatList
             data={filteredLanguages}
-            numColumns={2}
             contentContainerStyle={{
               flexDirection: width < 720 ? 'column' : 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: 16,
+              flexWrap: 'wrap',
+              gap: 20,
             }}
             renderItem={({ item }) => (
               <TouchableOpacity
@@ -138,6 +136,7 @@ const ChooseLanguageScreen = () => {
                 activeOpacity={0.7}
                 onPress={() => dispatch(setSelectedLanguage(item.title))}
                 style={{
+                  width: 200,
                   marginBottom: 16,
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -177,11 +176,27 @@ const ChooseLanguageScreen = () => {
       )}
 
       {selectedLanguage?.length > 0 && (
-        <PressableButton
-          onPress={() => navigation.navigate(AppPath.ChooseWords)}
-          text={i18n.t('welcomeScreen.next')}
-          buttonStyle={{ margin: 10 }}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <PressableButton
+              onPress={() => navigation.navigate(AppPath.ChooseWords)}
+              text={i18n.t('welcomeScreen.next')}
+            />
+          </View>
+
+          <PressableButton
+            onPress={() => navigation.navigate(AppPath.Register)}
+            text={i18n.t('welcomeScreen.skip')}
+            buttonStyle={{ paddingHorizontal: 16 }}
+            gradientColor={theme.colors.highlightDarkColor}
+          />
+        </View>
       )}
     </SafeAreaView>
   );

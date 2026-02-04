@@ -12,6 +12,7 @@ const translations = {
       next: 'Next',
       back: 'Back',
       chooseWords: 'Now select words, which translate you know',
+      skip: 'Skip explanation',
     },
     mainScreen: {
       alreadyPassed: 'It has been',
@@ -244,6 +245,7 @@ const translations = {
       start: 'Почати',
       next: 'Наступне',
       back: 'Назад',
+      skip: 'Пропустити пояснення',
     },
     chooseLanguageScreen: {
       whichLanguage: 'Яку мову ви хочете вивчати?',
