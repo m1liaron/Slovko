@@ -35,7 +35,7 @@ type CardListProps = {
 };
 
 const CardList = ({ shownCards, groupId }: CardListProps) => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height } = useWindowDimensions();
 
   const {
     theme: { colors },
@@ -70,6 +70,7 @@ const CardList = ({ shownCards, groupId }: CardListProps) => {
           keyExtractor={(item) => item.id}
           contentContainerStyle={[
             {
+              height: height / 2,
               padding: screenWidth < 620 ? 20 : 50,
               paddingBottom: 20,
             },

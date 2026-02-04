@@ -113,6 +113,8 @@ const translations = {
       noCardsLearned: 'No Cards',
       learned: 'Learned',
       chooseModes: 'Choose how you want to learn',
+      groupNotFound: 'I am so sorry, your group was not found',
+      resetFilters: 'Reset filters',
       cardList: {
         addCardTitle: 'Add a Card!',
         oneCard: 'Single',
@@ -354,6 +356,8 @@ const translations = {
       noCardsLearned: 'Немає Карток',
       learned: 'Вивчених',
       chooseModes: 'Оберіть як ви хочете навчатися',
+      groupNotFound: 'Вибачте, ваша група не була знайдена',
+      resetFilters: 'Скинути фільтри',
       cardList: {
         addCardTitle: 'Додайте Карточку!',
         oneCard: 'Одна',

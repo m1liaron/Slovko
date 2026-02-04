@@ -22,9 +22,9 @@ import { GroupProgress } from './components/GroupProgress/GroupProgress';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import BackButton from '@/components/BackButton/BackButton';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { selectVisibleCards } from '@/redux/cardReducer/cardSelector';
 import { useEffect } from 'react';
 import { setRangeLimit } from '@/redux/cardReducer/cardSlice';
+import { i18n } from '@/localization/i18n';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -74,7 +74,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     return (
       <ThemeBackground>
         <BackButton />
-        <ThemeText>I am so sorry, your group was not found</ThemeText>
+        <ThemeText>{i18n.t('group.groupNotFound')}</ThemeText>
       </ThemeBackground>
     );
   }
@@ -101,15 +101,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         />
       </View>
 
-      <View
-        style={{
-          flexShrink: isDesktop ? 0 : 1,
-          flex: 1,
-          paddingHorizontal: isDesktop ? 32 : 20,
-        }}
-      >
-        <CardList shownCards={filteredCards} groupId={groupId} />
-      </View>
+      <CardList shownCards={filteredCards} groupId={groupId} />
 
       <GroupActions
         hasCards={filteredCards.length > 1}

@@ -6,10 +6,9 @@ const useLearnCards = (
   initialCards: ICard[],
   setFlashCards: (card: ICard, isCorrect: boolean) => void,
 ) => {
+  const sortedWords = [...initialCards].sort(() => Math.random() - 0.5);
   const [learnedWordsIdes, setLearnedWordsIdes] = useState<number[]>([]);
-  const [learningCards, setLearningCards] = useState<ICard[]>([
-    ...initialCards,
-  ]);
+  const [learningCards, setLearningCards] = useState<ICard[]>(sortedWords);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isHorizontalSwipe, setIsHorizontalSwipe] = useState(false);
   const [isTranslateShow, setIsTranslateShow] = useState(false);

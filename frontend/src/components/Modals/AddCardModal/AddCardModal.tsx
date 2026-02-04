@@ -31,6 +31,7 @@ import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
+import Icon from 'react-native-vector-icons/Fontisto';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;
@@ -317,9 +318,17 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return formattedWord;
     }
 
-    const validatedAnswer = isValidateWord
-      ? validateWord(answerWord)
-      : answerWord;
+    function formatUpperCaseWord(word: string) {
+      const formattedWord = word
+        .split(' ')
+        .filter(Boolean)
+        .map(
+          (subWord) =>
+            subWord.charAt(0).toUpperCase() + subWord.slice(1).toLowerCase(),
+        )
+        .join(' ');
+      return formattedWord;
+    }
 
     if (textPlain.length > 0) {
       const validatedTextPlain = convertTextToObject(String(textPlain));
@@ -341,7 +350,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     if (Object.keys(valueWords)?.length > 0) {
       const payloads = Object.entries(valueWords).map(([w, t]) => ({
         word: validateWord(w),
-        translateWord: t,
+        translateWord: formatUpperCaseWord(t),
         imageUri: '',
         groupId,
       }));
@@ -358,7 +367,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
         tempId: `local-${uuid()}`,
         card: {
           word: validateWord(value),
-          translateWord: validatedAnswer,
+          translateWord: formatUpperCaseWord(answerWord),
           imageUri: finalImageUri || '',
           groupId,
         },
@@ -679,8 +688,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                     <Image
                       source={{ uri: imageUri }}
                       style={{
-                        width: 160,
-                        height: 160,
+                        width: 140,
+                        height: 140,
                         borderRadius: 12,
                         resizeMode: 'cover',
                       }}
