@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -21,27 +22,42 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
+import { LanguageCode, useLanguage } from '@/contexts/LanguageProvider';
+import { Language } from '@/common/enums/types/language.type';
 
 const languages = [
-  { id: 1, title: i18n.t('chooseLanguageScreen.english'), flag: '🇬🇧' },
-  { id: 2, title: i18n.t('chooseLanguageScreen.german'), flag: '🇩🇪' },
-  { id: 3, title: i18n.t('chooseLanguageScreen.spanish'), flag: '🇪🇸' },
-  { id: 4, title: i18n.t('chooseLanguageScreen.french'), flag: '🇫🇷' },
-  { id: 5, title: i18n.t('chooseLanguageScreen.italian'), flag: '🇮🇹' },
-  { id: 6, title: i18n.t('chooseLanguageScreen.portuguese'), flag: '🇵🇹' },
-  { id: 8, title: i18n.t('chooseLanguageScreen.chinese'), flag: '🇨🇳' },
-  { id: 9, title: i18n.t('chooseLanguageScreen.japanese'), flag: '🇯🇵' },
-  { id: 10, title: i18n.t('chooseLanguageScreen.korean'), flag: '🇰🇷' },
-  { id: 11, title: i18n.t('chooseLanguageScreen.dutch'), flag: '🇳🇱' },
-  { id: 12, title: i18n.t('chooseLanguageScreen.swedish'), flag: '🇸🇪' },
-  { id: 13, title: i18n.t('chooseLanguageScreen.norwegian'), flag: '🇳🇴' },
-  { id: 14, title: i18n.t('chooseLanguageScreen.danish'), flag: '🇩🇰' },
-  { id: 15, title: i18n.t('chooseLanguageScreen.finnish'), flag: '🇫🇮' },
-  { id: 16, title: i18n.t('chooseLanguageScreen.polish'), flag: '🇵🇱' },
-  { id: 17, title: i18n.t('chooseLanguageScreen.turkish'), flag: '🇹🇷' },
-  { id: 18, title: i18n.t('chooseLanguageScreen.arabic'), flag: '🇸🇦' },
-  { id: 19, title: i18n.t('chooseLanguageScreen.hindi'), flag: '🇮🇳' },
-  { id: 20, title: i18n.t('chooseLanguageScreen.ukrainian'), flag: '🇺🇦' },
+  { id: 1, title: 'English', flag: '🇬🇧' },
+  { id: 2, title: 'German', flag: '🇩🇪' },
+  { id: 3, title: 'Spanish', flag: '🇪🇸' },
+  { id: 4, title: 'French', flag: '🇫🇷' },
+  { id: 5, title: 'Italian', flag: '🇮🇹' },
+  { id: 6, title: 'Portuguese', flag: '🇵🇹' },
+  { id: 8, title: 'Chinese', flag: '🇨🇳' },
+  { id: 9, title: 'Japanese', flag: '🇯🇵' },
+  { id: 10, title: 'Korean', flag: '🇰🇷' },
+  { id: 11, title: 'Dutch', flag: '🇳🇱' },
+  { id: 12, title: 'Swedish', flag: '🇸🇪' },
+  { id: 13, title: 'Norwegian', flag: '🇳🇴' },
+  { id: 14, title: 'Danish', flag: '🇩🇰' },
+  { id: 15, title: 'Finnish', flag: '🇫🇮' },
+  { id: 16, title: 'Polish', flag: '🇵🇱' },
+  { id: 17, title: 'Turkish', flag: '🇹🇷' },
+  { id: 18, title: 'Arabic', flag: '🇸🇦' },
+  { id: 19, title: 'Hindi', flag: '🇮🇳' },
+  { id: 20, title: "Ukrainian'", flag: '🇺🇦' },
+];
+
+const appLanguages: { title: string; flag: string; value: LanguageCode }[] = [
+  {
+    title: 'English',
+    flag: '🇬🇧',
+    value: 'en',
+  },
+  {
+    title: 'Ukranian',
+    flag: '🇺🇦',
+    value: 'uk',
+  },
 ];
 
 const ChooseLanguageScreen = () => {
@@ -49,12 +65,14 @@ const ChooseLanguageScreen = () => {
   const { theme } = useAppTheme();
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
+  const { setLanguage, language } = useLanguage();
+  const { selectedLanguage } = useAppSelector((state) => state.sections);
 
   const [filteredLanguages, setFilteredLanguages] = useState<
     { id: number; title: string; flag: string }[]
   >([]);
+  const [showAppLanguages, setShowAppLanguages] = useState(true);
   const [searchInput, setSearchInput] = useState<string>('');
-  const { selectedLanguage } = useAppSelector((state) => state.sections);
 
   useEffect(() => {
     if (searchInput) {
@@ -66,6 +84,15 @@ const ChooseLanguageScreen = () => {
       setFilteredLanguages(languages);
     }
   }, [searchInput]);
+
+  const handleShowNext = () => {
+    if (showAppLanguages) {
+      setShowAppLanguages(false);
+    } else {
+      setShowAppLanguages(true);
+      navigation.navigate(AppPath.ChooseWords);
+    }
+  };
 
   return (
     <SafeAreaView
@@ -99,7 +126,9 @@ const ChooseLanguageScreen = () => {
             color: '#fff',
           }}
         >
-          {i18n.t('chooseLanguageScreen.whichLanguage')}
+          {showAppLanguages
+            ? i18n.t('chooseLanguageScreen.chooseAppLanguage')
+            : i18n.t('chooseLanguageScreen.whichLanguage')}
         </Text>
       </View>
 
@@ -116,62 +145,124 @@ const ChooseLanguageScreen = () => {
         />
       </View>
 
-      {/* Language List */}
-      {filteredLanguages.length === 0 ? (
-        <Loading />
+      {showAppLanguages ? (
+        <>
+          {appLanguages.length === 0 ? (
+            <Loading />
+          ) : (
+            <>
+              <FlatList
+                data={appLanguages}
+                contentContainerStyle={{
+                  flexDirection: width < 720 ? 'column' : 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: 20,
+                }}
+                renderItem={({ item, index }) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => setLanguage(item.value)}
+                    style={{
+                      width: 200,
+                      marginBottom: 16,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingVertical: 18,
+                      paddingHorizontal: 20,
+                      backgroundColor:
+                        language === item.value
+                          ? theme.colors.highlightColor
+                          : theme.colors.lightBackground,
+                      borderRadius: 16,
+                      shadowColor: '#000',
+                      shadowOpacity: 0.08,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 4,
+                      elevation: 2,
+                    }}
+                  >
+                    <Text style={{ fontSize: 28, marginRight: 15 }}>
+                      {item.flag}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: '600',
+                        color:
+                          language === item.value || theme.dark
+                            ? '#fff'
+                            : '#000',
+                      }}
+                    >
+                      {item.title}
+                    </Text>
+                  </Pressable>
+                )}
+              />
+            </>
+          )}
+        </>
       ) : (
         <>
-          <FlatList
-            data={filteredLanguages}
-            contentContainerStyle={{
-              flexDirection: width < 720 ? 'column' : 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: 20,
-            }}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                key={item.id}
-                activeOpacity={0.7}
-                onPress={() => dispatch(setSelectedLanguage(item.title))}
-                style={{
-                  width: 200,
-                  marginBottom: 16,
-                  flexDirection: 'row',
+          {filteredLanguages.length === 0 ? (
+            <Loading />
+          ) : (
+            <>
+              <FlatList
+                data={filteredLanguages}
+                contentContainerStyle={{
+                  flexDirection: width < 720 ? 'column' : 'row',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  paddingVertical: 18,
-                  paddingHorizontal: 20,
-                  backgroundColor:
-                    selectedLanguage === item.title
-                      ? theme.colors.highlightColor
-                      : theme.colors.lightBackground,
-                  borderRadius: 16,
-                  shadowColor: '#000',
-                  shadowOpacity: 0.08,
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowRadius: 4,
-                  elevation: 2,
+                  flexWrap: 'wrap',
+                  gap: 20,
                 }}
-              >
-                <Text style={{ fontSize: 28, marginRight: 15 }}>
-                  {item.flag}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: '600',
-                    color:
-                      selectedLanguage === item.title || theme.dark
-                        ? '#fff'
-                        : '#000',
-                  }}
-                >
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    activeOpacity={0.7}
+                    onPress={() => dispatch(setSelectedLanguage(item.title))}
+                    style={{
+                      width: 200,
+                      marginBottom: 16,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingVertical: 18,
+                      paddingHorizontal: 20,
+                      backgroundColor:
+                        selectedLanguage === item.title
+                          ? theme.colors.highlightColor
+                          : theme.colors.lightBackground,
+                      borderRadius: 16,
+                      shadowColor: '#000',
+                      shadowOpacity: 0.08,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowRadius: 4,
+                      elevation: 2,
+                    }}
+                  >
+                    <Text style={{ fontSize: 28, marginRight: 15 }}>
+                      {item.flag}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: '600',
+                        color:
+                          selectedLanguage === item.title || theme.dark
+                            ? '#fff'
+                            : '#000',
+                      }}
+                    >
+                      {item.title}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </>
+          )}
         </>
       )}
 
@@ -185,7 +276,7 @@ const ChooseLanguageScreen = () => {
         >
           <View style={{ flex: 1 }}>
             <PressableButton
-              onPress={() => navigation.navigate(AppPath.ChooseWords)}
+              onPress={handleShowNext}
               text={i18n.t('welcomeScreen.next')}
             />
           </View>
@@ -194,7 +285,7 @@ const ChooseLanguageScreen = () => {
             onPress={() => navigation.navigate(AppPath.Register)}
             text={i18n.t('welcomeScreen.skip')}
             buttonStyle={{ paddingHorizontal: 16 }}
-            gradientColor={theme.colors.highlightDarkColor}
+            gradientColor={theme.colors.danger}
           />
         </View>
       )}

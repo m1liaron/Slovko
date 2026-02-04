@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
   Text,
@@ -80,7 +79,7 @@ const WelcomeScreen = () => {
           onPress={() => navigation.navigate(AppPath.Register)}
           text={i18n.t('welcomeScreen.skip')}
           buttonStyle={{ width: '100%' }}
-          gradientColor={colors.highlightDarkColor}
+          gradientColor={colors.danger}
         />
       </View>
     </SafeAreaView>
