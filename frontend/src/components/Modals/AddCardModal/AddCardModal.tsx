@@ -75,12 +75,15 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       image: '',
     },
   ]);
-  const [showJsonInput, setShowJsonInput] = useState(false);
+  const [showManualCards, setShowManualCards] = useState(false);
 
   const {
     theme: { colors },
   } = useAppTheme();
   const dispatch = useAppDispatch();
+
+  const isJsonOutputExists = Object.keys(jsonOutput).length > 0;
+  const isManyCardsExists = !isJsonOutputExists || manualCards.length > 0;
 
   /**
    * Converts an array of strings or rows (from Excel) into an object.
@@ -171,7 +174,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       }
 
       // If parsing yielded no keys, notify and stop.
-      if (Object.keys(jsonObject).length === 0) {
+      if (isJsonOutputExists) {
         Toast.show({
           type: 'error',
           text1: 'No valid data',
@@ -184,7 +187,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       setJsonOutput(jsonObject);
       setValueWords(jsonObject);
       setManualCards([]);
-      setShowJsonInput(false);
+      setShowManualCards(false);
     };
 
     // Decide which method to read the file:
@@ -263,7 +266,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
         return;
       }
 
-      if (Object.keys(jsonObject).length === 0) {
+      if (isJsonOutputExists) {
         Toast.show({
           type: 'error',
           text1: 'No valid data',
@@ -420,13 +423,17 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     }
   };
 
+  const showAddCardsToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: i18n.t('common.sorry'),
+      text2: i18n.t('group.cardList.atFirstAddFromFile'),
+    });
+  };
+
   const addManualCard = () => {
     if (Object.values(jsonOutput).length > 0) {
-      Toast.show({
-        type: 'error',
-        text1: i18n.t('common.sorry'),
-        text2: i18n.t('group.cardList.atFirstAddFromFile'),
-      });
+      showAddCardsToast();
       return;
     }
 
@@ -456,6 +463,15 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const removeJsonData = () => {
     setJsonOutput({});
     setValueWords({});
+  };
+
+  const handleShowManualCards = () => {
+    if (isJsonOutputExists) {
+      showAddCardsToast();
+      return;
+    } else {
+      setShowManualCards((prev) => !prev);
+    }
   };
 
   return (
@@ -539,22 +555,28 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                   width: 56,
                   height: 56,
                   borderRadius: 28,
-                  backgroundColor: showJsonInput
+                  backgroundColor: showManualCards
                     ? colors.primary
                     : colors.lightBackground,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-                onPress={() => setShowJsonInput((prev) => !prev)}
+                onPress={handleShowManualCards}
               >
                 <MaterialCommunityIcons
                   name="code-json"
                   size={24}
-                  color={showJsonInput ? colors.background : colors.primary}
+                  color={
+                    showManualCards
+                      ? colors.background
+                      : isJsonOutputExists
+                        ? colors.danger
+                        : colors.primary
+                  }
                 />
               </Pressable>
 
-              {showJsonInput && (
+              {showManualCards && (
                 <View>
                   {manualCards.length > 0 && (
                     <FlatList
@@ -692,7 +714,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
               )}
 
               {/* JSON Preview */}
-              {Object.keys(jsonOutput).length > 0 && (
+              {isJsonOutputExists && (
                 <View>
                   <View
                     style={{
@@ -723,6 +745,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                         name="cross"
                         size={24}
                         color={colors.background}
+                        style={{ cursor: 'pointer' }}
                       />
                     </Pressable>
                   </View>
@@ -933,6 +956,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                 paddingVertical: 16,
                 borderRadius: 12,
               }}
+              disabled={isManyCardsExists}
+              gradientColor={isManyCardsExists ? colors.lightBackground : ''}
               textStyle={{
                 fontSize: 16,
                 fontWeight: '600',
