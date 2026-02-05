@@ -20,6 +20,8 @@ export const useTypeMode = (
   const [valueAnswer, setValueAnswer] = useState('');
   const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
   const [isTranslateShow, setIsTranslateShow] = useState(false);
+  const [isCardAnswered, setIsCardAnswered] = useState(false);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
 
   const checkTimerRef = useRef<NodeJS.Timeout>();
   const resetTimerRef = useRef<NodeJS.Timeout>();
@@ -54,26 +56,38 @@ export const useTypeMode = (
     const currentCard = learningCards[currentCardIndex];
     if (!currentCard) return;
 
+    const correctAnswer =
+      currentCard[isTranslateShow ? 'word' : 'translateWord'];
+
+    const isCorrect =
+      valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
+    if (isCorrect) {
+      setIsAnswerCorrect(true);
+    } else if (isCorrect === false) {
+      setIsAnswerCorrect(false);
+    }
+
+    if (isCardAnswered) {
+      if (isCorrect) {
+        swiperRef.current?.swipeRight();
+        setPlaceholderColor(colors.success);
+        setIsCardAnswered(false);
+        setValueAnswer('');
+      } else {
+        swiperRef.current?.swipeLeft();
+        setPlaceholderColor(colors.danger);
+        setIsCardAnswered(false);
+        setValueAnswer('');
+      }
+      setIsAnswerCorrect(null);
+    }
+
     handleFlipCard(currentCardIndex);
 
     clearTimers();
-
-    checkTimerRef.current = setTimeout(() => {
-      const correctAnswer =
-        currentCard[isTranslateShow ? 'word' : 'translateWord'];
-      const isCorrect =
-        valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
-
-      if (isCorrect) {
-        swiperRef.current?.swipeRight();
-        setPlaceholderColor('#62c485');
-      } else {
-        swiperRef.current?.swipeLeft();
-        setPlaceholderColor('#ff1100');
-      }
-
-      setValueAnswer('');
-    }, 1000);
+    if (!isCardAnswered) {
+      setIsCardAnswered(true);
+    }
 
     setIsTranslateShow((prev) => !prev);
     resetTimerRef.current = setTimeout(() => {
@@ -97,5 +111,8 @@ export const useTypeMode = (
     toggleTypeMode,
     handleAnswerChange,
     checkAnswer,
+    isTranslateShow,
+    isCardAnswered,
+    isAnswerCorrect,
   };
 };

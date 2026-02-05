@@ -14,6 +14,8 @@ interface AnswerInputProps {
   placeholderColor: string;
   onAnswerChange: (text: string) => void;
   onCheckAnswer: () => void;
+  isTranslateShow: boolean;
+  isCardAnswered: boolean;
 }
 
 export const AnswerInput: React.FC<AnswerInputProps> = ({
@@ -22,6 +24,8 @@ export const AnswerInput: React.FC<AnswerInputProps> = ({
   placeholderColor,
   onAnswerChange,
   onCheckAnswer,
+  isTranslateShow,
+  isCardAnswered,
 }) => {
   const {
     theme: { colors },
@@ -65,10 +69,18 @@ export const AnswerInput: React.FC<AnswerInputProps> = ({
           placeholderTextColor={placeholderColor}
           onChangeText={onAnswerChange}
           height={50}
-          placeholder={i18n.t('learnScreen.learnCards.answer')}
+          placeholder={
+            isTranslateShow
+              ? i18n.t('learnScreen.learnCards.typeTranslate')
+              : i18n.t('learnScreen.learnCards.typeWord')
+          }
         />
         <PressableButton
-          text={i18n.t('learnScreen.learnCards.checkAnswer')}
+          text={
+            isCardAnswered
+              ? i18n.t('welcomeScreen.next')
+              : i18n.t('learnScreen.learnCards.checkAnswer')
+          }
           onPress={onCheckAnswer}
         />
       </View>

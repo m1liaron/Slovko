@@ -39,6 +39,7 @@ const PressableButton = ({
       style={({ pressed }) => [
         { opacity: pressed ? 0.9 : 1 },
         { borderRadius: 14, overflow: 'hidden' },
+        buttonStyle,
       ]}
       disabled={disabled}
     >
@@ -46,7 +47,7 @@ const PressableButton = ({
         colors={[gradientColor || highlightColor, highlightDarkColor]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[styles.button, buttonStyle]}
+        style={[styles.button]}
       >
         {text ? (
           <Text style={[styles.buttonText, { color: '#fff' }, textStyle]}>

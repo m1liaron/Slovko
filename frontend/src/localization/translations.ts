@@ -223,6 +223,8 @@ const translations = {
         answer: 'Type in Answer',
         checkAnswer: 'Check',
         tapToFlip: 'Tap to Flip',
+        typeWord: 'Type in word',
+        typeTranslate: 'Type in word',
       },
     },
     chooseLanguageScreen: {
@@ -511,6 +513,8 @@ const translations = {
         swipeLeft: 'Проведіть вліво, якщо не знаєте',
         swipeRight: 'Проведіть вправо, якщо не знаєте',
         answer: 'Напишіть відповідь',
+        typeWord: 'Напишіть слово',
+        typeTranslate: 'Напишіть перекл',
         checkAnswer: 'Перевірити',
         tapToFlip: 'Натисніть, щоб перегорнути',
       },
