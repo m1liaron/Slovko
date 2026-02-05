@@ -144,7 +144,7 @@ const SharedGroupsScreen = () => {
     ) : null;
 
   const onShowModalOrToast = () => {
-    if (!isConnected || !isAuthenticated || !HAS_TOKEN) {
+    if (!isAuthenticated || !HAS_TOKEN) {
       Toast.show({
         type: 'error',
         text1: i18n.t('common.sorry'),

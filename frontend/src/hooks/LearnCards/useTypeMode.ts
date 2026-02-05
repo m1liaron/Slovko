@@ -62,6 +62,7 @@ export const useTypeMode = (
     const isCorrect =
       valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
     if (isCorrect) {
+      swiperRef.current?.swipeRight();
       setIsAnswerCorrect(true);
     } else if (isCorrect === false) {
       setIsAnswerCorrect(false);
