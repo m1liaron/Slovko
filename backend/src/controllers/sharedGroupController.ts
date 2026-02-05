@@ -24,7 +24,7 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
     user: { id },
   } = req;
   try {
-    const group = await Group.findOne({
+    const groupData = await Group.findOne({
       where: { id: groupId },
       include: [
         {
@@ -32,34 +32,42 @@ const createSharedGroup = async (req: AuthRequest, res: Response) => {
           as: "cards",
         },
       ],
-      raw: true,
     });
+    const group = groupData?.toJSON();
+
     if (!group || !group.cards) {
       return res
-        .status(404)
+        .status(StatusCodes.BAD_REQUEST)
         .json({ error: true, message: "Group is not defined" });
     }
-    const sharedGroup = await SharedGroup.create({
+    if (group.cards.length === 0) {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ error: true, message: "Group doesn't have cards to share" });
+      return;
+    }
+    const sharedGroupData = await SharedGroup.create({
       title: title ? title : group.title,
       userId: id,
       isAnonymous,
       wordsLength: group.cards.length,
     });
-    if (group.cards.length > 0) {
-      await Promise.all(
-        group.cards.map(async (card: Card) => {
-          await SharedCard.create({
-            word: card.word,
-            translateWord: card.translateWord,
-            sharedGroupId: sharedGroup.id,
-          });
-        }),
-      );
-    } else {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: true, message: "There are no cards to share!" });
-    }
+    const sharedGroup = sharedGroupData.toJSON();
+    await Promise.all(
+      group.cards.map(async (card: Card) => {
+        const word = card.word.trim();
+        const translateWord = card.translateWord.trim();
+
+        if (!word || !translateWord) return;
+        if (word.length < 2 || translateWord.length < 2) return;
+
+        await SharedCard.create({
+          word: card.word,
+          translateWord: card.translateWord,
+          sharedGroupId: sharedGroup.id,
+        });
+      }),
+    );
 
     const sharedGroupWithUser = await SharedGroup.findOne({
       where: { id: sharedGroup.id },
@@ -134,19 +142,19 @@ const removeSharedGroup = async (req: AuthRequest, res: Response) => {
     const sharedId = req.params.sharedGroupId;
     const sharedGroup = await SharedGroup.findOne({
       where: { id: sharedId, userId: req.user.id },
-      raw: true,
     });
-    if (!sharedGroup) {
+    const sharedGroupData = sharedGroup?.toJSON();
+    if (!sharedGroupData) {
       return res.status(404).json({ error: true, message: "Group not found" });
     }
-    const { id: sharedGroupId } = sharedGroup;
-    if (sharedGroup.userId !== req.user.id) {
+    const { id: sharedGroupId } = sharedGroupData;
+    if (sharedGroupData.userId !== req.user.id) {
       res
         .status(400)
         .json({ error: true, message: "You are not owner of this group!" });
     }
 
-    await sharedGroup.destroy();
+    await sharedGroup?.destroy();
 
     res.status(200).json(sharedGroupId);
   } catch (error) {
@@ -178,12 +186,10 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
       where: { sectionId, title: sharedGroup.title },
     });
     if (existGroup) {
-      res
-        .status(400)
-        .json({
-          erorr: true,
-          message: "You already have group with this name",
-        });
+      res.status(400).json({
+        erorr: true,
+        message: "You already have group with this name",
+      });
       return;
     }
 
