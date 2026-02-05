@@ -123,6 +123,7 @@ const translations = {
         manyCards: 'Multiple',
         fileTypes: 'Available file types: txt, text/plain',
         importTxt: 'Import .txt',
+        importFromFile: 'Import from file',
         dataTitle: 'Data:',
         chooseImage: 'Choose image from gallery',
         wordPlaceholder: 'Word...',
@@ -131,6 +132,8 @@ const translations = {
         addButton: 'Add',
         learnButton: 'Learn',
         atLeastFourWords: 'At Least Fours Words',
+        atFirstAddFromFile:
+          'Before adding manual add cards from file you imported or remove it',
       },
       sortByDate: 'Sort by date',
       sortByName: 'Sort by name',
@@ -410,6 +413,7 @@ const translations = {
         manyCards: 'Багато',
         fileTypes: 'Доступні типи файлів: txt, text/plain, xlsx, xls',
         importTxt: 'Імпортувати .txt',
+        importFromFile: 'Імпортувати з файлу',
         dataTitle: 'Дані:',
         chooseImage: 'Виберіть зображення з галереї',
         wordPlaceholder: 'Слово...',
@@ -418,6 +422,8 @@ const translations = {
         addButton: 'Додати',
         learnButton: 'Вчитися',
         atLeastFourWords: 'Принаймні 4 слова',
+        atFirstAddFromFile:
+          'Перед цим додайте слова, які ви імпортували з файлу, або видаліть їх',
       },
       sortByDate: 'Сортувати за датою',
       sortByName: 'Сортувати за назвою',

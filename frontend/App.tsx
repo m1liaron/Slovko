@@ -12,6 +12,7 @@ import { ThemeProvider } from './src/contexts/ThemeProvider';
 import ProtectedRoute from './src/navigation/ProtectedRoute/ProtectedRoute';
 import { persistor, store } from './src/redux/store';
 import Toast from 'react-native-toast-message';
+import { View } from 'moti';
 
 export default function App() {
   return (
@@ -22,7 +23,9 @@ export default function App() {
             <PersistGate loading={<Loading />} persistor={persistor}>
               <ConnectivityListener />
               <ProtectedRoute />
-              <Toast />
+              <View style={{ zIndex: 20 }}>
+                <Toast />
+              </View>
             </PersistGate>
           </LanguageProvider>
         </ThemeProvider>

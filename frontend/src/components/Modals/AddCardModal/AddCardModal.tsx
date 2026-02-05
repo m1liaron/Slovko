@@ -1,4 +1,8 @@
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {
+  Entypo,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -13,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import * as XLSX from 'xlsx';
 
 import { getUnsplashPhotos } from '@/api/unsplash';
-import { type AddCardRequest } from '@/common/enums/types/card.type';
+import { ICard, type AddCardRequest } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -32,6 +36,7 @@ import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import Icon from 'react-native-vector-icons/Fontisto';
+import { TextInput } from 'react-native-gesture-handler';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;
@@ -41,6 +46,12 @@ interface AddCardModalProps {
   setShowAddModal: Dispatch<React.SetStateAction<boolean>>;
   groupId: string;
 }
+
+type AddCard = {
+  word: string;
+  translateWord: string;
+  image?: string;
+};
 
 const AddCardModal: React.FC<AddCardModalProps> = ({
   showAddModal,
@@ -57,6 +68,13 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const [imageUri, setImageUri] = useState<string>('');
   const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
   const [textPlain, setTextPlain] = useState('');
+  const [manualCards, setManualCards] = useState<AddCard[]>([
+    {
+      word: '',
+      translateWord: '',
+      image: '',
+    },
+  ]);
   const [showJsonInput, setShowJsonInput] = useState(false);
 
   const {
@@ -162,8 +180,11 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
         return;
       }
 
+      event.target.value = '';
       setJsonOutput(jsonObject);
       setValueWords(jsonObject);
+      setManualCards([]);
+      setShowJsonInput(false);
     };
 
     // Decide which method to read the file:
@@ -399,11 +420,50 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     }
   };
 
+  const addManualCard = () => {
+    if (Object.values(jsonOutput).length > 0) {
+      Toast.show({
+        type: 'error',
+        text1: i18n.t('common.sorry'),
+        text2: i18n.t('group.cardList.atFirstAddFromFile'),
+      });
+      return;
+    }
+
+    const manualCardData = {
+      word: '',
+      translateWord: '',
+      image: '',
+    };
+
+    setManualCards((prev) => [...prev, manualCardData]);
+  };
+
+  const updateManualCardWord = (index: number, word: string) => {
+    const copy = [...manualCards];
+    copy[index].word = word;
+    setManualCards(copy);
+  };
+  const updateManualCardTranslateWord = (
+    index: number,
+    translateWord: string,
+  ) => {
+    const copy = [...manualCards];
+    copy[index].translateWord = translateWord;
+    setManualCards(copy);
+  };
+
+  const removeJsonData = () => {
+    setJsonOutput({});
+    setValueWords({});
+  };
+
   return (
     <DefaultModal
       isVisible={showAddModal}
       handleClose={() => setShowAddModal(false)}
     >
+      <Toast />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           {/* Header */}
@@ -493,25 +553,70 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                   color={showJsonInput ? colors.background : colors.primary}
                 />
               </Pressable>
+
               {showJsonInput && (
                 <View>
-                  <ThemeText
-                    style={{
-                      fontSize: 14,
-                      fontWeight: '600',
-                      marginBottom: 8,
-                      opacity: 0.7,
-                    }}
-                  >
-                    Add words as text
-                  </ThemeText>
-                  <AddInput
-                    placeholder="Enter text in plain format"
-                    placeholderTextColor={colors.lightText}
-                    value={textPlain}
-                    onChangeText={setTextPlain}
-                    height={120}
-                    multiline
+                  {manualCards.length > 0 && (
+                    <FlatList
+                      data={manualCards}
+                      renderItem={({ item, index }) => (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Pressable
+                            onPress={() => pickImage(imageUri, setImageUri)}
+                          >
+                            <Image
+                              source={{
+                                uri: 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
+                              }}
+                            />
+                          </Pressable>
+                          <TextInput
+                            placeholder={i18n.t(
+                              'group.cardList.wordPlaceholder',
+                            )}
+                            placeholderTextColor={colors.lightText}
+                            value={manualCards[index].word}
+                            onChangeText={(value) =>
+                              updateManualCardWord(index, value)
+                            }
+                            style={{
+                              backgroundColor: colors.lightBackground,
+                              padding: 15,
+                              width: '100%',
+                            }}
+                          />
+                          <TextInput
+                            placeholder={i18n.t(
+                              'group.cardList.answerPlaceholder',
+                            )}
+                            placeholderTextColor={colors.lightText}
+                            value={manualCards[index].translateWord}
+                            onChangeText={(value) =>
+                              updateManualCardTranslateWord(index, value)
+                            }
+                            style={{
+                              backgroundColor: colors.lightBackground,
+                              padding: 15,
+                              width: '100%',
+                            }}
+                          />
+                        </View>
+                      )}
+                      contentContainerStyle={{ maxHeight: 250 }}
+                    />
+                  )}
+                  <PressableButton
+                    text={i18n.t('group.cardList.addCardTitle')}
+                    onPress={addManualCard}
+                    gradientColor={colors.danger}
+                    buttonStyle={{ marginTop: 10, padding: 5 }}
+                    textStyle={{ fontSize: 10 }}
                   />
                 </View>
               )}
@@ -570,7 +675,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                           marginBottom: 4,
                         }}
                       >
-                        Import from file
+                        {i18n.t('group.cardList.importFromFile')}
                       </ThemeText>
                       <ThemeText style={{ fontSize: 13, opacity: 0.6 }}>
                         {i18n.t('group.cardList.fileTypes')}
@@ -589,17 +694,38 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
               {/* JSON Preview */}
               {Object.keys(jsonOutput).length > 0 && (
                 <View>
-                  <ThemeText
+                  <View
                     style={{
-                      fontSize: 14,
-                      fontWeight: '600',
-                      marginBottom: 12,
-                      opacity: 0.7,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     }}
                   >
-                    {i18n.t('group.cardList.dataTitle')} (
-                    {Object.keys(jsonOutput).length} items)
-                  </ThemeText>
+                    <ThemeText
+                      style={{
+                        fontSize: 14,
+                        fontWeight: '600',
+                        marginBottom: 12,
+                        opacity: 0.7,
+                      }}
+                    >
+                      {i18n.t('group.cardList.dataTitle')} (
+                      {Object.keys(jsonOutput).length} items)
+                    </ThemeText>
+                    <Pressable
+                      onPress={removeJsonData}
+                      style={{
+                        backgroundColor: colors.danger,
+                        padding: 5,
+                        borderRadius: 100,
+                      }}
+                    >
+                      <Entypo
+                        name="cross"
+                        size={24}
+                        color={colors.background}
+                      />
+                    </Pressable>
+                  </View>
                   <View
                     style={{
                       backgroundColor: colors.lightBackground,
@@ -679,7 +805,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                   buttonStyle={{
                     backgroundColor: colors.lightBackground,
                   }}
-                  textStyle={{ color: colors.primary }}
+                  textStyle={{ color: colors.background }}
                 />
 
                 {/* Selected Image Preview */}
