@@ -9,7 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import { ScrollView } from 'moti';
 import pLimit from 'p-limit';
 import type { Dispatch } from 'react';
-import React, { type ChangeEvent, useState } from 'react';
+import React, { type ChangeEvent, useEffect, useState } from 'react';
 import { FlatList, Image, Platform, Pressable, Text, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import * as XLSX from 'xlsx';
 
 import { getUnsplashPhotos } from '@/api/unsplash';
-import { ICard, type AddCardRequest } from '@/common/enums/types/card.type';
+import { type AddCardRequest } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -35,8 +35,9 @@ import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
-import Icon from 'react-native-vector-icons/Fontisto';
 import { TextInput } from 'react-native-gesture-handler';
+
+import NoAvailableImage from '@/assets/images/No_Image_Available.jpg';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;
@@ -83,7 +84,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const dispatch = useAppDispatch();
 
   const isJsonOutputExists = Object.keys(jsonOutput).length > 0;
-  const isManyCardsExists = !isJsonOutputExists || manualCards.length > 0;
+  const isManyCardsExists = isJsonOutputExists || manualCards.length > 0;
 
   /**
    * Converts an array of strings or rows (from Excel) into an object.
@@ -354,19 +355,19 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return formattedWord;
     }
 
-    if (textPlain.length > 0) {
-      const validatedTextPlain = convertTextToObject(String(textPlain));
-
-      const payloads = Object.entries(validatedTextPlain).map(([w, t]) => ({
-        word: validateWord(w),
-        translateWord: t,
-        imageUri: '',
+    if (manualCards.length > 0) {
+      const payloads = manualCards.map((item) => ({
+        word: validateWord(item.word),
+        translateWord: item.translateWord,
+        imageUri: item.image || '',
         groupId,
       }));
       await addCardsInBatches(payloads);
 
       setValueWords({});
       setJsonOutput({});
+      setShowManualCards(false);
+      setManualCards([]);
       alert('Cards added from file successfully!');
       return;
     }
@@ -591,12 +592,9 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                         >
                           <Pressable
                             onPress={() => pickImage(imageUri, setImageUri)}
+                            style={{ width: 50, height: 50 }}
                           >
-                            <Image
-                              source={{
-                                uri: 'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg',
-                              }}
-                            />
+                            <Image src={NoAvailableImage} />
                           </Pressable>
                           <TextInput
                             placeholder={i18n.t(
@@ -956,8 +954,8 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                 paddingVertical: 16,
                 borderRadius: 12,
               }}
-              disabled={isManyCardsExists}
-              gradientColor={isManyCardsExists ? colors.lightBackground : ''}
+              // disabled={isManyCardsExists}
+              // gradientColor={isManyCardsExists ? colors.lightBackground : ''}
               textStyle={{
                 fontSize: 16,
                 fontWeight: '600',
