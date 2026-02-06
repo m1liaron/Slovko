@@ -172,7 +172,8 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
       where: { id: sharedGroupId },
       include: { model: SharedCard, as: "sharedCards" },
     });
-    const sharedGroup = sharedGroupData?.toJSON();
+    const sharedGroup = sharedGroupData?.get({ plain: true });
+    console.log("Shared cards to copy: ", sharedGroup.sharedCards);
     if (!sharedGroup) {
       return res
         .status(404)
@@ -183,25 +184,36 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
         .json({ error: true, message: "No cards to share" });
     }
 
-    const existGroupData = await Group.findOne({
-      where: { sectionId, title: sharedGroup.title },
-    });
-    const existGroup = existGroupData?.toJSON();
-    if (existGroup) {
-      res.status(400).json({
-        erorr: true,
-        message: "You already have group with this name",
+    if (sectionId.length > 0) {
+      const existGroupData = await Group.findOne({
+        where: { sectionId, title: sharedGroup.title },
       });
-      return;
+      const existGroup = existGroupData?.toJSON();
+      if (existGroup) {
+        res.status(400).json({
+          erorr: true,
+          message: "You already have group with this name",
+        });
+        return;
+      }
     }
 
-    const newGroup = await Group.create({
+    const newGroupData = await Group.create({
       title: sharedGroup.title,
       sectionId,
     });
+    const newGroup = newGroupData?.toJSON();
+
     if (sharedGroup.sharedCards.length > 0) {
+      console.log("Shared cards to copy: ", sharedGroup.sharedCards);
       await Promise.all(
         sharedGroup.sharedCards.map(async (card: Card) => {
+          const word = card.word.trim();
+          const translateWord = card.translateWord.trim();
+
+          if (!word || !translateWord) return;
+          if (word.length < 2 || translateWord.length < 2) return;
+
           Card.create({
             word: card.word,
             translateWord: card.translateWord,

@@ -205,8 +205,6 @@ const addCard = async (req: Request, res: Response) => {
 
     let senseId: number | null = null;
 
-    console.log(`headwordResult.rows.length: `, headwordResult.rows.length);
-    console.log(`headwordResult.rows: `, headwordResult.rows);
     if (headwordResult.rows.length > 0) {
       const headword = headwordResult.rows[0];
       console.log("Headword: ", headword);
@@ -215,8 +213,6 @@ const addCard = async (req: Request, res: Response) => {
         .from(senses)
         .where(eq(senses.headwordId, headword.id))
         .orderBy(senses.id);
-
-      console.log("senseResult: ", senseResult);
 
       const sense = senseResult[0];
       senseId = sense?.id ?? null;

@@ -49,7 +49,6 @@ const SharedGroupsScreen = () => {
   const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
     (state) => state.sharedGroups,
   );
-  const { isConnected } = useAppSelector((state) => state.network);
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
 

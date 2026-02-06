@@ -7,6 +7,7 @@ import {
   FlatList,
   Pressable,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
@@ -34,6 +35,7 @@ import {
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 
 import styles from './SharedGroupDetailsScreen.styles';
+import { addStateGroup } from '@/redux/groupReducer/groupSlice';
 
 /**
  * @param route { object: { params }}
@@ -50,9 +52,11 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { height } = useWindowDimensions();
   const navigation = useNavigation<StackNavigation>();
   const { sharedGroupId } = route.params as { sharedGroupId: string };
   const { sharedGroup } = useAppSelector((state) => state.sharedGroups);
+  const { activeSection } = useAppSelector((state) => state.sections);
   const { user } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
 
@@ -66,7 +70,10 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 
   const handleCopySharedGroup = async () => {
     const action = await dispatch(
-      enqueueOrDispatch(copySharedGroup, sharedGroupId),
+      enqueueOrDispatch(copySharedGroup, {
+        sharedGroupId,
+        activeSectionId: activeSection?.id ?? '',
+      }),
     );
 
     if (copySharedGroup.fulfilled.match(action)) {
@@ -75,6 +82,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
         text1: 'Copied!',
         text2: 'Group copied ✓',
       });
+      dispatch(addStateGroup(action.payload));
     } else if (copySharedGroup.rejected.match(action)) {
       Toast.show({
         type: 'error',
@@ -122,7 +130,7 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
 
         <Text style={{ color: colors.lightText }}>
           {i18n.t('sharedGroup.sharedOn')}:{' '}
-          {formatMDYTime(sharedGroup.createdAt)}
+          {formatMDYTime(String(sharedGroup.createdAt))}
         </Text>
       </View>
 
@@ -134,7 +142,10 @@ const SharedGroupDetailsScreen = ({ route }: SharedGroupDetailsScreenProps) => {
         {sharedGroup?.sharedCards && sharedGroup.sharedCards.length > 0 ? (
           <FlatList
             data={sharedGroup.sharedCards}
-            contentContainerStyle={styles.cardsList}
+            contentContainerStyle={{
+              ...styles.cardsList,
+              height: height * 0.5,
+            }}
             renderItem={({ item }) => (
               <View
                 style={[
