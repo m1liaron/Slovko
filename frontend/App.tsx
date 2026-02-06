@@ -23,9 +23,7 @@ export default function App() {
             <PersistGate loading={<Loading />} persistor={persistor}>
               <ConnectivityListener />
               <ProtectedRoute />
-              <View style={{ zIndex: 20 }}>
-                <Toast />
-              </View>
+              <Toast />
             </PersistGate>
           </LanguageProvider>
         </ThemeProvider>

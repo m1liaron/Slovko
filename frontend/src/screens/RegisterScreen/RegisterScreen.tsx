@@ -89,7 +89,7 @@ const RegisterScreen = () => {
       .unwrap()
       .then(() => {
         initToken();
-        navigation.navigate(AppPath.Home);
+        navigation.navigate(AppPath.HomeNavigation);
       })
       .catch((error) => {
         const message = error.message || i18n.t('errors.loginFailed');

@@ -16,6 +16,7 @@ interface FlashCardProps {
   frontAnimatedStyle: AnimatedStyleProp<ViewStyle>;
   backAnimatedStyle: AnimatedStyleProp<ViewStyle>;
   onFlipCard: (index: number) => void;
+  isAnswerCorrect: boolean | null;
 }
 
 export const FlashCard: React.FC<FlashCardProps> = ({
@@ -25,6 +26,7 @@ export const FlashCard: React.FC<FlashCardProps> = ({
   frontAnimatedStyle,
   backAnimatedStyle,
   onFlipCard,
+  isAnswerCorrect,
 }) => {
   const { isTablet, isMobile, isDesktop } = useResponsive();
   const {
@@ -32,7 +34,11 @@ export const FlashCard: React.FC<FlashCardProps> = ({
   } = useAppTheme();
 
   const cardStyle = {
-    backgroundColor: colors.lightBackground,
+    backgroundColor: isAnswerCorrect
+      ? colors.success
+      : isAnswerCorrect === false
+        ? colors.danger
+        : colors.lightBackground,
     position: 'absolute' as const,
     borderRadius: 24,
     width: '100%',

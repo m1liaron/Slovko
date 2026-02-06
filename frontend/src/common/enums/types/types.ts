@@ -4,7 +4,7 @@ export {
   ICard,
   AddCardRequest,
   IRepeatedGroup,
-  UpdateCardRequst,
+  UpdateCardRequest,
 } from './card.type';
 export {
   IResult,

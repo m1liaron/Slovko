@@ -59,7 +59,13 @@ const ProtectedRoute = () => {
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (firstLaunch !== 'false') {
+      if (firstLaunch === 'true') {
+        if (token) {
+          setInitialRoute(AppPath.HomeNavigation);
+          setIsLoading(false);
+          return;
+        }
+
         await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
         setInitialRoute(AppPath.Welcome);
         setIsLoading(false);
@@ -71,7 +77,7 @@ const ProtectedRoute = () => {
         if (getUser.rejected.match(result) && result.payload?.status === 401) {
           setInitialRoute(AppPath.Login);
         } else {
-          setInitialRoute(AppPath.Main);
+          setInitialRoute(AppPath.HomeNavigation);
         }
       }
 

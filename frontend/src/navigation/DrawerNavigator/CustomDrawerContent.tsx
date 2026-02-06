@@ -28,7 +28,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
   } = useAppTheme();
   const dispatch = useAppDispatch();
   const { sections, activeSection } = useAppSelector((state) => state.sections);
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const languages = useAppSelector((state) => state.languages.languages);
 
   const [showSectionModal, setShowSectionModal] = useState(false);
@@ -75,7 +75,10 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     <View
       style={[
         styles.container,
-        { width: width / 2, backgroundColor: colors.background },
+        {
+          width: width < 720 ? '100%' : width / 3,
+          backgroundColor: colors.background,
+        },
       ]}
     >
       {showLanguages && languages.length > 0 ? (
@@ -105,6 +108,11 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                 </ThemeText>
               </Pressable>
             )}
+            contentContainerStyle={{
+              height: height - 200,
+              margin: 20,
+              paddingBottom: 10,
+            }}
           />
 
           <PressableButton

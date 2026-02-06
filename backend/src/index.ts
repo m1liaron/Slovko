@@ -40,7 +40,7 @@ const start = async () => {
     await connectDB();
     console.log("Database connected, attempting to sync models...");
     await sequelize.sync({ alter: true });
-    // await ensureLanguages();
+    await ensureLanguages();
 
     app.listen(port, () => {
       console.log(`Server running on port http://127.0.0.1:${port}`);

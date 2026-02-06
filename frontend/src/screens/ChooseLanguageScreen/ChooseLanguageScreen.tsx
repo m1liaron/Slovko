@@ -266,29 +266,27 @@ const ChooseLanguageScreen = () => {
         </>
       )}
 
-      {selectedLanguage?.length > 0 && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <PressableButton
-              onPress={handleShowNext}
-              text={i18n.t('welcomeScreen.next')}
-            />
-          </View>
-
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ flex: 1 }}>
           <PressableButton
-            onPress={() => navigation.navigate(AppPath.Register)}
-            text={i18n.t('welcomeScreen.skip')}
-            buttonStyle={{ paddingHorizontal: 16 }}
-            gradientColor={theme.colors.danger}
+            onPress={handleShowNext}
+            text={i18n.t('welcomeScreen.next')}
           />
         </View>
-      )}
+
+        <PressableButton
+          onPress={() => navigation.navigate(AppPath.Register)}
+          text={i18n.t('welcomeScreen.skip')}
+          buttonStyle={{ paddingHorizontal: 16 }}
+          gradientColor={theme.colors.danger}
+        />
+      </View>
     </SafeAreaView>
   );
 };
