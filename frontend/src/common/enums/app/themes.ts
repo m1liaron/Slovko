@@ -10,6 +10,7 @@ type Theme = {
     highlightDarkColor: string;
     lightText: string;
     danger: string;
+    success: string;
   };
 };
 
@@ -24,7 +25,8 @@ const lightTheme: Theme = {
     text: '#12171D',
     highlightColor: '#9E2CE2',
     highlightDarkColor: '#7533EE',
-    danger: '#AF0606',
+    danger: '#f17878',
+    success: '#a3ebbc',
   },
 };
 
@@ -39,7 +41,8 @@ const darkTheme: Theme = {
     text: '#fff',
     highlightColor: '#9E2CE2',
     highlightDarkColor: '#7533EE',
-    danger: '#AF0606',
+    danger: '#f1787',
+    success: '#a3ebbc',
   },
 };
 

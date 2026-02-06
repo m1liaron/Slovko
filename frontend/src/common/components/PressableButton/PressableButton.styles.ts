@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   button: {
+    flex: 1,
+    width: '100%',
     paddingVertical: 14,
     borderRadius: 20,
     shadowColor: '#ffffffff',

@@ -19,7 +19,7 @@ const StatisticsScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const { statistics } = useAppSelector(selectResult);
+  const { statistics } = useAppSelector((state) => state.results);
   const [selectedMode, setSelectedMode] = useState<string>('flashCards');
   const [selectedWordsMode, setSelectedWordsMode] =
     useState<string>('wordLength'); // Mistakes || wordLength;
@@ -47,8 +47,9 @@ const StatisticsScreen = () => {
 
   const renderGraph = () => {
     if (!statistics) {
-      return null;
+      return <ActivityIndicator />;
     }
+
     const chartConfig = {
       backgroundColor: colors.highlightColor,
       backgroundGradientFrom: colors.highlightDarkColor,
@@ -61,22 +62,26 @@ const StatisticsScreen = () => {
       },
     };
 
-    if (!statistics) {
-      return <ActivityIndicator />;
-    }
-
     const selectedModeKey =
       selectedMode as keyof IStatistics['amountMistakesCards'];
     const selectedWordsModeKey =
       selectedWordsMode as keyof IStatistics['amountMistakesCards'][ModeName];
 
+    const currentModeData = statistics.amountMistakesCards[selectedModeKey];
+
+    if (!currentModeData) {
+      return (
+        <ThemeText style={{ fontSize: 40 }}>
+          {i18n.t('statisticsScreen.noData')}
+        </ThemeText>
+      );
+    }
+
     const data = {
       labels: statistics.resultsMonths,
       datasets: [
         {
-          data: statistics.amountMistakesCards[selectedModeKey][
-            selectedWordsModeKey
-          ],
+          data: currentModeData[selectedWordsModeKey] || [],
         },
       ],
     };
@@ -225,7 +230,7 @@ const StatisticsScreen = () => {
               value={selectedGraph}
               placeholder={{
                 label: i18n.t('statisticsScreen.selectGraph'),
-                value: null,
+                value: '',
               }}
               style={{
                 inputWeb: {

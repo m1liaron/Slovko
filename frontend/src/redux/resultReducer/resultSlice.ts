@@ -12,6 +12,7 @@ import {
   getResultsStatistics,
   saveResults,
 } from './resultThunk';
+import { transformResult } from '@/helpers/result/convertResultData';
 
 interface InitialState {
   results: IResult[];
@@ -42,12 +43,16 @@ const resultSlice = createSlice({
   initialState,
   reducers: {
     addStateResult: (state, action) => {
-      const newResult = {
-        ...action.payload,
-        id: uuidv4(),
-        createdAt: new Date(),
-      };
-      state.results.push(newResult);
+      const transformedResult = transformResult(action.payload);
+      state.results.push(transformedResult);
+    },
+    getStateResult: (state, action) => {
+      const { resultId } = action.payload;
+
+      const findResult = state.results.find((result) => result.id === resultId);
+      if (findResult) {
+        state.result = findResult;
+      }
     },
     filterResults: (state, action) => {
       state.results = state.filteredResults.filter((item) =>
@@ -143,8 +148,13 @@ const resultSlice = createSlice({
   },
 });
 
-export const { addStateResult, filterResults, sortResults, resetResults } =
-  resultSlice.actions;
+export const {
+  addStateResult,
+  getStateResult,
+  filterResults,
+  sortResults,
+  resetResults,
+} = resultSlice.actions;
 export const selectResult = (state: RootState) => state.results;
 export {
   saveResults,

@@ -1,12 +1,8 @@
 import { Audio } from 'expo-av';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 
-import type { ICard } from '@/common/enums/types/card.type';
-import { useAppSelector } from '@/hooks/redux.hooks';
-
 import { useAppTheme } from '../../../contexts/ThemeProvider';
-import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
 
 import styles from './LearnQuiz.styles';
@@ -30,7 +26,8 @@ const LearnQuiz = ({
   const [quizOptions, setQuizOptions] = useState<QuizOption[]>([]);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [selectedOption, setSelectedOption] = useState<QuizOption | null>(null);
-  const [isSoundPlayed, setIsSoundPlayed] = useState(false);
+
+  const isSoundPlayedRef = useRef(false);
   const currentCard = learningCards[displayedQuizIndex];
 
   useEffect(() => {
@@ -50,7 +47,7 @@ const LearnQuiz = ({
 
   const getIncorrectOptions = () => {
     return learningCards
-      .filter((item, index) => index !== displayedQuizIndex)
+      .filter((_item, index) => index !== displayedQuizIndex)
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)
       .map((item) => ({ text: item.translateWord, isCorrect: false }));
@@ -73,6 +70,7 @@ const LearnQuiz = ({
 
   const handleOptionPress = async (option: QuizOption) => {
     setSelectedOption(option);
+
     if (option.isCorrect) {
       await playSuccessSound();
       setIsCorrect(true);
@@ -80,7 +78,6 @@ const LearnQuiz = ({
       setTimeout(() => {
         moveToNextCard();
         handleSetData(currentCard, true);
-        setIsSoundPlayed(false);
       }, 1000);
     } else {
       setIsCorrect(false);
@@ -93,21 +90,26 @@ const LearnQuiz = ({
   };
 
   const playSuccessSound = async () => {
+    if (isSoundPlayedRef.current) return;
+
+    isSoundPlayedRef.current = true;
+
     try {
-      if (isSoundPlayed) return;
-      setIsSoundPlayed(true);
       const { sound } = await Audio.Sound.createAsync(
         require('../../../assets/audio/success.mp3'),
         { positionMillis: 0 },
       );
 
       await sound.setVolumeAsync(0.2);
-
       await sound.playAsync();
     } catch (error) {
       console.error('Error playing sound', error);
     }
   };
+
+  useEffect(() => {
+    isSoundPlayedRef.current = false;
+  }, [displayedQuizIndex]);
 
   return (
     <>

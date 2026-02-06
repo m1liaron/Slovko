@@ -181,7 +181,7 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
 
     await Card.destroy({ where: { groupId: groupId } });
     await group.destroy();
-    
+
     res.status(StatusCodes.OK).json({ id: groupId });
   } catch (error) {
     sendError(res, error);
@@ -209,7 +209,11 @@ const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
         .json({ error: true, message: "Group not found" });
     }
 
-    res.status(StatusCodes.OK).json(updateGroup);
+    const group = await Group.findOne({
+      where: { id, sectionId },
+    });
+
+    res.status(StatusCodes.OK).json(group);
   } catch (error) {
     sendError(res, error);
   }

@@ -16,7 +16,7 @@ import { getLanguages } from '@/redux/languageReducer/languageThunk';
 import {
   addSection,
   addStateSection,
-  setActiveSectionId,
+  setActiveSection,
 } from '@/redux/sectionReducer/sectionSlice';
 import { HAS_TOKEN } from '@/utils/storage/initToken';
 
@@ -27,10 +27,8 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     theme: { colors },
   } = useAppTheme();
   const dispatch = useAppDispatch();
-  const { sections, activeSectionId } = useAppSelector(
-    (state) => state.sections,
-  );
-  const { width } = useWindowDimensions();
+  const { sections, activeSection } = useAppSelector((state) => state.sections);
+  const { width, height } = useWindowDimensions();
   const languages = useAppSelector((state) => state.languages.languages);
 
   const [showSectionModal, setShowSectionModal] = useState(false);
@@ -77,7 +75,10 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
     <View
       style={[
         styles.container,
-        { width: width / 2, backgroundColor: colors.background },
+        {
+          width: width < 720 ? '100%' : width / 3,
+          backgroundColor: colors.background,
+        },
       ]}
     >
       {showLanguages && languages.length > 0 ? (
@@ -95,7 +96,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                     chosenLanguage?.id === item.id
                       ? colors.highlightColor
                       : colors.primary,
-                  borderWidth: 2,
+                  borderWidth: 5,
                   borderRadius: 20,
                   padding: 20,
                   marginBottom: 20,
@@ -107,6 +108,11 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                 </ThemeText>
               </Pressable>
             )}
+            contentContainerStyle={{
+              height: height - 200,
+              margin: 20,
+              paddingBottom: 10,
+            }}
           />
 
           <PressableButton
@@ -150,7 +156,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
               <Pressable
                 style={{
                   borderColor:
-                    activeSectionId === item.id
+                    activeSection?.id === item.id
                       ? colors.highlightColor
                       : colors.lightBackground,
                   borderWidth: 2,
@@ -158,7 +164,7 @@ const CustomDrawerContent = ({ handleClose }: { handleClose: () => void }) => {
                   padding: 20,
                   marginBottom: 20,
                 }}
-                onPress={() => dispatch(setActiveSectionId(item.id))}
+                onPress={() => dispatch(setActiveSection(item))}
               >
                 <ThemeText>
                   {item.Language?.symbol} {item.title || item.Language?.title}

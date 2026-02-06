@@ -5,6 +5,7 @@ import {
   isPending,
   isRejected,
 } from '@reduxjs/toolkit';
+import { v4 as uuid } from 'uuid';
 
 import type { ICard, IRepeatedGroup } from '@/common/enums/types/types';
 
@@ -20,7 +21,6 @@ import {
   addCard,
   addManyCards,
   getCards,
-  getCardsStorage,
   getRepeatedCards,
   getRepeatedCardsFromIds,
   removeCard,
@@ -114,12 +114,14 @@ const cardSlice = createSlice({
   initialState,
   reducers: {
     addStateManyCards: (state, action) => {
-      const data = action.payload.cards;
+      const data = action.payload.cards.map((card: ICard) => ({
+        ...card,
+        id: uuid(),
+      }));
+
       state.globalCards.push(...data);
       state.cards.push(...data);
-      state.rangeLimit = data.length;
       state.filteredCards = applyTransformation(state);
-      state.rangeLimit = state.filteredCards.length;
     },
     getStateCards: (state, action) => {
       const { groupId } = action.payload;
@@ -138,7 +140,8 @@ const cardSlice = createSlice({
           card.word === newCard.word && card.groupId === newCard.groupId,
       );
       if (existingGroup) {
-        throw new Error('Card with this name already exist');
+        // throw new Error('Card with this name already exist');
+        return;
       }
       const newCardData = {
         id: tempId,
@@ -158,6 +161,13 @@ const cardSlice = createSlice({
       state.globalCards = state.globalCards.filter((card) => card.id !== id);
       state.filteredCards = applyTransformation(state);
       state.rangeLimit = state.filteredCards.length;
+    },
+    removeStateGroupCards: (state, action) => {
+      const { groupId } = action.payload;
+      state.filteredCards = [];
+      state.globalCards = state.globalCards.filter(
+        (card) => card.groupId !== groupId,
+      );
     },
     setRangeLimit: (state, action) => {
       state.rangeLimit = action.payload;
@@ -222,24 +232,13 @@ const cardSlice = createSlice({
       .addCase(getCards.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getCardsStorage.fulfilled, (state, action) => {
-        const { groupId } = action.payload;
-        if (action.payload.groupId) {
-          const groupCards = state.globalCards.filter(
-            (globalCard) => globalCard.groupId !== groupId,
-          );
-          state.cards = groupCards;
-          state.filteredCards = applyTransformation(state);
-          state.rangeLimit = state.filteredCards.length;
-        }
-      })
       .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
         state.cards = action.payload;
       })
       .addCase(addCard.fulfilled, (state, action) => {
         state.globalCards.push(action.payload.card);
         state.cards.push(action.payload.card);
-        state.filteredCards = applyTransformation(state);
+        state.filteredCards.push(action.payload.card);
         state.rangeLimit = state.filteredCards.length;
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
@@ -252,8 +251,10 @@ const cardSlice = createSlice({
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
-        state.globalCards.filter((card) => card.id !== action.payload);
-        state.cards.filter((card) => card.id !== action.payload);
+        state.globalCards = state.globalCards.filter(
+          (card) => card.id !== action.payload,
+        );
+        state.cards = state.cards.filter((card) => card.id !== action.payload);
         state.filteredCards = applyTransformation(state);
         state.rangeLimit = state.filteredCards.length;
       })
@@ -303,6 +304,7 @@ export const {
   addStateManyCards,
   updateStateCard,
   removeStateCard,
+  removeStateGroupCards,
   filterCardsByStatus,
   resetFilter,
   setRangeLimit,

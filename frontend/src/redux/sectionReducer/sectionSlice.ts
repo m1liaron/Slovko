@@ -1,4 +1,3 @@
-
 import { createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -16,7 +15,7 @@ import {
 
 interface InitialState {
   sections: ISection[];
-  activeSectionId: string;
+  activeSection: ISection | null;
   selectedLanguage: string;
   status: IDataStatus;
   error: undefined | null | string;
@@ -25,7 +24,7 @@ interface InitialState {
 
 const initialState: InitialState = {
   sections: [],
-  activeSectionId: '',
+  activeSection: null,
   selectedLanguage: '',
   status: DataStatus.IDLE,
   error: null,
@@ -42,20 +41,20 @@ const sectionSlice = createSlice({
         title: action.payload.title,
       };
       state.sections = [...state.sections, newSection];
-      state.activeSectionId = newSection.id;
+      state.activeSection = newSection;
     },
     setSelectedLanguage: (state, action) => {
       state.selectedLanguage = action.payload;
     },
-    setActiveSectionId: (state, action) => {
-      state.activeSectionId = action.payload;
+    setActiveSection: (state, action) => {
+      state.activeSection = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(getSections.fulfilled, (state, action) => {
-        if (!state.activeSectionId) {
-          state.activeSectionId = action.payload[0].id;
+        if (!state.activeSection) {
+          state.activeSection = action.payload[0];
         }
         if (Array.isArray(action.payload)) {
           state.sections = action.payload;
@@ -63,7 +62,7 @@ const sectionSlice = createSlice({
       })
       .addCase(addSection.fulfilled, (state, action: { payload: ISection }) => {
         state.sections = [...state.sections, action.payload];
-        state.activeSectionId = action.payload.id;
+        state.activeSection = action.payload;
       })
       .addCase(updateSection.fulfilled, (state, action) => {
         const updatedSection = action.payload;
@@ -85,7 +84,7 @@ const sectionSlice = createSlice({
 });
 
 export const selectSections = (state: RootState) => state.sections.sections;
-export const { addStateSection, setActiveSectionId, setSelectedLanguage } =
+export const { addStateSection, setActiveSection, setSelectedLanguage } =
   sectionSlice.actions;
 export const sectionReducers = sectionSlice.reducer;
 

@@ -1,37 +1,35 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { RefObject } from 'react';
 import type Swiper from 'react-native-deck-swiper';
 import Toast from 'react-native-toast-message';
 
 import type { ICard } from '@/common/enums/types/card.type';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 
 export const useTypeMode = (
   learningCards: ICard[],
   currentCardIndex: number,
   swiperRef: RefObject<Swiper<ICard>>,
   handleFlipCard: (index: number) => void,
+  answerResults: Record<string, boolean | null>,
+  setAnswerResults: React.Dispatch<
+    React.SetStateAction<Record<string, boolean | null>>
+  >,
 ) => {
-  const {
-    theme: { colors },
-  } = useAppTheme();
-
   const [showTypeMode, setShowTypeMode] = useState(true);
   const [valueAnswer, setValueAnswer] = useState('');
-  const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
-  const [isTranslateShow, setIsTranslateShow] = useState(false);
+  const [answerSide, setAnswerSide] = useState<'word' | 'translateWord'>(
+    'translateWord',
+  );
+  const [isCardAnswered, setIsCardAnswered] = useState(false);
 
-  const checkTimerRef = useRef<NodeJS.Timeout>();
-  const resetTimerRef = useRef<NodeJS.Timeout>();
-
-  const clearTimers = useCallback(() => {
-    if (checkTimerRef.current) {
-      clearTimeout(checkTimerRef.current);
+  useEffect(() => {
+    if (showTypeMode && currentCardIndex !== 0) {
+      setAnswerSide('translateWord');
+      handleFlipCard(currentCardIndex);
+      setIsCardAnswered(false);
+      setValueAnswer('');
     }
-    if (resetTimerRef.current) {
-      clearTimeout(resetTimerRef.current);
-    }
-  }, []);
+  }, [showTypeMode]);
 
   const toggleTypeMode = () => {
     setShowTypeMode((prev) => !prev);
@@ -41,8 +39,18 @@ export const useTypeMode = (
     setValueAnswer(text);
   }, []);
 
+  const handleSwipe = (cardIndex: number) => {
+    const card = learningCards[cardIndex];
+    if (!card) return;
+
+    setAnswerResults((prev) => ({
+      ...prev,
+      [card.id]: null,
+    }));
+  };
+
   const checkAnswer = useCallback(() => {
-    if (valueAnswer.trim().length === 0) {
+    if (valueAnswer.trim().length === 0 && !isCardAnswered) {
       Toast.show({
         type: 'error',
         text1: 'Fail',
@@ -54,51 +62,51 @@ export const useTypeMode = (
     const currentCard = learningCards[currentCardIndex];
     if (!currentCard) return;
 
-    handleFlipCard(currentCardIndex);
+    if (!isCardAnswered) {
+      const correctAnswer = currentCard[answerSide];
 
-    clearTimers();
-
-    checkTimerRef.current = setTimeout(() => {
-      const correctAnswer =
-        currentCard[isTranslateShow ? 'word' : 'translateWord'];
-      console.log(
-        `Correct answer: ${correctAnswer}, valueAnswer: ${valueAnswer.trim().toLowerCase()}`,
-      );
       const isCorrect =
         valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
 
-      if (isCorrect) {
-        swiperRef.current?.swipeRight();
-        setPlaceholderColor('#62c485');
-      } else {
-        swiperRef.current?.swipeLeft();
-        setPlaceholderColor('#ff1100');
-      }
+      setAnswerResults((prev) => ({
+        ...prev,
+        [currentCard.id]: isCorrect,
+      }));
 
-      setValueAnswer('');
-    }, 1000);
+      handleFlipCard(currentCardIndex);
+      setAnswerSide((prev) => (prev === 'word' ? 'translateWord' : 'word'));
+      setIsCardAnswered(true);
+      return;
+    }
+    const result = answerResults[currentCard.id];
 
-    setIsTranslateShow((prev) => !prev);
-    resetTimerRef.current = setTimeout(() => {
-      setPlaceholderColor(colors.primary);
-    }, 1100);
+    if (result === true) {
+      swiperRef.current?.swipeRight();
+    } else {
+      swiperRef.current?.swipeLeft();
+    }
+
+    setValueAnswer('');
+    setIsCardAnswered(false);
   }, [
     valueAnswer,
     learningCards,
     currentCardIndex,
-    showTypeMode,
     handleFlipCard,
     swiperRef,
-    colors.primary,
-    clearTimers,
+    answerResults,
+    isCardAnswered,
+    answerSide,
   ]);
 
   return {
     showTypeMode,
     valueAnswer,
-    placeholderColor,
     toggleTypeMode,
     handleAnswerChange,
     checkAnswer,
+    answerSide,
+    isCardAnswered,
+    handleSwipe,
   };
 };

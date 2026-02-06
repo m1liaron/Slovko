@@ -27,11 +27,13 @@ export const useLearnScreen = (groupId?: string) => {
   const { filteredCards: learningCards } = useAppSelector(
     (state) => state.cards,
   );
+  const { user } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
   const { repeatedCards, cards, status, shownModes } = useAppSelector(
     (state) => state.cards,
   );
-  const { activeSectionId } = useAppSelector((state) => state.sections);
+  const { activeSection } = useAppSelector((state) => state.sections);
+  const activeSectionId = activeSection?.id;
 
   // Derive enabled modes from shownModes
   const enabledModes: Section[] = [
@@ -107,10 +109,12 @@ export const useLearnScreen = (groupId?: string) => {
         check: 'checkCards',
       };
 
+      console.log('add data', card);
       const sectionKey = sectionKeyMap[currentSection];
       if (sectionKey) {
         updateCardData(sectionKey, card, isCorrect);
       }
+      console.log('sessionData: ', sessionData);
     },
     [currentSection, updateCardData],
   );
@@ -118,6 +122,7 @@ export const useLearnScreen = (groupId?: string) => {
   const saveResultsData = useCallback(() => {
     const resultData = {
       title: projectName || new Date().toString(),
+      userId: user?.id,
       flashCards: sessionData.flashCards,
       quiz: sessionData.quizCards,
       guessWord: sessionData.guessWordCards,
@@ -142,7 +147,7 @@ export const useLearnScreen = (groupId?: string) => {
 
     saveResultsData();
 
-    if (repeatedCards.length) {
+    if (repeatedCards.length && activeSectionId) {
       dispatch(
         enqueueOrDispatch(getRepeatedCards, { sectionId: activeSectionId }),
       );

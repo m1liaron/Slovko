@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,20 +8,17 @@ import {
 
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { getCardsStorage } from '@/redux/cardReducer/cardThunk';
 
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   getCards,
   getStateCards,
-  rangeCards,
   removeCard,
   removeStateCard,
 } from '../../../redux/cardReducer/cardSlice';
 import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
-import { selectVisibleCards } from '@/redux/cardReducer/cardSelector';
 import { ICard } from '@/common/enums/types/card.type';
 
 const MemoCardItem = memo(CardItem);
@@ -38,7 +35,7 @@ type CardListProps = {
 };
 
 const CardList = ({ shownCards, groupId }: CardListProps) => {
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height } = useWindowDimensions();
 
   const {
     theme: { colors },
@@ -73,7 +70,8 @@ const CardList = ({ shownCards, groupId }: CardListProps) => {
           keyExtractor={(item) => item.id}
           contentContainerStyle={[
             {
-              padding: screenWidth < 620 ? 10 : 50,
+              height: height / 2,
+              padding: screenWidth < 620 ? 20 : 50,
               paddingBottom: 20,
             },
           ]}

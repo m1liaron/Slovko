@@ -37,17 +37,18 @@ import {
 
 import styles from './SharedGroupsScreen.styles';
 import { HAS_TOKEN } from '@/utils/storage/initToken';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 const SharedGroupsScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
+  useLanguage();
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
   const { sharedGroups, haveMoreSharedGroups, isLoading } = useAppSelector(
     (state) => state.sharedGroups,
   );
-  const { isConnected } = useAppSelector((state) => state.network);
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
 
@@ -142,7 +143,7 @@ const SharedGroupsScreen = () => {
     ) : null;
 
   const onShowModalOrToast = () => {
-    if (!isConnected || !isAuthenticated || !HAS_TOKEN) {
+    if (!isAuthenticated || !HAS_TOKEN) {
       Toast.show({
         type: 'error',
         text1: i18n.t('common.sorry'),

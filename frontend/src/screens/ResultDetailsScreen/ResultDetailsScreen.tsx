@@ -24,7 +24,10 @@ import ThemeBackground from '../../common/components/ThemeBackground/Themebackgr
 import BackButton from '../../components/BackButton/BackButton';
 import Loading from '../../components/Loading';
 import { useAppTheme } from '../../contexts/ThemeProvider';
-import { getResultDetails } from '../../redux/resultReducer/resultSlice';
+import {
+  getResultDetails,
+  getStateResult,
+} from '../../redux/resultReducer/resultSlice';
 import { formatDurationHHMMSS, formatMDYTime, formatTime } from '../../utils';
 
 import styles from './ResultDetailsScreen.styles';
@@ -41,11 +44,11 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
   const { width } = useWindowDimensions();
   const { resultId } = route.params as { resultId: string };
   const { result, isLoading } = useAppSelector((state) => state.results);
-  const [selectedMode, setSelectedMode] = useState<ModeName>('flashCards'); // 0 - flashCards, 1 - quiz, 2 - guessWord
+  const [selectedMode, setSelectedMode] = useState<ModeName>('flashCards'); // 0 - flashCards, 1 - quiz, 2 - guessWord, 3 - checkTranslate
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(enqueueOrDispatch(getResultDetails, resultId));
+    dispatch(enqueueOrDispatch(getResultDetails, getStateResult, { resultId }));
   }, [resultId]);
 
   const modesMap = useMemo((): Partial<Record<ModeName, IResultMode>> => {
@@ -77,7 +80,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 
   const modesOptionsButtons: { key: ModeName; label: string }[] = [
     { key: 'flashCards', label: i18n.t('resultDetailsScreen.flashCards') },
-    { key: 'check', label: i18n.t('resultDetailsScreen.check') },
+    { key: 'checkTranslate', label: i18n.t('resultDetailsScreen.check') },
     { key: 'quiz', label: i18n.t('resultDetailsScreen.quiz') },
     { key: 'guessWord', label: i18n.t('resultDetailsScreen.guessWord') },
   ];
@@ -162,6 +165,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
       <View style={{ marginHorizontal: width < 640 ? 10 : 50 }}>
         <View style={styles.buttonsContainer}>{renderModeButtons()}</View>
         {isLoading && <Loading />}
+
         {modesMap[selectedMode] && (
           <FlatList
             style={{ height: 400, width: '100%' }}

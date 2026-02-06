@@ -1,0 +1,1 @@
+ALTER TABLE "headwords" DROP CONSTRAINT "headwords_word_unique";

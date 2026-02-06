@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import {
   Image,
   Text,
@@ -16,10 +15,14 @@ import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackgrou
 import { AppPath } from '@/common/enums/app/AppPath';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigation>();
   const { width } = useWindowDimensions();
+  const {
+    theme: { colors },
+  } = useAppTheme();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -69,6 +72,15 @@ const WelcomeScreen = () => {
             buttonStyle={{ width: '100%' }}
           />
         </Animated.View>
+      </View>
+
+      <View style={{ position: 'absolute', bottom: 0, right: 0, padding: 15 }}>
+        <PressableButton
+          onPress={() => navigation.navigate(AppPath.Register)}
+          text={i18n.t('welcomeScreen.skip')}
+          buttonStyle={{ width: '100%' }}
+          gradientColor={colors.danger}
+        />
       </View>
     </SafeAreaView>
   );

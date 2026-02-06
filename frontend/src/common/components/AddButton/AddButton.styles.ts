@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   addButtonContainer: {
-    bottom: 20,
     position: 'absolute',
+    bottom: 20,
     right: 20,
   },
   addButton: {

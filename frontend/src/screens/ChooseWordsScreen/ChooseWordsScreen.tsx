@@ -14,7 +14,6 @@ import { FlatList } from 'react-native-gesture-handler';
 import languagesJson from '@/assets/data/languages.json';
 import IconImage from '@/assets/images/favicon.png';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
-import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 import { AppPath } from '@/common/enums/app/AppPath';
@@ -31,7 +30,6 @@ import {
 import { removeStorageItem, setStorageItem } from '@/utils/storage';
 
 type Word = {
-  id: number;
   title: string;
   level: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
 };
@@ -85,7 +83,9 @@ const ChooseWordsScreen = () => {
   };
 
   const userLevel = () => {
-    if (chosenWords.length === 0) return null;
+    if (chosenWords.length === 0) {
+      return 'A0';
+    }
 
     // Find the highest level where user knows at least 80% of words
     const levelOrder: Word['level'][] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
@@ -144,6 +144,11 @@ const ChooseWordsScreen = () => {
     }
   };
 
+  const wordsTitles = words.map((word) => word.title);
+  const maxWordWidth = Math.max(wordsTitles.length) * 10;
+
+  const isSmallScreenWidth = width < 520;
+
   return (
     <SafeAreaView
       style={{
@@ -154,7 +159,13 @@ const ChooseWordsScreen = () => {
     >
       <WelcomeThemeBackground />
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ alignItems: 'center' }}>
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: isSmallScreenWidth ? 'row' : 'column',
+            flexWrap: 'wrap',
+          }}
+        >
           <Image
             source={IconImage}
             style={{
@@ -164,22 +175,32 @@ const ChooseWordsScreen = () => {
             }}
             resizeMode="contain"
           />
-          <Text style={{ fontWeight: 'bold', fontSize: 30, color: '#fff' }}>
-            Slovko
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                fontWeight: 'bold',
+                fontSize: isSmallScreenWidth ? 20 : 30,
+                color: '#fff',
+              }}
+            >
+              Slovko
+            </Text>
+            <Text
+              numberOfLines={3}
+              style={{
+                flexShrink: 1,
+                textAlign: isSmallScreenWidth ? 'left' : 'center',
+                marginBottom: 40,
+                color: '#fff',
+                fontSize: isSmallScreenWidth ? 14 : 30,
+              }}
+            >
+              {showLevel
+                ? i18n.t('chooseWordsScreen.slogan')
+                : i18n.t('chooseWordsScreen.chooseWords')}
+            </Text>
+          </View>
         </View>
-        <Text
-          style={{
-            fontWeight: '700',
-            textAlign: 'center',
-            marginBottom: 40,
-            color: '#fff',
-          }}
-        >
-          {showLevel
-            ? i18n.t('chooseWordsScreen.slogan')
-            : i18n.t('chooseWordsScreen.chooseWords')}
-        </Text>
 
         {showLevel ? (
           <>
@@ -257,24 +278,34 @@ const ChooseWordsScreen = () => {
                     size={20}
                     color={theme.colors.iconColor}
                   />
-                  <ThemeText>Learning Language</ThemeText>
+                  <ThemeText>
+                    {i18n.t('chooseWordsScreen.learningLanguage')}
+                  </ThemeText>
                 </View>
                 <View
                   style={{
-                    alignSelf: 'flex-start',
-                    padding: 20,
-                    borderRadius: 20,
-                    borderColor: theme.colors.highlightColor,
-                    borderWidth: 3,
-                    marginVertical: 10,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
-                  <ThemeText>{selectedLanguage}</ThemeText>
+                  <View
+                    style={{
+                      alignSelf: 'flex-start',
+                      borderRadius: 20,
+                      padding: 20,
+                      borderColor: theme.colors.highlightColor,
+                      borderWidth: 3,
+                      marginVertical: 10,
+                    }}
+                  >
+                    <ThemeText>{selectedLanguage}</ThemeText>
+                  </View>
+                  <PressableButton
+                    onPress={handleBack}
+                    text={`< ${i18n.t('chooseWordsScreen.changeLanguage')}`}
+                  />
                 </View>
-                <PressableButton
-                  onPress={handleBack}
-                  text={`< ${i18n.t('chooseWordsScreen.changeLanguage')}`}
-                />
               </View>
             </View>
             <View style={{ gap: 10, width: contentWidth, margin: 10 }}>
@@ -294,8 +325,7 @@ const ChooseWordsScreen = () => {
             {words?.length > 0 && (
               <FlatList
                 data={words}
-                numColumns={2}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(_item, index) => index.toString()}
                 contentContainerStyle={{
                   justifyContent: 'center',
                   flexDirection: 'row',
@@ -303,16 +333,12 @@ const ChooseWordsScreen = () => {
                   flexWrap: 'wrap',
                   paddingBottom: 100, // leave space for buttons
                 }}
-                columnWrapperStyle={{
-                  justifyContent: 'center',
-                  gap: 16,
-                }}
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => handleSetChosenWord(item)}
                     style={{
-                      minWidth: 150,
+                      width: maxWordWidth,
                       marginBottom: 16,
                       flexDirection: 'row',
                       alignItems: 'center',
@@ -356,12 +382,12 @@ const ChooseWordsScreen = () => {
             gap: 10,
             alignItems: 'center',
             justifyContent: 'space-between',
-            width: '100%',
             paddingTop: 10,
             position: 'absolute',
             bottom: 30,
             left: 20,
             right: 20,
+            flexWrap: 'wrap',
           }}
         >
           <PressableButton
@@ -369,11 +395,18 @@ const ChooseWordsScreen = () => {
             onPress={handleBack}
             text={i18n.t('welcomeScreen.back')}
           />
-          {chosenWords.length >= 1 && (
+          {chosenWords.length >= 1 ? (
             <PressableButton
               buttonStyle={{ flex: 1 }}
               onPress={() => setShowLevel(true)}
               text={i18n.t('welcomeScreen.next')}
+            />
+          ) : (
+            <PressableButton
+              buttonStyle={{ flex: 1 }}
+              onPress={() => setShowLevel(true)}
+              text={i18n.t('welcomeScreen.noKnow')}
+              gradientColor={theme.colors.danger}
             />
           )}
         </View>

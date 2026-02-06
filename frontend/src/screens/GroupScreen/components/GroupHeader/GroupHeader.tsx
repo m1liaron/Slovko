@@ -6,6 +6,7 @@ import type { IGroup } from '@/common/enums/types/group.type';
 import BackButton from '@/components/BackButton/BackButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useResponsive } from '@/hooks';
+import { useAppSelector } from '@/hooks/redux.hooks';
 
 interface GroupHeaderProps {
   group: IGroup;
@@ -28,6 +29,11 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({
     theme: { colors },
   } = useAppTheme();
   const { isDesktop } = useResponsive();
+  const { filterValue, rangeLimit, cards } = useAppSelector(
+    (state) => state.cards,
+  );
+
+  const isFilterUsed = filterValue.length > 0 || rangeLimit < cards.length;
 
   return (
     <View
@@ -66,7 +72,7 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({
           </View>
         </View>
 
-        <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+        <View style={{ flexDirection: 'row', gap: 15, flexWrap: 'wrap' }}>
           <Pressable
             style={{
               borderRadius: 20,
@@ -77,6 +83,21 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({
             }}
             onPress={onToggleFilters}
           >
+            {isFilterUsed && (
+              <Pressable
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 35,
+                  width: 20,
+                  padding: 5,
+                  borderRadius: 100,
+                  backgroundColor: colors.highlightColor,
+                }}
+              >
+                <ThemeText style={{ textAlign: 'center' }}>1</ThemeText>
+              </Pressable>
+            )}
             <Feather
               name="filter"
               size={20}

@@ -1,205 +1,1939 @@
 {
   "English": [
     {
-      "id": 1,
-      "title": "cat",
+      "title": "Water",
       "level": "A1"
     },
     {
-      "id": 2,
-      "title": "house",
+      "title": "Friend",
       "level": "A1"
     },
     {
-      "id": 3,
-      "title": "water",
+      "title": "Apple",
       "level": "A1"
     },
     {
-      "id": 4,
-      "title": "school",
+      "title": "House",
       "level": "A1"
     },
     {
-      "id": 5,
-      "title": "family",
+      "title": "Book",
       "level": "A1"
     },
     {
-      "id": 6,
-      "title": "friend",
+      "title": "Sun",
       "level": "A1"
     },
     {
-      "id": 7,
-      "title": "computer",
+      "title": "Weather",
       "level": "A2"
     },
     {
-      "id": 8,
-      "title": "important",
+      "title": "Holiday",
       "level": "A2"
     },
     {
-      "id": 9,
-      "title": "beautiful",
+      "title": "Kitchen",
       "level": "A2"
     },
     {
-      "id": 10,
-      "title": "expensive",
+      "title": "Education",
       "level": "B1"
     },
     {
-      "id": 11,
-      "title": "environment",
+      "title": "Promise",
       "level": "B1"
     },
     {
-      "id": 12,
-      "title": "government",
+      "title": "Opinion",
+      "level": "B1"
+    },
+    {
+      "title": "Dangerous",
+      "level": "B1"
+    },
+    {
+      "title": "Scientist",
+      "level": "B1"
+    },
+    {
+      "title": "Success",
+      "level": "B1"
+    },
+    {
+      "title": "Development",
       "level": "B2"
     },
     {
-      "id": 13,
-      "title": "responsibility",
+      "title": "Essential",
       "level": "B2"
     },
     {
-      "id": 14,
-      "title": "opportunity",
+      "title": "Literature",
       "level": "B2"
     },
     {
-      "id": 15,
-      "title": "communication",
+      "title": "Investment",
       "level": "B2"
     },
     {
-      "id": 16,
-      "title": "development",
+      "title": "Hypothesis",
       "level": "C1"
     },
     {
-      "id": 17,
-      "title": "architecture",
+      "title": "Perspective",
       "level": "C1"
     },
     {
-      "id": 18,
-      "title": "psychology",
+      "title": "Substantial",
       "level": "C1"
     },
     {
-      "id": 19,
-      "title": "entrepreneurship",
+      "title": "Serendipity",
       "level": "C2"
     },
     {
-      "id": 20,
-      "title": "sustainability",
+      "title": "Unprecedented",
+      "level": "C2"
+    },
+    {
+      "title": "Implication",
       "level": "C2"
     }
   ],
   "German": [
     {
-      "id": 1,
-      "title": "Katze",
-      "level": "A1"
-    },
-    {
-      "id": 2,
-      "title": "Haus",
-      "level": "A1"
-    },
-    {
-      "id": 3,
       "title": "Wasser",
       "level": "A1"
     },
     {
-      "id": 4,
-      "title": "Schule",
-      "level": "A1"
-    },
-    {
-      "id": 5,
-      "title": "Familie",
-      "level": "A1"
-    },
-    {
-      "id": 6,
       "title": "Freund",
       "level": "A1"
     },
     {
-      "id": 7,
-      "title": "Computer",
+      "title": "Apfel",
+      "level": "A1"
+    },
+    {
+      "title": "Haus",
+      "level": "A1"
+    },
+    {
+      "title": "Buch",
+      "level": "A1"
+    },
+    {
+      "title": "Sonne",
+      "level": "A1"
+    },
+    {
+      "title": "Wetter",
       "level": "A2"
     },
     {
-      "id": 8,
-      "title": "wichtig",
+      "title": "Urlaub",
       "level": "A2"
     },
     {
-      "id": 9,
-      "title": "schön",
+      "title": "Küche",
       "level": "A2"
     },
     {
-      "id": 10,
-      "title": "teuer",
+      "title": "Bildung",
       "level": "B1"
     },
     {
-      "id": 11,
-      "title": "Umwelt",
+      "title": "Versprechen",
       "level": "B1"
     },
     {
-      "id": 12,
-      "title": "Regierung",
-      "level": "B2"
+      "title": "Meinung",
+      "level": "B1"
     },
     {
-      "id": 13,
-      "title": "Verantwortung",
-      "level": "B2"
+      "title": "Gefährlich",
+      "level": "B1"
     },
     {
-      "id": 14,
-      "title": "Möglichkeit",
-      "level": "B2"
+      "title": "Wissenschaftler",
+      "level": "B1"
     },
     {
-      "id": 15,
-      "title": "Kommunikation",
-      "level": "B2"
+      "title": "Erfolg",
+      "level": "B1"
     },
     {
-      "id": 16,
       "title": "Entwicklung",
+      "level": "B2"
+    },
+    {
+      "title": "Wesentlich",
+      "level": "B2"
+    },
+    {
+      "title": "Literatur",
+      "level": "B2"
+    },
+    {
+      "title": "Investition",
+      "level": "B2"
+    },
+    {
+      "title": "Hypothese",
       "level": "C1"
     },
     {
-      "id": 17,
-      "title": "Architektur",
+      "title": "Perspektive",
       "level": "C1"
     },
     {
-      "id": 18,
-      "title": "Psychologie",
+      "title": "Erheblich",
       "level": "C1"
     },
     {
-      "id": 19,
-      "title": "Unternehmertum",
+      "title": "Glücksfall",
       "level": "C2"
     },
     {
-      "id": 20,
-      "title": "Nachhaltigkeit",
+      "title": "Beispiellos",
+      "level": "C2"
+    },
+    {
+      "title": "Auswirkung",
+      "level": "C2"
+    }
+  ],
+  "Spanish": [
+    {
+      "title": "Agua",
+      "level": "A1"
+    },
+    {
+      "title": "Amigo",
+      "level": "A1"
+    },
+    {
+      "title": "Manzana",
+      "level": "A1"
+    },
+    {
+      "title": "Casa",
+      "level": "A1"
+    },
+    {
+      "title": "Libro",
+      "level": "A1"
+    },
+    {
+      "title": "Sol",
+      "level": "A1"
+    },
+    {
+      "title": "Clima",
+      "level": "A2"
+    },
+    {
+      "title": "Vacaciones",
+      "level": "A2"
+    },
+    {
+      "title": "Cocina",
+      "level": "A2"
+    },
+    {
+      "title": "Educación",
+      "level": "B1"
+    },
+    {
+      "title": "Promesa",
+      "level": "B1"
+    },
+    {
+      "title": "Opinión",
+      "level": "B1"
+    },
+    {
+      "title": "Peligroso",
+      "level": "B1"
+    },
+    {
+      "title": "Científico",
+      "level": "B1"
+    },
+    {
+      "title": "Éxito",
+      "level": "B1"
+    },
+    {
+      "title": "Desarrollo",
+      "level": "B2"
+    },
+    {
+      "title": "Esencial",
+      "level": "B2"
+    },
+    {
+      "title": "Literatura",
+      "level": "B2"
+    },
+    {
+      "title": "Inversión",
+      "level": "B2"
+    },
+    {
+      "title": "Hipótesis",
+      "level": "C1"
+    },
+    {
+      "title": "Perspectiva",
+      "level": "C1"
+    },
+    {
+      "title": "Sustancial",
+      "level": "C1"
+    },
+    {
+      "title": "Serendipia",
+      "level": "C2"
+    },
+    {
+      "title": "Precedente",
+      "level": "C2"
+    },
+    {
+      "title": "Implicación",
+      "level": "C2"
+    }
+  ],
+  "French": [
+    {
+      "title": "Eau",
+      "level": "A1"
+    },
+    {
+      "title": "Ami",
+      "level": "A1"
+    },
+    {
+      "title": "Pomme",
+      "level": "A1"
+    },
+    {
+      "title": "Maison",
+      "level": "A1"
+    },
+    {
+      "title": "Livre",
+      "level": "A1"
+    },
+    {
+      "title": "Soleil",
+      "level": "A1"
+    },
+    {
+      "title": "Météo",
+      "level": "A2"
+    },
+    {
+      "title": "Vacances",
+      "level": "A2"
+    },
+    {
+      "title": "Cuisine",
+      "level": "A2"
+    },
+    {
+      "title": "Éducation",
+      "level": "B1"
+    },
+    {
+      "title": "Promesse",
+      "level": "B1"
+    },
+    {
+      "title": "Opinion",
+      "level": "B1"
+    },
+    {
+      "title": "Dangereux",
+      "level": "B1"
+    },
+    {
+      "title": "Scientifique",
+      "level": "B1"
+    },
+    {
+      "title": "Succès",
+      "level": "B1"
+    },
+    {
+      "title": "Développement",
+      "level": "B2"
+    },
+    {
+      "title": "Essentiel",
+      "level": "B2"
+    },
+    {
+      "title": "Littérature",
+      "level": "B2"
+    },
+    {
+      "title": "Investissement",
+      "level": "B2"
+    },
+    {
+      "title": "Hypothèse",
+      "level": "C1"
+    },
+    {
+      "title": "Perspective",
+      "level": "C1"
+    },
+    {
+      "title": "Substantiel",
+      "level": "C1"
+    },
+    {
+      "title": "Sérendipité",
+      "level": "C2"
+    },
+    {
+      "title": "Inédit",
+      "level": "C2"
+    },
+    {
+      "title": "Implication",
+      "level": "C2"
+    }
+  ],
+  "Italian": [
+    {
+      "title": "Acqua",
+      "level": "A1"
+    },
+    {
+      "title": "Amico",
+      "level": "A1"
+    },
+    {
+      "title": "Mela",
+      "level": "A1"
+    },
+    {
+      "title": "Casa",
+      "level": "A1"
+    },
+    {
+      "title": "Libro",
+      "level": "A1"
+    },
+    {
+      "title": "Sole",
+      "level": "A1"
+    },
+    {
+      "title": "Meteo",
+      "level": "A2"
+    },
+    {
+      "title": "Vacanza",
+      "level": "A2"
+    },
+    {
+      "title": "Cucina",
+      "level": "A2"
+    },
+    {
+      "title": "Istruzione",
+      "level": "B1"
+    },
+    {
+      "title": "Promessa",
+      "level": "B1"
+    },
+    {
+      "title": "Opinione",
+      "level": "B1"
+    },
+    {
+      "title": "Pericoloso",
+      "level": "B1"
+    },
+    {
+      "title": "Scienziato",
+      "level": "B1"
+    },
+    {
+      "title": "Successo",
+      "level": "B1"
+    },
+    {
+      "title": "Sviluppo",
+      "level": "B2"
+    },
+    {
+      "title": "Essenziale",
+      "level": "B2"
+    },
+    {
+      "title": "Letteratura",
+      "level": "B2"
+    },
+    {
+      "title": "Investimento",
+      "level": "B2"
+    },
+    {
+      "title": "Ipotesi",
+      "level": "C1"
+    },
+    {
+      "title": "Prospettiva",
+      "level": "C1"
+    },
+    {
+      "title": "Sostanziale",
+      "level": "C1"
+    },
+    {
+      "title": "Serendipità",
+      "level": "C2"
+    },
+    {
+      "title": "Inedito",
+      "level": "C2"
+    },
+    {
+      "title": "Implicazione",
+      "level": "C2"
+    }
+  ],
+  "Portuguese": [
+    {
+      "title": "Água",
+      "level": "A1"
+    },
+    {
+      "title": "Amigo",
+      "level": "A1"
+    },
+    {
+      "title": "Maçã",
+      "level": "A1"
+    },
+    {
+      "title": "Casa",
+      "level": "A1"
+    },
+    {
+      "title": "Livro",
+      "level": "A1"
+    },
+    {
+      "title": "Sol",
+      "level": "A1"
+    },
+    {
+      "title": "Clima",
+      "level": "A2"
+    },
+    {
+      "title": "Férias",
+      "level": "A2"
+    },
+    {
+      "title": "Cozinha",
+      "level": "A2"
+    },
+    {
+      "title": "Educação",
+      "level": "B1"
+    },
+    {
+      "title": "Promessa",
+      "level": "B1"
+    },
+    {
+      "title": "Opinião",
+      "level": "B1"
+    },
+    {
+      "title": "Perigoso",
+      "level": "B1"
+    },
+    {
+      "title": "Cientista",
+      "level": "B1"
+    },
+    {
+      "title": "Sucesso",
+      "level": "B1"
+    },
+    {
+      "title": "Desenvolvimento",
+      "level": "B2"
+    },
+    {
+      "title": "Essencial",
+      "level": "B2"
+    },
+    {
+      "title": "Literatura",
+      "level": "B2"
+    },
+    {
+      "title": "Investimento",
+      "level": "B2"
+    },
+    {
+      "title": "Hipótese",
+      "level": "C1"
+    },
+    {
+      "title": "Perspectiva",
+      "level": "C1"
+    },
+    {
+      "title": "Substancial",
+      "level": "C1"
+    },
+    {
+      "title": "Serendipidade",
+      "level": "C2"
+    },
+    {
+      "title": "Sem precedentes",
+      "level": "C2"
+    },
+    {
+      "title": "Implicação",
+      "level": "C2"
+    }
+  ],
+  "Chinese": [
+    {
+      "title": "水",
+      "level": "A1"
+    },
+    {
+      "title": "朋友",
+      "level": "A1"
+    },
+    {
+      "title": "苹果",
+      "level": "A1"
+    },
+    {
+      "title": "家",
+      "level": "A1"
+    },
+    {
+      "title": "书",
+      "level": "A1"
+    },
+    {
+      "title": "太阳",
+      "level": "A1"
+    },
+    {
+      "title": "天气",
+      "level": "A2"
+    },
+    {
+      "title": "假期",
+      "level": "A2"
+    },
+    {
+      "title": "厨房",
+      "level": "A2"
+    },
+    {
+      "title": "教育",
+      "level": "B1"
+    },
+    {
+      "title": "承诺",
+      "level": "B1"
+    },
+    {
+      "title": "意见",
+      "level": "B1"
+    },
+    {
+      "title": "危险",
+      "level": "B1"
+    },
+    {
+      "title": "科学家",
+      "level": "B1"
+    },
+    {
+      "title": "成功",
+      "level": "B1"
+    },
+    {
+      "title": "发展",
+      "level": "B2"
+    },
+    {
+      "title": "本质",
+      "level": "B2"
+    },
+    {
+      "title": "文学",
+      "level": "B2"
+    },
+    {
+      "title": "投资",
+      "level": "B2"
+    },
+    {
+      "title": "假设",
+      "level": "C1"
+    },
+    {
+      "title": "透视",
+      "level": "C1"
+    },
+    {
+      "title": "实质",
+      "level": "C1"
+    },
+    {
+      "title": "机缘",
+      "level": "C2"
+    },
+    {
+      "title": "空前",
+      "level": "C2"
+    },
+    {
+      "title": "含义",
+      "level": "C2"
+    }
+  ],
+  "Japanese": [
+    {
+      "title": "水",
+      "level": "A1"
+    },
+    {
+      "title": "友達",
+      "level": "A1"
+    },
+    {
+      "title": "りんご",
+      "level": "A1"
+    },
+    {
+      "title": "家",
+      "level": "A1"
+    },
+    {
+      "title": "本",
+      "level": "A1"
+    },
+    {
+      "title": "太陽",
+      "level": "A1"
+    },
+    {
+      "title": "天気",
+      "level": "A2"
+    },
+    {
+      "title": "休日",
+      "level": "A2"
+    },
+    {
+      "title": "台所",
+      "level": "A2"
+    },
+    {
+      "title": "教育",
+      "level": "B1"
+    },
+    {
+      "title": "約束",
+      "level": "B1"
+    },
+    {
+      "title": "意見",
+      "level": "B1"
+    },
+    {
+      "title": "危険",
+      "level": "B1"
+    },
+    {
+      "title": "科学者",
+      "level": "B1"
+    },
+    {
+      "title": "成功",
+      "level": "B1"
+    },
+    {
+      "title": "発展",
+      "level": "B2"
+    },
+    {
+      "title": "不可欠",
+      "level": "B2"
+    },
+    {
+      "title": "文学",
+      "level": "B2"
+    },
+    {
+      "title": "投資",
+      "level": "B2"
+    },
+    {
+      "title": "仮説",
+      "level": "C1"
+    },
+    {
+      "title": "視点",
+      "level": "C1"
+    },
+    {
+      "title": "実質的",
+      "level": "C1"
+    },
+    {
+      "title": "偶然",
+      "level": "C2"
+    },
+    {
+      "title": "前例のない",
+      "level": "C2"
+    },
+    {
+      "title": "含意",
+      "level": "C2"
+    }
+  ],
+  "Korean": [
+    {
+      "title": "물",
+      "level": "A1"
+    },
+    {
+      "title": "친구",
+      "level": "A1"
+    },
+    {
+      "title": "사과",
+      "level": "A1"
+    },
+    {
+      "title": "집",
+      "level": "A1"
+    },
+    {
+      "title": "책",
+      "level": "A1"
+    },
+    {
+      "title": "태양",
+      "level": "A1"
+    },
+    {
+      "title": "날씨",
+      "level": "A2"
+    },
+    {
+      "title": "휴일",
+      "level": "A2"
+    },
+    {
+      "title": "부엌",
+      "level": "A2"
+    },
+    {
+      "title": "교육",
+      "level": "B1"
+    },
+    {
+      "title": "약속",
+      "level": "B1"
+    },
+    {
+      "title": "의견",
+      "level": "B1"
+    },
+    {
+      "title": "위험",
+      "level": "B1"
+    },
+    {
+      "title": "과학자",
+      "level": "B1"
+    },
+    {
+      "title": "성공",
+      "level": "B1"
+    },
+    {
+      "title": "개발",
+      "level": "B2"
+    },
+    {
+      "title": "필수",
+      "level": "B2"
+    },
+    {
+      "title": "문학",
+      "level": "B2"
+    },
+    {
+      "title": "투자",
+      "level": "B2"
+    },
+    {
+      "title": "가설",
+      "level": "C1"
+    },
+    {
+      "title": "관점",
+      "level": "C1"
+    },
+    {
+      "title": "상당한",
+      "level": "C1"
+    },
+    {
+      "title": "뜻밖의 행운",
+      "level": "C2"
+    },
+    {
+      "title": "전례없는",
+      "level": "C2"
+    },
+    {
+      "title": "함축",
+      "level": "C2"
+    }
+  ],
+  "Dutch": [
+    {
+      "title": "Water",
+      "level": "A1"
+    },
+    {
+      "title": "Vriend",
+      "level": "A1"
+    },
+    {
+      "title": "Appel",
+      "level": "A1"
+    },
+    {
+      "title": "Huis",
+      "level": "A1"
+    },
+    {
+      "title": "Boek",
+      "level": "A1"
+    },
+    {
+      "title": "Zon",
+      "level": "A1"
+    },
+    {
+      "title": "Weer",
+      "level": "A2"
+    },
+    {
+      "title": "Vakantie",
+      "level": "A2"
+    },
+    {
+      "title": "Keuken",
+      "level": "A2"
+    },
+    {
+      "title": "Onderwijs",
+      "level": "B1"
+    },
+    {
+      "title": "Belofte",
+      "level": "B1"
+    },
+    {
+      "title": "Mening",
+      "level": "B1"
+    },
+    {
+      "title": "Gevaarlijk",
+      "level": "B1"
+    },
+    {
+      "title": "Wetenschapper",
+      "level": "B1"
+    },
+    {
+      "title": "Succes",
+      "level": "B1"
+    },
+    {
+      "title": "Ontwikkeling",
+      "level": "B2"
+    },
+    {
+      "title": "Essentieel",
+      "level": "B2"
+    },
+    {
+      "title": "Literatuur",
+      "level": "B2"
+    },
+    {
+      "title": "Investering",
+      "level": "B2"
+    },
+    {
+      "title": "Hypothese",
+      "level": "C1"
+    },
+    {
+      "title": "Perspectief",
+      "level": "C1"
+    },
+    {
+      "title": "Aanzienlijk",
+      "level": "C1"
+    },
+    {
+      "title": "Serendipiteit",
+      "level": "C2"
+    },
+    {
+      "title": "Ongekend",
+      "level": "C2"
+    },
+    {
+      "title": "Implicatie",
+      "level": "C2"
+    }
+  ],
+  "Swedish": [
+    {
+      "title": "Vatten",
+      "level": "A1"
+    },
+    {
+      "title": "Vän",
+      "level": "A1"
+    },
+    {
+      "title": "Äpple",
+      "level": "A1"
+    },
+    {
+      "title": "Hus",
+      "level": "A1"
+    },
+    {
+      "title": "Bok",
+      "level": "A1"
+    },
+    {
+      "title": "Sol",
+      "level": "A1"
+    },
+    {
+      "title": "Väder",
+      "level": "A2"
+    },
+    {
+      "title": "Semester",
+      "level": "A2"
+    },
+    {
+      "title": "Kök",
+      "level": "A2"
+    },
+    {
+      "title": "Utbildning",
+      "level": "B1"
+    },
+    {
+      "title": "Löfte",
+      "level": "B1"
+    },
+    {
+      "title": "Åsikt",
+      "level": "B1"
+    },
+    {
+      "title": "Farlig",
+      "level": "B1"
+    },
+    {
+      "title": "Forskare",
+      "level": "B1"
+    },
+    {
+      "title": "Framgång",
+      "level": "B1"
+    },
+    {
+      "title": "Utveckling",
+      "level": "B2"
+    },
+    {
+      "title": "Väsentlig",
+      "level": "B2"
+    },
+    {
+      "title": "Litteratur",
+      "level": "B2"
+    },
+    {
+      "title": "Investering",
+      "level": "B2"
+    },
+    {
+      "title": "Hypotes",
+      "level": "C1"
+    },
+    {
+      "title": "Perspektiv",
+      "level": "C1"
+    },
+    {
+      "title": "Betydande",
+      "level": "C1"
+    },
+    {
+      "title": "Lyckträff",
+      "level": "C2"
+    },
+    {
+      "title": "Enastående",
+      "level": "C2"
+    },
+    {
+      "title": "Innebörd",
+      "level": "C2"
+    }
+  ],
+  "Norwegian": [
+    {
+      "title": "Vann",
+      "level": "A1"
+    },
+    {
+      "title": "Venn",
+      "level": "A1"
+    },
+    {
+      "title": "Eple",
+      "level": "A1"
+    },
+    {
+      "title": "Hus",
+      "level": "A1"
+    },
+    {
+      "title": "Bok",
+      "level": "A1"
+    },
+    {
+      "title": "Sol",
+      "level": "A1"
+    },
+    {
+      "title": "Vær",
+      "level": "A2"
+    },
+    {
+      "title": "Ferie",
+      "level": "A2"
+    },
+    {
+      "title": "Kjøkken",
+      "level": "A2"
+    },
+    {
+      "title": "Utdanning",
+      "level": "B1"
+    },
+    {
+      "title": "Løfte",
+      "level": "B1"
+    },
+    {
+      "title": "Mening",
+      "level": "B1"
+    },
+    {
+      "title": "Farlig",
+      "level": "B1"
+    },
+    {
+      "title": "Forsker",
+      "level": "B1"
+    },
+    {
+      "title": "Suksess",
+      "level": "B1"
+    },
+    {
+      "title": "Utvikling",
+      "level": "B2"
+    },
+    {
+      "title": "Vesentlig",
+      "level": "B2"
+    },
+    {
+      "title": "Litteratur",
+      "level": "B2"
+    },
+    {
+      "title": "Investering",
+      "level": "B2"
+    },
+    {
+      "title": "Hypotese",
+      "level": "C1"
+    },
+    {
+      "title": "Perspektiv",
+      "level": "C1"
+    },
+    {
+      "title": "Betydelig",
+      "level": "C1"
+    },
+    {
+      "title": "Serendipitet",
+      "level": "C2"
+    },
+    {
+      "title": "Enestående",
+      "level": "C2"
+    },
+    {
+      "title": "Implikasjon",
+      "level": "C2"
+    }
+  ],
+  "Danish": [
+    {
+      "title": "Vand",
+      "level": "A1"
+    },
+    {
+      "title": "Ven",
+      "level": "A1"
+    },
+    {
+      "title": "Æble",
+      "level": "A1"
+    },
+    {
+      "title": "Hus",
+      "level": "A1"
+    },
+    {
+      "title": "Bog",
+      "level": "A1"
+    },
+    {
+      "title": "Sol",
+      "level": "A1"
+    },
+    {
+      "title": "Vejr",
+      "level": "A2"
+    },
+    {
+      "title": "Ferie",
+      "level": "A2"
+    },
+    {
+      "title": "Køkken",
+      "level": "A2"
+    },
+    {
+      "title": "Uddannelse",
+      "level": "B1"
+    },
+    {
+      "title": "Løfte",
+      "level": "B1"
+    },
+    {
+      "title": "Mening",
+      "level": "B1"
+    },
+    {
+      "title": "Farlig",
+      "level": "B1"
+    },
+    {
+      "title": "Forsker",
+      "level": "B1"
+    },
+    {
+      "title": "Succes",
+      "level": "B1"
+    },
+    {
+      "title": "Udvikling",
+      "level": "B2"
+    },
+    {
+      "title": "Væsentlig",
+      "level": "B2"
+    },
+    {
+      "title": "Litteratur",
+      "level": "B2"
+    },
+    {
+      "title": "Investering",
+      "level": "B2"
+    },
+    {
+      "title": "Hypotese",
+      "level": "C1"
+    },
+    {
+      "title": "Perspektiv",
+      "level": "C1"
+    },
+    {
+      "title": "Betydelig",
+      "level": "C1"
+    },
+    {
+      "title": "Lykketræf",
+      "level": "C2"
+    },
+    {
+      "title": "Fortilfælde",
+      "level": "C2"
+    },
+    {
+      "title": "Implikation",
+      "level": "C2"
+    }
+  ],
+  "Finnish": [
+    {
+      "title": "Vesi",
+      "level": "A1"
+    },
+    {
+      "title": "Ystävä",
+      "level": "A1"
+    },
+    {
+      "title": "Omena",
+      "level": "A1"
+    },
+    {
+      "title": "Talo",
+      "level": "A1"
+    },
+    {
+      "title": "Kirja",
+      "level": "A1"
+    },
+    {
+      "title": "Aurinko",
+      "level": "A1"
+    },
+    {
+      "title": "Sää",
+      "level": "A2"
+    },
+    {
+      "title": "Loma",
+      "level": "A2"
+    },
+    {
+      "title": "Keittiö",
+      "level": "A2"
+    },
+    {
+      "title": "Koulutus",
+      "level": "B1"
+    },
+    {
+      "title": "Lupaus",
+      "level": "B1"
+    },
+    {
+      "title": "Mielipide",
+      "level": "B1"
+    },
+    {
+      "title": "Vaarallinen",
+      "level": "B1"
+    },
+    {
+      "title": "Tiedemies",
+      "level": "B1"
+    },
+    {
+      "title": "Menestys",
+      "level": "B1"
+    },
+    {
+      "title": "Kehitys",
+      "level": "B2"
+    },
+    {
+      "title": "Olennainen",
+      "level": "B2"
+    },
+    {
+      "title": "Kirjallisuus",
+      "level": "B2"
+    },
+    {
+      "title": "Sijoitus",
+      "level": "B2"
+    },
+    {
+      "title": "Hypoteesi",
+      "level": "C1"
+    },
+    {
+      "title": "Näkökulma",
+      "level": "C1"
+    },
+    {
+      "title": "Merkittävä",
+      "level": "C1"
+    },
+    {
+      "title": "Onnenpotku",
+      "level": "C2"
+    },
+    {
+      "title": "Ennennäkemätön",
+      "level": "C2"
+    },
+    {
+      "title": "Seuraus",
+      "level": "C2"
+    }
+  ],
+  "Polish": [
+    {
+      "title": "Woda",
+      "level": "A1"
+    },
+    {
+      "title": "Przyjaciel",
+      "level": "A1"
+    },
+    {
+      "title": "Jabłko",
+      "level": "A1"
+    },
+    {
+      "title": "Dom",
+      "level": "A1"
+    },
+    {
+      "title": "Książka",
+      "level": "A1"
+    },
+    {
+      "title": "Słońce",
+      "level": "A1"
+    },
+    {
+      "title": "Pogoda",
+      "level": "A2"
+    },
+    {
+      "title": "Wakacje",
+      "level": "A2"
+    },
+    {
+      "title": "Kuchnia",
+      "level": "A2"
+    },
+    {
+      "title": "Edukacja",
+      "level": "B1"
+    },
+    {
+      "title": "Obietnica",
+      "level": "B1"
+    },
+    {
+      "title": "Opinia",
+      "level": "B1"
+    },
+    {
+      "title": "Niebezpieczny",
+      "level": "B1"
+    },
+    {
+      "title": "Naukowiec",
+      "level": "B1"
+    },
+    {
+      "title": "Sukces",
+      "level": "B1"
+    },
+    {
+      "title": "Rozwój",
+      "level": "B2"
+    },
+    {
+      "title": "Istotny",
+      "level": "B2"
+    },
+    {
+      "title": "Literatura",
+      "level": "B2"
+    },
+    {
+      "title": "Inwestycja",
+      "level": "B2"
+    },
+    {
+      "title": "Hipoteza",
+      "level": "C1"
+    },
+    {
+      "title": "Perspektywa",
+      "level": "C1"
+    },
+    {
+      "title": "Znaczny",
+      "level": "C1"
+    },
+    {
+      "title": "Szczęśliwy traf",
+      "level": "C2"
+    },
+    {
+      "title": "Bezprecedensowy",
+      "level": "C2"
+    },
+    {
+      "title": "Implikacja",
+      "level": "C2"
+    }
+  ],
+  "Turkish": [
+    {
+      "title": "Su",
+      "level": "A1"
+    },
+    {
+      "title": "Arkadaş",
+      "level": "A1"
+    },
+    {
+      "title": "Elma",
+      "level": "A1"
+    },
+    {
+      "title": "Ev",
+      "level": "A1"
+    },
+    {
+      "title": "Kitap",
+      "level": "A1"
+    },
+    {
+      "title": "Güneş",
+      "level": "A1"
+    },
+    {
+      "title": "Hava",
+      "level": "A2"
+    },
+    {
+      "title": "Tatil",
+      "level": "A2"
+    },
+    {
+      "title": "Mutfak",
+      "level": "A2"
+    },
+    {
+      "title": "Eğitim",
+      "level": "B1"
+    },
+    {
+      "title": "Söz",
+      "level": "B1"
+    },
+    {
+      "title": "Fikir",
+      "level": "B1"
+    },
+    {
+      "title": "Tehlikeli",
+      "level": "B1"
+    },
+    {
+      "title": "Bilim",
+      "level": "B1"
+    },
+    {
+      "title": "Başarı",
+      "level": "B1"
+    },
+    {
+      "title": "Gelişim",
+      "level": "B2"
+    },
+    {
+      "title": "Esas",
+      "level": "B2"
+    },
+    {
+      "title": "Edebiyat",
+      "level": "B2"
+    },
+    {
+      "title": "Yatırım",
+      "level": "B2"
+    },
+    {
+      "title": "Hipotez",
+      "level": "C1"
+    },
+    {
+      "title": "Perspektif",
+      "level": "C1"
+    },
+    {
+      "title": "Önemli",
+      "level": "C1"
+    },
+    {
+      "title": "Tesadüf",
+      "level": "C2"
+    },
+    {
+      "title": "Eşi benzeri görülmemiş",
+      "level": "C2"
+    },
+    {
+      "title": "İma",
+      "level": "C2"
+    }
+  ],
+  "Arabic": [
+    {
+      "title": "ماء",
+      "level": "A1"
+    },
+    {
+      "title": "صديق",
+      "level": "A1"
+    },
+    {
+      "title": "تفاحة",
+      "level": "A1"
+    },
+    {
+      "title": "منزل",
+      "level": "A1"
+    },
+    {
+      "title": "كتاب",
+      "level": "A1"
+    },
+    {
+      "title": "شمس",
+      "level": "A1"
+    },
+    {
+      "title": "طقس",
+      "level": "A2"
+    },
+    {
+      "title": "عطلة",
+      "level": "A2"
+    },
+    {
+      "title": "مطبخ",
+      "level": "A2"
+    },
+    {
+      "title": "تعليم",
+      "level": "B1"
+    },
+    {
+      "title": "وعد",
+      "level": "B1"
+    },
+    {
+      "title": "رأي",
+      "level": "B1"
+    },
+    {
+      "title": "خطير",
+      "level": "B1"
+    },
+    {
+      "title": "عالم",
+      "level": "B1"
+    },
+    {
+      "title": "نجاح",
+      "level": "B1"
+    },
+    {
+      "title": "تطوير",
+      "level": "B2"
+    },
+    {
+      "title": "جوهري",
+      "level": "B2"
+    },
+    {
+      "title": "أدب",
+      "level": "B2"
+    },
+    {
+      "title": "استثمار",
+      "level": "B2"
+    },
+    {
+      "title": "فرضية",
+      "level": "C1"
+    },
+    {
+      "title": "منظور",
+      "level": "C1"
+    },
+    {
+      "title": "جوهري",
+      "level": "C1"
+    },
+    {
+      "title": "صدفة",
+      "level": "C2"
+    },
+    {
+      "title": "غير مسبوق",
+      "level": "C2"
+    },
+    {
+      "title": "تضمين",
+      "level": "C2"
+    }
+  ],
+  "Hindi": [
+    {
+      "title": "पानी",
+      "level": "A1"
+    },
+    {
+      "title": "मित्र",
+      "level": "A1"
+    },
+    {
+      "title": "सेब",
+      "level": "A1"
+    },
+    {
+      "title": "घर",
+      "level": "A1"
+    },
+    {
+      "title": "किताब",
+      "level": "A1"
+    },
+    {
+      "title": "सूरज",
+      "level": "A1"
+    },
+    {
+      "title": "मौसम",
+      "level": "A2"
+    },
+    {
+      "title": "छुट्टी",
+      "level": "A2"
+    },
+    {
+      "title": "रसोई",
+      "level": "A2"
+    },
+    {
+      "title": "शिक्षा",
+      "level": "B1"
+    },
+    {
+      "title": "वादा",
+      "level": "B1"
+    },
+    {
+      "title": "राय",
+      "level": "B1"
+    },
+    {
+      "title": "खतरनाक",
+      "level": "B1"
+    },
+    {
+      "title": "वैज्ञानिक",
+      "level": "B1"
+    },
+    {
+      "title": "सफलता",
+      "level": "B1"
+    },
+    {
+      "title": "विकास",
+      "level": "B2"
+    },
+    {
+      "title": "आवश्यक",
+      "level": "B2"
+    },
+    {
+      "title": "साहित्य",
+      "level": "B2"
+    },
+    {
+      "title": "निवेश",
+      "level": "B2"
+    },
+    {
+      "title": "परिकल्पना",
+      "level": "C1"
+    },
+    {
+      "title": "दृष्टिकोण",
+      "level": "C1"
+    },
+    {
+      "title": "पर्याप्त",
+      "level": "C1"
+    },
+    {
+      "title": "नसीब",
+      "level": "C2"
+    },
+    {
+      "title": "अभूतपूर्व",
+      "level": "C2"
+    },
+    {
+      "title": "निहितार्थ",
+      "level": "C2"
+    }
+  ],
+  "Ukrainian": [
+    {
+      "title": "Вода",
+      "level": "A1"
+    },
+    {
+      "title": "Друг",
+      "level": "A1"
+    },
+    {
+      "title": "Яблуко",
+      "level": "A1"
+    },
+    {
+      "title": "Дім",
+      "level": "A1"
+    },
+    {
+      "title": "Книга",
+      "level": "A1"
+    },
+    {
+      "title": "Сонце",
+      "level": "A1"
+    },
+    {
+      "title": "Погода",
+      "level": "A2"
+    },
+    {
+      "title": "Відпустка",
+      "level": "A2"
+    },
+    {
+      "title": "Кухня",
+      "level": "A2"
+    },
+    {
+      "title": "Освіта",
+      "level": "B1"
+    },
+    {
+      "title": "Обіцянка",
+      "level": "B1"
+    },
+    {
+      "title": "Думка",
+      "level": "B1"
+    },
+    {
+      "title": "Небезпечний",
+      "level": "B1"
+    },
+    {
+      "title": "Вчений",
+      "level": "B1"
+    },
+    {
+      "title": "Успіх",
+      "level": "B1"
+    },
+    {
+      "title": "Розвиток",
+      "level": "B2"
+    },
+    {
+      "title": "Суттєвий",
+      "level": "B2"
+    },
+    {
+      "title": "Література",
+      "level": "B2"
+    },
+    {
+      "title": "Інвестиція",
+      "level": "B2"
+    },
+    {
+      "title": "Гіпотеза",
+      "level": "C1"
+    },
+    {
+      "title": "Перспектива",
+      "level": "C1"
+    },
+    {
+      "title": "Значний",
+      "level": "C1"
+    },
+    {
+      "title": "Інтуїція",
+      "level": "C2"
+    },
+    {
+      "title": "Безпрецедентний",
+      "level": "C2"
+    },
+    {
+      "title": "Наслідок",
       "level": "C2"
     }
   ]

@@ -29,6 +29,7 @@ import { AppPath } from '../../common/enums/app/app';
 import { login } from '../../redux/userReducer/userSlice';
 
 import styles from './LoginScreen.styles';
+import Loading from '@/components/Loading';
 
 const LoginScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -37,6 +38,7 @@ const LoginScreen = () => {
   const {
     theme: { colors },
   } = useAppTheme();
+  const { isLoading } = useAppSelector((state) => state.user);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -71,7 +73,7 @@ const LoginScreen = () => {
       .unwrap()
       .then(() => {
         initToken();
-        navigation.navigate(AppPath.Home);
+        navigation.navigate(AppPath.HomeNavigation);
       })
       .catch((error) => {
         const message = error.message || i18n.t('errors.loginFailed');
@@ -170,12 +172,16 @@ const LoginScreen = () => {
               </Pressable>
             </View>
 
-            {/* Sign Up Button */}
-            <PressableButton
-              text={i18n.t('loginScreen.loginButton')}
-              buttonStyle={styles.signUpButton}
-              onPress={handleSubmit}
-            />
+            {/* Sign In Button */}
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <PressableButton
+                text={i18n.t('loginScreen.loginButton')}
+                buttonStyle={styles.signUpButton}
+                onPress={handleSubmit}
+              />
+            )}
 
             {/* Divider */}
             <View style={styles.divider}>

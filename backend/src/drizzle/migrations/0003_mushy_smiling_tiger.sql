@@ -1,0 +1,1 @@
+ALTER TYPE "public"."part_of_speech" ADD VALUE 'modal verb';

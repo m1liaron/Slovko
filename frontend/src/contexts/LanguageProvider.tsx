@@ -6,11 +6,11 @@ import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables'
 import { i18n } from '@/localization/i18n';
 import { getStorageItem } from '@/utils/storage';
 
-type Language = 'en' | 'uk';
+export type LanguageCode = 'en' | 'uk';
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
+  language: LanguageCode;
+  setLanguage: (lang: LanguageCode) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType>({
@@ -23,7 +23,7 @@ const useLanguage = () => useContext(LanguageContext);
 const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [language, setLanguageState] = useState<Language>('uk');
+  const [language, setLanguageState] = useState<LanguageCode>('uk');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     i18n.locale = language;
   }, [language]);
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = (lang: LanguageCode) => {
     AsyncStorage.setItem(AsyncStorageVariables.LANGUAGE, lang);
     setLanguageState(lang);
     i18n.locale = lang;

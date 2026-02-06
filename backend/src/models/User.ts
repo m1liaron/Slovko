@@ -21,18 +21,10 @@ interface UserAttributes {
   frozen: boolean;
 }
 
- 
-interface UserCreationAttributes
-  extends Optional<
-    UserAttributes,
-    | "id"
-    | "image"
-    | "streak"
-    | "lastReviewAt"
-    | "points"
-    | "frozen"
-    | "password"
-  > {}
+interface UserCreationAttributes extends Optional<
+  UserAttributes,
+  "id" | "image" | "streak" | "lastReviewAt" | "points" | "frozen"
+> {}
 
 class User
   extends Model<UserAttributes, UserCreationAttributes>
@@ -60,12 +52,15 @@ class User
   }
 
   async comparePassword(candidatePassword: string): Promise<boolean> {
-    return await bcrypt.compare(candidatePassword, this.password);
+    const user = this.get();
+    return await bcrypt.compare(candidatePassword, user.password);
   }
 
   createJWT(): string {
+    const user = this.get();
+
     return jwt.sign(
-      { userId: this.id, name: this.name },
+      { userId: user.id, name: user.name },
       EnvVariables.JWT_SECRET!,
       { expiresIn: "30d" },
     );
@@ -134,10 +129,12 @@ User.init(
   },
 );
 
-User.beforeCreate(async (user: User) => {
-  if (user.password) {
-    user.password = await User.hashPassword(user.password);
+User.beforeCreate(async (userData: User) => {
+  const user = userData.get();
+  if (!user.password) {
+    throw new Error("Password is required");
   }
+  user.password = await User.hashPassword(user.password);
 });
 
 export { User };

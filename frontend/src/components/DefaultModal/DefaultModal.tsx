@@ -68,8 +68,8 @@ const DefaultModal = ({
             styles.modalContent,
             modalStyle,
             {
-              width: width - 100,
-              maxWidth: 400,
+              width: width < 720 ? '100%' : width - 100,
+              maxWidth: width < 720 ? '100%' : 600,
               backgroundColor: theme.colors.background,
               margin: 50,
             },

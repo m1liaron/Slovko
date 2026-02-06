@@ -11,17 +11,19 @@ import { getCardWidth } from '@/utils/learn/learnCards.utill';
 interface AnswerInputProps {
   valueAnswer: string;
   backCardAnswerLength: number;
-  placeholderColor: string;
   onAnswerChange: (text: string) => void;
   onCheckAnswer: () => void;
+  isCardAnswered: boolean;
+  answerSide: 'word' | 'translateWord';
 }
 
 export const AnswerInput: React.FC<AnswerInputProps> = ({
   valueAnswer,
   backCardAnswerLength,
-  placeholderColor,
   onAnswerChange,
   onCheckAnswer,
+  isCardAnswered,
+  answerSide,
 }) => {
   const {
     theme: { colors },
@@ -62,13 +64,20 @@ export const AnswerInput: React.FC<AnswerInputProps> = ({
       >
         <AddInput
           value={valueAnswer}
-          placeholderTextColor={placeholderColor}
           onChangeText={onAnswerChange}
           height={50}
-          placeholder={i18n.t('learnScreen.learnCards.answer')}
+          placeholder={
+            answerSide === 'translateWord'
+              ? i18n.t('learnScreen.learnCards.typeTranslate')
+              : i18n.t('learnScreen.learnCards.typeWord')
+          }
         />
         <PressableButton
-          text={i18n.t('learnScreen.learnCards.checkAnswer')}
+          text={
+            isCardAnswered
+              ? i18n.t('welcomeScreen.next')
+              : i18n.t('learnScreen.learnCards.checkAnswer')
+          }
           onPress={onCheckAnswer}
         />
       </View>
