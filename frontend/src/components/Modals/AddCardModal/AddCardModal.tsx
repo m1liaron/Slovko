@@ -1,8 +1,4 @@
-import {
-  Entypo,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from '@expo/vector-icons';
+import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -59,7 +55,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   setShowAddModal,
   groupId,
 }) => {
-  const [addCardMode, setAddCardMode] = useState<number>(0);
+  const [addCardMode, setAddCardMode] = useState<number>(0); // 0 - one card, 1 - many cards
   const [valueWords, setValueWords] = useState<Record<string, string>>({});
   const [value, setValue] = useState<string>('');
   const [answerWord, setAnswerWord] = useState<string>('');
@@ -68,7 +64,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const [chosenImage, setChosenImage] = useState<number | null>(null);
   const [imageUri, setImageUri] = useState<string>('');
   const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
-  const [textPlain, setTextPlain] = useState('');
   const [manualCards, setManualCards] = useState<AddCard[]>([
     {
       word: '',
@@ -311,20 +306,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     dispatch(setRangeLimit(cards.length));
   }
 
-  function convertTextToObject(input: string) {
-    const result: Record<string, string> = {};
-    const regex = /([^:]+):\s*([^:]+?)(?=\s+\S+:|$)/g;
-
-    let match;
-    while ((match = regex.exec(input)) !== null) {
-      const key = match[1].trim();
-      const value = match[2].trim();
-      result[key] = value;
-    }
-
-    return result;
-  }
-
   const onSaveCard = async () => {
     const finalImageUri = await convertDeviceImage(imageUri);
 
@@ -355,7 +336,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return formattedWord;
     }
 
-    if (manualCards.length > 0) {
+    if (manualCards.length > 0 && addCardMode === 1) {
       const payloads = manualCards.map((item) => ({
         word: validateWord(item.word),
         translateWord: item.translateWord,
@@ -372,7 +353,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return;
     }
 
-    if (Object.keys(valueWords)?.length > 0) {
+    if (Object.keys(valueWords)?.length > 0 && addCardMode === 1) {
       const payloads = Object.entries(valueWords).map(([w, t]) => ({
         word: validateWord(w),
         translateWord: formatUpperCaseWord(t),
@@ -387,7 +368,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return;
     }
 
-    if (value && answerWord) {
+    if (value && answerWord && addCardMode === 0) {
       const cardData = {
         tempId: `local-${uuid()}`,
         card: {
@@ -418,9 +399,11 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   };
 
   const fetchUnsplashPhotos = async () => {
-    const photos = await getUnsplashPhotos(value);
-    if (photos?.length) {
-      setUnsplashImages(photos);
+    if (value.length > 0) {
+      const photos = await getUnsplashPhotos(value);
+      if (photos?.length) {
+        setUnsplashImages(photos);
+      }
     }
   };
 
@@ -447,17 +430,19 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     setManualCards((prev) => [...prev, manualCardData]);
   };
 
-  const updateManualCardWord = (index: number, word: string) => {
-    const copy = [...manualCards];
-    copy[index].word = word;
-    setManualCards(copy);
-  };
-  const updateManualCardTranslateWord = (
+  const updateManualCard = (
     index: number,
-    translateWord: string,
+    field: 'word' | 'translateWord' | 'image',
+    value: string,
   ) => {
     const copy = [...manualCards];
-    copy[index].translateWord = translateWord;
+    copy[index][field] = value;
+    setManualCards(copy);
+  };
+
+  const removeManualCard = (index: number) => {
+    let copy = [...manualCards];
+    copy = copy.filter((_, i) => i !== index);
     setManualCards(copy);
   };
 
@@ -591,10 +576,21 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                           }}
                         >
                           <Pressable
-                            onPress={() => pickImage(imageUri, setImageUri)}
+                            onPress={() =>
+                              pickImage(imageUri, (imageUri) =>
+                                updateManualCard(index, 'image', imageUri),
+                              )
+                            }
                             style={{ width: 50, height: 50 }}
                           >
-                            <Image src={NoAvailableImage} />
+                            <Image
+                              source={
+                                item.image
+                                  ? { uri: item.image }
+                                  : require('@/assets/images/No_Image_Available.jpg')
+                              }
+                              style={{ width: 50, height: 50 }}
+                            />
                           </Pressable>
                           <TextInput
                             placeholder={i18n.t(
@@ -603,7 +599,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                             placeholderTextColor={colors.lightText}
                             value={manualCards[index].word}
                             onChangeText={(value) =>
-                              updateManualCardWord(index, value)
+                              updateManualCard(index, 'word', value)
                             }
                             style={{
                               backgroundColor: colors.lightBackground,
@@ -618,7 +614,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                             placeholderTextColor={colors.lightText}
                             value={manualCards[index].translateWord}
                             onChangeText={(value) =>
-                              updateManualCardTranslateWord(index, value)
+                              updateManualCard(index, 'translateWord', value)
                             }
                             style={{
                               backgroundColor: colors.lightBackground,
@@ -626,6 +622,20 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                               width: '100%',
                             }}
                           />
+                          <Pressable
+                            onPress={() => removeManualCard(index)}
+                            style={{
+                              backgroundColor: colors.danger,
+                              padding: 5,
+                            }}
+                          >
+                            <Entypo
+                              name="cross"
+                              size={24}
+                              color={colors.background}
+                              style={{ cursor: 'pointer' }}
+                            />
+                          </Pressable>
                         </View>
                       )}
                       contentContainerStyle={{ maxHeight: 250 }}

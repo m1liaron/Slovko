@@ -174,12 +174,13 @@ const addCard = async (req: Request, res: Response) => {
         message: "Word and translate must be filled",
       });
     }
-    const existingCard = await Card.findOne({
+    const existingCardData = await Card.findOne({
       where: {
         groupId,
         word: { [Op.iLike]: word },
       },
     });
+    const existingCard = existingCardData?.toJSON();
 
     if (existingCard) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -202,22 +203,28 @@ const addCard = async (req: Request, res: Response) => {
       `,
     );
 
-    const headword = headwordResult.rows[0];
-    const senseResult = await db
-      .select()
-      .from(senses)
-      .where(eq(senses.headwordId, headword.id))
-      .orderBy(senses.id);
+    let senseId: number | null = null;
 
-    const sense = senseResult[0];
+    if (headwordResult.rows.length > 0) {
+      const headword = headwordResult.rows[0];
+      console.log("Headword: ", headword);
+      const senseResult = await db
+        .select()
+        .from(senses)
+        .where(eq(senses.headwordId, headword.id))
+        .orderBy(senses.id);
+
+      const sense = senseResult[0];
+      senseId = sense?.id ?? null;
+    }
 
     let definition = customDefinition;
     let example = customExample;
 
     if (!definition || !example) {
       const dictionaryData = await getDictionaryData(word);
-      definition ||= dictionaryData.definition ?? "";
-      example ||= dictionaryData.example ?? "";
+      definition = dictionaryData.definition ?? "";
+      example = dictionaryData.example ?? "";
     }
 
     let imageUrl = imageUri;
@@ -238,18 +245,20 @@ const addCard = async (req: Request, res: Response) => {
 
     const imageId = image && image.id ? image.id : null;
 
-    const newCard = await Card.create({
+    const newCardData = await Card.create({
       imageId,
       word,
       translateWord,
       groupId,
       definition,
       example,
-      senseId: sense.id ?? null,
+      senseId: senseId ?? null,
     });
 
+    const newCard = newCardData.toJSON();
+
     const card = await Card.findOne({
-      where: { id: newCard.dataValues.id, groupId },
+      where: { id: newCard.id, groupId },
       include: [{ model: Image, as: "image" }],
     });
 

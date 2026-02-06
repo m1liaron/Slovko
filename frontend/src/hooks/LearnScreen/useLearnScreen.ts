@@ -109,10 +109,12 @@ export const useLearnScreen = (groupId?: string) => {
         check: 'checkCards',
       };
 
+      console.log('add data', card);
       const sectionKey = sectionKeyMap[currentSection];
       if (sectionKey) {
         updateCardData(sectionKey, card, isCorrect);
       }
+      console.log('sessionData: ', sessionData);
     },
     [currentSection, updateCardData],
   );

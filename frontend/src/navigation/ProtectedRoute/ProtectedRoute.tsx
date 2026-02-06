@@ -59,20 +59,29 @@ const ProtectedRoute = () => {
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (firstLaunch !== 'false') {
-        await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
-        setInitialRoute(AppPath.Welcome);
+      if (!firstLaunch) {
+        if (token) {
+          setInitialRoute(AppPath.HomeNavigation);
+        } else {
+          await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
+          setInitialRoute(AppPath.Welcome);
+        }
+
         setIsLoading(false);
         return;
       }
 
+      // NOT FIRST LAUNCH
       if (token) {
         const result = await dispatch(getUser({}));
+
         if (getUser.rejected.match(result) && result.payload?.status === 401) {
           setInitialRoute(AppPath.Login);
         } else {
-          setInitialRoute(AppPath.Main);
+          setInitialRoute(AppPath.HomeNavigation);
         }
+      } else {
+        setInitialRoute(AppPath.Login);
       }
 
       setIsLoading(false);

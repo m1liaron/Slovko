@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
 import type Swiper from 'react-native-deck-swiper';
 
@@ -10,6 +10,7 @@ import { AnswerInput } from './components/AnswerInput.tsx/AnswerInput';
 import { CardSwiper } from './components/CardSwiper/CardSwiper';
 import { TypeModeToggle } from './components/TypeModeToggle/TypeModeToggle';
 import { LearnProps } from '@/common/enums/types/learnProps.type';
+import Toast from 'react-native-toast-message';
 
 const LearnCards: React.FC<LearnProps> = ({
   learningCards: shownCards,
@@ -17,6 +18,9 @@ const LearnCards: React.FC<LearnProps> = ({
   handleSetData,
 }) => {
   const swiperRef = useRef<Swiper<ICard>>(null);
+  const [answerResults, setAnswerResults] = useState<
+    Record<string, boolean | null>
+  >({});
 
   const { isMobile, isDesktop } = useResponsive();
 
@@ -42,11 +46,20 @@ const LearnCards: React.FC<LearnProps> = ({
   const {
     showTypeMode,
     valueAnswer,
-    placeholderColor,
     toggleTypeMode,
     handleAnswerChange,
     checkAnswer,
-  } = useTypeMode(learningCards, currentCardIndex, swiperRef, handleFlipCard);
+    answerSide,
+    isCardAnswered,
+    handleSwipe,
+  } = useTypeMode(
+    learningCards,
+    currentCardIndex,
+    swiperRef,
+    handleFlipCard,
+    answerResults,
+    setAnswerResults,
+  );
 
   const backCardAnswer =
     learningCards[currentCardIndex]?.[
@@ -84,15 +97,18 @@ const LearnCards: React.FC<LearnProps> = ({
         onSwipeLeft={handleSwipeLeft}
         onComplete={onComplete}
         onFlipCard={handleFlipCard}
+        answerResults={answerResults}
+        handleSwipe={handleSwipe}
       />
 
       {showTypeMode && (
         <AnswerInput
           valueAnswer={valueAnswer}
           backCardAnswerLength={backCardAnswerLength}
-          placeholderColor={placeholderColor}
           onAnswerChange={handleAnswerChange}
           onCheckAnswer={checkAnswer}
+          answerSide={answerSide}
+          isCardAnswered={isCardAnswered}
         />
       )}
     </View>

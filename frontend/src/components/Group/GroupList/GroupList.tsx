@@ -51,7 +51,6 @@ export const GroupList = () => {
       return;
     }
     const newGroup = {
-      id: uuid(),
       title,
       sectionId: activeSectionId,
     };

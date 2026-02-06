@@ -44,7 +44,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
   const { width } = useWindowDimensions();
   const { resultId } = route.params as { resultId: string };
   const { result, isLoading } = useAppSelector((state) => state.results);
-  const [selectedMode, setSelectedMode] = useState<ModeName>('flashCards'); // 0 - flashCards, 1 - quiz, 2 - guessWord
+  const [selectedMode, setSelectedMode] = useState<ModeName>('flashCards'); // 0 - flashCards, 1 - quiz, 2 - guessWord, 3 - checkTranslate
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const ResultDetailsScreen: React.FC<ResultDetailsScreenProps> = ({ route }) => {
 
   const modesOptionsButtons: { key: ModeName; label: string }[] = [
     { key: 'flashCards', label: i18n.t('resultDetailsScreen.flashCards') },
-    { key: 'check', label: i18n.t('resultDetailsScreen.check') },
+    { key: 'checkTranslate', label: i18n.t('resultDetailsScreen.check') },
     { key: 'quiz', label: i18n.t('resultDetailsScreen.quiz') },
     { key: 'guessWord', label: i18n.t('resultDetailsScreen.guessWord') },
   ];

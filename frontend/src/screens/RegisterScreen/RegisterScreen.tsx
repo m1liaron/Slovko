@@ -29,6 +29,9 @@ import { AppPath } from '../../common/enums/app/app';
 import { register } from '../../redux/userReducer/userSlice';
 import styles from '../LoginScreen/LoginScreen.styles';
 import Loading from '@/components/Loading';
+import { addGroup, addStateGroup } from '@/redux/groupReducer/groupSlice';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
+import { addSection } from '@/redux/sectionReducer/sectionThunk';
 
 const RegisterScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -38,6 +41,7 @@ const RegisterScreen = () => {
     theme: { colors },
   } = useAppTheme();
   const { isLoading } = useAppSelector((state) => state.user);
+  const { selectedLanguage } = useAppSelector((state) => state.sections);
 
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -89,7 +93,12 @@ const RegisterScreen = () => {
       .unwrap()
       .then(() => {
         initToken();
-        navigation.navigate(AppPath.Home);
+        navigation.navigate(AppPath.HomeNavigation);
+        dispatch(
+          enqueueOrDispatch(addSection, addSection, {
+            title: selectedLanguage,
+          }),
+        );
       })
       .catch((error) => {
         const message = error.message || i18n.t('errors.loginFailed');

@@ -17,7 +17,7 @@ type CardImage = {
   url: string;
 };
 
-type UpdateCardRequst = {
+type UpdateCardRequest = {
   id: string;
   word: string;
   translateWord: string;
@@ -37,4 +37,4 @@ type IRepeatedGroup = {
   cards: string[];
 };
 
-export type { ICard, IRepeatedGroup, AddCardRequest, UpdateCardRequst };
+export type { ICard, IRepeatedGroup, AddCardRequest, UpdateCardRequest };
