@@ -59,15 +59,15 @@ const ProtectedRoute = () => {
       );
       const token = await getStorageItem(AsyncStorageVariables.TOKEN);
 
-      if (firstLaunch === 'true') {
+      if (!firstLaunch) {
         if (token) {
           setInitialRoute(AppPath.HomeNavigation);
-          setIsLoading(false);
           return;
+        } else {
+          await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
+          setInitialRoute(AppPath.Welcome);
         }
 
-        await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
-        setInitialRoute(AppPath.Welcome);
         setIsLoading(false);
         return;
       }
@@ -79,6 +79,8 @@ const ProtectedRoute = () => {
         } else {
           setInitialRoute(AppPath.HomeNavigation);
         }
+      } else {
+        setInitialRoute(AppPath.Login);
       }
 
       setIsLoading(false);
