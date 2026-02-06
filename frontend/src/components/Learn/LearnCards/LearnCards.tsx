@@ -46,18 +46,18 @@ const LearnCards: React.FC<LearnProps> = ({
   const {
     showTypeMode,
     valueAnswer,
-    placeholderColor,
     toggleTypeMode,
     handleAnswerChange,
     checkAnswer,
-    isTranslateShow,
+    answerSide,
     isCardAnswered,
-    isAnswerCorrect,
+    handleSwipe,
   } = useTypeMode(
     learningCards,
     currentCardIndex,
     swiperRef,
     handleFlipCard,
+    answerResults,
     setAnswerResults,
   );
 
@@ -97,17 +97,17 @@ const LearnCards: React.FC<LearnProps> = ({
         onSwipeLeft={handleSwipeLeft}
         onComplete={onComplete}
         onFlipCard={handleFlipCard}
-        isAnswerCorrect={isAnswerCorrect}
+        answerResults={answerResults}
+        handleSwipe={handleSwipe}
       />
 
       {showTypeMode && (
         <AnswerInput
           valueAnswer={valueAnswer}
           backCardAnswerLength={backCardAnswerLength}
-          placeholderColor={placeholderColor}
           onAnswerChange={handleAnswerChange}
           onCheckAnswer={checkAnswer}
-          isTranslateShow={isTranslateShow}
+          answerSide={answerSide}
           isCardAnswered={isCardAnswered}
         />
       )}

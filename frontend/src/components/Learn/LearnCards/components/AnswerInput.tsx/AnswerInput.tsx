@@ -11,21 +11,19 @@ import { getCardWidth } from '@/utils/learn/learnCards.utill';
 interface AnswerInputProps {
   valueAnswer: string;
   backCardAnswerLength: number;
-  placeholderColor: string;
   onAnswerChange: (text: string) => void;
   onCheckAnswer: () => void;
-  isTranslateShow: boolean;
   isCardAnswered: boolean;
+  answerSide: 'word' | 'translateWord';
 }
 
 export const AnswerInput: React.FC<AnswerInputProps> = ({
   valueAnswer,
   backCardAnswerLength,
-  placeholderColor,
   onAnswerChange,
   onCheckAnswer,
-  isTranslateShow,
   isCardAnswered,
+  answerSide,
 }) => {
   const {
     theme: { colors },
@@ -66,11 +64,10 @@ export const AnswerInput: React.FC<AnswerInputProps> = ({
       >
         <AddInput
           value={valueAnswer}
-          placeholderTextColor={placeholderColor}
           onChangeText={onAnswerChange}
           height={50}
           placeholder={
-            isTranslateShow
+            answerSide === 'translateWord'
               ? i18n.t('learnScreen.learnCards.typeTranslate')
               : i18n.t('learnScreen.learnCards.typeWord')
           }

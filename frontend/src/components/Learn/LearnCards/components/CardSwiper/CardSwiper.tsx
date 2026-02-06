@@ -19,7 +19,8 @@ interface CardSwiperProps {
   onSwipeLeft: (index: number) => void;
   onComplete: () => void;
   onFlipCard: (index: number) => void;
-  isAnswerCorrect: boolean | null;
+  answerResults: Record<string, boolean | null>;
+  handleSwipe: (cardIndex: number) => void;
 }
 
 export const CardSwiper = forwardRef<Swiper<ICard>, CardSwiperProps>(
@@ -35,12 +36,14 @@ export const CardSwiper = forwardRef<Swiper<ICard>, CardSwiperProps>(
       onSwipeLeft,
       onComplete,
       onFlipCard,
-      isAnswerCorrect,
+      answerResults,
+      handleSwipe,
     },
     ref,
   ) => {
     return (
       <Swiper
+        key={`${currentCardIndex}-${answerResults[cards[currentCardIndex]?.id || '']}`}
         ref={ref}
         cards={cards}
         renderCard={(card, index) => (
@@ -51,13 +54,14 @@ export const CardSwiper = forwardRef<Swiper<ICard>, CardSwiperProps>(
             frontAnimatedStyle={frontAnimatedStyle}
             backAnimatedStyle={backAnimatedStyle}
             onFlipCard={onFlipCard}
-            isAnswerCorrect={isAnswerCorrect}
+            isAnswerCorrect={answerResults[card.id] ?? null}
           />
         )}
         keyExtractor={(card) => card.id}
         onSwipedRight={onSwipeRight}
         onSwipedLeft={onSwipeLeft}
         onSwipedAll={onComplete}
+        onSwiped={handleSwipe}
         stackSize={3}
         cardIndex={currentCardIndex}
         backgroundColor="transparent"

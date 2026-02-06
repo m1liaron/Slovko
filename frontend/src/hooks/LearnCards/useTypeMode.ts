@@ -1,30 +1,35 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { RefObject } from 'react';
 import type Swiper from 'react-native-deck-swiper';
 import Toast from 'react-native-toast-message';
 
 import type { ICard } from '@/common/enums/types/card.type';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 
 export const useTypeMode = (
   learningCards: ICard[],
   currentCardIndex: number,
   swiperRef: RefObject<Swiper<ICard>>,
   handleFlipCard: (index: number) => void,
+  answerResults: Record<string, boolean | null>,
   setAnswerResults: React.Dispatch<
     React.SetStateAction<Record<string, boolean | null>>
   >,
 ) => {
-  const {
-    theme: { colors },
-  } = useAppTheme();
-
   const [showTypeMode, setShowTypeMode] = useState(true);
   const [valueAnswer, setValueAnswer] = useState('');
-  const [placeholderColor, setPlaceholderColor] = useState(colors.lightText);
-  const [isTranslateShow, setIsTranslateShow] = useState(false);
+  const [answerSide, setAnswerSide] = useState<'word' | 'translateWord'>(
+    'translateWord',
+  );
   const [isCardAnswered, setIsCardAnswered] = useState(false);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (showTypeMode && currentCardIndex !== 0) {
+      setAnswerSide('translateWord');
+      handleFlipCard(currentCardIndex);
+      setIsCardAnswered(false);
+      setValueAnswer('');
+    }
+  }, [showTypeMode]);
 
   const toggleTypeMode = () => {
     setShowTypeMode((prev) => !prev);
@@ -34,8 +39,18 @@ export const useTypeMode = (
     setValueAnswer(text);
   }, []);
 
+  const handleSwipe = (cardIndex: number) => {
+    const card = learningCards[cardIndex];
+    if (!card) return;
+
+    setAnswerResults((prev) => ({
+      ...prev,
+      [card.id]: null,
+    }));
+  };
+
   const checkAnswer = useCallback(() => {
-    if (valueAnswer.trim().length === 0) {
+    if (valueAnswer.trim().length === 0 && !isCardAnswered) {
       Toast.show({
         type: 'error',
         text1: 'Fail',
@@ -47,56 +62,51 @@ export const useTypeMode = (
     const currentCard = learningCards[currentCardIndex];
     if (!currentCard) return;
 
-    const correctAnswer =
-      currentCard[isTranslateShow ? 'word' : 'translateWord'];
+    if (!isCardAnswered) {
+      const correctAnswer = currentCard[answerSide];
 
-    const isCorrect =
-      valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
-    setAnswerResults((prev) => ({
-      ...prev,
-      [currentCard.id]: isCorrect,
-    }));
+      const isCorrect =
+        valueAnswer.trim().toLowerCase() === correctAnswer.toLowerCase();
 
-    if (isCardAnswered) {
-      if (isCorrect) {
-        swiperRef.current?.swipeRight();
-      } else {
-        swiperRef.current?.swipeLeft();
-      }
       setAnswerResults((prev) => ({
         ...prev,
-        [currentCard.id]: null,
+        [currentCard.id]: isCorrect,
       }));
-      setValueAnswer('');
-      setIsCardAnswered(false);
-    }
 
-    handleFlipCard(currentCardIndex);
-
-    if (!isCardAnswered) {
+      handleFlipCard(currentCardIndex);
+      setAnswerSide((prev) => (prev === 'word' ? 'translateWord' : 'word'));
       setIsCardAnswered(true);
+      return;
+    }
+    const result = answerResults[currentCard.id];
+
+    if (result === true) {
+      swiperRef.current?.swipeRight();
+    } else {
+      swiperRef.current?.swipeLeft();
     }
 
-    setIsTranslateShow((prev) => !prev);
+    setValueAnswer('');
+    setIsCardAnswered(false);
   }, [
     valueAnswer,
     learningCards,
     currentCardIndex,
-    showTypeMode,
     handleFlipCard,
     swiperRef,
-    colors.primary,
+    answerResults,
+    isCardAnswered,
+    answerSide,
   ]);
 
   return {
     showTypeMode,
     valueAnswer,
-    placeholderColor,
     toggleTypeMode,
     handleAnswerChange,
     checkAnswer,
-    isTranslateShow,
+    answerSide,
     isCardAnswered,
-    isAnswerCorrect,
+    handleSwipe,
   };
 };
