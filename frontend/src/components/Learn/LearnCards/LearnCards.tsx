@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
 import type Swiper from 'react-native-deck-swiper';
 
@@ -18,6 +18,9 @@ const LearnCards: React.FC<LearnProps> = ({
   handleSetData,
 }) => {
   const swiperRef = useRef<Swiper<ICard>>(null);
+  const [answerResults, setAnswerResults] = useState<
+    Record<string, boolean | null>
+  >({});
 
   const { isMobile, isDesktop } = useResponsive();
 
@@ -50,7 +53,13 @@ const LearnCards: React.FC<LearnProps> = ({
     isTranslateShow,
     isCardAnswered,
     isAnswerCorrect,
-  } = useTypeMode(learningCards, currentCardIndex, swiperRef, handleFlipCard);
+  } = useTypeMode(
+    learningCards,
+    currentCardIndex,
+    swiperRef,
+    handleFlipCard,
+    setAnswerResults,
+  );
 
   const backCardAnswer =
     learningCards[currentCardIndex]?.[
