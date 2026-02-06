@@ -21,7 +21,6 @@ import {
   addCard,
   addManyCards,
   getCards,
-  getCardsStorage,
   getRepeatedCards,
   getRepeatedCardsFromIds,
   removeCard,
@@ -141,7 +140,8 @@ const cardSlice = createSlice({
           card.word === newCard.word && card.groupId === newCard.groupId,
       );
       if (existingGroup) {
-        throw new Error('Card with this name already exist');
+        // throw new Error('Card with this name already exist');
+        return;
       }
       const newCardData = {
         id: tempId,
@@ -165,7 +165,9 @@ const cardSlice = createSlice({
     removeStateGroupCards: (state, action) => {
       const { groupId } = action.payload;
       state.filteredCards = [];
-      state.globalCards.filter((card) => card.groupId !== groupId);
+      state.globalCards = state.globalCards.filter(
+        (card) => card.groupId !== groupId,
+      );
     },
     setRangeLimit: (state, action) => {
       state.rangeLimit = action.payload;
@@ -230,17 +232,6 @@ const cardSlice = createSlice({
       .addCase(getCards.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getCardsStorage.fulfilled, (state, action) => {
-        const { groupId } = action.payload;
-        if (action.payload.groupId) {
-          const groupCards = state.globalCards.filter(
-            (globalCard) => globalCard.groupId !== groupId,
-          );
-          state.cards = groupCards;
-          state.filteredCards = applyTransformation(state);
-          state.rangeLimit = state.filteredCards.length;
-        }
-      })
       .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
         state.cards = action.payload;
       })
@@ -260,8 +251,10 @@ const cardSlice = createSlice({
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
-        state.globalCards.filter((card) => card.id !== action.payload);
-        state.cards.filter((card) => card.id !== action.payload);
+        state.globalCards = state.globalCards.filter(
+          (card) => card.id !== action.payload,
+        );
+        state.cards = state.cards.filter((card) => card.id !== action.payload);
         state.filteredCards = applyTransformation(state);
         state.rangeLimit = state.filteredCards.length;
       })

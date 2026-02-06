@@ -59,7 +59,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   setShowAddModal,
   groupId,
 }) => {
-  const [addCardMode, setAddCardMode] = useState<number>(0);
+  const [addCardMode, setAddCardMode] = useState<number>(0); // 0 - one card, 1 - many cards
   const [valueWords, setValueWords] = useState<Record<string, string>>({});
   const [value, setValue] = useState<string>('');
   const [answerWord, setAnswerWord] = useState<string>('');
@@ -68,7 +68,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const [chosenImage, setChosenImage] = useState<number | null>(null);
   const [imageUri, setImageUri] = useState<string>('');
   const [jsonOutput, setJsonOutput] = useState<Record<string, string>>({});
-  const [textPlain, setTextPlain] = useState('');
   const [manualCards, setManualCards] = useState<AddCard[]>([
     {
       word: '',
@@ -311,20 +310,6 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     dispatch(setRangeLimit(cards.length));
   }
 
-  function convertTextToObject(input: string) {
-    const result: Record<string, string> = {};
-    const regex = /([^:]+):\s*([^:]+?)(?=\s+\S+:|$)/g;
-
-    let match;
-    while ((match = regex.exec(input)) !== null) {
-      const key = match[1].trim();
-      const value = match[2].trim();
-      result[key] = value;
-    }
-
-    return result;
-  }
-
   const onSaveCard = async () => {
     const finalImageUri = await convertDeviceImage(imageUri);
 
@@ -355,7 +340,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return formattedWord;
     }
 
-    if (manualCards.length > 0) {
+    if (manualCards.length > 0 && addCardMode === 1) {
       const payloads = manualCards.map((item) => ({
         word: validateWord(item.word),
         translateWord: item.translateWord,
@@ -372,7 +357,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return;
     }
 
-    if (Object.keys(valueWords)?.length > 0) {
+    if (Object.keys(valueWords)?.length > 0 && addCardMode === 1) {
       const payloads = Object.entries(valueWords).map(([w, t]) => ({
         word: validateWord(w),
         translateWord: formatUpperCaseWord(t),
@@ -387,7 +372,7 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
       return;
     }
 
-    if (value && answerWord) {
+    if (value && answerWord && addCardMode === 0) {
       const cardData = {
         tempId: `local-${uuid()}`,
         card: {
@@ -418,9 +403,11 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   };
 
   const fetchUnsplashPhotos = async () => {
-    const photos = await getUnsplashPhotos(value);
-    if (photos?.length) {
-      setUnsplashImages(photos);
+    if (value.length > 0) {
+      const photos = await getUnsplashPhotos(value);
+      if (photos?.length) {
+        setUnsplashImages(photos);
+      }
     }
   };
 
