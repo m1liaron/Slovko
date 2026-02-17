@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 
-import { db } from "../index";
+import { db } from "../index.js";
 
 await db.execute(sql`
   TRUNCATE TABLE

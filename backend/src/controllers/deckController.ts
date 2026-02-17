@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
-import type { AuthRequestHandler } from "../common/types/AuthRequest.type";
-import { db } from "../db";
-import { decks, deckWords, headwords } from "../db/schema/tables";
-import { sendError } from "../helpers";
+import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
+import { db } from "../drizzle/index.js";
+import { decks, deckWords, headwords } from "../drizzle/schema/tables.js";
+import { sendError } from "../helpers/index.js";
 
 const getDecks: AuthRequestHandler = async (req, res) => {
   try {
