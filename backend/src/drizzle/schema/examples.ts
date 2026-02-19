@@ -1,6 +1,6 @@
 import { pgTable, serial, integer, text } from "drizzle-orm/pg-core";
 
-import { senses } from "./senses";
+import { senses } from "./senses.js";
 
 export const examples = pgTable("examples", {
   id: serial("id").primaryKey(),

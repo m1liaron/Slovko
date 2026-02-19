@@ -33,11 +33,11 @@ import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
 import { TextInput } from 'react-native-gesture-handler';
 
-import NoAvailableImage from '@/assets/images/No_Image_Available.jpg';
+import { translateText } from '@/api/google-translate';
+import { Picker } from '@react-native-picker/picker';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;
-
 interface AddCardModalProps {
   showAddModal: boolean;
   setShowAddModal: Dispatch<React.SetStateAction<boolean>>;
@@ -72,6 +72,9 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     },
   ]);
   const [showManualCards, setShowManualCards] = useState(false);
+  const [sourceLang, setSourceLang] = useState('en');
+  const [targetLang, setTargetLang] = useState('es');
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const {
     theme: { colors },
@@ -81,6 +84,14 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
   const isJsonOutputExists = Object.keys(jsonOutput).length > 0;
   const isManyCardsExists = isJsonOutputExists || manualCards.length > 0;
 
+  const handleTranslate = async () => {
+    if (!value.trim()) return;
+
+    setIsTranslating(true);
+    const translated = await translateText(value, sourceLang, targetLang);
+    setAnswerWord(translated);
+    setIsTranslating(false);
+  };
   /**
    * Converts an array of strings or rows (from Excel) into an object.
    * Each line/row is expected to be in the "key: value" format.
@@ -909,6 +920,108 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
                   onChangeText={setValue}
                   placeholder={i18n.t('group.cardList.wordPlaceholder')}
                   onFocus={fetchUnsplashPhotos}
+                />
+              </View>
+
+              <View style={{ gap: 12 }}>
+                <ThemeText
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    opacity: 0.7,
+                  }}
+                >
+                  Translation Settings
+                </ThemeText>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    gap: 12,
+                    alignItems: 'center',
+                  }}
+                >
+                  {/* Source Language */}
+                  <View style={{ flex: 1 }}>
+                    <ThemeText
+                      style={{ fontSize: 12, marginBottom: 4, opacity: 0.6 }}
+                    >
+                      From
+                    </ThemeText>
+                    <View
+                      style={{
+                        backgroundColor: colors.lightBackground,
+                        borderRadius: 8,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Picker
+                        selectedValue={sourceLang}
+                        onValueChange={setSourceLang}
+                        style={{ color: colors.text }}
+                      >
+                        <Picker.Item label="English" value="en" />
+                        <Picker.Item label="Spanish" value="es" />
+                        <Picker.Item label="French" value="fr" />
+                        <Picker.Item label="German" value="de" />
+                        <Picker.Item label="Italian" value="it" />
+                        <Picker.Item label="Portuguese" value="pt" />
+                        <Picker.Item label="Ukrainian" value="uk" />
+                        <Picker.Item label="Chinese" value="zh" />
+                        <Picker.Item label="Japanese" value="ja" />
+                        <Picker.Item label="Korean" value="ko" />
+                        <Picker.Item label="Arabic" value="ar" />
+                        <Picker.Item label="Hindi" value="hi" />
+                      </Picker>
+                    </View>
+                  </View>
+
+                  {/* Target Language */}
+                  <View style={{ flex: 1 }}>
+                    <ThemeText
+                      style={{ fontSize: 12, marginBottom: 4, opacity: 0.6 }}
+                    >
+                      To
+                    </ThemeText>
+                    <View
+                      style={{
+                        backgroundColor: colors.lightBackground,
+                        borderRadius: 8,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <Picker
+                        selectedValue={targetLang}
+                        onValueChange={setTargetLang}
+                        style={{ color: colors.text }}
+                      >
+                        <Picker.Item label="Spanish" value="es" />
+                        <Picker.Item label="English" value="en" />
+                        <Picker.Item label="French" value="fr" />
+                        <Picker.Item label="German" value="de" />
+                        <Picker.Item label="Italian" value="it" />
+                        <Picker.Item label="Portuguese" value="pt" />
+                        <Picker.Item label="Ukrainian" value="uk" />
+                        <Picker.Item label="Chinese" value="zh" />
+                        <Picker.Item label="Japanese" value="ja" />
+                        <Picker.Item label="Korean" value="ko" />
+                        <Picker.Item label="Arabic" value="ar" />
+                        <Picker.Item label="Hindi" value="hi" />
+                      </Picker>
+                    </View>
+                  </View>
+                </View>
+
+                {/* Translate Button */}
+                <PressableButton
+                  text={isTranslating ? 'Translating...' : 'Auto-Translate'}
+                  onPress={handleTranslate}
+                  disabled={isTranslating || !value.trim()}
+                  buttonStyle={{
+                    backgroundColor: colors.primary,
+                    opacity: isTranslating || !value.trim() ? 0.5 : 1,
+                  }}
+                  textStyle={{ color: '#fff' }}
                 />
               </View>
 

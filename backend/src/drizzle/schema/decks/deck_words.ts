@@ -1,8 +1,8 @@
 import { integer, pgTable, uuid } from "drizzle-orm/pg-core";
 
-import { headwords } from "../headwords";
+import { headwords } from "../headwords.js";
 
-import { decks } from "./decks";
+import { decks } from "./decks.js";
 
 export const deckWords = pgTable("deck_words", {
   id: uuid("id").defaultRandom().primaryKey(),

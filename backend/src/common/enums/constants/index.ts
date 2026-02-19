@@ -1,1 +1,1 @@
-export { DATABASE_URL } from "./DatabaseURL";
+export { DATABASE_URL } from "./DatabaseURL.js";

@@ -173,7 +173,6 @@ const copySharedGroup = async (req: AuthRequest, res: Response) => {
       include: { model: SharedCard, as: "sharedCards" },
     });
     const sharedGroup = sharedGroupData?.get({ plain: true });
-    console.log("Shared cards to copy: ", sharedGroup.sharedCards);
     if (!sharedGroup) {
       return res
         .status(404)

@@ -202,7 +202,7 @@ const LoginScreen = () => {
 
             {/* Continue Without Account */}
             <Pressable
-              onPress={() => navigation.navigate(AppPath.Main)}
+              onPress={() => navigation.navigate(AppPath.HomeNavigation)}
               style={[
                 styles.guestButton,
                 {
