@@ -7,7 +7,7 @@ config();
 let sequelize: Sequelize;
 
 if (EnvVariables.NODE_ENV === "production") {
-  sequelize = new Sequelize(process.env.DATABASE_URL!, {
+  sequelize = new Sequelize(EnvVariables.DATABASE_URL!, {
     dialect: "postgres",
     logging: false,
     dialectOptions: {
@@ -19,12 +19,12 @@ if (EnvVariables.NODE_ENV === "production") {
   });
 } else {
   sequelize = new Sequelize(
-    process.env.DATABASE_NAME!,
-    process.env.DATABASE_USER_NAME!,
-    process.env.DATABASE_PASSWORD!,
+    EnvVariables.DATABASE_NAME!,
+    EnvVariables.DATABASE_USER_NAME!,
+    EnvVariables.DATABASE_PASSWORD!,
     {
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
+      host: EnvVariables.DATABASE_HOST,
+      port: Number(EnvVariables.DB_PORT),
       dialect: "postgres",
       logging: false,
     },

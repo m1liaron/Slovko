@@ -8,7 +8,7 @@
         - DATABASE_USER_NAME=${DB_USER}
         - DATABASE_PASSWORD=${DB_PASSWORD}
         - DATABASE_NAME=${DB_NAME}
-        - DATABASE_HOST=${DB_HOST}
+        - DB_HOST=${DB_HOST}
       ports: 
         - "3000:3000"
       depends_on:
@@ -16,7 +16,7 @@
       volumes: 
         - ./backend:/app
         - /app/node_modules
-      command: npm run dev
+      command: npm run start
 
     frontend: 
       build: ./frontend
