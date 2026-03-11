@@ -141,7 +141,7 @@ export const useLearnScreen = (groupId?: string) => {
     const totalLearnedTime = endLearnDate - startLearnDate.getTime();
     setElapsedTime(formatTime(totalLearnedTime));
 
-    const repeatedCardsIds = cards?.map((card) => card.id);
+    const repeatedCardsIds = learningCards?.map((card) => card.id);
     dispatch(enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds));
     dispatch(enqueueOrDispatch(updateUserStreak, {}));
 
