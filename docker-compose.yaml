@@ -9,6 +9,8 @@
         - DATABASE_PASSWORD=${DB_PASSWORD}
         - DATABASE_NAME=${DB_NAME}
         - DB_HOST=${DB_HOST}
+        - JWT_SECRET=${JWT_SECRET}
+        - JWT_LIFETIME=${JWT_LIFETIME}
       ports: 
         - "3000:3000"
       depends_on:
@@ -16,7 +18,6 @@
       volumes: 
         - ./backend:/app
         - /app/node_modules
-      command: npm run start
 
     frontend: 
       build: ./frontend

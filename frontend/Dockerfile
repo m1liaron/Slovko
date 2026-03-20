@@ -1,16 +1,15 @@
-FROM node:21
+FROM node:20-slim
+
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
-# Install @expo/ngrok globally
-RUN npm install -g expo/ngrok
-RUN npm install -g expo-cli
-
 EXPOSE 8081
 
-CMD ["npx", "expo", "start", "--tunnel"]
+# Default to LAN mode (much faster than tunnel)
+CMD ["npx", "expo", "start", "--host", "lan"]

@@ -12,6 +12,7 @@ const validateEnvVariables = () => {
   const missingVariables = requiredEnvVariables.filter(
     (varName) => !process.env[varName],
   );
+  console.log(`Required variables: ${requiredEnvVariables}`);
   if (missingVariables.length > 0) {
     missingVariables.forEach((varName) => {
       winston.error(
