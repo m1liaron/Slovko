@@ -113,11 +113,12 @@ const getAllStatusCards = async (req: Request, res: Response) => {
 const updateCardsAfterReview = async (req: Request, res: Response) => {
   try {
     const cardsIds = req.body;
-    if (!Array.isArray(cardsIds) && cardsIds.length <= 0) {
-      return res.status(400).send({
+    if (!Array.isArray(cardsIds) || cardsIds.length === 0) {
+      return res.status(400).json({
         error: "Invalid request. Provide an array of card IDs.",
       });
     }
+
     const cardsToUpdate = await Card.findAll({
       where: { id: { [Op.in]: cardsIds } },
     });
@@ -125,33 +126,30 @@ const updateCardsAfterReview = async (req: Request, res: Response) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    for (const card of cardsToUpdate) {
-      const cardNextReview = card.nextReviewAt
-        ? new Date(card.nextReviewAt).setHours(0, 0, 0, 0)
+    const updatePromises = cardsToUpdate.map((cardInstance) => {
+      const cardNextReview = cardInstance.nextReviewAt
+        ? new Date(cardInstance.nextReviewAt).setHours(0, 0, 0, 0)
         : null;
 
       if (cardNextReview && cardNextReview >= today.getTime()) {
-        continue;
+        return null;
       }
 
-      const newReviewCount = card.reviewCount;
+      const newReviewCount = (cardInstance.reviewCount || 0) + 1;
       const nextReviewDate = calculateNextReviewDate(newReviewCount);
 
-      if (card.reviewCount >= 12) {
-        card.status = "Know";
-      } else {
-        card.status = "Learned";
-      }
+      return cardInstance.update({
+        learnedAt: new Date(),
+        reviewCount: newReviewCount,
+        nextReviewAt: nextReviewDate,
+        status: newReviewCount >= 12 ? "Know" : "Repeated",
+      });
+    });
 
-      card.status = "Repeated";
-      card.learnedAt = new Date();
-      card.reviewCount = newReviewCount + 1;
-      card.nextReviewAt = nextReviewDate;
+    const results = await Promise.all(updatePromises);
+    const updatedCards = results.filter((card): card is Card => card !== null);
 
-      await card.save();
-    }
-
-    res.status(StatusCodes.OK).json(cardsToUpdate);
+    res.status(200).json(updatedCards);
   } catch (error) {
     sendError(res, error);
   }

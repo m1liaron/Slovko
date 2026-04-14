@@ -19,16 +19,15 @@ import { selectGroup } from '@/redux/groupReducer/groupSlice';
 import { addStateResult, saveResults } from '@/redux/resultReducer/resultSlice';
 import { updateUserStreak } from '@/redux/userReducer/userSlice';
 import { formatTime } from '@/utils/formatTime/formatTime';
-import {
-  selectCardsByGroupId,
-  selectVisibleCards,
-} from '@/redux/cardReducer/cardSelector';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 
 export const useLearnScreen = (groupId: string) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
-  const learningCards = useAppSelector((state) => selectVisibleCards(state));
+  const learningCards = useAppSelector((state) =>
+    selectVisibleCardsByGroup(state),
+  );
   const { user } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
   const { repeatedCards, status, shownModes } = useAppSelector(
