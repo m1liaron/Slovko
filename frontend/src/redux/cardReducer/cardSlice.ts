@@ -1,5 +1,7 @@
 import {
+  EntityState,
   type PayloadAction,
+  createEntityAdapter,
   createSlice,
   isFulfilled,
   isPending,
@@ -7,14 +9,17 @@ import {
 } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 
-import type { ICard, IRepeatedGroup } from '@/common/enums/types/types';
+import type {
+  AddCardRequest,
+  ICard,
+  IRepeatedGroup,
+} from '@/common/enums/types/types';
 
 import {
   CardFields,
   DataStatus,
   type IDataStatus,
 } from '../../common/enums/app/app';
-import { handleUpdateState } from '../services/handleUpdateState';
 import type { RootState } from '../store';
 
 import {
@@ -30,11 +35,9 @@ import {
 
 export type LearningMode = 'cards' | 'quiz' | 'word' | 'check';
 
-interface InitialState {
-  globalCards: ICard[];
-  cards: ICard[];
-  filteredCards: ICard[];
+interface CardMetadata {
   repeatedCards: IRepeatedGroup[];
+  repeatedIds: string[];
   sortOrder: 'asc' | 'desc';
   sortValue: keyof typeof CardFields;
   filterValue: string;
@@ -42,15 +45,18 @@ interface InitialState {
   shownModes: Record<LearningMode, boolean>;
   lastFetchedSuccessfully: boolean;
   status: IDataStatus;
-  error: undefined | null | string;
-  isLoading: boolean;
+  errorMessage: string | null;
 }
 
-const initialState: InitialState = {
-  globalCards: [], // true state of all cards
-  cards: [], // cards for particular group
-  filteredCards: [], // cards shown in UI
+type InitialState = EntityState<ICard, string> & CardMetadata;
+
+const cardsAdapter = createEntityAdapter<ICard>({
+  sortComparer: (a, b) => a.word.localeCompare(b.word),
+});
+
+const initialState: InitialState = cardsAdapter.getInitialState({
   repeatedCards: [],
+  repeatedIds: [],
   sortOrder: 'asc',
   sortValue: 'word',
   filterValue: '',
@@ -63,151 +69,74 @@ const initialState: InitialState = {
   },
   lastFetchedSuccessfully: false,
   status: DataStatus.IDLE,
-  error: null,
-  isLoading: false,
-};
-
-const applyTransformation = ({
-  cards,
-  filterValue,
-  sortValue,
-  sortOrder,
-  rangeLimit,
-}: InitialState) => {
-  let result = [...cards];
-
-  if (filterValue) {
-    result = result.filter((c) => c.status === filterValue);
-  }
-
-  if (
-    sortValue === CardFields.createdAt ||
-    sortValue === CardFields.nextReviewAt
-  ) {
-    result.sort((a, b) => {
-      const timeA = new Date(a[sortValue]).getTime();
-      const timeB = new Date(b[sortValue]).getTime();
-      return sortOrder === 'asc' ? timeA - timeB : timeB - timeA;
-    });
-  } else if (sortValue === CardFields.word) {
-    result.sort((a, b) => {
-      const comparison = a.word.localeCompare(b.word);
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-  } else if (sortValue === CardFields.reviewCount) {
-    result.sort((a, b) => {
-      const comparison = a.reviewCount - b.reviewCount;
-      return sortOrder === 'asc' ? comparison : -comparison;
-    });
-  }
-
-  // 3. Apply range
-  if (rangeLimit && rangeLimit < result.length) {
-    result = result.slice(0, rangeLimit);
-  }
-
-  return result;
-};
+  errorMessage: null,
+});
 
 const cardSlice = createSlice({
   name: 'cards',
   initialState,
   reducers: {
-    addStateManyCards: (state, action) => {
-      const data = action.payload.cards.map((card: ICard) => ({
-        ...card,
-        id: uuid(),
-      }));
-
-      state.globalCards.push(...data);
-      state.cards.push(...data);
-      state.filteredCards = applyTransformation(state);
+    addStateManyCards: {
+      prepare: (cards: AddCardRequest[]) => ({
+        payload: cards.map((card) => ({
+          ...card,
+          id: uuid(),
+          reviewCount: 0,
+          nextReviewAt: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          status: 'To Learn',
+          definition: '',
+          example: '',
+          image: { url: '' },
+          learnedAt: null,
+        })) as ICard[],
+      }),
+      reducer: (state, action: PayloadAction<ICard[]>) => {
+        cardsAdapter.addMany(state, action.payload);
+      },
     },
-    getStateCards: (state, action) => {
-      const { groupId } = action.payload;
-      if (action.payload.groupId) {
-        const groupCards = state.globalCards.filter(
-          (globalCard) => globalCard.groupId === groupId,
-        );
-        state.cards = groupCards;
-        state.rangeLimit = groupCards.length;
-      }
-    },
-    addStateCard: (state, action) => {
-      const { card: newCard, tempId } = action.payload;
-      const existingGroup = state.cards.find(
-        (card) =>
-          card.word === newCard.word && card.groupId === newCard.groupId,
-      );
-      if (existingGroup) {
-        // throw new Error('Card with this name already exist');
-        return;
-      }
-      const newCardData = {
-        id: tempId,
-        ...newCard,
-      };
-      state.globalCards.push(newCardData);
-      state.cards.push(newCardData);
-      state.filteredCards = applyTransformation(state);
-      state.rangeLimit = state.filteredCards.length;
+    addStateCard: (state, action: PayloadAction<ICard>) => {
+      cardsAdapter.addOne(state, action.payload);
     },
     updateStateCard: (state, action) => {
-      state.filteredCards = applyTransformation(state);
-      handleUpdateState(state, action, 'cards');
+      cardsAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: action.payload,
+      });
     },
     removeStateCard: (state, action) => {
       const id = action.payload;
-      state.globalCards = state.globalCards.filter((card) => card.id !== id);
-      state.filteredCards = applyTransformation(state);
-      state.rangeLimit = state.filteredCards.length;
+      cardsAdapter.removeOne(state, id);
     },
     removeStateGroupCards: (state, action) => {
-      const { groupId } = action.payload;
-      state.filteredCards = [];
-      state.globalCards = state.globalCards.filter(
-        (card) => card.groupId !== groupId,
-      );
+      const idsToRemove = Object.values(state.entities)
+        .filter((card) => card.groupId === action.payload.groupId)
+        .map((card) => card!.id);
+
+      cardsAdapter.removeMany(state, idsToRemove);
     },
     setRangeLimit: (state, action) => {
       state.rangeLimit = action.payload;
-    },
-    rangeCards: (state, action) => {
-      state.rangeLimit = Math.floor(action.payload);
-      state.filteredCards = applyTransformation(state);
-      state.rangeLimit = state.filteredCards.length;
-      state.isLoading = false;
     },
     sortCards: (
       state,
       action: PayloadAction<{ sort: keyof typeof CardFields }>,
     ) => {
       const { sort } = action.payload;
-
-      state.isLoading = true;
       state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
       state.sortValue = sort;
-
-      state.filteredCards = applyTransformation(state);
-      state.isLoading = false;
     },
     toggleCardsSortOrder: (state) => {
       state.sortOrder = state.sortOrder === 'asc' ? 'desc' : 'asc';
-      state.filteredCards = applyTransformation(state);
     },
     filterCardsByStatus: (state, action) => {
       state.filterValue = action.payload.status;
-      state.filteredCards = applyTransformation(state);
-      state.rangeLimit = state.filteredCards.length;
     },
     resetFilter: (state) => {
       state.filterValue = '';
       state.sortOrder = 'asc';
       state.sortValue = 'word';
-      state.rangeLimit = state.cards.length;
-
-      state.filteredCards = applyTransformation(state);
-      state.isLoading = false;
     },
     addLearningMode: (
       state,
@@ -223,60 +152,34 @@ const cardSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getCards.fulfilled, (state, action) => {
-        const fresh = action.payload;
-        state.globalCards = fresh;
-        state.cards = fresh;
-        state.filteredCards = applyTransformation(state);
-        state.rangeLimit = state.filteredCards.length;
-      })
-      .addCase(getCards.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
-        state.cards = action.payload;
+        cardsAdapter.setAll(state, action.payload);
       })
       .addCase(addCard.fulfilled, (state, action) => {
-        state.globalCards.push(action.payload.card);
-        state.cards.push(action.payload.card);
-        state.filteredCards.push(action.payload.card);
-        state.rangeLimit = state.filteredCards.length;
+        cardsAdapter.addOne(state, action.payload.card);
       })
       .addCase(addManyCards.fulfilled, (state, action) => {
-        if (action.payload.cards.length > 0) {
-          state.globalCards.push(...action.payload.cards);
-          state.cards.push(...action.payload.cards);
-          state.filteredCards = applyTransformation(state);
-          state.rangeLimit = state.filteredCards.length;
-        }
+        cardsAdapter.addMany(state, action.payload.cards);
       })
       // remove card
       .addCase(removeCard.fulfilled, (state, action) => {
-        state.globalCards = state.globalCards.filter(
-          (card) => card.id !== action.payload,
-        );
-        state.cards = state.cards.filter((card) => card.id !== action.payload);
-        state.filteredCards = applyTransformation(state);
-        state.rangeLimit = state.filteredCards.length;
+        cardsAdapter.removeOne(state, action.payload.id);
       })
       // update card
       .addCase(updateCard.fulfilled, (state, action) => {
-        const updatedCard = action.payload;
-        const index = state.cards.findIndex(
-          (card) => card.id === updatedCard.id,
-        );
-        if (index !== -1) {
-          state.globalCards[index] = updatedCard;
-          state.cards[index] = updatedCard;
-        }
+        cardsAdapter.updateOne(state, {
+          id: action.payload.id,
+          changes: action.payload,
+        });
       })
       // get repeated cards
       .addCase(getRepeatedCards.fulfilled, (state, action) => {
         state.repeatedCards = action.payload;
       })
-      // get repeated cards
       .addCase(getRepeatedCardsFromIds.fulfilled, (state, action) => {
-        state.cards = action.payload;
-        state.filteredCards = action.payload;
+        state.repeatedIds = action.payload;
+      })
+      .addCase(updateCardsAfterLearn.fulfilled, (state, action) => {
+        cardsAdapter.upsertMany(state, action.payload);
       })
 
       .addMatcher(isPending, (state) => {
@@ -284,22 +187,20 @@ const cardSlice = createSlice({
       })
       .addMatcher(isFulfilled, (state) => {
         state.status = DataStatus.SUCCESS;
-        state.error = null;
+        state.errorMessage = null;
         state.lastFetchedSuccessfully = true;
-        state.isLoading = false;
       })
       .addMatcher(isRejected, (state, action) => {
         state.status = DataStatus.ERROR;
         state.lastFetchedSuccessfully = false;
-        state.isLoading = false;
         const payload = action.payload as { message?: string } | undefined;
-        state.error = payload?.message ?? action.error.message;
+        state.errorMessage =
+          payload?.message ?? action.error.message ?? 'Unknown Error';
       });
   },
 });
 
 export const {
-  getStateCards,
   addStateCard,
   addStateManyCards,
   updateStateCard,
@@ -308,12 +209,11 @@ export const {
   filterCardsByStatus,
   resetFilter,
   setRangeLimit,
-  rangeCards,
   sortCards,
   toggleCardsSortOrder,
   addLearningMode,
 } = cardSlice.actions;
-export const selectCard = (state: RootState) => state.cards.cards;
+export const selectCard = (state: RootState) => state.cards.entities;
 export {
   getCards,
   addCard,
@@ -323,4 +223,5 @@ export {
   getRepeatedCards,
   getRepeatedCardsFromIds,
 } from './cardThunk';
+export { cardsAdapter };
 export const cardReducer = cardSlice.reducer;

@@ -15,6 +15,7 @@ import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRo
 import { LearnContent } from './components/LearnContent/LearnContent';
 import { LearnHeader } from './components/LearnHeader/LearnHeader';
 import { LearnResults } from './components/LearnResults/LearnResults';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 type LearnScreenProps = StackScreenProps<
   RootStackParamList,
@@ -23,6 +24,10 @@ type LearnScreenProps = StackScreenProps<
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const groupId = (route.params as { groupId?: string | undefined })?.groupId;
+
+  if (!groupId) {
+    return <ThemeText>Sorry, group was not found</ThemeText>;
+  }
 
   const {
     learningCards,

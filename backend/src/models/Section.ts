@@ -2,12 +2,8 @@ import { DataTypes } from "sequelize";
 
 import { sequelize } from "../db/sequelize.js";
 
-import type {
-  BaseAttributes,
-  BaseCreationAttributes} from "./CustomModel.js";
-import {
-  CustomModal,
-} from "./CustomModel.js";
+import type { BaseAttributes, BaseCreationAttributes } from "./CustomModel.js";
+import { CustomModal } from "./CustomModel.js";
 import type { Group } from "./Group.js";
 import { Language } from "./Language.js";
 import { User } from "./User.js";
@@ -37,7 +33,7 @@ Section.init(
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     languageId: {
       type: DataTypes.UUID,

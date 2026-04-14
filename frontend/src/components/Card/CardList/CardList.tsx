@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import {
   getCards,
-  getStateCards,
   removeCard,
   removeStateCard,
 } from '../../../redux/cardReducer/cardSlice';
@@ -20,6 +19,7 @@ import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
 import { ICard } from '@/common/enums/types/card.type';
+import { DataStatus } from '@/common/enums/app/DataStatus';
 
 const MemoCardItem = memo(CardItem);
 
@@ -40,13 +40,9 @@ const CardList = ({ shownCards, groupId }: CardListProps) => {
   const {
     theme: { colors },
   } = useAppTheme();
-  const { group } = useAppSelector((state) => state.groups);
-  const { isLoading } = useAppSelector((state) => state.cards);
+  const { status } = useAppSelector((state) => state.cards);
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(enqueueOrDispatch(getCards, getStateCards, { groupId }));
-  }, [group, groupId]);
+  const isLoading = status === DataStatus.PENDING;
 
   return (
     <View style={styles.container}>

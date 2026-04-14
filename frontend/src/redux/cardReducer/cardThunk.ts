@@ -1,11 +1,9 @@
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 import type {
   AddCardRequest,
-  ICard,
   UpdateCardRequest,
 } from '@/common/enums/types/types';
 
-import { createAuthorizedInstance } from '../../utils/createAuthorizedInstance';
 import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
 import { withAuth } from '../services';
 
@@ -26,10 +24,10 @@ export const addCard = createAppAsyncThunk(
 
 export const addManyCards = createAppAsyncThunk(
   'card/add-many',
-  async (data: { cards: AddCardRequest[]; tempId: string }) =>
-    withAuth((api) => api.post('/cards/many', { cards: data.cards })).then(
-      (r) => ({ cards: r.data, tempId: data }),
-    ),
+  async (cards: AddCardRequest[]) =>
+    withAuth((api) => api.post('/cards/many', { cards })).then((r) => ({
+      cards: r.data,
+    })),
 );
 
 export const removeCard = createAppAsyncThunk(
@@ -60,7 +58,6 @@ export const getRepeatedCards = createAppAsyncThunk(
 
 export const getRepeatedCardsFromIds = createAppAsyncThunk(
   'card/getRepeatedCardsFromIds',
-  async (data: string[]) => {
-    withAuth((api) => api.post('/cards/repeated', data)).then((r) => r.data);
-  },
+  async (data: string[]) =>
+    withAuth((api) => api.post('/cards/repeated', data)).then((r) => r.data),
 );

@@ -13,7 +13,7 @@ import { v4 as uuid } from 'uuid';
 import * as XLSX from 'xlsx';
 
 import { getUnsplashPhotos } from '@/api/unsplash';
-import { type AddCardRequest } from '@/common/enums/types/card.type';
+import { ICard, type AddCardRequest } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -302,19 +302,28 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     await Promise.all(
       batches.map((batch) =>
         limit(async () => {
-          // you could either POST to a new bulk endpoint (see below)
-          // or send each item in the batch sequentially:
+          const optimisticCards = batch.map((card) => ({
+            ...card,
+            id: uuid(),
+            reviewCount: 0,
+            nextReviewAt: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            status: 'To Learn',
+            definition: '',
+            example: '',
+            image: { url: '' },
+            learnedAt: null,
+          })) as ICard[];
           await dispatch(
             enqueueOrDispatch(addManyCards, addStateManyCards, {
-              cards: batch,
-              tempId: uuid(),
+              requests: batch,
+              optimisticCards: optimisticCards,
             }),
           );
         }),
       ),
     );
-
-    dispatch(setRangeLimit(cards.length));
   }
 
   const onSaveCard = async () => {

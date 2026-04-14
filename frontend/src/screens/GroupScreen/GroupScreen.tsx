@@ -25,6 +25,8 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { useEffect } from 'react';
 import { setRangeLimit } from '@/redux/cardReducer/cardSlice';
 import { i18n } from '@/localization/i18n';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
+import { DataStatus } from '@/common/enums/app/DataStatus';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -33,17 +35,19 @@ type GroupScreenProps = StackScreenProps<
 
 const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const dispatch = useAppDispatch();
-  const { rangeLimit } = useAppSelector((state) => state.cards);
+  const { rangeLimit, status } = useAppSelector((state) => state.cards);
   const { groupId } = route.params as { groupId: string };
-  const { cards, filteredCards } = useAppSelector((state) => state.cards);
+  const cards =
+    useAppSelector((state) => selectVisibleCardsByGroup(state, groupId)) ?? [];
+
   const { isDesktop, width } = useResponsive();
 
   const maxContentWidth = isDesktop ? 1200 : width;
+  const isLoading = status === DataStatus.PENDING;
 
   const {
     group: groupData,
     groups,
-    isLoading,
     progressPercentage,
     learnedCards,
   } = useGroupScreen(groupId);
@@ -64,12 +68,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     modalState.setShowModesModal,
   );
 
-  useEffect(() => {
-    if (rangeLimit === 0) {
-      dispatch(setRangeLimit(filteredCards.length));
-    }
-  }, []);
-
   if (!group) {
     return (
       <ThemeBackground>
@@ -89,22 +87,23 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           onViewModeChange={filterState.setViewMode}
           onToggleFilters={filterState.toggleFilters}
           onOpenSettings={modalState.openEditModal}
+          cards={cards}
         />
 
         {isLoading && <LineLoader />}
 
         <GroupProgress
           learnedCards={learnedCards}
-          shownCardsLength={filteredCards.length}
+          shownCardsLength={cards.length}
           progressPercentage={progressPercentage}
           isDesktop={isDesktop}
         />
       </View>
 
-      <CardList shownCards={filteredCards} groupId={groupId} />
+      <CardList shownCards={cards} groupId={groupId} />
 
       <GroupActions
-        hasCards={filteredCards.length > 1}
+        hasCards={cards.length > 1}
         isLoading={isLoading}
         onLearn={modalState.openModesModal}
         onAddCard={modalState.openAddModal}
@@ -113,7 +112,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       {filterState.showFilterModal && (
         <GroupFilters
           cardsLength={cards.length}
-          shownCards={filteredCards}
+          shownCards={cards}
           sort={filterState.sort}
           sortOrder={filterState.sortOrder}
           selectedStatus={filterState.selectedStatus}
@@ -131,7 +130,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         newSectionId={navigationHandlers.newSectionId}
         setNewSectionId={navigationHandlers.setNewSectionId}
         group={group}
-        shownCards={filteredCards}
+        shownCards={cards}
         groupTitle={navigationHandlers.groupTitle}
         setGroupTitle={navigationHandlers.setGroupTitle}
         showModesModal={modalState.showModesModal}

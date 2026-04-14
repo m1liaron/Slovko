@@ -7,13 +7,16 @@ import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute
 import { getGroup, getGroupStorage } from '@/redux/groupReducer/groupThunk';
 
 import { useAppDispatch, useAppSelector } from '../redux.hooks';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 
 const useGroupScreen = (groupId: string) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
   const { group, status, groups } = useAppSelector((state) => state.groups);
-  const { cards, isLoading } = useAppSelector((state) => state.cards);
+  const cards = useAppSelector((state) =>
+    selectVisibleCardsByGroup(state, groupId),
+  );
 
   useEffect(() => {
     if (!groupId && status === DataStatus.ERROR) {
@@ -35,8 +38,6 @@ const useGroupScreen = (groupId: string) => {
   return {
     group,
     groups,
-    cards,
-    isLoading,
     totalCards,
     learnedCards,
     progressPercentage,

@@ -7,6 +7,7 @@ import BackButton from '@/components/BackButton/BackButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useResponsive } from '@/hooks';
 import { useAppSelector } from '@/hooks/redux.hooks';
+import { ICard } from '@/common/enums/types/card.type';
 
 interface GroupHeaderProps {
   group: IGroup;
@@ -15,6 +16,7 @@ interface GroupHeaderProps {
   onViewModeChange: (mode: 'list' | 'cards') => void;
   onToggleFilters: () => void;
   onOpenSettings: () => void;
+  cards: ICard[];
 }
 
 export const GroupHeader: React.FC<GroupHeaderProps> = ({
@@ -24,14 +26,13 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({
   onViewModeChange,
   onToggleFilters,
   onOpenSettings,
+  cards,
 }) => {
   const {
     theme: { colors },
   } = useAppTheme();
   const { isDesktop } = useResponsive();
-  const { filterValue, rangeLimit, cards } = useAppSelector(
-    (state) => state.cards,
-  );
+  const { filterValue, rangeLimit } = useAppSelector((state) => state.cards);
 
   const isFilterUsed = filterValue.length > 0 || rangeLimit < cards.length;
 
