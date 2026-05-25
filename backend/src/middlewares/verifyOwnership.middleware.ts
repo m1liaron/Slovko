@@ -1,5 +1,6 @@
 import type { Includeable, Model, ModelStatic } from "sequelize";
 
+import { ownershipPolicies } from "../common/enums/constants/ownershipPolicies.js";
 import type {
   AuthRequest,
   AuthRequestHandler,
@@ -20,6 +21,11 @@ type VerifyOwnershipOptions<TModel extends Model> = {
     | null
     | undefined
     | Promise<string | number | null | undefined>;
+};
+
+type VerifyOwnershipFactoryOptions<TModel extends Model> = {
+  Model: ModelStatic<TModel>;
+  param?: string;
 };
 
 const getValueByPath = (value: unknown, path: string) =>
@@ -75,4 +81,14 @@ const verifyOwnershipMiddleware =
     }
   };
 
-export { verifyOwnershipMiddleware };
+const verifyOwnership = <TModel extends Model>(
+  resource: keyof typeof ownershipPolicies,
+  options: VerifyOwnershipFactoryOptions<TModel>,
+) => {
+  return verifyOwnershipMiddleware<TModel>({
+    ...ownershipPolicies[resource],
+    ...options,
+  });
+};
+
+export { verifyOwnership };
