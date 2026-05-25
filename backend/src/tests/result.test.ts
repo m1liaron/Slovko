@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { testData, authRequest } from "./testSetup.js";
 
 const tenSecInMiliseconds = 10000;

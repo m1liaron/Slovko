@@ -7,6 +7,7 @@ import { connectDB, sequelize } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { ensureLanguages } from "./initFunctions/createLanguages.js";
 import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
+import { handleErrorsMiddleware } from "./middlewares/catchErrorMiddleware.js";
 import { initializeLogger } from "./middlewares/initializeLogger.js";
 import { languageRoute } from "./routes/languageRoute.js";
 import {
@@ -32,6 +33,8 @@ app.use("/results", authMiddleware, resultRoute);
 app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
 app.use("/sections", authMiddleware, sectionRoute);
 
+app.use(handleErrorsMiddleware);
+
 const port = EnvVariables.PORT || 3000;
 
 const start = async () => {
@@ -39,8 +42,7 @@ const start = async () => {
     validateEnvVariables();
     await connectDB();
     console.log("Database connected, attempting to sync models...");
-    await sequelize.sync({ alter: true });
-    await ensureLanguages();
+    // await ensureLanguages();
 
     app.listen(port, () => {
       console.log(`Server running on port http://127.0.0.1:${port}`);

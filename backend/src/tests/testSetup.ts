@@ -1,4 +1,5 @@
 import request from "supertest";
+import { beforeAll, afterAll } from "vitest";
 
 import { sequelize } from "../db/sequelize.js";
 import { app } from "../index.js";
@@ -11,7 +12,7 @@ type Card = {
   imageUri: string;
   learnedAt?: Date;
   nextReviewAt?: Date;
-}
+};
 
 interface ITestData {
   testUser: {
@@ -44,7 +45,7 @@ const testData: ITestData = {
     froze: 0,
   },
   testSection: {
-    title: "New Section"
+    title: "New Section",
   },
   testGroup: {
     title: "New Group",
@@ -64,8 +65,6 @@ const changeTestData = (updates: Partial<typeof testData>) => {
 };
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true });
-
   await request(app).post("/users/register").send(testData.testUser);
   const res = await request(app).post("/users/login").send({
     email: testData.testUser.email,

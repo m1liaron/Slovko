@@ -1,4 +1,5 @@
 import request from "supertest";
+import { beforeAll, afterAll, describe, it, expect } from "vitest";
 
 import { sequelize } from "../db/sequelize.js";
 import { app } from "../index.js";
@@ -65,7 +66,9 @@ describe("USER_ROUTES", () => {
   });
 
   it("PUT_USER should update user data", async () => {
-    const res = await authRequest("patch", `/users/${testData.userId}`, { email: "updatedEmail@gmail.com" });
+    const res = await authRequest("patch", `/users/${testData.userId}`, {
+      email: "updatedEmail@gmail.com",
+    });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.email).toBe("updatedEmail@gmail.com");
@@ -82,7 +85,10 @@ describe("USER_ROUTES", () => {
 
   it("GET_STREAK_DATES should return streak dates", async () => {
     const now = new Date();
-    const res = await authRequest("get", `/users/streak?month=${now.getMonth() + 1}&year=${now.getFullYear()}`);
+    const res = await authRequest(
+      "get",
+      `/users/streak?month=${now.getMonth() + 1}&year=${now.getFullYear()}`,
+    );
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
