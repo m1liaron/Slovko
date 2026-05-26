@@ -11,7 +11,6 @@ import {
 } from "../controllers/cardsController.js";
 import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
 import { Card } from "../models/Card.js";
-import { Group } from "../models/Group.js";
 import { Section } from "../models/Section.js";
 
 import { authRouter } from "./authRoute.js";
@@ -19,7 +18,14 @@ import { authRouter } from "./authRoute.js";
 const { router, get, post, delete: remove, patch } = authRouter();
 
 router.route("/repeated").post(getCardsFromIds);
-get("/repeated/:sectionId", getRepeatedCards);
+get(
+  "/repeated/:sectionId",
+  verifyOwnership("section", {
+    Model: Section,
+    param: "sectionId",
+  }),
+  getRepeatedCards,
+);
 post("/", addCard);
 router.route("/many").post(addManyCards);
 router.route("/learn").put(updateCardsAfterReview);
