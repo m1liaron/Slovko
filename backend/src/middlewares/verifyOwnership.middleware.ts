@@ -63,7 +63,7 @@ const verifyOwnershipMiddleware =
           ? getValueByPath(resource.get({ plain: true }), ownerPath)
           : resource.get(ownerField as string);
 
-      if (!ownerField) {
+      if (!ownerId) {
         res.status(500).json({
           message: "Ownership is not configured correctly for this resource",
         });

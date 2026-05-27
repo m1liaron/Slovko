@@ -1,4 +1,7 @@
+import request from "supertest";
 import { describe, it, expect } from "vitest";
+
+import { app } from "../index.js";
 
 import { testData, changeTestData, authRequest } from "./testSetup.js";
 
@@ -10,6 +13,14 @@ describe("SECTION_ROUTES", () => {
     expect(res.body.title).toBe(testData.testSection.title);
     expect(res.body.userId).toBe(testData.userId);
     changeTestData({ testSection: res.body });
+  });
+
+  it("DELETE_SECTION should deny access when user is not owner", async () => {
+    const res = await request(app)
+      .delete(`/sections/${testData.testSection.id}`)
+      .set("Authorization", `Bearer ${testData.testUser2.token}`);
+
+    expect(res.status).toBe(401);
   });
 
   it("GET_SECTIONS", async () => {
