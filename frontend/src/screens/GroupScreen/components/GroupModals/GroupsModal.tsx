@@ -1,7 +1,8 @@
 import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Checkbox from 'expo-checkbox';
-import { useRef, SetStateAction, Dispatch } from 'react';
+import type { SetStateAction, Dispatch } from 'react';
+import { useRef } from 'react';
 import { Platform, View, Text, Pressable } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 

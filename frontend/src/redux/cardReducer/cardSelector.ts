@@ -1,8 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+
 import { CardFields } from '@/common/enums/app/CardFields';
+import type { ICard } from '@/common/enums/types/card.type';
+
+import type { RootState } from '../store';
+
 import { cardsAdapter } from './cardSlice';
-import { ICard } from '@/common/enums/types/card.type';
 
 const selectCardState = (state: RootState) => state.cards;
 const adapterSelectors = cardsAdapter.getSelectors(selectCardState);

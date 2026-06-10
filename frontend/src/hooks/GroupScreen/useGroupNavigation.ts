@@ -6,6 +6,7 @@ import { AppPath } from '@/common/enums/app/app';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectCardsByGroupId } from '@/redux/cardReducer/cardSelector';
 import {
   getRepeatedCards,
   setRangeLimit,
@@ -19,7 +20,6 @@ import {
   moveStateGroupToAnotherSection,
 } from '@/redux/groupReducer/groupSlice';
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
-import { selectCardsByGroupId } from '@/redux/cardReducer/cardSelector';
 
 const useGroupNavigation = (
   groupId: string,

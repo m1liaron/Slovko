@@ -1,4 +1,4 @@
-import { CardFields } from '../app/CardFields';
+import type { CardFields } from '../app/CardFields';
 
 type KeyOfCardFields = keyof typeof CardFields;
 

@@ -4,8 +4,8 @@ import type {
   UpdateCardRequest,
 } from '@/common/enums/types/types';
 
-import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
 import { withAuth } from '../services';
+import { createAppAsyncThunk } from '../services/createAppAsyncThunk';
 
 export const getCards = createAppAsyncThunk(
   'card/get-cards',

@@ -13,9 +13,9 @@ import IconImage from '@/assets/images/favicon.png';
 import PressableButton from '@/common/components/PressableButton/PressableButton';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 import { AppPath } from '@/common/enums/app/AppPath';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 
 const WelcomeScreen = () => {
   const navigation = useNavigation<StackNavigation>();

@@ -1,4 +1,4 @@
-import { ICard } from './card.type';
+import type { ICard } from './card.type';
 
 interface LearnProps {
   learningCards: ICard[];

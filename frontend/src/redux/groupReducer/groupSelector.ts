@@ -1,5 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+
+import type { RootState } from '../store';
 
 const selectSectionGroups = createSelector(
   [

@@ -4,6 +4,9 @@ import { Section } from "../../../models/Section.js";
 import type { OwnershipPolicies } from "../../types/types.js";
 
 const ownershipPolicies = {
+  user: {
+    ownerField: "userId",
+  },
   section: {
     ownerField: "userId",
   },

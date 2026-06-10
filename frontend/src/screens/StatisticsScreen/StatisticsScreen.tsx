@@ -5,6 +5,7 @@ import RNPickerSelect from 'react-native-picker-select';
 
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { IStatistics, ModeName } from '@/common/enums/types/result.type';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -13,7 +14,6 @@ import ThemeBackground from '../../common/components/ThemeBackground/Themebackgr
 import BackButton from '../../components/BackButton/BackButton';
 import { selectResult } from '../../redux/resultReducer/resultSlice';
 import { getResultsStatistics } from '../../redux/resultReducer/resultThunk';
-import { useAppTheme } from '@/contexts/ThemeProvider';
 
 const StatisticsScreen = () => {
   const {

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { DataStatus, type IDataStatus } from '@/common/enums/app/DataStatus';
 import type { IResult, IStatistics } from '@/common/enums/types/types';
+import { transformResult } from '@/helpers/result/convertResultData';
 
 import type { RootState } from '../store';
 
@@ -12,7 +13,6 @@ import {
   getResultsStatistics,
   saveResults,
 } from './resultThunk';
-import { transformResult } from '@/helpers/result/convertResultData';
 
 interface InitialState {
   results: IResult[];

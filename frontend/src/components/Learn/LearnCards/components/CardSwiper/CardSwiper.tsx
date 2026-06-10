@@ -1,9 +1,11 @@
 import React, { forwardRef } from 'react';
+import type { ViewStyle } from 'react-native';
 import Swiper from 'react-native-deck-swiper';
-import type { ICard } from '@/common/enums/types/card.type';
 import type { AnimatedStyleProp } from 'react-native-reanimated';
+
+import type { ICard } from '@/common/enums/types/card.type';
+
 import { FlashCard } from '../FlashCard/FlashCard';
-import { ViewStyle } from 'react-native';
 
 interface CardSwiperProps {
   cards: ICard[];

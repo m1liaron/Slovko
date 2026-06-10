@@ -3,8 +3,9 @@ import axios, { InternalAxiosRequestConfig, type AxiosInstance } from 'axios';
 import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables';
 import { SERVER_API_URL } from '@/common/enums/constants/server-api';
 import { triggerUnauthorized } from '@/redux/services/authEvents';
-import { getStorageItem } from '@/utils/storage';
 import { store } from '@/redux/store';
+import { getStorageItem } from '@/utils/storage';
+
 import { HAS_TOKEN } from './storage/initToken';
 
 /**

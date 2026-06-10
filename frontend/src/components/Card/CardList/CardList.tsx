@@ -6,6 +6,8 @@ import {
   View,
 } from 'react-native';
 
+import { DataStatus } from '@/common/enums/app/DataStatus';
+import type { ICard } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 
@@ -18,8 +20,6 @@ import {
 import CardItem from '../CardItem/CardItem';
 
 import styles from './CardList.styles';
-import { ICard } from '@/common/enums/types/card.type';
-import { DataStatus } from '@/common/enums/app/DataStatus';
 
 const MemoCardItem = memo(CardItem);
 

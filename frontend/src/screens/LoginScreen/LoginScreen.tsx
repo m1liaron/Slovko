@@ -16,6 +16,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import Loading from '@/components/Loading';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -29,7 +30,6 @@ import { AppPath } from '../../common/enums/app/app';
 import { login } from '../../redux/userReducer/userSlice';
 
 import styles from './LoginScreen.styles';
-import Loading from '@/components/Loading';
 
 const LoginScreen = () => {
   const { width: screenWidth } = useWindowDimensions();

@@ -1,7 +1,9 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 import 'react-native-get-random-values';
+import { View } from 'moti';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -11,8 +13,6 @@ import { LanguageProvider } from './src/contexts/LanguageProvider';
 import { ThemeProvider } from './src/contexts/ThemeProvider';
 import ProtectedRoute from './src/navigation/ProtectedRoute/ProtectedRoute';
 import { persistor, store } from './src/redux/store';
-import Toast from 'react-native-toast-message';
-import { View } from 'moti';
 
 export default function App() {
   return (

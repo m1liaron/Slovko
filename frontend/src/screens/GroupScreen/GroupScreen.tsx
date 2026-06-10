@@ -3,7 +3,10 @@ import { View } from 'moti';
 
 import { LineLoader } from '@/common/components/LineLoader/LineLoader';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { AppPath } from '@/common/enums/app/AppPath';
+import { DataStatus } from '@/common/enums/app/DataStatus';
+import BackButton from '@/components/BackButton/BackButton';
 import CardList from '@/components/Card/CardList/CardList';
 import { useResponsive } from '@/hooks';
 import {
@@ -12,21 +15,16 @@ import {
   useGroupNavigation,
   useGroupScreen,
 } from '@/hooks/GroupScreen';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
 import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 
 import { GroupActions } from './components/GroupActions/GroupActions';
 import { GroupFilters } from './components/GroupFilters/GroupFilters';
 import { GroupHeader } from './components/GroupHeader/GroupHeader';
 import { GroupModals } from './components/GroupModals/GroupsModal';
 import { GroupProgress } from './components/GroupProgress/GroupProgress';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import BackButton from '@/components/BackButton/BackButton';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { useEffect } from 'react';
-import { setRangeLimit } from '@/redux/cardReducer/cardSlice';
-import { i18n } from '@/localization/i18n';
-import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
-import { DataStatus } from '@/common/enums/app/DataStatus';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,

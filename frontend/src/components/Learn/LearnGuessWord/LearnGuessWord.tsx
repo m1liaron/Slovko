@@ -4,6 +4,7 @@ import { FlatList, Image, Platform, Pressable, Text, View } from 'react-native';
 
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { ICard } from '@/common/enums/types/card.type';
+import type { LearnProps } from '@/common/enums/types/learnProps.type';
 import { useAppSelector } from '@/hooks/redux.hooks';
 
 import { useAppTheme } from '../../../contexts/ThemeProvider';
@@ -11,7 +12,6 @@ import { selectCard } from '../../../redux/cardReducer/cardSlice';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
 
 import styles from './LearnGuessWord.styles';
-import { LearnProps } from '@/common/enums/types/learnProps.type';
 
 interface LetterColors {
   [key: number]: string;

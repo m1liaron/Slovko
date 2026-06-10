@@ -7,11 +7,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+import type { LearnProps } from '@/common/enums/types/learnProps.type';
+
 import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 
 import styles from './LearnCheck.styles';
-import { LearnProps } from '@/common/enums/types/learnProps.type';
 
 const LearnCheck = ({
   learningCards,
