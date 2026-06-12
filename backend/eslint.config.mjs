@@ -17,7 +17,11 @@ export default [
     rules: {
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/require-await": "error",
-      "no-process-exit": "warn",
+      "no-console": "warn", // catches leftover debug logs
+      "no-debugger": "error",
+      'eqeqeq': ["error", "always"], // no == comparisons
+      "no-var": "error",
+      "prefer-const": "error",
     },
   },
 ];

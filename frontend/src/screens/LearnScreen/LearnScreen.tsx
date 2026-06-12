@@ -3,6 +3,7 @@ import type React from 'react';
 import { View } from 'react-native';
 
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { AppPath } from '@/common/enums/app/app';
 import Loading from '@/components/Loading';
 import {
@@ -15,7 +16,6 @@ import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRo
 import { LearnContent } from './components/LearnContent/LearnContent';
 import { LearnHeader } from './components/LearnHeader/LearnHeader';
 import { LearnResults } from './components/LearnResults/LearnResults';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 type LearnScreenProps = StackScreenProps<
   RootStackParamList,

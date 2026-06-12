@@ -61,7 +61,7 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
 
 const getGroup = async (req: AuthRequest, res: Response) => {
   const {
-    params: { groupId, sectionId },
+    params: { id: groupId, sectionId },
   } = req;
   try {
     const group = await Group.findOne({
@@ -109,7 +109,7 @@ const getGroup = async (req: AuthRequest, res: Response) => {
       subQuery: false, // Necessary for aggregation queries with associations
     });
     if (!group) {
-      res.status(200).send({ error: true, message: "Group does not exist" });
+      res.status(404).send({ error: true, message: "Group does not exist" });
     }
 
     res.status(200).json(group);
@@ -142,7 +142,7 @@ const addGroup = async (req: AuthRequest, res: Response) => {
 const updateGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      params: { groupId },
+      params: { id: groupId },
       body: { sectionId },
     } = req;
     const updatedGroup = await Group.update(req.body, {
@@ -167,7 +167,7 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
 const removeGroup = async (req: AuthRequest, res: Response) => {
   try {
     const {
-      params: { groupId, sectionId },
+      params: { id: groupId, sectionId },
     } = req;
     const group = await Group.findOne({
       where: { id: groupId, sectionId },
@@ -191,7 +191,7 @@ const removeGroup = async (req: AuthRequest, res: Response) => {
 const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
   try {
     const {
-      params: { id },
+      params: { id: groupId },
       body: { sectionId },
     } = req;
 
@@ -199,7 +199,7 @@ const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
       { sectionId },
       {
         where: {
-          id,
+          id: groupId,
         },
       },
     );
@@ -210,7 +210,7 @@ const moveGroupToAnotherSection: AuthRequestHandler = async (req, res) => {
     }
 
     const group = await Group.findOne({
-      where: { id, sectionId },
+      where: { id: groupId, sectionId },
     });
 
     res.status(StatusCodes.OK).json(group);

@@ -1,6 +1,3 @@
-import { authRouter } from "./authRoute.js";
-
-const { router, get, post, patch, delete: remove, put } = authRouter();
 import {
   getAllGroups,
   addGroup,
@@ -9,13 +6,52 @@ import {
   updateGroup,
   moveGroupToAnotherSection,
 } from "../controllers/groupController.js";
+import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
+import { Group } from "../models/Group.js";
+import { Section } from "../models/Section.js";
 
-get("/:sectionId", getAllGroups);
+import { authRouter } from "./authRoute.js";
+
+const { router, get, post, patch, delete: remove, put } = authRouter();
+
+get(
+  "/:sectionId",
+  verifyOwnership("section", {
+    Model: Section,
+    param: "sectionId",
+  }),
+  getAllGroups,
+);
 post("/", addGroup);
 
-remove("/:groupId/:sectionId", removeGroup);
-get("/:groupId/:sectionId", getGroup);
-patch("/:groupId", updateGroup);
-put("/:id", moveGroupToAnotherSection);
+remove(
+  "/:id/:sectionId",
+  verifyOwnership("group", {
+    Model: Group,
+  }),
+  removeGroup,
+);
+
+get(
+  "/:id/:sectionId",
+  verifyOwnership("group", {
+    Model: Group,
+  }),
+  getGroup,
+);
+patch(
+  "/:id",
+  verifyOwnership("group", {
+    Model: Group,
+  }),
+  updateGroup,
+);
+put(
+  "/:id",
+  verifyOwnership("group", {
+    Model: Group,
+  }),
+  moveGroupToAnotherSection,
+);
 
 export { router as groupRoute };

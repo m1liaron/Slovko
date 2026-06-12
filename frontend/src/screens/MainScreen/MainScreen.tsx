@@ -13,6 +13,7 @@ import {
 
 import appLogo from '@/assets/images/favicon.png';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import { useLanguage } from '@/contexts/LanguageProvider';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
@@ -41,7 +42,6 @@ import {
 } from '../../utils/notifications';
 
 import styles from './MainScreen.styles';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
 
 const MainScreen = () => {
   useLanguage();

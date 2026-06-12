@@ -2,12 +2,12 @@ import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import { View, Pressable, Text } from 'react-native';
 
 import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { ICard } from '@/common/enums/types/card.type';
 import type { IGroup } from '@/common/enums/types/group.type';
 import BackButton from '@/components/BackButton/BackButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useResponsive } from '@/hooks';
 import { useAppSelector } from '@/hooks/redux.hooks';
-import { ICard } from '@/common/enums/types/card.type';
 
 interface GroupHeaderProps {
   group: IGroup;

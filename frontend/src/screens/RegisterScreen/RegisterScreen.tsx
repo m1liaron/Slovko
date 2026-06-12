@@ -16,10 +16,14 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import Loading from '@/components/Loading';
 import { useAppTheme } from '@/contexts/ThemeProvider';
+import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { addStateSection } from '@/redux/sectionReducer/sectionSlice';
+import { addSection } from '@/redux/sectionReducer/sectionThunk';
 import { isValidEmail, isValidPassword } from '@/utils';
 import { initToken } from '@/utils/storage/initToken';
 
@@ -28,10 +32,6 @@ import ThemeText from '../../common/components/ThemeText/ThemeText';
 import { AppPath } from '../../common/enums/app/app';
 import { register } from '../../redux/userReducer/userSlice';
 import styles from '../LoginScreen/LoginScreen.styles';
-import Loading from '@/components/Loading';
-import { addSection } from '@/redux/sectionReducer/sectionThunk';
-import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
-import { addStateSection } from '@/redux/sectionReducer/sectionSlice';
 
 const RegisterScreen = () => {
   const { width: screenWidth } = useWindowDimensions();

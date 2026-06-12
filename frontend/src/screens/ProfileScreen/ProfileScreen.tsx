@@ -26,6 +26,7 @@ import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute
 import { persistor } from '@/redux/store';
 import { pickImage } from '@/utils';
 import { convertDeviceImage } from '@/utils/images/convertDeviceImage';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 import AvatarImage from '../../../assets/images/avatar.png';
 import PressableButton from '../../common/components/PressableButton/PressableButton';
@@ -35,7 +36,6 @@ import { logout, selectUser } from '../../redux/userReducer/userSlice';
 import { updateUser } from '../../redux/userReducer/userThunk';
 
 import styles from './ProfileScreen.styles';
-import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 export default function ProfileScreen() {
   const { user, isAuthenticated } = useAppSelector((state) => state.user);

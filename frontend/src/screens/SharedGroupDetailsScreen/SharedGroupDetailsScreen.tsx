@@ -21,6 +21,7 @@ import type {
   RootStackParamList,
   StackNavigation,
 } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { addStateGroup } from '@/redux/groupReducer/groupSlice';
 import { selectUser } from '@/redux/userReducer/userSlice';
 import { formatMDYTime } from '@/utils';
 
@@ -35,7 +36,6 @@ import {
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 
 import styles from './SharedGroupDetailsScreen.styles';
-import { addStateGroup } from '@/redux/groupReducer/groupSlice';
 
 /**
  * @param route { object: { params }}

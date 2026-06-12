@@ -1,5 +1,5 @@
+import type { EntityState } from '@reduxjs/toolkit';
 import {
-  EntityState,
   type PayloadAction,
   createEntityAdapter,
   createSlice,
@@ -15,11 +15,8 @@ import type {
   IRepeatedGroup,
 } from '@/common/enums/types/types';
 
-import {
-  CardFields,
-  DataStatus,
-  type IDataStatus,
-} from '../../common/enums/app/app';
+import type { CardFields } from '../../common/enums/app/app';
+import { DataStatus, type IDataStatus } from '../../common/enums/app/app';
 import type { RootState } from '../store';
 
 import {

@@ -4,10 +4,10 @@ import { useEffect } from 'react';
 import { DataStatus } from '@/common/enums/app/DataStatus';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 import { getGroup, getGroupStorage } from '@/redux/groupReducer/groupThunk';
 
 import { useAppDispatch, useAppSelector } from '../redux.hooks';
-import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 
 const useGroupScreen = (groupId: string) => {
   const dispatch = useAppDispatch();

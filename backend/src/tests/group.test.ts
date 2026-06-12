@@ -1,3 +1,5 @@
+import { beforeAll, describe, it, expect } from "vitest";
+
 import { testData, changeTestData, authRequest } from "./testSetup.js";
 
 describe("GROUP_ROUTES", () => {
@@ -8,7 +10,10 @@ describe("GROUP_ROUTES", () => {
   });
 
   it("POST_GROUP", async () => {
-    const res = await authRequest("post", "/groups", { title: testData.testGroup.title, sectionId: testData.testSection.id });
+    const res = await authRequest("post", "/groups", {
+      title: testData.testGroup.title,
+      sectionId: testData.testSection.id,
+    });
 
     expect(res.status).toBe(200);
     expect(res.body.title).toBe(testData.testGroup.title);
@@ -24,7 +29,10 @@ describe("GROUP_ROUTES", () => {
   });
 
   it("GET_GROUP", async () => {
-    const res = await authRequest("get", `/groups/${testData.testGroup.id}/${testData.testSection.id}`);
+    const res = await authRequest(
+      "get",
+      `/groups/${testData.testGroup.id}/${testData.testSection.id}`,
+    );
 
     expect(res.status).toBe(200);
     expect(res.body.title).toBe(testData.testGroup.title);
@@ -33,7 +41,7 @@ describe("GROUP_ROUTES", () => {
   it("PATCH_GROUP", async () => {
     const res = await authRequest("patch", `/groups/${testData.testGroup.id}`, {
       title: "Updated Group Title",
-      sectionId: testData.testSection.id
+      sectionId: testData.testSection.id,
     });
 
     expect(res.status).toBe(200);
@@ -41,7 +49,10 @@ describe("GROUP_ROUTES", () => {
   });
 
   it("DELETE_GROUP", async () => {
-    const res = await authRequest("delete", `/groups/${testData.testGroup.id}/${testData.testSection.id}`);
+    const res = await authRequest(
+      "delete",
+      `/groups/${testData.testGroup.id}/${testData.testSection.id}`,
+    );
 
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(testData.testGroup.id);

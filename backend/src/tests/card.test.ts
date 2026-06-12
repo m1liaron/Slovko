@@ -1,3 +1,5 @@
+import { beforeAll, describe, it, expect } from "vitest";
+
 import { testData, changeTestData, authRequest } from "./testSetup.js";
 
 describe("CARD_ROUTES", () => {
@@ -41,21 +43,21 @@ describe("CARD_ROUTES", () => {
     expect(res.body.length).toBe(2);
     expect(res.body[0]).toHaveProperty("word", "Apple");
   });
-    
-    it("PATCH_CARD", async () => {
-        const res = await authRequest("patch", `/cards/${testData.testCard.id}`, {
-            word: "Updated word",
-            groupId: testData.testGroup.id
-        });
 
-        expect(res.status).toBe(200);
-        expect(res.body.word).toBe("Updated word");
+  it("PATCH_CARD", async () => {
+    const res = await authRequest("patch", `/cards/${testData.testCard.id}`, {
+      word: "Updated word",
+      groupId: testData.testGroup.id,
     });
 
-    it("DELETE_CARD", async () => {
-        const res = await authRequest("delete", `/cards/${testData.testCard.id}`);
+    expect(res.status).toBe(200);
+    expect(res.body.word).toBe("Updated word");
+  });
 
-        expect(res.status).toBe(200);
-        expect(res.body).toBe(testData.testCard.id);
-    });
+  it("DELETE_CARD", async () => {
+    const res = await authRequest("delete", `/cards/${testData.testCard.id}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toBe(testData.testCard.id);
+  });
 });
