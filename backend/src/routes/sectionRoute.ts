@@ -7,17 +7,13 @@ import {
 import { validate } from "../middlewares/index.js";
 import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
 import { Section } from "../models/Section.js";
-import {
-  updateSectionSchema,
-  removeSectionSchema,
-  addSectionSchema,
-} from "../schemas/index.js";
+import { updateSectionSchema, removeSectionSchema } from "../schemas/index.js";
 
 import { authRouter } from "./authRoute.js";
 const { router, get, post, patch, delete: remove } = authRouter();
 
 get("/", getAllSections);
-post("/", validate(addSectionSchema), addSection);
+post("/", addSection);
 patch(
   "/:id",
   verifyOwnership("section", {

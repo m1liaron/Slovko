@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { Schema} from "zod";
+import type { Schema } from "zod";
 import { z } from "zod";
 
 const validate =

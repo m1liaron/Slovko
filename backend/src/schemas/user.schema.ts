@@ -16,9 +16,6 @@ const loginSchema = z.object({
 });
 
 const updateUserSchema = z.object({
-  params: z.object({
-    userId: z.string().min(1, "userId is required"),
-  }),
   body: z
     .object({
       username: z.string().min(2).max(32).optional(),

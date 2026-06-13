@@ -23,8 +23,8 @@ import { authRouter } from "./authRoute.js";
 
 const { router, get, put, post, patch } = authRouter();
 
-router.route("/register").post(validate(registerSchema), register);
-router.route("/login").post(validate(loginSchema), login);
+router.post("/register", validate(registerSchema), register);
+router.post("/login", validate(loginSchema), login);
 
 get("/", authMiddleware, getUser);
 
@@ -32,19 +32,13 @@ patch(
   "/:userId",
   authMiddleware,
   verifyOwnership("user", { Model: User }),
-  validate(updateUserSchema),
   updateUser,
 );
 
 get("/streak", authMiddleware, getUserStreakDates);
 
-post(
-  "/streak",
-  authMiddleware,
-  validate(updateUserStreakSchema),
-  updateUserStreak,
-);
+post("/streak", authMiddleware, updateUserStreak);
 
-put("/streak/froze", authMiddleware, validate(buyFreezeSchema), buyFreeze);
+put("/streak/froze", authMiddleware, buyFreeze);
 
 export { router as userRoute };

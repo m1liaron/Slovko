@@ -10,7 +10,7 @@ const addSectionSchema = z.object({
   body: z
     .object({
       title: z.string().min(1).max(255).optional(),
-      languageId: z.string().uuid("languageId must be a valid UUID").optional(),
+      languageId: z.uuid("languageId must be a valid UUID").optional(),
     })
     .strict()
     .refine((b) => b.title !== undefined || b.languageId !== undefined, {
@@ -22,7 +22,7 @@ const updateSectionSchema = uuidParam.extend({
   body: z
     .object({
       title: z.string().min(1).max(255).optional(),
-      languageId: z.string().uuid("languageId must be a valid UUID").optional(),
+      languageId: z.uuid("languageId must be a valid UUID").optional(),
     })
     .strict()
     .refine((b) => Object.keys(b).length > 0, {
