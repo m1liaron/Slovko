@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import type { Schema } from "zod";
 import { z } from "zod";
 
@@ -13,7 +14,7 @@ const validate =
       next();
     } catch (err) {
       if (err instanceof z.ZodError) {
-        return res.status(422).json({
+        return res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
           message: "Validation failed",
           errors: err.issues.map((e) => ({
             path: e.path.slice(1).join("."),

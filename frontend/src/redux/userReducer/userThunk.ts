@@ -18,7 +18,6 @@ const login = createAuthAppAsyncThunk(
   'user/login',
   async (data: { email: string; password: string }) => {
     const response = await axios.post(`${SERVER_API_URL}/users/login`, data);
-    console.log(response);
     await AsyncStorage.setItem(
       AsyncStorageVariables.TOKEN,
       response.data.token,

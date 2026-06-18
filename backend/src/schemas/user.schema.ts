@@ -18,11 +18,18 @@ const loginSchema = z.object({
 const updateUserSchema = z.object({
   body: z
     .object({
-      username: z.string().min(2).max(32).optional(),
+      name: z.string().min(2).max(32).optional(),
       email: z.email().optional(),
-      avatar: z.url().optional(),
+      image: z.url().optional(),
     })
     .strict(),
+});
+
+const getUserStreakDatesSchema = z.object({
+  query: z.object({
+    month: z.number().int().min(1).max(2),
+    year: z.number().int().min(1).max(4),
+  }),
 });
 
 const updateUserStreakSchema = z.object({
@@ -42,5 +49,6 @@ export {
   loginSchema,
   updateUserSchema,
   updateUserStreakSchema,
+  getUserStreakDatesSchema,
   buyFreezeSchema,
 };

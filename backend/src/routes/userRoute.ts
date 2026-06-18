@@ -7,6 +7,7 @@ import {
   buyFreeze,
   getUserStreakDates,
 } from "../controllers/userController.js";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { authMiddleware } from "../middlewares/authenticationMiddleware.js";
 import { validate } from "../middlewares/index.js";
 import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
@@ -17,28 +18,44 @@ import {
   updateUserSchema,
   updateUserStreakSchema,
   buyFreezeSchema,
+  getUserStreakDatesSchema,
 } from "../schemas/user.schema.js";
 
 import { authRouter } from "./authRoute.js";
 
 const { router, get, put, post, patch } = authRouter();
 
-router.post("/register", validate(registerSchema), register);
-router.post("/login", validate(loginSchema), login);
+router.post("/register", validate(registerSchema), asyncHandler(register));
+router.post("/login", validate(loginSchema), asyncHandler(login));
 
-get("/", authMiddleware, getUser);
-
-patch(
-  "/:userId",
+get("/me", authMiddleware, asyncHandler(getUser));
+get(
+  "/streak",
   authMiddleware,
-  verifyOwnership("user", { Model: User }),
-  updateUser,
+  validate(getUserStreakDatesSchema),
+  asyncHandler(getUserStreakDates),
 );
 
-get("/streak", authMiddleware, getUserStreakDates);
+patch(
+  "/:id",
+  authMiddleware,
+  verifyOwnership("user", { Model: User }),
+  validate(updateUserSchema),
+  asyncHandler(updateUser),
+);
 
-post("/streak", authMiddleware, updateUserStreak);
+post(
+  "/streak",
+  authMiddleware,
+  validate(updateUserStreakSchema),
+  asyncHandler(updateUserStreak),
+);
 
-put("/streak/froze", authMiddleware, buyFreeze);
+put(
+  "/streak/froze",
+  authMiddleware,
+  validate(buyFreezeSchema),
+  asyncHandler(buyFreeze),
+);
 
 export { router as userRoute };

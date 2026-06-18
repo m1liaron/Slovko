@@ -59,13 +59,13 @@ describe("USER_ROUTES", () => {
   });
 
   it("GET_USER should return user by token", async () => {
-    const res = await authRequest("get", "/users");
+    const res = await authRequest("get", "/users/me");
 
     expect(res.statusCode).toBe(200);
     expect(res.body.user.email).toBe(testData.testUser.email);
   });
 
-  it("PUT_USER should update user data", async () => {
+  it("PATCH_USER should update user data", async () => {
     const res = await authRequest("patch", `/users/${testData.userId}`, {
       email: "updatedEmail@gmail.com",
     });
