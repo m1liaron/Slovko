@@ -5,7 +5,6 @@ import { Op } from "sequelize";
 import type { AuthRequest } from "../common/types/AuthRequest.type.js";
 import type { ResultAttributes } from "../common/types/Request.type.js";
 import { calculateCurMonthAndYearDate } from "../helpers/calculateCurMonthAndYearDate.js";
-import { sendError } from "../helpers/index.js";
 import { Result, ResultMode, WordResult, User } from "../models/models.js";
 
 interface ResultsQuery {
@@ -173,7 +172,7 @@ const getResults = async (req: AuthRequest<ResultsQuery>, res: Response) => {
   const findResultDate = earliestResult ? earliestResult.createdAt : null;
 
   res
-    .status(200)
+    .status(StatusCodes.OK)
     .json({ results: rows, haveMoreResults, firstResult: findResultDate });
 };
 
@@ -277,8 +276,7 @@ const saveResults = async (
     where: { userId: id, id: newResult.id },
   });
 
-  // Return the result as a response
-  res.status(200).json(result);
+  res.status(StatusCodes.OK).json(result);
 };
 
 export {

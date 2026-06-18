@@ -9,6 +9,7 @@ import {
   getCardsFromIds,
   addManyCards,
 } from "../controllers/cardsController.js";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
 import { validate } from "../middlewares/validateMiddleware.js";
 import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
 import { Card } from "../models/Card.js";
@@ -31,7 +32,7 @@ const { router, get, post, delete: remove, patch } = authRouter();
 
 router
   .route("/repeated")
-  .post(validate(getCardsFromIdsSchema), getCardsFromIds);
+  .post(validate(getCardsFromIdsSchema), asyncHandler(getCardsFromIds));
 get(
   "/repeated/:sectionId",
   verifyOwnership("section", {
@@ -39,24 +40,24 @@ get(
     param: "sectionId",
   }),
   validate(getRepeatedCardsSchema),
-  getRepeatedCards,
+  asyncHandler(getRepeatedCards),
 );
 post("/", validate(addCardSchema), addCard);
-router.route("/many").post(validate(addManyCardsSchema), addManyCards);
+router.route("/many").post(validate(addManyCardsSchema), asyncHandler(addManyCards));
 router
   .route("/learn")
-  .put(validate(updateCardsAfterReviewSchema), updateCardsAfterReview);
-router.route("/:groupId").get(validate(getAllCardsSchema), getAllCards);
+  .put(validate(updateCardsAfterReviewSchema), asyncHandler(updateCardsAfterReview));
+router.route("/:groupId").get(validate(getAllCardsSchema), asyncHandler(getAllCards));
 router
   .route("/:groupId/:status")
-  .get(validate(getAllStatusCardsSchema), getAllStatusCards);
+  .get(validate(getAllStatusCardsSchema), asyncHandler(getAllStatusCards));
 remove(
   "/:id",
   verifyOwnership("card", {
     Model: Card,
   }),
   validate(removeCardSchema),
-  removeCard,
+  asyncHandler(removeCard),
 );
 patch(
   "/:id",
@@ -64,7 +65,7 @@ patch(
     Model: Card,
   }),
   validate(updateCardSchema),
-  updateCard,
+  asyncHandler(updateCard),
 );
 
 export { router as cardRoute };
