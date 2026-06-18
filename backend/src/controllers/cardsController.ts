@@ -74,7 +74,6 @@ const getCardsFromIds = async (req: Request, res: Response) => {
 
 const getAllCards = async (req: Request, res: Response) => {
   const { groupId } = req.params;
-  console.log("GroupId: ", groupId);
 
   const cards = await Card.findAll({
     where: {
