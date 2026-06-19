@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
+import { HttpError } from "../common/constants/HttpError.js";
 import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 import { sendError } from "../helpers/sendError.js";
 import { Group } from "../models/Group.js";
@@ -83,18 +84,16 @@ const removeSection: AuthRequestHandler = async (req, res) => {
     user: { id: userId },
     params: { id },
   } = req;
-  const section = await Section.findOne({
+  const sectionData = await Section.findOne({
     where: { id, userId },
   });
-  if (!section) {
-    res
-      .status(StatusCodes.NOT_FOUND)
-      .send({ error: true, message: "Section not found" });
-    return;
+  if (!sectionData) {
+    throw HttpError.notFound("Section not found");
   }
+  const section = sectionData.toJSON();
 
   await Group.destroy({ where: { id: section.id } });
-  await section.destroy();
+  await sectionData.destroy();
   res.status(StatusCodes.OK).json({ id: section.id });
 };
 

@@ -16,7 +16,6 @@ import {
   registerSchema,
   loginSchema,
   updateUserSchema,
-  updateUserStreakSchema,
   buyFreezeSchema,
   getUserStreakDatesSchema,
 } from "../schemas/user.schema.js";
@@ -44,12 +43,7 @@ patch(
   asyncHandler(updateUser),
 );
 
-post(
-  "/streak",
-  authMiddleware,
-  validate(updateUserStreakSchema),
-  asyncHandler(updateUserStreak),
-);
+post("/streak", authMiddleware, asyncHandler(updateUserStreak));
 
 put(
   "/streak/froze",

@@ -38,11 +38,6 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   const { email, password: requestPassword } = req.body;
-  if (!email || !requestPassword) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: true, message: "Please provide email and password" });
-  }
 
   const user = await User.findOne({
     where: { email },
@@ -211,14 +206,9 @@ const updateUserStreak = async (req: AuthRequest, res: Response) => {
 
 const getUserStreakDates = async (req: AuthRequest, res: Response) => {
   const { month, year } = req.query;
-  if (!month || !year) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .json({ error: true, message: "Month and year are required." });
-  }
 
-  const intMonth = Number.parseInt(String(month), 10);
-  const intYear = Number.parseInt(String(year), 10);
+  const intMonth = Number(month);
+  const intYear = Number(year);
   if (
     Number.isNaN(intMonth) ||
     Number.isNaN(intYear) ||

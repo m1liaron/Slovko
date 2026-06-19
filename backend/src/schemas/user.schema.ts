@@ -27,14 +27,8 @@ const updateUserSchema = z.object({
 
 const getUserStreakDatesSchema = z.object({
   query: z.object({
-    month: z.number().int().min(1).max(2),
-    year: z.number().int().min(1).max(4),
-  }),
-});
-
-const updateUserStreakSchema = z.object({
-  body: z.object({
-    date: z.date({ message: "Must be a valid ISO datetime" }),
+    month: z.coerce.number().int().min(0),
+    year: z.coerce.number().int().min(0),
   }),
 });
 
@@ -48,7 +42,6 @@ export {
   registerSchema,
   loginSchema,
   updateUserSchema,
-  updateUserStreakSchema,
   getUserStreakDatesSchema,
   buyFreezeSchema,
 };

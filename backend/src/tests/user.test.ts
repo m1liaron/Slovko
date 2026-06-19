@@ -109,11 +109,3 @@ describe("USER_ROUTES", () => {
     expect(res.body.message).toBe("You already have freeze");
   });
 });
-
-afterAll(async () => {
-  const newUserRes = await request(app)
-    .post("/users/register")
-    .send(testData.testUser2);
-
-  changeTestData({ testUser2: newUserRes.body });
-});

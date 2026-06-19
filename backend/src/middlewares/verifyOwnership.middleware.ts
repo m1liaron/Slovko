@@ -65,7 +65,7 @@ const verifyOwnershipMiddleware =
       const resource = await Model.findByPk(resourceId, { include });
 
       if (!resource) {
-        throw HttpError.notFound(`Param: ${param} not found`);
+        throw HttpError.notFound(`Resource not found`);
       }
 
       const ownerId = getOwnerId
@@ -82,9 +82,7 @@ const verifyOwnershipMiddleware =
       }
 
       if (String(ownerId) !== String(userId)) {
-        throw HttpError.forbidden(
-          "Ownership is not configured correctly for this resource",
-        );
+        throw HttpError.forbidden("You're not owner of this resource");
       }
 
       next();
