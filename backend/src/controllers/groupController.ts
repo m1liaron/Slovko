@@ -57,11 +57,11 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
 
 const getGroup = async (req: AuthRequest, res: Response) => {
   const {
-    params: { id: groupId, sectionId },
+    params: { id: groupId },
   } = req;
 
   const group = await Group.findOne({
-    where: { id: groupId, sectionId },
+    where: { id: groupId },
     include: [
       {
         model: Card,
@@ -146,10 +146,10 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
 
 const removeGroup = async (req: AuthRequest, res: Response) => {
   const {
-    params: { id: groupId, sectionId },
+    params: { id: groupId },
   } = req;
   const group = await Group.findOne({
-    where: { id: groupId, sectionId },
+    where: { id: groupId },
   });
   if (!group) {
     throw HttpError.notFound("Group not found");

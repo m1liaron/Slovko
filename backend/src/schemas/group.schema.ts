@@ -1,9 +1,7 @@
 import { z } from "zod";
 
-// ─── Reusable primitives ───────────────────────────────────────────────────────
-
 const groupIdSchema = z.object({
-  id: z.string().uuid("Invalid group ID"),
+  id: z.uuid("Invalid group ID"),
 });
 
 const sectionIdParamSchema = z.object({
@@ -19,7 +17,7 @@ export const getAllGroupsSchema = z.object({
 });
 
 export const getGroupSchema = z.object({
-  params: { groupIdSchema, sectionIdParamSchema },
+  params: groupIdSchema,
 });
 
 export const addGroupSchema = z.object({
@@ -38,7 +36,7 @@ export const updateGroupSchema = z.object({
 });
 
 export const removeGroupSchema = z.object({
-  params: { groupIdSchema, sectionIdParamSchema },
+  params: groupIdSchema,
 });
 
 export const moveGroupToAnotherSectionSchema = z.object({

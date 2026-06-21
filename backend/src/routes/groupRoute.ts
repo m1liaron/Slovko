@@ -23,7 +23,7 @@ import { authRouter } from "./authRoute.js";
 const { router, get, post, patch, delete: remove, put } = authRouter();
 
 get(
-  "/:sectionId",
+  "/section/:sectionId",
   verifyOwnership("section", {
     Model: Section,
     param: "sectionId",
@@ -33,17 +33,8 @@ get(
 );
 post("/", asyncHandler(addGroup));
 
-remove(
-  "/:id/:sectionId",
-  verifyOwnership("group", {
-    Model: Group,
-  }),
-  validate(removeGroupSchema),
-  asyncHandler(removeGroup),
-);
-
 get(
-  "/:id/:sectionId",
+  "/:id",
   verifyOwnership("group", {
     Model: Group,
   }),
@@ -65,6 +56,15 @@ put(
   }),
   validate(updateGroupSchema),
   asyncHandler(moveGroupToAnotherSection),
+);
+
+remove(
+  "/:id",
+  verifyOwnership("group", {
+    Model: Group,
+  }),
+  validate(removeGroupSchema),
+  asyncHandler(removeGroup),
 );
 
 export { router as groupRoute };
