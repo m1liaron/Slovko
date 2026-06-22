@@ -1,6 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 import { beforeAll, describe, it, expect } from "vitest";
 
+import { ApiPath } from "../common/constants/ApiPath.js";
+import { RoutePath } from "../common/constants/RoutePath.js";
+
 import { testData, changeTestData, authRequest } from "./testSetup.js";
 
 describe("GROUP_ROUTES", () => {
@@ -25,7 +28,7 @@ describe("GROUP_ROUTES", () => {
   it("GET_GROUPS", async () => {
     const res = await authRequest(
       "get",
-      `/groups/section/${testData.testSection.id}`,
+      ApiPath.GROUP.GET_GROUPS.replace(":sectionId", testData.testSection.id!),
     );
 
     expect(res.status).toBe(200);
@@ -64,7 +67,7 @@ describe("GROUP_ROUTES", () => {
         });
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.title" }),
+          expect.objectContaining({ path: "title" }),
         );
       });
 
@@ -75,7 +78,7 @@ describe("GROUP_ROUTES", () => {
         });
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.title" }),
+          expect.objectContaining({ path: "title" }),
         );
       });
 
@@ -85,7 +88,7 @@ describe("GROUP_ROUTES", () => {
         });
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
 
@@ -96,17 +99,20 @@ describe("GROUP_ROUTES", () => {
         });
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
     });
 
     describe("GET_GROUPS", () => {
       it("rejects invalid sectionId param", async () => {
-        const res = await authRequest("get", "/groups/not-a-uuid");
+        const res = await authRequest(
+          "get",
+          ApiPath.GROUP.GET_GROUPS.replace(":sectionId", "not-a-uuid"),
+        );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
     });
@@ -115,59 +121,52 @@ describe("GROUP_ROUTES", () => {
       it("rejects invalid group id param", async () => {
         const res = await authRequest(
           "get",
-          `/groups/not-a-uuid/${testData.testSection.id}`,
+          ApiPath.GROUP.GET_GROUP.replace(":id", "no-a-uuid"),
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.id" }),
-        );
-      });
-
-      it("rejects invalid sectionId param", async () => {
-        const res = await authRequest(
-          "get",
-          `/groups/${testData.testGroup.id}/not-a-uuid`,
-        );
-        expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
-        expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.sectionId" }),
+          expect.objectContaining({ path: "id" }),
         );
       });
     });
 
     describe("PATCH_GROUP", () => {
       it("rejects invalid group id param", async () => {
-        const res = await authRequest("patch", "/groups/not-a-uuid", {
-          title: "New Title",
-          sectionId: testData.testSection.id,
-        });
+        const res = await authRequest(
+          "patch",
+          ApiPath.GROUP.UPDATE_GROUP.replace(":id", "not-a-uuid"),
+          {
+            title: "New Title",
+            sectionId: testData.testSection.id,
+          },
+        );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.id" }),
+          expect.objectContaining({ path: "id" }),
         );
       });
 
       it("rejects missing sectionId in body", async () => {
         const res = await authRequest(
           "patch",
-          `/groups/${testData.testGroup.id}`,
+          ApiPath.GROUP.UPDATE_GROUP.replace(":id", testData.testGroup.id!),
           { title: "New Title" },
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
 
       it("rejects empty title when provided", async () => {
         const res = await authRequest(
           "patch",
-          `/groups/${testData.testGroup.id}`,
+          ApiPath.GROUP.UPDATE_GROUP.replace(":id", testData.testGroup.id!),
           { title: "", sectionId: testData.testSection.id },
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.title" }),
+          expect.objectContaining({ path: "title" }),
         );
       });
     });
@@ -180,7 +179,7 @@ describe("GROUP_ROUTES", () => {
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.id" }),
+          expect.objectContaining({ path: "id" }),
         );
       });
 
@@ -191,7 +190,7 @@ describe("GROUP_ROUTES", () => {
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
     });
@@ -203,19 +202,19 @@ describe("GROUP_ROUTES", () => {
         });
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "params.id" }),
+          expect.objectContaining({ path: "id" }),
         );
       });
 
       it("rejects missing sectionId in body", async () => {
         const res = await authRequest(
           "patch",
-          `/groups/${testData.testGroup.id}/move`,
+          ApiPath.GROUP.MOVE_GROUP.replace(":id", testData.testGroup.id!),
           {},
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
 
@@ -227,7 +226,7 @@ describe("GROUP_ROUTES", () => {
         );
         expect(res.status).toBe(StatusCodes.UNPROCESSABLE_ENTITY);
         expect(res.body.errors).toContainEqual(
-          expect.objectContaining({ path: "body.sectionId" }),
+          expect.objectContaining({ path: "sectionId" }),
         );
       });
     });

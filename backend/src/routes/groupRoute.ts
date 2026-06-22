@@ -12,6 +12,7 @@ import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
 import { Group } from "../models/Group.js";
 import { Section } from "../models/Section.js";
 import {
+  addGroupSchema,
   getAllGroupsSchema,
   getGroupSchema,
   removeGroupSchema,
@@ -24,14 +25,14 @@ const { router, get, post, patch, delete: remove, put } = authRouter();
 
 get(
   "/section/:sectionId",
+  validate(getAllGroupsSchema),
   verifyOwnership("section", {
     Model: Section,
     param: "sectionId",
   }),
-  validate(getAllGroupsSchema),
   asyncHandler(getAllGroups),
 );
-post("/", asyncHandler(addGroup));
+post("/", validate(addGroupSchema), asyncHandler(addGroup));
 
 get(
   "/:id",
