@@ -6,52 +6,66 @@ import {
   updateGroup,
   moveGroupToAnotherSection,
 } from "../controllers/groupController.js";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
+import { validate } from "../middlewares/validateMiddleware.js";
 import { verifyOwnership } from "../middlewares/verifyOwnership.middleware.js";
 import { Group } from "../models/Group.js";
 import { Section } from "../models/Section.js";
+import {
+  addGroupSchema,
+  getAllGroupsSchema,
+  getGroupSchema,
+  removeGroupSchema,
+  updateGroupSchema,
+} from "../schemas/group.schema.js";
 
 import { authRouter } from "./authRoute.js";
 
 const { router, get, post, patch, delete: remove, put } = authRouter();
 
 get(
-  "/:sectionId",
+  "/section/:sectionId",
+  validate(getAllGroupsSchema),
   verifyOwnership("section", {
     Model: Section,
     param: "sectionId",
   }),
-  getAllGroups,
+  asyncHandler(getAllGroups),
 );
-post("/", addGroup);
-
-remove(
-  "/:id/:sectionId",
-  verifyOwnership("group", {
-    Model: Group,
-  }),
-  removeGroup,
-);
+post("/", validate(addGroupSchema), asyncHandler(addGroup));
 
 get(
-  "/:id/:sectionId",
+  "/:id",
   verifyOwnership("group", {
     Model: Group,
   }),
-  getGroup,
+  validate(getGroupSchema),
+  asyncHandler(getGroup),
 );
 patch(
   "/:id",
   verifyOwnership("group", {
     Model: Group,
   }),
-  updateGroup,
+  validate(updateGroupSchema),
+  asyncHandler(updateGroup),
 );
 put(
   "/:id",
   verifyOwnership("group", {
     Model: Group,
   }),
-  moveGroupToAnotherSection,
+  validate(updateGroupSchema),
+  asyncHandler(moveGroupToAnotherSection),
+);
+
+remove(
+  "/:id",
+  verifyOwnership("group", {
+    Model: Group,
+  }),
+  validate(removeGroupSchema),
+  asyncHandler(removeGroup),
 );
 
 export { router as groupRoute };

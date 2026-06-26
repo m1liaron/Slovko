@@ -2,9 +2,9 @@ import { describe, it, expect } from "vitest";
 
 import { testData, authRequest } from "./testSetup.js";
 
-const tenSecInMiliseconds = 10000;
+const tenSecInMilliseconds = 10000;
 const date = new Date();
-const time = date.getTime() + tenSecInMiliseconds;
+const time = date.getTime() + tenSecInMilliseconds;
 const newTime = new Date(time);
 
 const TEST_RESULT = {

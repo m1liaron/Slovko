@@ -1,17 +1,37 @@
 import type { Request, Response, NextFunction } from "express";
+import { StatusCodes } from "http-status-codes";
+import { ZodError } from "zod";
 
-import { sendError } from "../helpers/sendError.js";
+import { HttpError } from "../common/constants/HttpError.js";
 
-const handleErrorsMiddleware = (
-  req: Request,
+const errorMiddleware = (
+  error: unknown,
+  _req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
-  try {
-    next();
-  } catch (error) {
-    sendError(res, error);
+  if (error instanceof ZodError) {
+    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+      message: "Validation failed",
+      errors: error.issues.map((e) => ({
+        path: e.path.slice(1).join("."),
+        message: e.message,
+      })),
+    });
+    return;
   }
+
+  if (error instanceof HttpError) {
+    res.status(error.status).json({
+      error: true,
+      message: error.message,
+    });
+    return;
+  }
+
+  const message =
+    error instanceof Error ? error.message : "Internal server error";
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: true, message });
 };
 
-export { handleErrorsMiddleware };
+export { errorMiddleware };

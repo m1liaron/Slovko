@@ -5,7 +5,8 @@ import type { OwnershipPolicies } from "../../types/types.js";
 
 const ownershipPolicies = {
   user: {
-    ownerField: "userId",
+    ownerField: "id",
+    isSelf: true,
   },
   section: {
     ownerField: "userId",

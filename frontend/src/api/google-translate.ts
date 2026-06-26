@@ -21,7 +21,6 @@ const translateText = async (
     });
 
     const data = await response.json();
-    console.log('Translated Text:', data.data.translations[0].translatedText);
     return data.data.translations[0].translatedText;
   } catch (error) {
     console.error('Translation error:', error);

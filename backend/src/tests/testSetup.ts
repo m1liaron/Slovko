@@ -53,14 +53,14 @@ const testData: ITestData = {
   testUser: {
     email: "lani@gmail.com",
     name: "lani",
-    password: "rty1245",
+    password: "rty1245678",
     points: 200,
     froze: 0,
   },
   testUser2: {
-    email: "lani@gmail.com",
+    email: "lani2@gmail.com",
     name: "lani",
-    password: "rty1245",
+    password: "rty1245678",
     points: 200,
     froze: 0,
   },

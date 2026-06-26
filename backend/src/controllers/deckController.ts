@@ -7,40 +7,32 @@ import { decks, deckWords, headwords } from "../drizzle/schema/tables.js";
 import { sendError } from "../helpers/index.js";
 
 const getDecks: AuthRequestHandler = async (req, res) => {
-  try {
-    const decksData = await db.select().from(decks).orderBy(decks.orderIndex);
+  const decksData = await db.select().from(decks).orderBy(decks.orderIndex);
 
-    res.status(StatusCodes.OK).json(decksData);
-  } catch (error) {
-    sendError(res, error);
-  }
+  res.status(StatusCodes.OK).json(decksData);
 };
 
 const getDeck: AuthRequestHandler = async (req, res) => {
   const { deckId } = req.params;
 
-  try {
-    const deck = await db.select().from(decks).where(eq(decks.id, deckId));
+  const deck = await db.select().from(decks).where(eq(decks.id, deckId));
 
-    const words = await db
-      .select({
-        id: headwords.id,
-        word: headwords.word,
-        pos: headwords.pos,
-        level: headwords.level,
-      })
-      .from(deckWords)
-      .innerJoin(headwords, eq(deckWords.headwordId, headwords.id))
-      .where(eq(deckWords.deckId, deckId))
-      .orderBy(deckWords.orderIndex);
+  const words = await db
+    .select({
+      id: headwords.id,
+      word: headwords.word,
+      pos: headwords.pos,
+      level: headwords.level,
+    })
+    .from(deckWords)
+    .innerJoin(headwords, eq(deckWords.headwordId, headwords.id))
+    .where(eq(deckWords.deckId, deckId))
+    .orderBy(deckWords.orderIndex);
 
-    res.status(StatusCodes.OK).json({
-      ...deck,
-      words,
-    });
-  } catch (error) {
-    sendError(res, error);
-  }
+  res.status(StatusCodes.OK).json({
+    ...deck,
+    words,
+  });
 };
 
 export { getDecks, getDeck };

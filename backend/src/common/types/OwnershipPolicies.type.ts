@@ -8,11 +8,13 @@ type OwnershipPolicyBase = {
 type OwnershipByField = OwnershipPolicyBase & {
   ownerField: string;
   ownerPath?: never;
+  isSelf?: boolean;
 };
 
 type OwnerShipByPath = OwnershipPolicyBase & {
   ownerPath: string;
   ownerField?: never;
+  isSelf?: boolean;
 };
 
 export type OwnershipPolicy = OwnershipByField | OwnerShipByPath;

@@ -1,9 +1,18 @@
+import { StatusCodes } from "http-status-codes";
 import request from "supertest";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll } from "vitest";
 
 import { app } from "../index.js";
 
 import { testData, changeTestData, authRequest } from "./testSetup.js";
+
+beforeAll(async () => {
+  const newUserRes = await request(app)
+    .post("/users/register")
+    .send(testData.testUser2);
+
+  changeTestData({ testUser2: newUserRes.body });
+});
 
 describe("SECTION_ROUTES", () => {
   it("POST_SECTION", async () => {
@@ -20,7 +29,7 @@ describe("SECTION_ROUTES", () => {
       .delete(`/sections/${testData.testSection.id}`)
       .set("Authorization", `Bearer ${testData.testUser2.token}`);
 
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(StatusCodes.FORBIDDEN);
   });
 
   it("GET_SECTIONS", async () => {
