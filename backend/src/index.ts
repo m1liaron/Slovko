@@ -2,8 +2,7 @@ import cors from "cors";
 import type { Application } from "express";
 import express from "express";
 
-import { EnvVariables } from "./common/enums/index.js";
-import { connectDB, sequelize } from "./db/sequelize.js";
+import { connectDB } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { ensureLanguages } from "./initFunctions/createLanguages.js";
 import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
@@ -18,6 +17,7 @@ import {
   sharedGroupRoute,
 } from "./routes/routes.js";
 import { sectionRoute } from "./routes/sectionRoute.js";
+import { EnvVariables } from "./libs/common/enums/envVariables.js";
 
 const app: Application = express();
 

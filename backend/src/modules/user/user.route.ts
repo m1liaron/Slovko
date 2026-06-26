@@ -20,7 +20,7 @@ import {
     getUserStreakDatesSchema,
 } from "@/schemas/user.schema.js";
 
-import { authRouter } from "@/libs/models/route/index.js";
+import { authRouter } from "@/libs/modules/route/index.js";
 
 const { router, get, put, post, patch } = authRouter();
 

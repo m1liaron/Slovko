@@ -1,0 +1,288 @@
+import type { Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { Op } from "sequelize";
+
+import { type AuthRequest } from "@/libs/common/types/AuthRequest.type.js";
+import { type ResultAttributes } from "@/libs/common/types/Request.type.js";
+import { calculateCurMonthAndYearDate } from "@/helpers/calculateCurMonthAndYearDate.js";
+import { Result, ResultMode, WordResult, User } from "@/models/models.js";
+
+interface ResultsQuery {
+    month: string;
+    year: string;
+    page?: string;
+    limit?: string;
+}
+
+type ResultsCard = {
+    wordId: string;
+    word: string;
+    translateWord: string;
+    mistakesAmount: number;
+};
+
+type SaveResultsRequest = {
+    title: string | Date;
+    flashCards: ResultsCard[];
+    quiz: ResultsCard[];
+    guessWord: ResultsCard[];
+    startedLearn: Date;
+    completionTime: Date;
+};
+
+const VALID_MODES = [
+    "flashCards",
+    "quiz",
+    "guessWord",
+    "checkTranslate",
+] as const;
+
+const getResultsDetails = async (req: AuthRequest, res: Response) => {
+    const results = await Result.findAll({
+        where: { userId: req.user.id },
+        include: [
+            {
+                model: ResultMode,
+                as: "mode",
+                include: [
+                    {
+                        model: WordResult,
+                        as: "words",
+                    },
+                ],
+            },
+        ],
+    });
+
+    res.status(StatusCodes.OK).json(results);
+};
+
+const getResultsStatistics = async (req: AuthRequest, res: Response) => {
+    const resultsData = (await Result.findAll({
+        where: { userId: req.user.id },
+        include: [
+            {
+                model: ResultMode,
+                as: "mode",
+                include: [
+                    {
+                        model: WordResult,
+                        as: "words",
+                    },
+                ],
+            },
+        ],
+    })) as (Result & { mode: (ResultMode & { words: WordResult[] })[] })[];
+
+    const results = resultsData.map((result) => result.get({ plain: true }));
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+    const resultsMonths: Partial<typeof months> = [];
+
+    results.map((result) => {
+        const month = months[new Date(result.createdAt).getMonth()];
+        if (!resultsMonths.includes(month)) {
+            return resultsMonths.push(month);
+        }
+    });
+
+    function getAllWordsMode(results: ResultAttributes[]) {
+        const modeMonthSum: {
+            [mode: string]: {
+                mistakes: number[];
+                wordLength: number[];
+            };
+        } = {};
+
+        for (const result of results) {
+            const month = months[new Date(result.createdAt).getMonth()];
+            const index = resultsMonths.indexOf(month); // Find the month index in resultsMonthes
+
+            if (index !== -1 && result.mode) {
+                for (const modeItem of result.mode) {
+                    if (!modeMonthSum[modeItem.mode]) {
+                        const array = new Array(resultsMonths.length).fill(0);
+                        modeMonthSum[modeItem.mode] = {
+                            mistakes: [...array],
+                            wordLength: [...array],
+                        };
+                    }
+
+                    const mistakesForCard = modeItem.words.reduce(
+                        (acc, curr) => acc + curr.mistakesAmount,
+                        0,
+                    );
+                    const wordCountForCard = modeItem.words.length;
+
+                    modeMonthSum[modeItem.mode].mistakes[index] += mistakesForCard;
+                    modeMonthSum[modeItem.mode].wordLength[index] += wordCountForCard;
+                }
+            }
+        }
+
+        return modeMonthSum;
+    }
+
+    const amountMistakesCards = getAllWordsMode(results);
+    res.status(200).json({ resultsMonths, amountMistakesCards });
+};
+
+const getResults = async (req: AuthRequest<ResultsQuery>, res: Response) => {
+    const { month, year, page = "0", limit = "10" } = req.query as ResultsQuery;
+
+    const { startDate, endDate } = calculateCurMonthAndYearDate(month, year, res);
+    const pageNumber = Number.parseInt(page, 10) || 1;
+    const itemsPerPage = Number.parseInt(limit, 10) || 10;
+    const offset = (pageNumber - 1) * itemsPerPage;
+
+    const { rows, count } = await Result.findAndCountAll({
+        where: {
+            userId: req.user.id,
+            createdAt: { [Op.between]: [startDate, endDate] },
+        },
+        order: [["createdAt", "DESC"]],
+        limit: itemsPerPage,
+        offset,
+    });
+    if (!rows) {
+        return res
+            .status(404)
+            .send({ error: true, message: "Results is not find" });
+    }
+
+    const haveMoreResults = offset + itemsPerPage < count;
+
+    const earliestResult = await Result.findOne({
+        where: { userId: req.user.id },
+        order: [["createdAt", "ASC"]],
+        attributes: ["createdAt"],
+    });
+    const findResultDate = earliestResult ? earliestResult.createdAt : null;
+
+    res
+        .status(StatusCodes.OK)
+        .json({ results: rows, haveMoreResults, firstResult: findResultDate });
+};
+
+const getResultDetails = async (req: AuthRequest, res: Response) => {
+    const { resultId } = req.params;
+
+    const result = await Result.findOne({
+        where: { userId: req.user.id, id: resultId },
+        include: {
+            model: ResultMode,
+            as: "mode",
+            include: [
+                {
+                    model: WordResult,
+                    as: "words",
+                },
+            ],
+        },
+    });
+    if (!result) {
+        return res.status(404).send({ error: true, message: "Result is not find" });
+    }
+    res.status(200).json(result);
+};
+
+const saveResults = async (
+    req: AuthRequest<SaveResultsRequest>,
+    res: Response,
+) => {
+    const { title, startedLearn, completionTime, ...data } =
+        req.body as SaveResultsRequest;
+    const {
+        user: { id },
+    } = req;
+
+    const newResultData = await Result.create({
+        title,
+        userId: id,
+        startedLearn,
+        completionTime,
+    });
+    const newResult = newResultData.toJSON();
+
+    const correctAnswersAmount = Object.values(data)
+        .filter((key) => Array.isArray(key))
+        .reduce((total, key) => {
+            return total + key.filter((item) => item.mistakesAmount === 0).length;
+        }, 0);
+
+    const userData = await User.findByPk(id);
+    const user = userData?.get({ plain: true });
+    if (user) {
+        await User.update(
+            { points: user.points + correctAnswersAmount * 10 },
+            {
+                where: { id },
+            },
+        );
+    }
+
+    const resultModes = await Promise.all(
+        Object.keys(data)
+            .filter((mode): mode is (typeof VALID_MODES)[number] =>
+                VALID_MODES.includes(mode as any),
+            )
+            .map(async (mode) => {
+                const resultModeData = await ResultMode.create({
+                    mode: mode,
+                    resultId: newResult.id,
+                });
+                const resultMode = resultModeData?.get({ plain: true });
+                return resultMode;
+            }),
+    );
+
+    if (!Object.entries(data).length) {
+        return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ error: true, message: "No data provided as a result" });
+    }
+
+    await Promise.all(
+        Object.entries(data).map(([mode, words]) => {
+            const resultMode = resultModes.find((rm) => rm.mode === mode);
+            if (resultMode) {
+                return Promise.all(
+                    words.map((word) =>
+                        WordResult.create({
+                            word: word.word,
+                            translate: word.translateWord,
+                            mistakesAmount: word.mistakesAmount,
+                            resultModeId: resultMode.id,
+                        }),
+                    ),
+                );
+            }
+        }),
+    );
+
+    const result = await Result.findOne({
+        where: { userId: id, id: newResult.id },
+    });
+
+    res.status(StatusCodes.OK).json(result);
+};
+
+export {
+    saveResults,
+    getResults,
+    getResultDetails,
+    getResultsDetails,
+    getResultsStatistics,
+};

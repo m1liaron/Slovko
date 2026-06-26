@@ -1,7 +1,7 @@
 import { Group } from "../../../models/Group.js";
 import { SharedGroup } from "../../../models/models.js";
 import { Section } from "../../../models/Section.js";
-import type { OwnershipPolicies } from "../../types/types.js";
+import type { OwnershipPolicies } from "../types/types.js";
 
 const ownershipPolicies = {
   user: {

@@ -1,4 +1,4 @@
-import { EnvVariables } from "../envVariables.js";
+import { EnvVariables } from "../enums/envVariables.js";
 
 const DATABASE_URL = `postgres://${EnvVariables.DATABASE_USER_NAME}:${EnvVariables.DATABASE_PASSWORD}@${EnvVariables.DATABASE_HOST}:${EnvVariables.DB_PORT}/${EnvVariables.DATABASE_NAME}`;
 
