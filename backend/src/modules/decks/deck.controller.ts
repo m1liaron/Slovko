@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
-import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
-import { db } from "../drizzle/index.js";
-import { decks, deckWords, headwords } from "../drizzle/schema/tables.js";
+import type { AuthRequestHandler } from "@/libs/common/types/AuthRequest.type.js";
+import { db } from "@/drizzle/index.js";
+import { decks, deckWords, headwords } from "@/drizzle/schema/tables.js";
 
 const getDecks: AuthRequestHandler = async (req, res) => {
   const decksData = await db.select().from(decks).orderBy(decks.orderIndex);

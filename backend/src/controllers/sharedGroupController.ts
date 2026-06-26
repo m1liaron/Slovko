@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import type { AuthRequest } from "../common/types/AuthRequest.type.js";
+import type { AuthRequest } from "@/libs/common/types/AuthRequest.type.js";
 import {
   SharedGroup,
   SharedCard,

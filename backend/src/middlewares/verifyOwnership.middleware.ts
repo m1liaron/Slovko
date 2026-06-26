@@ -1,12 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import type { Includeable, Model, ModelStatic } from "sequelize";
 
-import { HttpError } from "../common/constants/HttpError.js";
-import { ownershipPolicies } from "../common/enums/constants/ownershipPolicies.js";
+import { HttpError } from "@/libs/common/constants/HttpError.js";
+import { ownershipPolicies } from "@/libs/common/constants/index";
 import type {
   AuthRequest,
   AuthRequestHandler,
-} from "../common/types/AuthRequest.type.js";
+} from "@/libs/common/types/AuthRequest.type.js";
 
 type VerifyOwnershipOptions<TModel extends Model> = {
   Model: ModelStatic<TModel>;

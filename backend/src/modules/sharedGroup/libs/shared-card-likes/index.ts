@@ -1,0 +1,1 @@
+export { SharedCardLike } from "./shared-card-likes.model";

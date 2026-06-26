@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 const uuidParam = z.uuid("Invalid UUID format");
-export const getResultsDetailsSchema = z.object({});
+const getResultsDetailsSchema = z.object({});
 
-export const getResultsStatisticsSchema = z.object({});
+const getResultsStatisticsSchema = z.object({});
 
-export const getResultsSchema = z.object({
+const getResultsSchema = z.object({
   query: z.object({
     month: z
       .string()
@@ -29,7 +29,7 @@ export const getResultsSchema = z.object({
 });
 
 
-export const getResultDetailsSchema = z.object({
+const getResultDetailsSchema = z.object({
   params: z.object({
     resultId: uuidParam,
   }),
@@ -42,7 +42,7 @@ const wordResultSchema = z.object({
     mistakesAmount: z.number().int().min(0, "Mistakes amount must be non-negative"),
 });
 
-export const saveResultsSchema = z.object({
+const saveResultsSchema = z.object({
     body: z.object({
         title: z.string().min(1, "Title is required"),
         startedLearn: z.coerce.date(),
@@ -53,6 +53,10 @@ export const saveResultsSchema = z.object({
     }).strict(),
 });
 
-export type GetResultsInput        = z.infer<typeof getResultsSchema>;
-export type GetResultDetailsInput  = z.infer<typeof getResultDetailsSchema>;
-export type SaveResultsInput       = z.infer<typeof saveResultsSchema>;
+export {
+  getResultsDetailsSchema,
+  getResultsStatisticsSchema,
+  getResultsSchema,
+  getResultDetailsSchema,
+  saveResultsSchema
+}

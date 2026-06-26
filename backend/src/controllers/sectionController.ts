@@ -1,8 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 
-import { HttpError } from "../common/constants/HttpError.js";
-import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
-import { sendError } from "../helpers/sendError.js";
+import { HttpError } from "@/libs/common/constants/HttpError.js";
+import { type AuthRequestHandler } from "@/libs/common/types/AuthRequest.type.js";
 import { Group } from "../models/Group.js";
 import { Language } from "../models/Language.js";
 import { Section } from "../models/Section.js";

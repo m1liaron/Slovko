@@ -1,0 +1,1 @@
+export { SharedCard } from "./shared-card.model";

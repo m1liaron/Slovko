@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
 import { sequelize } from "@/db/sequelize.js";
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/libs/modules/model/custom-model.js";
+import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
 import type { ResultMode } from "./libs/result-mode/result-mode.model.js";
 import { User } from "../user/user.model.js";
 
