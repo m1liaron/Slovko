@@ -10,7 +10,10 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@/*": ["./src/*"],
+    }
   },
   "include": ["src", "src/tests", "drizzle.config.ts"],
   "exclude": ["node_modules", "dist"]
