@@ -1,133 +1,36 @@
-import { DataTypes } from "sequelize";
+import { baseColumns, images } from "@/db/models";
+import { pgTable, uuid, varchar, text, integer, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { groups } from "../index";
 
-import { sequelize } from "@/db/sequelize.js";
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
+const cardStatusEnum = pgEnum("card_status", [
+    "To Learn",
+    "Repeated",
+    "Know",
+    "Learned",
+]);
 
-import { Group } from "../index";
-import { Image } from "@/db/models/index";
+const cards = pgTable("Cards", {
+    ...baseColumns,
+    word: varchar("word", { length: 60 }).notNull(),
+    translateWord: varchar("translate_word", { length: 100 }).notNull(),
+    groupId: uuid("group_id")
+        .notNull()
+        .references(() => groups.id),
+    imageId: uuid("image_id").references(() => images.id),
+    status: cardStatusEnum("status").notNull().default("To Learn"),
+    definition: text("definition").notNull().default(""),
+    example: text("example").notNull().default(""),
+    learnedAt: timestamp("learned_at", { withTimezone: true }),
+    nextReviewAt: timestamp("next_review_at", { withTimezone: true }),
+    reviewCount: integer("review_count").notNull().default(0),
+});
 
-interface CardAttributes extends BaseAttributes {
-    word: string;
-    translateWord: string;
-    groupId: string;
-    imageId: string;
-    status: "To Learn" | "Repeated" | "Know" | "Learned";
-    definition: string;
-    example: string;
-    learnedAt: Date;
-    nextReviewAt: Date;
-    reviewCount: number;
+type Card = typeof cards.$inferSelect;
+type NewCard = typeof cards.$inferInsert;
+
+export {
+    cardStatusEnum,
+    cards,
+    type Card,
+    type NewCard
 }
-
-interface CardCreationAttributes extends BaseCreationAttributes<CardAttributes> { }
-
-class Card
-    extends CustomModal<CardAttributes, CardCreationAttributes>
-    implements CardAttributes {
-    public id!: string;
-    public word!: string;
-    public translateWord!: string;
-    public groupId!: string;
-    public imageId!: string;
-    public status!: "To Learn" | "Repeated" | "Know" | "Learned";
-    public definition!: string;
-    public example!: string;
-    public learnedAt!: Date;
-    public nextReviewAt!: Date;
-    public reviewCount!: number;
-}
-
-Card.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
-            primaryKey: true,
-            field: "id",
-        },
-        word: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                len: [1, 60],
-                notNull: {
-                    msg: "Please provide a word",
-                },
-                notEmpty: {
-                    msg: "Card word cannot be empty",
-                },
-            },
-        },
-        translateWord: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                len: [1, 100],
-                notNull: {
-                    msg: "Please provide a translate word",
-                },
-                notEmpty: {
-                    msg: "Card translate word cannot be empty",
-                },
-            },
-        },
-        groupId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: Group,
-                key: "id",
-            },
-        },
-        imageId: {
-            type: DataTypes.UUID,
-            references: {
-                model: Image,
-                key: "id",
-            },
-            allowNull: true,
-        },
-        senseId: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        status: {
-            type: DataTypes.ENUM("To Learn", "Repeated", "Know", "Learned"),
-            allowNull: false,
-            defaultValue: "To Learn",
-        },
-        definition: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-            defaultValue: "",
-        },
-        example: {
-            type: DataTypes.TEXT,
-            allowNull: false,
-            defaultValue: "",
-        },
-        learnedAt: {
-            type: DataTypes.DATE, // Date when the card was learned
-            allowNull: true,
-        },
-        nextReviewAt: {
-            type: DataTypes.DATE, // Date for the next review based on the curve
-            allowNull: true,
-        },
-        reviewCount: {
-            type: DataTypes.INTEGER, // Number of times the card has been reviewed
-            defaultValue: 0,
-        },
-    },
-    {
-        sequelize,
-        modelName: "Card",
-        tableName: "Cards",
-        timestamps: true,
-    },
-);
-
-Card.belongsTo(Image, { foreignKey: "imageId", as: "image" });
-Image.hasMany(Card, { foreignKey: "imageId" });
-
-export { Card };

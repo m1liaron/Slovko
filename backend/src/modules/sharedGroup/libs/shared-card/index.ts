@@ -1,1 +1,1 @@
-export { SharedCard } from "./shared-card.model";
+export { sharedCards, type SharedCard, type NewSharedCard } from "./shared-card.model";

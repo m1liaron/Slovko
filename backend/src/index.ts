@@ -17,7 +17,7 @@ import {
   sharedGroupRoute,
 } from "./routes/routes.js";
 import { sectionRoute } from "./routes/sectionRoute.js";
-import { EnvVariables } from "./libs/common/enums/envVariables.js";
+import { EnvVariables } from "./libs/enums/envVariables.js";
 
 const app: Application = express();
 

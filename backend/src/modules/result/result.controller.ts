@@ -2,8 +2,8 @@ import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
-import { type AuthRequest } from "@/libs/common/types/AuthRequest.type.js";
-import { type ResultAttributes } from "@/libs/common/types/Request.type.js";
+import { type AuthRequest } from "@/libs/types/auth-request.type.js";
+import { type ResultAttributes } from "@/libs/types/request.type.js";
 import { calculateCurMonthAndYearDate } from "@/helpers/calculateCurMonthAndYearDate.js";
 import { Result, ResultMode, WordResult, User } from "@/models/models.js";
 

@@ -6,7 +6,7 @@ import { ownershipPolicies } from "@/libs/common/constants/index";
 import type {
   AuthRequest,
   AuthRequestHandler,
-} from "@/libs/common/types/AuthRequest.type.js";
+} from "@/libs/types/auth-request.type.js";
 
 type VerifyOwnershipOptions<TModel extends Model> = {
   Model: ModelStatic<TModel>;
@@ -49,47 +49,47 @@ const verifyOwnershipMiddleware =
     include = [],
     getOwnerId,
   }: VerifyOwnershipOptions<TModel>): AuthRequestHandler<TModel> =>
-  async (req, res, next) => {
-    try {
-      const resourceId = req.params[param];
-      const userId = req.user.id;
+    async (req, res, next) => {
+      try {
+        const resourceId = req.params[param];
+        const userId = req.user.id;
 
-      if (isSelf) {
-        if (String(resourceId) !== String(userId)) {
-          throw HttpError.forbidden("Forbidden. You are not owner");
+        if (isSelf) {
+          if (String(resourceId) !== String(userId)) {
+            throw HttpError.forbidden("Forbidden. You are not owner");
+          }
+          next();
+          return;
         }
+
+        const resource = await Model.findByPk(resourceId, { include });
+
+        if (!resource) {
+          throw HttpError.notFound(`Resource not found`);
+        }
+
+        const ownerId = getOwnerId
+          ? await getOwnerId(resource, req)
+          : ownerPath
+            ? getValueByPath(resource.get({ plain: true }), ownerPath)
+            : resource.get(ownerField as string);
+
+        if (!ownerId) {
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Ownership is not configured correctly for this resource",
+          });
+          return;
+        }
+
+        if (String(ownerId) !== String(userId)) {
+          throw HttpError.forbidden("You're not owner of this resource");
+        }
+
         next();
-        return;
+      } catch (error) {
+        next(error);
       }
-
-      const resource = await Model.findByPk(resourceId, { include });
-
-      if (!resource) {
-        throw HttpError.notFound(`Resource not found`);
-      }
-
-      const ownerId = getOwnerId
-        ? await getOwnerId(resource, req)
-        : ownerPath
-          ? getValueByPath(resource.get({ plain: true }), ownerPath)
-          : resource.get(ownerField as string);
-
-      if (!ownerId) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-          message: "Ownership is not configured correctly for this resource",
-        });
-        return;
-      }
-
-      if (String(ownerId) !== String(userId)) {
-        throw HttpError.forbidden("You're not owner of this resource");
-      }
-
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
+    };
 
 const verifyOwnership = <TModel extends Model>(
   resource: keyof typeof ownershipPolicies,

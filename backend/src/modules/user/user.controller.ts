@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
 import { HttpError } from "@/libs/common/constants/HttpError.js";
-import type { AuthRequest } from "@/libs/common/types/AuthRequest.type.js";
+import type { AuthRequest } from "@/libs/types/auth-request.type.js";
 import { Streak, User } from "@/models/models.js";
 
 const MILLISECONDS_IN_DAY = 86400000;

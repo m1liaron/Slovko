@@ -6,7 +6,7 @@ import { HttpError } from "@/libs/common/constants/HttpError.js";
 import type {
     AuthRequest,
     AuthRequestHandler,
-} from "@/libs/common/types/AuthRequest.type.js";
+} from "@/libs/types/auth-request.type.js";
 import { sequelize } from "@/db/sequelize.js";
 import { Card, Group } from "../index";
 

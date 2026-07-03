@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
-import { HttpError } from "../common/constants/HttpError.js";
-import type { AuthRequest } from "../common/types/AuthRequest.type.js";
 import { Streak, User } from "../models/models.js";
+import { HttpError } from "@/libs/constants/http-error.js";
+import { jwtToken } from "@/libs/modules/token/index.js";
 
 const MILLISECONDS_IN_DAY = 86400000;
 
@@ -31,7 +31,7 @@ const register = async (req: Request, res: Response) => {
     name,
     points,
   });
-  const token = user.createJWT();
+  const token = jwtToken.createJWTToken({ name: user.name, id: user.id });
   const mainUserData = user.toJSON();
   res.status(StatusCodes.CREATED).json({ user: mainUserData, token });
 };

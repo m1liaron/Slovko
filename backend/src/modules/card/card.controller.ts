@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
 import { unsplash } from "@/api/unsplash.js";
-import type { AuthRequestHandler } from "@/libs/common/types/AuthRequest.type.js";
+import type { AuthRequestHandler } from "@/libs/types/auth-request.type.js";
 import { db } from "@/drizzle/index.js";
 import { senses } from "@/drizzle/schema/senses.js";
 import {

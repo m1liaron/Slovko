@@ -1,53 +1,17 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, timestamp, boolean } from "drizzle-orm/pg-core";
+import { baseColumns } from "@/db/models/base.model";
+import { users } from "@/modules/index";
 
-import { sequelize } from "../sequelize.js";
+const streaks = pgTable("Streaks", {
+	...baseColumns,
+	date: timestamp("date", { withTimezone: true }).notNull(),
+	frozen: boolean("frozen").notNull().default(false),
+	userId: uuid("user_id")
+		.notNull()
+		.references(() => users.id),
+});
 
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
-import { User } from "@/modules/index.js";
+type Streak = typeof streaks.$inferSelect;
+type NewStreak = typeof streaks.$inferInsert;
 
-interface StreakAttributes extends BaseAttributes {
-	date: Date;
-	frozen: number;
-	userId: string;
-}
-
-interface StreakCreationAttributes extends BaseCreationAttributes<StreakAttributes> { }
-
-class Streak extends CustomModal<StreakAttributes, StreakCreationAttributes> implements StreakAttributes {
-	public date!: Date;
-	public frozen!: number;
-	public userId!: string;
-}
-
-Streak.init(
-	{
-		id: {
-			type: DataTypes.UUID,
-			defaultValue: uuidv4,
-			primaryKey: true,
-		},
-		date: {
-			type: DataTypes.DATE,
-			allowNull: false,
-		},
-		frozen: {
-			type: DataTypes.BOOLEAN,
-			allowNull: false,
-			defaultValue: false,
-		},
-		userId: {
-			type: DataTypes.UUID,
-			allowNull: false,
-			references: {
-				model: User,
-				key: "id",
-			}
-		}
-	},
-	{
-		sequelize
-	}
-)
-
-export { Streak }
+export { streaks, type Streak, type NewStreak };

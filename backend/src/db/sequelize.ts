@@ -1,8 +1,5 @@
-import { config } from "dotenv";
+import { EnvVariables } from "@/libs/enums/index";
 import { Sequelize } from "sequelize";
-
-import { EnvVariables } from "../common/enums/index.js";
-config();
 
 let sequelize: Sequelize;
 

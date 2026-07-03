@@ -1,16 +1,20 @@
-import { Card } from "./Card.js";
-import { Group } from "./Group.js";
+import { relations } from "drizzle-orm";
+
+import {
+    Card,
+    Group,
+    Result,
+    ResultMode,
+    WordResult,
+    Section,
+    SharedCard,
+    SharedCardLike,
+    SharedGroup,
+    users
+} from "@/modules/index";
 import { Image } from "./Image.js";
 import { Language } from "./Language.js";
-import { Result } from "./Result/Result.js";
-import { ResultMode } from "./Result/ResultMode.js";
-import { WordResult } from "./Result/WordResult.js";
-import { Section } from "./Section.js";
-import { SharedCard } from "./SharedGroup/SharedCard.js";
-import { SharedCardLikes } from "./SharedGroup/SharedCardLikes.js";
-import { SharedGroup } from "./SharedGroup/SharedGroup.js";
 import { Streak } from "./Streak.js";
-import { User } from "./User.js";
 
 // User - Section
 User.hasMany(Section, { foreignKey: "userId", as: "sections" });

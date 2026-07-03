@@ -1,12 +1,10 @@
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 import type { Optional } from "sequelize";
 import { Model, DataTypes } from "sequelize";
 import { v4 as uuidv4 } from "uuid";
 
-import { EnvVariables } from "../common/enums/index.js";
 import { sequelize } from "../db/sequelize.js";
+import { encrypt } from "@/libs/modules/encrypt/encrypt.js";
 dotenv.config();
 
 interface UserAttributes {
@@ -46,25 +44,6 @@ class User
     return values;
   }
 
-  static async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    return await bcrypt.hash(password, salt);
-  }
-
-  async comparePassword(candidatePassword: string): Promise<boolean> {
-    const user = this.get();
-    return await bcrypt.compare(candidatePassword, user.password);
-  }
-
-  createJWT(): string {
-    const user = this.get();
-
-    return jwt.sign(
-      { userId: user.id, name: user.name },
-      EnvVariables.JWT_SECRET!,
-      { expiresIn: "30d" },
-    );
-  }
 }
 
 User.init(
@@ -134,7 +113,7 @@ User.beforeCreate(async (userData: User) => {
   if (!user.password) {
     throw new Error("Password is required");
   }
-  user.password = await User.hashPassword(user.password);
+  user.password = await encrypt.hash(user.password);
 });
 
 export { User };

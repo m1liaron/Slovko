@@ -1,49 +1,21 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, pgEnum } from "drizzle-orm/pg-core";
+import { baseColumns } from "@/db/models/base.model";
+import { results } from "../../index";
 
-import { sequelize } from "@/db/sequelize.js";
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
-import { Result } from "../../result.model.js";
+const resultModeEnum = pgEnum("result_mode", [
+    "flashCards",
+    "quiz",
+    "guessWord",
+    "checkTranslate",
+]);
 
-interface ResultModeAttributes extends BaseAttributes {
-    mode: "flashCards" | "quiz" | "guessWord" | "checkTranslate";
-    resultId: string;
-}
+const resultModes = pgTable("ResultsMode", {
+    ...baseColumns,
+    mode: resultModeEnum("mode").notNull(),
+    resultId: uuid("result_id").references(() => results.id),
+});
 
-interface ResultModeCreationAttributes extends BaseCreationAttributes<ResultModeAttributes> { }
+type ResultMode = typeof resultModes.$inferSelect;
+type NewResultMode = typeof resultModes.$inferInsert;
 
-class ResultMode
-    extends CustomModal<ResultModeAttributes, ResultModeCreationAttributes>
-    implements ResultModeAttributes {
-    public mode!: "flashCards" | "quiz" | "guessWord" | "checkTranslate";
-    public resultId!: string;
-}
-
-ResultMode.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: uuidv4,
-            primaryKey: true,
-        },
-        mode: {
-            type: DataTypes.ENUM("flashCards", "quiz", "guessWord", "checkTranslate"),
-            allowNull: false,
-        },
-        resultId: {
-            type: DataTypes.UUID,
-            references: {
-                model: Result,
-                key: "id",
-            },
-        },
-    },
-    {
-        sequelize,
-        modelName: "ResultMode",
-        tableName: "ResultsMode",
-        timestamps: true,
-    },
-);
-
-export { ResultMode };
+export { resultModes, resultModeEnum, type ResultMode, type NewResultMode };

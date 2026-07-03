@@ -15,4 +15,4 @@ export { groupRoute } from "./group.route";
 export {
 } from "./group.controller";
 
-export { Group } from "./group.model";
+export { groups, type Group } from "./group.model";

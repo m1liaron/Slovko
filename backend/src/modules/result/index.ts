@@ -11,4 +11,4 @@ export { resultRoute } from "./result.route";
 export {
 } from "./result.controller";
 
-export { Result } from "./result.model";
+export { results, type Result, type NewResult } from "./result.model";

@@ -1,19 +1,17 @@
 export {
     registerSchema,
     loginSchema,
-    updateUserSchema,
-    getUserStreakDatesSchema,
     buyFreezeSchema,
-} from "./user.schema"
+} from "./language.schema"
 
-export { userRoute } from "./user.route";
+export { languageRoute } from "./language.route";
 
 export {
-    getUser,
-    updateUser,
-    getUserStreakDates,
-    updateUserStreak,
-    buyFreeze,
-} from "./user.controller";
+    getLanguages
+} from "./language.controller";
 
-export { User } from "./user.model";
+export {
+    languages,
+    type Language,
+    type NewLanguage
+} from "./language.model";

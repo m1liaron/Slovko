@@ -2,13 +2,10 @@ import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { literal } from "sequelize";
 
-import { HttpError } from "../common/constants/HttpError.js";
-import type {
-  AuthRequest,
-  AuthRequestHandler,
-} from "../common/types/AuthRequest.type.js";
 import { sequelize } from "../db/sequelize.js";
 import { Card, Group } from "../models/models.js";
+import { AuthRequestHandler } from "@/libs/types/auth-request.type.js";
+import { HttpError } from "@/libs/constants/http-error.js";
 
 const getAllGroups: AuthRequestHandler = async (req, res) => {
   const { sectionId } = req.params;
@@ -55,7 +52,7 @@ const getAllGroups: AuthRequestHandler = async (req, res) => {
   res.status(StatusCodes.OK).json(groups);
 };
 
-const getGroup = async (req: AuthRequest, res: Response) => {
+const getGroup: AuthRequestHandler = async (req, res) => {
   const {
     params: { id: groupId },
   } = req;
@@ -107,7 +104,7 @@ const getGroup = async (req: AuthRequest, res: Response) => {
   res.status(200).json(group);
 };
 
-const addGroup = async (req: AuthRequest, res: Response) => {
+const addGroup: AuthRequestHandler = async (req, res) => {
   const { title, sectionId } = req.body;
 
   const existGroup = await Group.findOne({
@@ -123,7 +120,7 @@ const addGroup = async (req: AuthRequest, res: Response) => {
   return res.status(StatusCodes.OK).json(newGroup);
 };
 
-const updateGroup = async (req: AuthRequest, res: Response) => {
+const updateGroup: AuthRequestHandler = async (req, res) => {
   const {
     params: { id: groupId },
     body: { sectionId },
@@ -144,7 +141,7 @@ const updateGroup = async (req: AuthRequest, res: Response) => {
   res.status(StatusCodes.OK).json(group);
 };
 
-const removeGroup = async (req: AuthRequest, res: Response) => {
+const removeGroup: AuthRequestHandler = async (req, res) => {
   const {
     params: { id: groupId },
   } = req;

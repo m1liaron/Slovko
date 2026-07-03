@@ -1,60 +1,16 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, varchar, integer } from "drizzle-orm/pg-core";
+import { baseColumns } from "@/db/models/base.model";
+import { resultModes } from "../result-mode/result-mode.model";
 
-import { sequelize } from "@/db/sequelize.js";
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
-import { ResultMode } from "../result-mode/result-mode.model.js";
+const wordResults = pgTable("WordsResult", {
+    ...baseColumns,
+    resultModeId: uuid("result_mode_id").references(() => resultModes.id),
+    word: varchar("word", { length: 255 }).notNull(),
+    translate: varchar("translate", { length: 255 }).notNull(),
+    mistakesAmount: integer("mistakes_amount").notNull().default(0),
+});
 
-interface WordResultAttributes extends BaseAttributes {
-    resultModeId: string;
-    word: string;
-    translate: string;
-    mistakesAmount: number;
-}
+type WordResult = typeof wordResults.$inferSelect;
+type NewWordResult = typeof wordResults.$inferInsert;
 
-interface WordResultCreationAttributes extends BaseCreationAttributes<WordResultAttributes> { }
-
-class WordResult extends CustomModal<WordResultAttributes, WordResultCreationAttributes> implements WordResultAttributes {
-    public resultModeId!: string;
-    public word!: string;
-    public translate!: string;
-    public mistakesAmount!: number;
-}
-
-WordResult.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: uuidv4,
-            primaryKey: true,
-        },
-        resultModeId: {
-            type: DataTypes.UUID,
-            references: {
-                model: ResultMode,
-                key: "id",
-            },
-        },
-        word: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        translate: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        mistakesAmount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
-        },
-    },
-    {
-        sequelize,
-        modelName: "WordResult",
-        tableName: "WordsResult",
-        timestamps: true,
-    },
-);
-
-export { WordResult };
+export { wordResults, type WordResult, type NewWordResult };

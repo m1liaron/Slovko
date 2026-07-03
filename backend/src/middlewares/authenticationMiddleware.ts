@@ -1,24 +1,11 @@
-import type { NextFunction, Request, Response } from "express";
-import type { JwtPayload } from "jsonwebtoken";
-import jwt from "jsonwebtoken";
+import type { NextFunction, Response } from "express";
 
-import { HttpError } from "../common/constants/HttpError.js";
-import { EnvVariables } from "../common/enums/index.js";
 import { User } from "../models/User.js";
 
 import { asyncHandler } from "./asyncHandler.middleware.js";
-
-interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    name: string;
-  };
-}
-
-interface DecodedUserPayload extends JwtPayload {
-  userId: string;
-  name: string;
-}
+import { HttpError } from "@/libs/constants/index.js";
+import { AuthRequest } from "@/libs/types/auth-request.type.js";
+import { jwtToken } from "@/libs/modules/token/token.js";
 
 const authMiddleware = asyncHandler(
   async (req: AuthRequest, _res: Response, next: NextFunction) => {
@@ -30,17 +17,14 @@ const authMiddleware = asyncHandler(
     const token = authHeader.split(" ")[1];
 
     try {
-      const decoded = jwt.verify(
-        token,
-        EnvVariables.JWT_SECRET!,
-      ) as DecodedUserPayload;
-      const user = await User.findByPk(decoded.userId, {
+      const decoded = await jwtToken.verifyJWTToken(token);
+      const user = await User.findByPk(decoded.id, {
         attributes: { exclude: ["password"] },
       });
       if (!user) {
         throw HttpError.unauthorized("Authentication invalid, user not found");
       }
-      req.user = { id: decoded.userId, name: decoded.name };
+      req.user = { id: decoded.id, name: decoded.name };
 
       next();
     } catch (error) {

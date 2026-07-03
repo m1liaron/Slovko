@@ -1,74 +1,15 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { baseColumns } from "@/db/models/base.model";
+import { sharedGroups } from "../../index";
 
-import { sequelize } from "../../db/sequelize.js";
-import type { BaseAttributes, BaseCreationAttributes } from "../CustomModel.js";
-import { CustomModal } from "../CustomModel.js";
+const sharedCards = pgTable("SharedCards", {
+  ...baseColumns,
+  word: varchar("word", { length: 30 }).notNull(),
+  translateWord: varchar("translate_word", { length: 100 }).notNull(),
+  sharedGroupId: uuid("shared_group_id").references(() => sharedGroups.id),
+});
 
-import { SharedGroup } from "./SharedGroup.js";
+type SharedCard = typeof sharedCards.$inferSelect;
+type NewSharedCard = typeof sharedCards.$inferInsert;
 
-interface SharedCardAttributes extends BaseAttributes {
-  word: string;
-  translateWord: string;
-  sharedGroupId: string;
-}
-
-interface SharedCardCreationAttributes extends BaseCreationAttributes<SharedCardAttributes> {}
-
-class SharedCard
-  extends CustomModal<SharedCardAttributes, SharedCardCreationAttributes>
-  implements SharedCardAttributes
-{
-  public word!: string;
-  public translateWord!: string;
-  public sharedGroupId!: string;
-}
-
-SharedCard.init(
-  {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: uuidv4,
-      primaryKey: true,
-    },
-    word: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 30],
-        notNull: {
-          msg: "Please provide a word",
-        },
-        notEmpty: {
-          msg: "Card word cannot be empty",
-        },
-      },
-    },
-    translateWord: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: [1, 100],
-        notNull: {
-          msg: "Please provide a translate word",
-        },
-        notEmpty: {
-          msg: "Card translate word cannot be empty",
-        },
-      },
-    },
-    sharedGroupId: {
-      type: DataTypes.UUID,
-      references: {
-        model: SharedGroup,
-        key: "id",
-      },
-    },
-  },
-  {
-    sequelize,
-    modelName: "SharedCards",
-  },
-);
-
-export { SharedCard };
+export { sharedCards, type SharedCard, type NewSharedCard };

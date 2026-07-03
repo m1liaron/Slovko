@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { StatusCodes } from "http-status-codes";
 
-import type { AuthRequestHandler } from "@/libs/common/types/AuthRequest.type.js";
+import type { AuthRequestHandler } from "@/libs/types/auth-request.type.js";
 import { db } from "@/drizzle/index.js";
 import { decks, deckWords, headwords } from "@/drizzle/schema/tables.js";
 

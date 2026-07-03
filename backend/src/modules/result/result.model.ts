@@ -1,63 +1,18 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, varchar, timestamp } from "drizzle-orm/pg-core";
+import { baseColumns } from "@/db/models/base.model";
+import { users } from "../index";
 
-import { sequelize } from "@/db/sequelize.js";
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
-import type { ResultMode } from "./libs/result-mode/result-mode.model.js";
-import { User } from "../user/user.model.js";
+const results = pgTable("Results", {
+    ...baseColumns,
+    title: varchar("title", { length: 255 }).notNull(),
+    userId: uuid("user_id")
+        .notNull()
+        .references(() => users.id),
+    startedLearn: timestamp("started_learn", { withTimezone: true }).notNull(),
+    completionTime: timestamp("completion_time", { withTimezone: true }).notNull(),
+});
 
-interface ResultAttributes extends BaseAttributes {
-    title: string;
-    userId: string;
-    startedLearn: Date;
-    completionTime: Date;
-}
+type Result = typeof results.$inferSelect;
+type NewResult = typeof results.$inferInsert;
 
-interface ResultCreationAttributes extends BaseCreationAttributes<ResultAttributes> { }
-
-class Result extends CustomModal<ResultAttributes, ResultCreationAttributes> implements ResultAttributes {
-    public title!: string;
-    public userId!: string;
-    public startedLearn!: Date;
-    public completionTime!: Date;
-
-    public mode?: ResultMode
-}
-
-Result.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: uuidv4,
-            primaryKey: true,
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        userId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: User,
-                key: "id",
-            },
-        },
-        startedLearn: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-        completionTime: {
-            type: DataTypes.DATE,
-            allowNull: false,
-        },
-    },
-    {
-        sequelize,
-        modelName: "Result",
-        tableName: "Results",
-        timestamps: true,
-    },
-);
-
-export { Result };
+export { results, type Result, type NewResult };

@@ -4,7 +4,6 @@ import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
 import { unsplash } from "../api/unsplash.js";
-import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 import { db } from "../drizzle/index.js";
 import { headwords } from "../drizzle/schema/headwords.js";
 import { senses } from "../drizzle/schema/senses.js";
@@ -14,6 +13,7 @@ import {
   sendError,
 } from "../helpers/index.js";
 import { Card, Image, Group } from "../models/models.js";
+import { AuthRequestHandler } from "@/libs/types/auth-request.type.js";
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
   const { sectionId } = req.params;

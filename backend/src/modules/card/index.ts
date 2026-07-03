@@ -17,4 +17,9 @@ export { cardRoute } from "./card.route";
 export {
 } from "./card.controller";
 
-export { Card } from "./card.model";
+export {
+    cardStatusEnum,
+    cards,
+    type Card,
+    type NewCard
+} from "./card.model";

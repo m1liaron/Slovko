@@ -1,10 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { beforeAll, describe, it, expect } from "vitest";
 
-import { ApiPath } from "../common/constants/ApiPath.js";
-import { RoutePath } from "../common/constants/RoutePath.js";
-
 import { testData, changeTestData, authRequest } from "./testSetup.js";
+import { ApiPath } from "@/libs/constants/api-path.js";
 
 describe("GROUP_ROUTES", () => {
   beforeAll(async () => {

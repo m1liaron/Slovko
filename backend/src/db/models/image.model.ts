@@ -1,37 +1,11 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, text } from "drizzle-orm/pg-core";
 
-import { sequelize } from "../sequelize.js";
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
+const images = pgTable("Images", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	url: text("url").notNull(),
+});
 
-interface ImageAttributes extends BaseAttributes {
-	url: string;
-}
+type Image = typeof images.$inferSelect;
+type NewImage = typeof images.$inferInsert;
 
-interface ImageCreationAttributes extends BaseCreationAttributes<ImageAttributes> {}
-
-class Image extends CustomModal<ImageAttributes, ImageCreationAttributes> implements ImageAttributes {
-	public url!: string;
-}
-
-Image.init(
-	{
-		id: {
-			type: DataTypes.UUID,
-			defaultValue: uuidv4,
-			primaryKey: true,
-		},
-		url: {
-			type: DataTypes.TEXT,
-			allowNull: false,
-		}
-	},
-	{
-		sequelize,
-		modelName: "Image",
-		tableName: "Images",
-		timestamps: false
-	}
-);
-
-export { Image };
+export { images, type Image, type NewImage };

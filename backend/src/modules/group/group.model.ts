@@ -1,60 +1,14 @@
-import { DataTypes } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { sections } from "../index";
+import { baseColumns } from "@/db/models";
 
-import { sequelize } from "@/db/sequelize.js";
+export const groups = pgTable("Groups", {
+    title: varchar("title", { length: 30 }).notNull(),
+    sectionId: uuid("section_id")
+        .notNull()
+        .references(() => sections.id),
+    ...baseColumns
+});
 
-import { CustomModal, type BaseAttributes, BaseCreationAttributes } from "@/db/models/custom-model.js";
-import type { User, Card } from "../index.js";
-interface GroupAttributes extends BaseAttributes {
-    title: string;
-    sectionId: string;
-}
-
-interface GroupCreationAttributes extends BaseCreationAttributes<GroupAttributes> { }
-
-class Group extends CustomModal<GroupAttributes, GroupCreationAttributes> implements GroupAttributes {
-    public title!: string;
-    public sectionId!: string;
-
-    cards?: Card[]
-    user?: User
-}
-
-Group.init(
-    {
-        id: {
-            type: DataTypes.UUID,
-            defaultValue: uuidv4,
-            primaryKey: true,
-        },
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                len: [1, 30],
-                notNull: {
-                    msg: "Please provide a word",
-                },
-                notEmpty: {
-                    msg: "Card word cannot be empty",
-                },
-            },
-        },
-        sectionId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: "Sections",
-                key: "id",
-            },
-        },
-    },
-    {
-        sequelize,
-        modelName: "Group",
-        tableName: "Groups",
-        timestamps: true,
-    }
-);
-
-export { Group };
+export type Group = typeof groups.$inferSelect;
+export type NewGroup = typeof groups.$inferInsert;

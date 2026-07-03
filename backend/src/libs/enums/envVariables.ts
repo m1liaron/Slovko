@@ -13,6 +13,7 @@ const EnvVariables = {
   JWT_LIFETIME: (process.env.JWT_LIFETIME as string) || "30d",
   UNSPLASH_KEY: process.env.UNSPLASH_KEY as string,
   DATABASE_URL: process.env.DATABASE_URL as string,
+  BCRYPT_SALT_ROUNDS: (Number(process.env.BCRYPT_SALT_ROUNDS)) || 12
 } as const;
 
 export { EnvVariables };
