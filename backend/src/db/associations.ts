@@ -1,92 +1,97 @@
 import { relations } from "drizzle-orm";
 
 import {
-    Card,
-    Group,
-    Result,
-    ResultMode,
-    WordResult,
-    Section,
-    SharedCard,
-    SharedCardLike,
-    SharedGroup,
-    users
+    users,
+    sections,
+    groups,
+    cards,
+    results,
+    resultModes,
+    wordResults,
+    sharedGroups,
+    languages,
+    sharedGroupLikes
 } from "@/modules/index";
-import { Image } from "./Image.js";
-import { Language } from "./Language.js";
-import { Streak } from "./Streak.js";
+import { streaks } from "./models";
 
 // User - Section
-User.hasMany(Section, { foreignKey: "userId", as: "sections" });
-Section.belongsTo(User, { foreignKey: "userId", as: "user" });
+const usersRelations = relations(users, ({ many }) => ({
+    sections: many(sections),
+    sharedGroups: many(sharedGroups),
+    streakDates: many(streaks),
+    results: many(results)
+}));
+
+const sectionRelations = relations(sections, ({ one, many }) => ({
+    user: one(users, { fields: [sections.userId], references: [users.id] }),
+    language: one(languages, { fields: [sections.languageId], references: [languages.id]})
+}))
 
 // Section - Language
-Section.belongsTo(Language, { foreignKey: "languageId" });
-Language.hasMany(Section, { foreignKey: "languageId" });
+const languagesRelations = relations(languages, ({ many }) => ({
+    sections: many(languages)
+}));
 
 // Section - Group
-Section.hasMany(Group, { foreignKey: "sectionId", as: "groups" });
-Group.belongsTo(Section, { foreignKey: "sectionId", as: "section" });
+const groupRelations = relations(groups, ({ one, many }) => ({
+    section: one(sections, { fields: [groups.sectionId], references: [sections.id] }),
+    cards: many(cards)
+}));
 
 // Group - Card
-Group.hasMany(Card, { foreignKey: "groupId", as: "cards" });
-Card.belongsTo(Group, { foreignKey: "groupId", as: "group" });
+const cardsRelations = relations(cards, ({ one }) => ({
+    group: one(groups, { fields: [cards.groupId], references: [groups.id] }),
+}));
 
 // User - SharedGroup
-User.hasMany(SharedGroup, { foreignKey: "userId", as: "sharedGroups" });
-SharedGroup.belongsTo(User, { foreignKey: "userId", as: "user" });
+const sharedGroupsRelations = relations(sharedGroups, ({ one, many }) => ({
+    user: one(users, { fields: [sharedGroups.userId], references: [users.id] }),
+    sharedGroups: many(sharedGroups),
+}));
 
 // User - Streak
-User.hasMany(Streak, { foreignKey: "userId", as: "streakDates" });
-Streak.belongsTo(User, { foreignKey: "userId", as: "user" });
+const streaksRelations = relations(streaks, ({ one }) => ({
+    user: one(users, { fields: [streaks.userId], references: [users.id] }),
+}));
 
 // User - Result
-User.hasMany(Result, { foreignKey: "userId", as: "results" });
-Result.belongsTo(User, { foreignKey: "userId", as: "user" });
+const resultsRelations = relations(results, ({ one, many }) => ({
+    user: one(users, { fields: [results.userId], references: [users.id] }),
+    mode: many(resultModes),
+}));
 
 // Result - ResultMode
-Result.hasMany(ResultMode, { foreignKey: "resultId", as: "mode" });
-ResultMode.belongsTo(Result, { foreignKey: "resultId", as: "result" });
+const resultModesRelations = relations(resultModes, ({ one, many }) => ({
+    result: one(results, { fields: [resultModes.resultId], references: [results.id] }),
+    words: many(wordResults),
+}));
 
 // ResultMode - WordResult
-ResultMode.hasMany(WordResult, { foreignKey: "resultModeId", as: "words" });
-WordResult.belongsTo(ResultMode, {
-    foreignKey: "resultModeId",
-    as: "resultMode",
-});
+const wordResultsRelations = relations(wordResults, ({ one }) => ({
+    resultMode: one(resultModes, { fields: [wordResults.resultModeId], references: [resultModes.id] }),
+}));
 
 // SharedGroup - SharedCard
-SharedGroup.hasMany(SharedCard, {
-    foreignKey: "sharedGroupId",
-    as: "sharedCards",
-});
-SharedCard.belongsTo(SharedGroup, {
-    foreignKey: "sharedGroupId",
-    as: "sharedGroup",
-});
+const sharedCardsRelations = relations(sharedGroups, ({ one, many }) => ({
+    sharedGroup: one(sharedGroups, { fields: [sharedGroups.userId], references: [sharedGroups.id] }),
+    likes: many(sharedGroupLikes),
+}));
 
 // SharedCard - SharedCardLikes
-SharedCard.hasMany(SharedCardLikes, {
-    foreignKey: "sharedGroupId",
-    as: "likes",
-});
-SharedCardLikes.belongsTo(SharedCard, {
-    foreignKey: "sharedGroupId",
-    as: "sharedCard",
-});
+const sharedGroupLikesRelations = relations(sharedGroupLikes, ({ one }) => ({
+    sharedGroup: one(sharedGroups, { fields: [sharedGroupLikes.sharedGroupId], references: [sharedGroups.id] }),
+}));
 
 export {
-    Language,
-    User,
-    Section,
-    Group,
-    Card,
-    Streak,
-    Result,
-    ResultMode,
-    WordResult,
-    SharedGroup,
-    SharedCard,
-    SharedCardLikes,
-    Image,
+    usersRelations,
+    sectionRelations,
+    groupRelations,
+    cardsRelations,
+    sharedGroupsRelations,
+    streaksRelations,
+    resultsRelations,
+    resultModesRelations,
+    wordResultsRelations,
+    sharedCardsRelations,
+    sharedGroupLikesRelations
 };

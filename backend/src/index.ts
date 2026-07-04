@@ -5,18 +5,17 @@ import express from "express";
 import { connectDB } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { ensureLanguages } from "./initFunctions/createLanguages.js";
-import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
-import { errorMiddleware } from "./middlewares/catchErrorMiddleware.js";
-import { initializeLogger } from "./middlewares/initializeLogger.js";
-import { languageRoute } from "./routes/languageRoute.js";
+import { authMiddleware, errorMiddleware, initializeLogger } from "./middlewares/index";
 import {
   userRoute,
-  cardRoute,
+  sectionRoute,
   groupRoute,
+  cardRoute,
   resultRoute,
   sharedGroupRoute,
-} from "./routes/routes.js";
-import { sectionRoute } from "./routes/sectionRoute.js";
+  languageRoute
+} from "./modules/index";
+
 import { EnvVariables } from "./libs/enums/envVariables.js";
 
 const app: Application = express();

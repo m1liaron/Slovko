@@ -1,7 +1,7 @@
-import { Group } from "../../../models/Group.js";
-import { SharedGroup } from "../../../models/models.js";
-import { Section } from "../../../models/Section.js";
+import { eq } from "drizzle-orm";
+import { sections, groups, cards, sharedGroups, sharedCards } from "@/modules/index";
 import type { OwnershipPolicies } from "../types/types.js";
+import { db } from "@/db/drizzle";
 
 const ownershipPolicies = {
   user: {
@@ -10,27 +10,36 @@ const ownershipPolicies = {
   },
   section: {
     ownerField: "userId",
+    findResource: (id: string) => db.query.sections.findFirst({ where: eq(sections.id, id) })
   },
   group: {
-    include: [{ model: Section, as: "section" }],
+    findResource: (id: string) =>
+      db.query.groups.findFirst({
+        where: eq(groups.id, id),
+        with: { section: true },
+      }),
     ownerPath: "section.userId",
   },
   card: {
-    include: [
-      {
-        model: Group,
-        as: "group",
-        include: [{ model: Section, as: "section" }],
-      },
-    ],
     ownerPath: "group.section.userId",
+    findResource: (id: string) =>
+      db.query.cards.findFirst({
+        where: eq(cards.id, id),
+        with: { group: { with: { section: true } } },
+      }),
   },
   sharedGroup: {
     ownerField: "userId",
+    findResource: (id: string) =>
+      db.query.sharedGroups.findFirst({ where: eq(sharedGroups.id, id) }),
   },
   sharedCard: {
-    include: [{ model: SharedGroup, as: "sharedGroup" }],
     ownerPath: "sharedGroup.userId",
+    findResource: (id: string) =>
+      db.query.sharedCards.findFirst({
+        where: eq(sharedCards.id, id),
+        with: { sharedGroup: true },
+      }),
   },
 } satisfies OwnershipPolicies;
 

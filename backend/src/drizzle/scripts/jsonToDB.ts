@@ -3,8 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { Client } from "pg";
-
-import { EnvVariables } from "../../common/enums/envVariables.js";
+import { EnvVariables } from "@/libs/enums";
 
 type Phrase = {
   phrase: string;

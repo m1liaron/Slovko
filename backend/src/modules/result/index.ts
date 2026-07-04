@@ -12,3 +12,4 @@ export {
 } from "./result.controller";
 
 export { results, type Result, type NewResult } from "./result.model";
+export { resultModes, resultModeEnum, wordResults, } from "./libs/index"

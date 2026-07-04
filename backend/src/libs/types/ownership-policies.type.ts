@@ -1,8 +1,17 @@
-import type { Includeable } from "sequelize";
+import { AuthRequest } from "./types";
 
 type OwnershipPolicyBase = {
   param?: string;
-  include?: Includeable[];
+  findResource?: (id: string, req: AuthRequest) => Promise<unknown>;
+  getOwnerId?: (
+    resource: Record<string, unknown>,
+    req: AuthRequest,
+  ) =>
+    | string
+    | number
+    | null
+    | undefined
+    | Promise<string | number | null | undefined>;
 };
 
 type OwnershipByField = OwnershipPolicyBase & {

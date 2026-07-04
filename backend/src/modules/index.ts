@@ -1,13 +1,14 @@
-export { users, type User } from "./user/index";
-export { sections, type Section } from "./section/index";
-export { groups, type Group } from "./group/index";
+export { users, type User, userRoute } from "./user/index";
+export { sections, sectionRoute, type Section } from "./section/index";
+export { groups, groupRoute, type Group } from "./group/index";
 export {
     cardStatusEnum,
     cards,
+    cardRoute,
     type Card,
     type NewCard
 } from "./card/index";
-export { results, type Result, type NewResult } from "./result/index";
-export { SharedCardLike, SharedCard } from "./sharedGroup/index"
+export { resultRoute, results, resultModes, wordResults, type Result, type NewResult } from "./result/index";
+export { sharedGroupRoute, sharedGroups, sharedCards, sharedGroupLikes, SharedGroupLike, SharedCard } from "./sharedGroup/index"
 
-export { languages, type Language, type NewLanguage } from "./language";
+export { languageRoute, languages, type Language, type NewLanguage } from "./language";

@@ -1,34 +1,20 @@
 import { StatusCodes } from "http-status-codes";
-import type { Includeable, Model, ModelStatic } from "sequelize";
 
-import { HttpError } from "@/libs/common/constants/HttpError.js";
-import { ownershipPolicies } from "@/libs/common/constants/index";
 import type {
   AuthRequest,
   AuthRequestHandler,
 } from "@/libs/types/auth-request.type.js";
+import { HttpError, ownershipPolicies } from "@/libs/constants";
 
-type VerifyOwnershipOptions<TModel extends Model> = {
-  Model: ModelStatic<TModel>;
+type OwnerId = string | number | null | undefined;
+
+type VerifyOwnershipOptions<TResource extends Record<string, unknown>> = {
+  findResource?: (id: string, req: AuthRequest) => Promise<TResource | undefined>;
   param?: string;
   ownerField?: string;
   isSelf?: boolean;
   ownerPath?: string;
-  include?: Includeable[];
-  getOwnerId?: (
-    resource: TModel,
-    req: AuthRequest,
-  ) =>
-    | string
-    | number
-    | null
-    | undefined
-    | Promise<string | number | null | undefined>;
-};
-
-type VerifyOwnershipFactoryOptions<TModel extends Model> = {
-  Model: ModelStatic<TModel>;
-  param?: string;
+  getOwnerId?: (resource: TResource, req: AuthRequest) => OwnerId | Promise<OwnerId>;
 };
 
 const getValueByPath = (value: unknown, path: string) =>
@@ -40,15 +26,14 @@ const getValueByPath = (value: unknown, path: string) =>
   }, value);
 
 const verifyOwnershipMiddleware =
-  <TModel extends Model>({
-    Model,
+  <TResource extends Record<string, unknown>>({
+    findResource,
     param = "id",
     ownerField = "userId",
     ownerPath,
     isSelf = false,
-    include = [],
     getOwnerId,
-  }: VerifyOwnershipOptions<TModel>): AuthRequestHandler<TModel> =>
+  }: VerifyOwnershipOptions<TResource>): AuthRequestHandler =>
     async (req, res, next) => {
       try {
         const resourceId = req.params[param];
@@ -62,17 +47,24 @@ const verifyOwnershipMiddleware =
           return;
         }
 
-        const resource = await Model.findByPk(resourceId, { include });
+        if (!findResource) {
+          throw new Error(
+            `Ownership policy is missing "findResource" for a non-self resource`,
+          );
+        }
 
+        const resource = await findResource(resourceId, req);
         if (!resource) {
           throw HttpError.notFound(`Resource not found`);
         }
 
+        const typedResource = resource as Record<string, unknown>
+
         const ownerId = getOwnerId
           ? await getOwnerId(resource, req)
           : ownerPath
-            ? getValueByPath(resource.get({ plain: true }), ownerPath)
-            : resource.get(ownerField as string);
+            ? getValueByPath(resource, ownerPath)
+            : resource[ownerField];
 
         if (!ownerId) {
           res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
@@ -91,14 +83,14 @@ const verifyOwnershipMiddleware =
       }
     };
 
-const verifyOwnership = <TModel extends Model>(
+const verifyOwnership = <TResource extends Record<string, unknown>>(
   resource: keyof typeof ownershipPolicies,
-  options: VerifyOwnershipFactoryOptions<TModel>,
+  options: Partial<VerifyOwnershipOptions<TResource>> = {},
 ) => {
-  return verifyOwnershipMiddleware<TModel>({
+  return verifyOwnershipMiddleware<TResource>({
     ...ownershipPolicies[resource],
     ...options,
-  });
+  }) as VerifyOwnershipOptions<TResource>;
 };
 
 export { verifyOwnership };
