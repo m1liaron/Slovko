@@ -1,7 +1,7 @@
+import { AuthRequestHandler } from "@/libs/types/types";
 import type { RequestHandler } from "express";
 import { Router } from "express";
 
-import type { AuthRequestHandler } from "@/common/types/AuthRequest.type.js";
 
 const authRouter = () => {
     const router = Router();

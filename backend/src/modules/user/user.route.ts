@@ -1,17 +1,14 @@
 import {
-    register,
-    login,
     getUser,
     updateUser,
     updateUserStreak,
     buyFreeze,
     getUserStreakDates,
-} from "@/controllers/userController.js";
+} from "./user.controller";
 import { asyncHandler } from "@/middlewares/asyncHandler.middleware.js";
 import { authMiddleware } from "@/middlewares/authenticationMiddleware.js";
 import { validate } from "@/middlewares/index.js";
 import { verifyOwnership } from "@/middlewares/verifyOwnership.middleware.js";
-import { User } from "@/models/User.js";
 import {
     registerSchema,
     loginSchema,
@@ -24,9 +21,6 @@ import { authRouter } from "@/libs/modules/route/index.js";
 
 const { router, get, put, post, patch } = authRouter();
 
-router.post("/register", validate(registerSchema), asyncHandler(register));
-router.post("/login", validate(loginSchema), asyncHandler(login));
-
 get("/me", authMiddleware, asyncHandler(getUser));
 get(
     "/streak",
@@ -38,7 +32,7 @@ get(
 patch(
     "/:id",
     authMiddleware,
-    verifyOwnership("user", { Model: User }),
+    verifyOwnership("user"),
     validate(updateUserSchema),
     asyncHandler(updateUser),
 );

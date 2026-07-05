@@ -83,14 +83,14 @@ const verifyOwnershipMiddleware =
       }
     };
 
-const verifyOwnership = <TResource extends Record<string, unknown>>(
+const verifyOwnership = (
   resource: keyof typeof ownershipPolicies,
-  options: Partial<VerifyOwnershipOptions<TResource>> = {},
+  options: Partial<VerifyOwnershipOptions<Record<string, unknown>>> = {},
 ) => {
-  return verifyOwnershipMiddleware<TResource>({
+  return verifyOwnershipMiddleware({
     ...ownershipPolicies[resource],
     ...options,
-  }) as VerifyOwnershipOptions<TResource>;
+  } as VerifyOwnershipOptions<Record<string, unknown>>) ;
 };
 
 export { verifyOwnership };
