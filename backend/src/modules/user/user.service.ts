@@ -5,7 +5,6 @@ import { StreakRepository } from "@/modules/streak/index";
 import { type User, type NewUser } from "./user.model";
 import { UserRepository } from "./user.repository";
 
-
 const MILLISECONDS_IN_DAY = 86400000;
 
 const startOfDay = (d: Date): Date => {
@@ -19,7 +18,7 @@ const daysBetween = (from: Date, to: Date): number =>
 
 const UserService = {
   toSafeUser(user: User): Omit<User, "password"> {
-    const { _password, ...safe } = user;
+    const { password: _pass, ...safe } = user;
     return safe;
   },
 

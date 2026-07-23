@@ -3,7 +3,6 @@ import { asyncHandler } from "@/middlewares/asyncHandler.middleware.js";
 import { authMiddleware } from "@/middlewares/authenticationMiddleware.js";
 import { validate } from "@/middlewares/index.js";
 import { verifyOwnership } from "@/middlewares/verifyOwnership.middleware.js";
-import { User } from "@/models/User.js";
 import {
   registerSchema,
   loginSchema,
