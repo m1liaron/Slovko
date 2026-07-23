@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { db } from "@/db/drizzle";
 
 const getLanguages = async (_req: Request, res: Response) => {
-    const languagesData = await db.query.languages.findAll;
+    const languagesData = await db.query.languages.findMany();
     res.status(StatusCodes.OK).json(languagesData);
 };
 

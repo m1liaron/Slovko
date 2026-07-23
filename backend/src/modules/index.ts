@@ -12,3 +12,4 @@ export { resultRoute, results, resultModes, wordResults, type Result, type NewRe
 export { sharedGroupRoute, sharedGroups, sharedCards, sharedGroupLikes, SharedGroupLike, SharedCard } from "./sharedGroup/index"
 
 export { languageRoute, languages, type Language, type NewLanguage } from "./language";
+export { images } from "./image"

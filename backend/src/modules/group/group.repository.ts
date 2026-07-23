@@ -65,15 +65,14 @@ const GroupRepository = {
     return group;
   },
 
-  async updateByIdAndSection(
+  async updateById(
     id: string,
-    sectionId: string,
     data: Partial<NewGroup>,
   ): Promise<Group | undefined> {
     const [group] = await db
       .update(groups)
       .set(data)
-      .where(sql`${groups.id} = ${id} and ${groups.sectionId} = ${sectionId}`)
+      .where(sql`${groups.id} = ${id}`)
       .returning();
     return group;
   },

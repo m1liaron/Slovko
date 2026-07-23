@@ -28,9 +28,9 @@ const getAllSharedGroups = async (
   res.status(StatusCodes.OK).json(data);
 };
 
-const getSharedGroup = async (req: Request, res: Response) => {
+const getSharedGroup = async (req: AuthRequest, res: Response) => {
   const sharedGroup = await SharedGroupService.getSharedGroup(
-    req.params.sharedGroupId,
+    req.params.sharedGroupId
   );
   res.status(StatusCodes.OK).json(sharedGroup);
 };

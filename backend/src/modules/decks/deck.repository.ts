@@ -9,9 +9,7 @@ const DeckRepository = {
   },
 
   findById(deckId: string) {
-    return db.query.decks.findFirst({
-      where: eq(decks.id, deckId),
-    });
+    return db.select().from(decks).where(eq(decks.id, deckId));;
   },
 
   findWordsByDeckId(deckId: string) {

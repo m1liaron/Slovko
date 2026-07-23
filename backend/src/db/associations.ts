@@ -10,7 +10,9 @@ import {
     wordResults,
     sharedGroups,
     languages,
-    sharedGroupLikes
+    sharedGroupLikes,
+    sharedCards,
+    images
 } from "@/modules/index";
 import { streaks } from "./models";
 
@@ -29,7 +31,7 @@ const sectionRelations = relations(sections, ({ one, many }) => ({
 
 // Section - Language
 const languagesRelations = relations(languages, ({ many }) => ({
-    sections: many(languages)
+    sections: many(sections)
 }));
 
 // Section - Group
@@ -41,12 +43,14 @@ const groupRelations = relations(groups, ({ one, many }) => ({
 // Group - Card
 const cardsRelations = relations(cards, ({ one }) => ({
     group: one(groups, { fields: [cards.groupId], references: [groups.id] }),
+    image: one(images, { fields: [cards.imageId], references: [images.id]})
 }));
 
 // User - SharedGroup
 const sharedGroupsRelations = relations(sharedGroups, ({ one, many }) => ({
     user: one(users, { fields: [sharedGroups.userId], references: [users.id] }),
-    sharedGroups: many(sharedGroups),
+    sharedCards: many(sharedCards),
+    likes: many(sharedGroupLikes),
 }));
 
 // User - Streak
@@ -72,9 +76,11 @@ const wordResultsRelations = relations(wordResults, ({ one }) => ({
 }));
 
 // SharedGroup - SharedCard
-const sharedCardsRelations = relations(sharedGroups, ({ one, many }) => ({
-    sharedGroup: one(sharedGroups, { fields: [sharedGroups.userId], references: [sharedGroups.id] }),
-    likes: many(sharedGroupLikes),
+const sharedCardsRelations = relations(sharedCards, ({ one }) => ({
+    sharedGroup: one(sharedGroups, {
+        fields: [sharedCards.sharedGroupId],
+        references: [sharedGroups.id],
+    }),
 }));
 
 // SharedCard - SharedCardLikes
@@ -93,5 +99,6 @@ export {
     resultModesRelations,
     wordResultsRelations,
     sharedCardsRelations,
-    sharedGroupLikesRelations
+    sharedGroupLikesRelations,
+    languagesRelations
 };

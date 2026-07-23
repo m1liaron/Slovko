@@ -31,12 +31,10 @@ const GroupService = {
 
   async updateGroup(
     groupId: string,
-    sectionId: string,
     data: Partial<NewGroup>,
   ): Promise<Group> {
-    const updated = await GroupRepository.updateByIdAndSection(
+    const updated = await GroupRepository.updateById(
       groupId,
-      sectionId,
       data,
     );
     if (!updated) {

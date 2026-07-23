@@ -4,12 +4,10 @@ import { authMiddleware } from "@/middlewares/authenticationMiddleware.js";
 import { validate } from "@/middlewares/index.js";
 import { verifyOwnership } from "@/middlewares/verifyOwnership.middleware.js";
 import {
-  registerSchema,
-  loginSchema,
   updateUserSchema,
   buyFreezeSchema,
   getUserStreakDatesSchema,
-} from "@/schemas/user.schema.js";
+} from "./user.schema.js";
 
 import {
   getUser,

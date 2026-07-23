@@ -1,6 +1,6 @@
+import { LanguageRepository } from "@/modules/language/language.repository";
 import { v4 as uuidv4 } from "uuid";
 
-import { Language } from "../models/Language.js";
 
 const predefinedLanguages = [
   { code: "en", name: "English", symbol: "🇬🇧" },
@@ -26,16 +26,10 @@ const predefinedLanguages = [
 
 export async function ensureLanguages() {
   for (const lang of predefinedLanguages) {
-    const foundLanguageData = await Language.findOne({
-      where: { code: lang.code },
-    });
-    const foundLanguage = foundLanguageData?.toJSON();
+    const foundLanguage = await LanguageRepository.findByCode(lang.code);
 
     if (!foundLanguage) {
-      await Language.findOrCreate({
-        where: { code: lang.code },
-        defaults: { id: uuidv4(), title: lang.name, symbol: lang.symbol },
-      });
+      await LanguageRepository.create({ id: uuidv4(), title: lang.name, symbol: lang.symbol, code: lang.code });
       console.log("Added language to the database:", lang.name);
     }
   }

@@ -23,12 +23,15 @@ const cards = pgTable("Cards", {
     learnedAt: timestamp("learned_at", { withTimezone: true }),
     nextReviewAt: timestamp("next_review_at", { withTimezone: true }),
     reviewCount: integer("review_count").notNull().default(0),
+    senseId: integer("sense_id")
 });
 
 type Card = typeof cards.$inferSelect;
 type NewCard = typeof cards.$inferInsert;
+type CardStatusEnum = typeof cardStatusEnum.enumValues[number];
 
 export {
+    type CardStatusEnum,
     cardStatusEnum,
     cards,
     type Card,

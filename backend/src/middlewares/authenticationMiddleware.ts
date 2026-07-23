@@ -1,11 +1,10 @@
 import type { NextFunction, Response } from "express";
 
-import { User } from "../models/User.js";
-
 import { asyncHandler } from "./asyncHandler.middleware.js";
 import { HttpError } from "@/libs/constants/index.js";
 import { AuthRequest } from "@/libs/types/auth-request.type.js";
 import { jwtToken } from "@/libs/modules/token/token.js";
+import { UserRepository } from "@/modules/user/user.repository.js";
 
 const authMiddleware = asyncHandler(
   async (req: AuthRequest, _res: Response, next: NextFunction) => {
@@ -18,9 +17,7 @@ const authMiddleware = asyncHandler(
 
     try {
       const decoded = await jwtToken.verifyJWTToken(token);
-      const user = await User.findByPk(decoded.id, {
-        attributes: { exclude: ["password"] },
-      });
+      const user = await UserRepository.findById(decoded.id);
       if (!user) {
         throw HttpError.unauthorized("Authentication invalid, user not found");
       }

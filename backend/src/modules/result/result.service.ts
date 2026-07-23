@@ -122,13 +122,12 @@ export const resultService = {
       throw HttpError.badRequest("No data provided as a result");
     }
 
-    const newResultData = await ResultRepository.createResult({
+    const newResult = await ResultRepository.createResult({
       title,
       userId,
       startedLearn,
       completionTime,
     });
-    const newResult = newResultData.toJSON();
 
     const correctAnswersAmount = Object.values(data)
       .filter((key) => Array.isArray(key))
@@ -138,8 +137,7 @@ export const resultService = {
         0,
       );
 
-    const userData = await ResultRepository.findUserById(userId);
-    const user = userData?.get({ plain: true });
+    const user = await ResultRepository.findUserById(userId);
     if (user) {
       await ResultRepository.updatePoints(
         userId,
@@ -157,7 +155,7 @@ export const resultService = {
             mode,
             resultId: newResult.id,
           });
-          return resultModeData.get({ plain: true });
+          return resultModeData
         }),
     );
 

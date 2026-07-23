@@ -6,21 +6,14 @@ import type { Application } from "express";
 import express from "express";
 import helmet from "helmet";
 
-import { EnvVariables } from "./common/enums/index.js";
 import { connectDB, sequelize } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { ensureLanguages } from "./initFunctions/createLanguages.js";
-import { authMiddleware } from "./middlewares/authenticationMiddleware.js";
+
 import { initializeLogger } from "./middlewares/initializeLogger.js";
-import { languageRoute } from "./routes/languageRoute.js";
-import {
-  userRoute,
-  cardRoute,
-  groupRoute,
-  resultRoute,
-  sharedGroupRoute,
-} from "./routes/routes.js";
-import { sectionRoute } from "./routes/sectionRoute.js";
+import { initializeRoutes } from "./initFunctions/initialize_routes.js";
+
+import { EnvVariables } from "./libs/enums/envVariables.js";
 
 const app: Application = express();
 
@@ -29,13 +22,7 @@ app.use(cors());
 app.use(initializeLogger);
 app.use(helmet());
 
-app.use("/users", userRoute);
-app.use("/languages", authMiddleware, languageRoute);
-app.use("/cards", authMiddleware, cardRoute);
-app.use("/groups", authMiddleware, groupRoute);
-app.use("/results", authMiddleware, resultRoute);
-app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
-app.use("/sections", authMiddleware, sectionRoute);
+initializeRoutes(app);
 
 const port = EnvVariables.PORT || 3000;
 

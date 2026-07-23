@@ -1,7 +1,9 @@
-import { Group } from "../../models/Group.js";
-import { Card, Result } from "../../models/models.js";
-import { Section } from "../../models/Section.js";
-import { User } from "../../models/User.js";
+import { SectionRepository } from "@/modules/section/section.repository.js";
+import { ResultRepository } from "@/modules/result/result.repository.js";
+import { CardRepository } from "@/modules/card/card.repository.js";
+import { UserRepository } from "@/modules/user/user.repository";
+import { NewCard } from "@/modules";
+import { GroupRepository } from "@/modules/group/group.repository";
 
 interface IResult {
   id: string;
@@ -29,7 +31,7 @@ const IDS = {
   group2Id: "33333333-3333-3333-3333-333333333332",
 };
 
-const sections = [
+const fakeSections = [
   {
     id: IDS.section1Id,
     title: "English Basics",
@@ -48,7 +50,7 @@ const sections = [
   },
 ];
 
-const groups = [
+const fakeGroups = [
   {
     id: IDS.group1Id,
     title: "Basics – Group 1",
@@ -67,7 +69,7 @@ const groups = [
 
 const today = new Date();
 
-function generateCards(groupId: string, prefix: string) {
+function generateCards(groupId: string, prefix: string): NewCard[] {
   return Array.from({ length: 20 }, (_, i) => ({
     id: `${prefix}-card-${i + 1}`,
     word: `${prefix}_word_${i + 1}`,
@@ -85,7 +87,7 @@ function generateCards(groupId: string, prefix: string) {
   }));
 }
 
-const cards = [
+const fakeCards = [
   ...generateCards(IDS.group1Id, "basic"),
   ...generateCards(IDS.group2Id, "advanced"),
 ];
@@ -154,29 +156,29 @@ for (let monthOffset = 0; monthOffset < 3; monthOffset++) {
 }
 
 const createFakeData = async () => {
-  const user = await User.create(fakeUser);
+  const user = await UserRepository.create(fakeUser);
 
   Promise.all(
-    (await sections).map((section) => {
-      Section.create({ ...section, userId: user.id });
+    fakeSections.map(async (section) => {
+      await SectionRepository.create({ ...section, userId: user.id });
     }),
   );
 
   Promise.all(
-    (await groups).map((group) => {
-      Group.create(group);
+    fakeGroups.map((group) => {
+      GroupRepository.create(group);
     }),
   );
 
   Promise.all(
-    (await results).map((result) => {
-      Result.create({ ...result, userId: user.id });
+    results.map((result) => {
+      ResultRepository.createResult({ ...result, userId: user.id });
     }),
   );
 
   Promise.all(
-    (await cards).map((card) => {
-      Card.create(card);
+    fakeCards.map((card) => {
+      CardRepository.create(card);
     }),
   );
 };

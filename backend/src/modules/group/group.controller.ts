@@ -1,98 +1,43 @@
-import { eq, sql } from "drizzle-orm";
+import { GroupService } from "./group.service";
+import { AuthRequestHandler } from "@/libs/types/auth-request.type";
+import { StatusCodes } from "http-status-codes";
 
-import { db } from "@/db/drizzle.js";
-import { cards } from "@/modules/card/card.model";
+const getAllGroups: AuthRequestHandler = (req, res) => {
+  const { sectionId } = req.params;
+  const groups = GroupService.getAllGroups(sectionId);
+  res.status(StatusCodes.OK).json(groups)
+}
+const addGroup: AuthRequestHandler = (req, res) => {
+  const { sectionId } = req.params;
+  const newGroup = GroupService.addGroup(req.body, sectionId);
+  res.status(StatusCodes.OK).json(newGroup)
+}
+const removeGroup: AuthRequestHandler = (req, res) => {
+  const { id } = req.params;
+  const newGroup = GroupService.removeGroup(id);
+  res.status(StatusCodes.OK).json(newGroup)
+}
+const getGroup: AuthRequestHandler = (req, res) => {
+  const { id } = req.params;
+  const newGroup = GroupService.getGroup(id);
+  res.status(StatusCodes.OK).json(newGroup)
+}
+const updateGroup: AuthRequestHandler = (req, res) => {
+  const { id, } = req.params;
+  const newGroup = GroupService.updateGroup(id, req.body);
+  res.status(StatusCodes.OK).json(newGroup)
+}
+const moveGroupToAnotherSection: AuthRequestHandler = (req, res) => {
+  const { id, sectionId  } = req.params;
+  const newGroup = GroupService.moveGroupToAnotherSection(id, sectionId);
+  res.status(StatusCodes.OK).json(newGroup)
+}
 
-import { groups, type Group, type NewGroup } from "./group.model.js";
-
-const GroupRepository = {
-  async findAllBySection(sectionId: string) {
-    return db
-      .select({
-        id: groups.id,
-        title: groups.title,
-        sectionId: groups.sectionId,
-        createdAt: groups.createdAt,
-        updatedAt: groups.updatedAt,
-        toLearnCount: sql<number>`count(*) filter (where ${cards.status} = 'To Learn')::int`,
-        repeatedCount: sql<number>`count(*) filter (where ${cards.status} = 'Repeated')::int`,
-        knowCount: sql<number>`count(*) filter (where ${cards.status} = 'Know')::int`,
-        learnedCount: sql<number>`count(*) filter (where ${cards.status} = 'Learned')::int`,
-      })
-      .from(groups)
-      .leftJoin(cards, eq(cards.groupId, groups.id))
-      .where(eq(groups.sectionId, sectionId))
-      .groupBy(groups.id);
-  },
-
-  async findOneWithCounts(groupId: string) {
-    const [group] = await db
-      .select({
-        id: groups.id,
-        title: groups.title,
-        sectionId: groups.sectionId,
-        createdAt: groups.createdAt,
-        updatedAt: groups.updatedAt,
-        learnToCardsAmount: sql<number>`count(*) filter (where ${cards.status} = 'To Learn')::int`,
-        learnedCardsAmount: sql<number>`count(*) filter (where ${cards.status} = 'Learned')::int`,
-        knowCardsAmount: sql<number>`count(*) filter (where ${cards.status} = 'Know')::int`,
-      })
-      .from(groups)
-      .leftJoin(cards, eq(cards.groupId, groups.id))
-      .where(eq(groups.id, groupId))
-      .groupBy(groups.id);
-
-    return group;
-  },
-
-  async findByTitleAndSection(title: string, sectionId: string) {
-    return db.query.groups.findFirst({
-      where: (g, { and, eq }) =>
-        and(eq(g.title, title), eq(g.sectionId, sectionId)),
-    });
-  },
-
-  async findById(id: string): Promise<Group | undefined> {
-    return db.query.groups.findFirst({ where: eq(groups.id, id) });
-  },
-
-  async create(data: NewGroup): Promise<Group> {
-    const [group] = await db.insert(groups).values(data).returning();
-    return group;
-  },
-
-  async updateByIdAndSection(
-    id: string,
-    sectionId: string,
-    data: Partial<NewGroup>,
-  ): Promise<Group | undefined> {
-    const [group] = await db
-      .update(groups)
-      .set(data)
-      .where(sql`${groups.id} = ${id} and ${groups.sectionId} = ${sectionId}`)
-      .returning();
-    return group;
-  },
-
-  async updateSectionId(
-    id: string,
-    sectionId: string,
-  ): Promise<Group | undefined> {
-    const [group] = await db
-      .update(groups)
-      .set({ sectionId })
-      .where(eq(groups.id, id))
-      .returning();
-    return group;
-  },
-
-  async deleteById(id: string): Promise<Group | undefined> {
-    const [group] = await db
-      .delete(groups)
-      .where(eq(groups.id, id))
-      .returning();
-    return group;
-  },
+export {
+  getAllGroups,
+  addGroup,
+  removeGroup,
+  getGroup,
+  updateGroup,
+  moveGroupToAnotherSection
 };
-
-export { GroupRepository };

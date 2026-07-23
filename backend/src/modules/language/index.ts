@@ -1,9 +1,3 @@
-export {
-    registerSchema,
-    loginSchema,
-    buyFreezeSchema,
-} from "./language.schema"
-
 export { languageRoute } from "./language.route";
 
 export {

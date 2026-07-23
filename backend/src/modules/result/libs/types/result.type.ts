@@ -13,7 +13,7 @@ type ResultsCard = {
 };
 
 type SaveResultsRequest = {
-  title: string | Date;
+  title: string;
   flashCards: ResultsCard[];
   quiz: ResultsCard[];
   guessWord: ResultsCard[];

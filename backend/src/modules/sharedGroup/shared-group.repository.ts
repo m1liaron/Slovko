@@ -11,8 +11,15 @@ import {
 
 import type { NewGroup } from "../group";
 
-const { password: _password, ...userColumnsWithoutPassword } =
-  getTableColumns(users);
+const userColumnsWithoutPassword = {
+  id: true,
+  name: true,
+  email: true,
+  image: true,
+  createdAt: true,
+  updatedAt: true,
+  frozen: true,
+}
 
 const SharedGroupRepository = {
   findGroupWithCards(groupId: string) {

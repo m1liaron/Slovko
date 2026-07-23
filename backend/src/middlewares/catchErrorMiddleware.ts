@@ -1,8 +1,7 @@
+import { HttpError } from "@/libs/constants";
 import type { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ZodError } from "zod";
-
-import { HttpError } from "../common/constants/HttpError.js";
 
 const errorMiddleware = (
   error: unknown,

@@ -10,7 +10,6 @@ import {
   addManyCards,
 } from "./card.controller";
 import { asyncHandler, validate, verifyOwnership } from "@/middlewares/index";
-import { Card, Section } from "../index";
 import {
   addCardSchema,
   addManyCardsSchema,
@@ -32,7 +31,6 @@ router
 get(
   "/repeated/:sectionId",
   verifyOwnership("section", {
-    Model: Section,
     param: "sectionId",
   }),
   validate(getRepeatedCardsSchema),
@@ -49,17 +47,13 @@ router
   .get(validate(getAllStatusCardsSchema), asyncHandler(getAllStatusCards));
 remove(
   "/:id",
-  verifyOwnership("card", {
-    Model: Card,
-  }),
+  verifyOwnership("card"),
   validate(removeCardSchema),
   asyncHandler(removeCard),
 );
 patch(
   "/:id",
-  verifyOwnership("card", {
-    Model: Card,
-  }),
+  verifyOwnership("card"),
   validate(updateCardSchema),
   asyncHandler(updateCard),
 );

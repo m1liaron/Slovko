@@ -1,4 +1,4 @@
-export { images, type Image, type NewImage } from "./image.model";
+export { images, type Image, type NewImage } from "../../modules/image/image.model";
 export {
   streaks,
   type Streak,

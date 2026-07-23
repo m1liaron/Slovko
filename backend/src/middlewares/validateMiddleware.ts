@@ -1,10 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import type { Schema } from "zod";
 import { z } from "zod";
 
 const validate =
-  (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
+  (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction) => {
     try {
       schema.parse({
         body: req.body,

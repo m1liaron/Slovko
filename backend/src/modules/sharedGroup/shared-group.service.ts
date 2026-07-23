@@ -98,9 +98,8 @@ const SharedGroupService = {
   async copySharedGroup(body: CopySharedGroupBody, sharedGroupId: string) {
     const { sectionId } = body;
 
-    const sharedGroupData =
+    const sharedGroup =
       await SharedGroupRepository.findByIdWithCards(sharedGroupId);
-    const sharedGroup = sharedGroupData;
 
     if (!sharedGroup) {
       throw HttpError.notFound("Shared group is not found");

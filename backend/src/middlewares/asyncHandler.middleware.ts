@@ -1,6 +1,6 @@
+import { AuthRequestHandler } from "@/libs/types/auth-request.type";
 import type { RequestHandler } from "express";
 
-import type { AuthRequestHandler } from "../common/types/AuthRequest.type.js";
 
 const asyncHandler =
   (fn: AuthRequestHandler | RequestHandler): RequestHandler =>

@@ -1,22 +1,12 @@
 import cors from "cors";
-import type { Application } from "express";
-import express from "express";
+import express, { type Application } from "express";
 
 import { connectDB } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
-import { ensureLanguages } from "./initFunctions/createLanguages.js";
-import { authMiddleware, errorMiddleware, initializeLogger } from "./middlewares/index";
-import {
-  userRoute,
-  sectionRoute,
-  groupRoute,
-  cardRoute,
-  resultRoute,
-  sharedGroupRoute,
-  languageRoute
-} from "./modules/index";
+import { errorMiddleware, initializeLogger } from "./middlewares/index";
 
 import { EnvVariables } from "./libs/enums/envVariables.js";
+import { initializeRoutes } from "./initFunctions/initialize_routes.js";
 
 const app: Application = express();
 
@@ -24,13 +14,7 @@ app.use(express.json());
 app.use(cors());
 app.use(initializeLogger);
 
-app.use("/users", userRoute);
-app.use("/languages", authMiddleware, languageRoute);
-app.use("/cards", authMiddleware, cardRoute);
-app.use("/groups", authMiddleware, groupRoute);
-app.use("/results", authMiddleware, resultRoute);
-app.use("/sharedGroups", authMiddleware, sharedGroupRoute);
-app.use("/sections", authMiddleware, sectionRoute);
+initializeRoutes(app);
 
 app.use(errorMiddleware);
 

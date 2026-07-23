@@ -4,16 +4,15 @@ import {
     getSharedGroup,
     copySharedGroup,
     removeSharedGroup,
-} from "./sharedGroup.controller";
+} from "./shared-group.controller";
 import { asyncHandler, validate, verifyOwnership } from "@/middlewares/index";
-import { SharedGroup } from "./sharedGroup.model";
 import {
     copySharedGroupSchema,
     createSharedGroupSchema,
     getAllSharedGroupsSchema,
     getSharedGroupSchema,
     removeSharedGroupSchema,
-} from "./sharedGroup.schema";
+} from "./shared-group.schema";
 
 import { authRouter } from "@/libs/modules/route/index";
 
@@ -34,9 +33,7 @@ post(
 );
 remove(
     "/:sharedGroupId",
-    verifyOwnership("sharedGroup", {
-        Model: SharedGroup,
-    }),
+    verifyOwnership("sharedGroup"),
     validate(removeSharedGroupSchema),
     asyncHandler(removeSharedGroup),
 );
