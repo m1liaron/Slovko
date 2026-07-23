@@ -1,8 +1,3 @@
-export {
-  CustomModal,
-  type BaseCreationAttributes,
-  type BaseAttributes,
-} from "./custom-model";
 export { images, type Image, type NewImage } from "./image.model";
 export {
   streaks,

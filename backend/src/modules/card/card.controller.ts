@@ -4,15 +4,14 @@ import { StatusCodes } from "http-status-codes";
 import { Op } from "sequelize";
 
 import { unsplash } from "@/api/unsplash.js";
-import type { AuthRequestHandler } from "@/libs/types/auth-request.type.js";
-import { db } from "@/drizzle/index.js";
-import { senses } from "@/drizzle/schema/senses.js";
-import {
-  calculateNextReviewDate,
-  getDictionaryData,
-} from "@/helpers/index";
-import { Card, Group } from "../index";
+import { senses } from "@/db/models/decks/senses.js";
 import { Image } from "@/db/models/index";
+import { db } from "@/drizzle/index.js";
+import { calculateNextReviewDate, getDictionaryData } from "@/helpers/index";
+import type { AuthRequestHandler } from "@/libs/types/auth-request.type.js";
+
+import { Card, Group } from "../index";
+
 
 const getRepeatedCards: AuthRequestHandler = async (req, res) => {
   const { sectionId } = req.params;
