@@ -6,7 +6,6 @@ import type { Application } from "express";
 import express from "express";
 import helmet from "helmet";
 
-import { connectDB, sequelize } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { ensureLanguages } from "./initFunctions/createLanguages.js";
 
@@ -34,9 +33,7 @@ const SSL_PASSPHRASE = process.env.SSL_PASSPHRASE || undefined;
 const start = async () => {
   try {
     validateEnvVariables();
-    await connectDB();
     console.log("Database connected, attempting to sync models...");
-    await sequelize.sync({ alter: true });
     await ensureLanguages();
 
     const key = fs.readFileSync(SSL_KEY_PATH, "utf8");

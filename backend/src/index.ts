@@ -1,7 +1,6 @@
 import cors from "cors";
 import express, { type Application } from "express";
 
-import { connectDB } from "./db/sequelize.js";
 import { validateEnvVariables } from "./helpers/db/index.js";
 import { errorMiddleware, initializeLogger } from "./middlewares/index";
 
@@ -23,7 +22,6 @@ const port = EnvVariables.PORT || 3000;
 const start = async () => {
   try {
     validateEnvVariables();
-    await connectDB();
     console.log("Database connected, attempting to sync models...");
     // await ensureLanguages();
 

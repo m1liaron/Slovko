@@ -1,8 +1,8 @@
 import { eq, sql } from "drizzle-orm";
 
 import { db } from "@/db/drizzle.js";
-import { cards } from "@/modules/card";
-import type { Group, NewGroup } from "@/modules/group";
+import { cards } from "@/modules/card/schema";
+import { type Group, type NewGroup } from "@/modules/group/schema";
 
 import { groups } from "./group.model.js";
 

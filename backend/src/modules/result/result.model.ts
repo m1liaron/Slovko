@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar, timestamp } from "drizzle-orm/pg-core";
 import { baseColumns } from "@/db/models/base.model";
-import { users } from "../index";
+import { users } from "@/modules/user/schema";
 
 const results = pgTable("Results", {
     ...baseColumns,

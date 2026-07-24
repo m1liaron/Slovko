@@ -1,6 +1,6 @@
 import { baseColumns, images } from "@/db/models";
 import { pgTable, uuid, varchar, text, integer, timestamp, pgEnum } from "drizzle-orm/pg-core";
-import { groups } from "../index";
+import { groups } from "../group/schema";
 
 const cardStatusEnum = pgEnum("card_status", [
     "To Learn",

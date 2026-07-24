@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 import { baseColumns } from "@/db/models/base.model";
-import { sharedGroups } from "../../index";
+import { sharedGroups } from "@/modules/sharedGroup/schema";
 
 const sharedCards = pgTable("SharedCards", {
   ...baseColumns,

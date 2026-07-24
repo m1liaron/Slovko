@@ -1,5 +1,6 @@
-import { pgTable, uuid, varchar, timestamp } from "drizzle-orm/pg-core";
-import { users, languages } from "../index";
+import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { users } from "@/modules/user/schema";
+import { languages } from "@/modules/language/schema";
 import { baseColumns } from "@/db/models";
 
 export const sections = pgTable("Sections", {

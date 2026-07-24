@@ -1,5 +1,10 @@
 import { eq } from "drizzle-orm";
-import { sections, groups, cards, sharedGroups, sharedCards } from "@/modules/index";
+import { sections } from "@/modules/section/schema";
+import { groups } from "@/modules/group/schema";
+import { cards } from "@/modules/card/schema";
+import { sharedGroups } from "@/modules/sharedGroup/schema";
+import { sharedCards } from "@/modules/sharedGroup/libs/shared-card/schema";
+
 import type { OwnershipPolicies } from "../types/types.js";
 import { db } from "@/db/drizzle";
 

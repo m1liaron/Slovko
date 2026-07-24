@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
 import { DATABASE_URL } from "@/libs/constants";
-import * as schema from "@/modules/index";
+import * as schema from "./schema";
 
 import * as relations from "./associations";
 
@@ -21,4 +21,4 @@ type DatabaseTransaction = Parameters<TransactionCallback>[0];
 
 type Transaction = DatabaseTransaction | typeof db
 
-export { db, type Transaction };
+export { db, pool, type Transaction };

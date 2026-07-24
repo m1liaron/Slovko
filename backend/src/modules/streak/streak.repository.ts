@@ -41,7 +41,6 @@ export const StreakRepository = {
   },
 
   // Mirrors the `attributes: ["id", "date", "createdAt", "updatedAt"]`
-  // projection used by the Sequelize `streakDates` include.
   async findAllByUserWithSelectedFields(userId: string) {
     return db
       .select({

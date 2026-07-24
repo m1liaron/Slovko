@@ -1,17 +1,17 @@
 import request from "supertest";
 import { beforeAll, afterAll, describe, it, expect } from "vitest";
 
-import { sequelize } from "../db/sequelize.js";
 import { app } from "../index.js";
 
 import { testData, changeTestData, authRequest } from "./testSetup.js";
+import { setup, teardown } from "./setup.js";
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true });
+  setup();
 });
 
 afterAll(async () => {
-  await sequelize.close();
+  teardown();
 });
 
 describe("USER_ROUTES", () => {

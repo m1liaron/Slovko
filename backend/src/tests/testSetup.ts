@@ -1,8 +1,8 @@
 import request from "supertest";
 import { beforeAll, afterAll } from "vitest";
 
-import { sequelize } from "../db/sequelize.js";
 import { app } from "../index.js";
+import { pool } from "@/db/drizzle.js";
 
 type Card = {
   id?: string;
@@ -99,7 +99,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await sequelize.close();
+  await pool.end();
 });
 
 type ITestDataField = ITestData[keyof ITestData];

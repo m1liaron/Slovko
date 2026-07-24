@@ -2,7 +2,7 @@ import { SectionRepository } from "@/modules/section/section.repository.js";
 import { ResultRepository } from "@/modules/result/result.repository.js";
 import { CardRepository } from "@/modules/card/card.repository.js";
 import { UserRepository } from "@/modules/user/user.repository";
-import { NewCard } from "@/modules";
+import { type NewCard } from "@/modules/card/schema";
 import { GroupRepository } from "@/modules/group/group.repository";
 
 interface IResult {

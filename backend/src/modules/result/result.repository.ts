@@ -7,7 +7,8 @@ import {
   type NewResultMode,
   resultModes
 } from "./libs/result-mode/schema";
-import type {
+import {
+  type NewWordResult,
   wordResults
 } from "./libs/word-result/schema";
 

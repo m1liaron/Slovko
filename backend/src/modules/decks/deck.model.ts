@@ -1,11 +1,11 @@
 import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import { baseColumns } from "@/db/models/base.model.js";
-import { languages } from "@/modules/language";
+import { languages } from "@/modules/language/schema";
 
 const decks = pgTable("decks", {
   ...baseColumns,
-  languageId: integer("language_id")
+  languageId: uuid("language_id")
     .references(() => languages.id)
     .notNull(),
   title: text("title").notNull(),

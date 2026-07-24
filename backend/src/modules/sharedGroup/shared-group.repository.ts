@@ -1,15 +1,12 @@
 import { and, eq, getTableColumns } from "drizzle-orm";
 
 import { db } from "@/db/drizzle";
-import {
-  users,
-  groups,
-  cards,
-  sharedGroups,
-  sharedCards,
-} from "@/modules/index";
+import { groups } from "@/modules/group/schema";
+import { cards } from "@/modules/card/schema";
+import { sharedGroups } from "@/modules/sharedGroup/schema";
+import { sharedCards } from "@/modules/sharedGroup/libs/shared-card/schema";
 
-import type { NewGroup } from "../group";
+import { type NewGroup } from "../group/schema";
 
 const userColumnsWithoutPassword = {
   id: true,

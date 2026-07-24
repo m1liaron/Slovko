@@ -12,7 +12,8 @@ import {
     languages,
     sharedGroupLikes,
     sharedCards,
-    images
+    images,
+    decks
 } from "./schema";
 import { streaks } from "./models";
 
@@ -31,7 +32,8 @@ const sectionRelations = relations(sections, ({ one, many }) => ({
 
 // Section - Language
 const languagesRelations = relations(languages, ({ many }) => ({
-    sections: many(sections)
+    sections: many(sections),
+    decks: many(decks)
 }));
 
 // Section - Group
@@ -88,6 +90,10 @@ const sharedGroupLikesRelations = relations(sharedGroupLikes, ({ one }) => ({
     sharedGroup: one(sharedGroups, { fields: [sharedGroupLikes.sharedGroupId], references: [sharedGroups.id] }),
 }));
 
+const decksRelations = relations(decks, ({ one }) => ({
+    language: one(languages, { fields: [decks.languageId], references: [languages.id]})
+}))
+
 export {
     usersRelations,
     sectionRelations,
@@ -100,5 +106,6 @@ export {
     wordResultsRelations,
     sharedCardsRelations,
     sharedGroupLikesRelations,
-    languagesRelations
+    languagesRelations,
+    decksRelations
 };

@@ -1,13 +1,13 @@
 import { Application } from "express";
-import {
-    userRoute,
-    cardRoute,
-    groupRoute,
-    resultRoute,
-    sharedGroupRoute,
-    languageRoute,
-    sectionRoute,
-} from "../modules/index";
+import { userRoute } from "../modules/user/index";
+import { languageRoute } from "../modules/language/index";
+import { groupRoute } from "../modules/group/index";
+import { cardRoute } from "../modules/card/index";
+import { resultRoute } from "../modules/result/index";
+import { sharedGroupRoute } from "../modules/sharedGroup/index";
+import { sectionRoute } from "../modules/section/index";
+
+
 import { authMiddleware } from "@/middlewares";
 
 const initializeRoutes = (app: Application) => {
