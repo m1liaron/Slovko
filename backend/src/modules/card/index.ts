@@ -13,13 +13,3 @@ export {
 } from "./card.schema"
 
 export { cardRoute } from "./card.route";
-
-export {
-} from "./card.controller";
-
-export {
-    cardStatusEnum,
-    cards,
-    type Card,
-    type NewCard
-} from "./card.model";

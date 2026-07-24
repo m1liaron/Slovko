@@ -12,9 +12,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
-    "eslint-check-only": "npx eslint .",
-    "eslint-fix": "npx eslint --fix .",
-    "prettier": "npx prettier --write ."
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint --fix .",
+    "format": "npx prettier --write ."
   },
   "repository": {
     "type": "git",

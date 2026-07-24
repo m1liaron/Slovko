@@ -11,7 +11,3 @@ export {
 } from "./group.schema";
 
 export { groupRoute } from "./group.route";
-
-export {} from "./group.controller";
-
-export { groups, type Group, type NewGroup } from "./group.model";

@@ -7,9 +7,3 @@ export {
 } from "./result.schema"
 
 export { resultRoute } from "./result.route";
-
-export {
-} from "./result.controller";
-
-export { results, type Result, type NewResult } from "./result.model";
-export { resultModes, resultModeEnum, wordResults, } from "./libs/index"

@@ -13,7 +13,7 @@ import {
     sharedGroupLikes,
     sharedCards,
     images
-} from "@/modules/index";
+} from "./schema";
 import { streaks } from "./models";
 
 // User - Section

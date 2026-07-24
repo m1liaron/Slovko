@@ -1,0 +1,1 @@
+export { wordResults, type WordResult, type NewWordResult } from "./word-result.model";

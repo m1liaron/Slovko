@@ -16,4 +16,4 @@ export {
     buyFreeze,
 } from "./user.controller";
 
-export { users, User } from "./user.model";
+export { users, type User } from "./user.model";

@@ -1,8 +1,8 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core";
-import { sections } from "../index";
+import { sections } from "@/modules/section/schema";
 import { baseColumns } from "@/db/models";
 
-export const groups = pgTable("Groups", {
+const groups = pgTable("Groups", {
     title: varchar("title", { length: 30 }).notNull(),
     sectionId: uuid("section_id")
         .notNull()
@@ -10,5 +10,7 @@ export const groups = pgTable("Groups", {
     ...baseColumns
 });
 
-export type Group = typeof groups.$inferSelect;
-export type NewGroup = typeof groups.$inferInsert;
+type Group = typeof groups.$inferSelect;
+type NewGroup = typeof groups.$inferInsert;
+
+export { groups, type Group, type NewGroup }

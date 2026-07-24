@@ -1,0 +1,1 @@
+export { images, type Image, type NewImage } from "./image.model";

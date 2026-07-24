@@ -1,2 +1,0 @@
-export { wordResults, type WordResult, type NewWordResult } from "./word-result/word-result.model";
-export { resultModes, resultModeEnum, type ResultMode, type NewResultMode } from "./result-mode/index"

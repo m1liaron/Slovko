@@ -1,1 +1,0 @@
-export { resultModes, resultModeEnum, type ResultMode, type NewResultMode } from "./result-mode.model"

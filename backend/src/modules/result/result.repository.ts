@@ -3,18 +3,15 @@ import { and, asc, between, desc, eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { users } from "@/modules/user";
 
-import type {
-  NewResultMode,
-  NewWordResult} from "./libs";
 import {
-  ResultMode,
-  resultModes,
-  wordResults,
-} from "./libs";
+  type NewResultMode,
+  resultModes
+} from "./libs/result-mode/schema";
+import type {
+  wordResults
+} from "./libs/word-result/schema";
 
-import type { NewResult} from "./index";
-import { results } from "./index";
-
+import { results, type NewResult } from "./schema";
 
 
 export const ResultRepository = {

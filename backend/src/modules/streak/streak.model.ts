@@ -1,7 +1,7 @@
 import { pgTable, uuid, timestamp, boolean } from "drizzle-orm/pg-core";
 
 import { baseColumns } from "@/db/models/base.model";
-import { users } from "@/modules/index";
+import { users } from "@/modules/user/schema";
 
 const streaks = pgTable("Streaks", {
   ...baseColumns,

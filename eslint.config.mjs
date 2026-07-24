@@ -8,7 +8,7 @@ import backendConfig from "./backend/eslint.config.mjs";
 
 export default [
   {
-    ignores: ["node_modules", "dist", "frontend/dist", "backend/dist"],
+    ignores: ["node_modules", "dist", "frontend/dist", "backend/dist", "frontend/node_modules", "backend/node_modules"],
   },
 
   {
@@ -33,6 +33,7 @@ export default [
         "error",
         { vars: "all", varsIgnorePattern: "^_", argsIgnorePattern: "^_" },
       ],
+      'import/no-duplicates': ['error'],
       "import/order": [
         "error",
         {

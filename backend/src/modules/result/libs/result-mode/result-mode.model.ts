@@ -1,6 +1,6 @@
 import { pgTable, uuid, pgEnum } from "drizzle-orm/pg-core";
 import { baseColumns } from "@/db/models/base.model";
-import { results } from "../../index";
+import { results } from "../../schema";
 
 const resultModeEnum = pgEnum("result_mode", [
     "flashCards",

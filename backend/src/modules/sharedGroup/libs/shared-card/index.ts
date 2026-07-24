@@ -1,1 +1,0 @@
-export { sharedCards, type SharedCard, type NewSharedCard } from "./shared-card.model";

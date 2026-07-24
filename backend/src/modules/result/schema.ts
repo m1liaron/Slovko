@@ -1,0 +1,1 @@
+export { results, type Result, type NewResult } from "./result.model";

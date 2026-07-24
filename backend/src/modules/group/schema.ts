@@ -1,0 +1,1 @@
+export { groups, type Group, type NewGroup } from "./group.model";

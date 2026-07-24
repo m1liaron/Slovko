@@ -2,7 +2,7 @@ import * as jose from 'jose';
 
 import { HttpError } from '@/libs/constants/index';
 import { type JwtTokenPayload } from '@/libs/types/jwt-token-payload.type.js';
-import { SECRET_JWT_KEY } from './index.js';
+import { SECRET_JWT_KEY } from './jwt-secret';
 
 class JWToken {
     public createJWTToken({ email, id }: JwtTokenPayload): Promise<string> {

@@ -1,4 +1,4 @@
-import { AuthRequest } from "./types";
+import { AuthRequest } from "./auth-request.type";
 
 type OwnershipPolicyBase = {
   param?: string;

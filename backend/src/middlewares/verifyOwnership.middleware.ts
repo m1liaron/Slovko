@@ -4,7 +4,7 @@ import { HttpError, ownershipPolicies } from "@/libs/constants";
 import type {
   AuthRequest,
   AuthRequestHandler,
-} from "@/libs/types/auth-request.type.js";
+} from "@/libs/types/types";
 
 type OwnerId = string | number | null | undefined;
 
