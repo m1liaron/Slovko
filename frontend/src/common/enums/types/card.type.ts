@@ -7,8 +7,8 @@ type ICard = {
   groupId?: string;
   image?: CardImage;
   status: string;
-  learnedAt: Date;
-  nextReviewAt: Date;
+  learnedAt: Date | null;
+  nextReviewAt: Date | null;
   reviewCount: number;
   createdAt: Date;
 };
@@ -33,6 +33,7 @@ type AddCardRequest = {
 };
 
 type IRepeatedGroup = {
+  id: string;
   title: string;
   cards: string[];
 };

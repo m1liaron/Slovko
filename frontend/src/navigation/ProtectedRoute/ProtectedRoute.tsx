@@ -62,6 +62,7 @@ const ProtectedRoute = () => {
       if (!firstLaunch) {
         if (token) {
           setInitialRoute(AppPath.HomeNavigation);
+          return;
         } else {
           await setStorageItem(AsyncStorageVariables.FIRST_START, 'true');
           setInitialRoute(AppPath.Welcome);
@@ -71,10 +72,8 @@ const ProtectedRoute = () => {
         return;
       }
 
-      // NOT FIRST LAUNCH
       if (token) {
         const result = await dispatch(getUser({}));
-
         if (getUser.rejected.match(result) && result.payload?.status === 401) {
           setInitialRoute(AppPath.Login);
         } else {

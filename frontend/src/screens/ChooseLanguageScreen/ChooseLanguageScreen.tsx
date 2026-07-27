@@ -16,14 +16,15 @@ import PressableButton from '@/common/components/PressableButton/PressableButton
 import { SearchInput } from '@/common/components/SearchInput/SearchInput';
 import { WelcomeThemeBackground } from '@/common/components/WelcomeThemeBackground/WelcomeThemeBackground';
 import { AppPath } from '@/common/enums/app/AppPath';
+import { Language } from '@/common/enums/types/language.type';
 import Loading from '@/components/Loading';
+import type { LanguageCode } from '@/contexts/LanguageProvider';
+import { useLanguage } from '@/contexts/LanguageProvider';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
 import { setSelectedLanguage } from '@/redux/sectionReducer/sectionSlice';
-import { LanguageCode, useLanguage } from '@/contexts/LanguageProvider';
-import { Language } from '@/common/enums/types/language.type';
 
 const languages = [
   { id: 1, title: 'English', flag: '🇬🇧' },

@@ -2,6 +2,7 @@ import { Entypo, Feather, MaterialIcons } from '@expo/vector-icons';
 import { View, Pressable, Text } from 'react-native';
 
 import ThemeText from '@/common/components/ThemeText/ThemeText';
+import type { ICard } from '@/common/enums/types/card.type';
 import type { IGroup } from '@/common/enums/types/group.type';
 import BackButton from '@/components/BackButton/BackButton';
 import { useAppTheme } from '@/contexts/ThemeProvider';
@@ -15,6 +16,7 @@ interface GroupHeaderProps {
   onViewModeChange: (mode: 'list' | 'cards') => void;
   onToggleFilters: () => void;
   onOpenSettings: () => void;
+  cards: ICard[];
 }
 
 export const GroupHeader: React.FC<GroupHeaderProps> = ({
@@ -24,14 +26,13 @@ export const GroupHeader: React.FC<GroupHeaderProps> = ({
   onViewModeChange,
   onToggleFilters,
   onOpenSettings,
+  cards,
 }) => {
   const {
     theme: { colors },
   } = useAppTheme();
   const { isDesktop } = useResponsive();
-  const { filterValue, rangeLimit, cards } = useAppSelector(
-    (state) => state.cards,
-  );
+  const { filterValue, rangeLimit } = useAppSelector((state) => state.cards);
 
   const isFilterUsed = filterValue.length > 0 || rangeLimit < cards.length;
 

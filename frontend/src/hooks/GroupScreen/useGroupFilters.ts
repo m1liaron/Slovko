@@ -4,7 +4,6 @@ import type { ICard } from '@/common/enums/types/card.type';
 import { i18n } from '@/localization/i18n';
 import {
   filterCardsByStatus,
-  rangeCards,
   resetFilter,
   setRangeLimit,
   sortCards,
@@ -22,12 +21,6 @@ const useGroupFilters = (cards: ICard[]) => {
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-
-  useEffect(() => {
-    if (rangeLimit === 0) {
-      setRangeLimit();
-    }
-  }, []);
 
   const statusCardsButtons = useMemo(
     () => [
@@ -58,7 +51,7 @@ const useGroupFilters = (cards: ICard[]) => {
 
   const onChangeCardsRange = useCallback(
     (value: number) => {
-      dispatch(rangeCards(value));
+      dispatch(setRangeLimit(value));
     },
     [cards.length, dispatch],
   );

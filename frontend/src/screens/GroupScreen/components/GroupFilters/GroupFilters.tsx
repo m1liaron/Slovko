@@ -9,13 +9,13 @@ import { View, Pressable, Text } from 'react-native';
 
 import { Select } from '@/common/components/Select/Select';
 import ThemeText from '@/common/components/ThemeText/ThemeText';
-import { useAppTheme } from '@/contexts/ThemeProvider';
-import { i18n } from '@/localization/i18n';
 import { CardFields } from '@/common/enums/app/CardFields';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import type { ICard } from '@/common/enums/types/card.type';
+import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useResponsive } from '@/hooks';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
 import { sortCards, toggleCardsSortOrder } from '@/redux/cardReducer/cardSlice';
-import { ICard } from '@/common/enums/types/card.type';
 
 interface StatusButton {
   title: string;

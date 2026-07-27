@@ -1,5 +1,5 @@
+import type { AsyncThunkConfig } from '@reduxjs/toolkit';
 import {
-  AsyncThunkConfig,
   createAsyncThunk,
   type AsyncThunkPayloadCreator,
 } from '@reduxjs/toolkit';

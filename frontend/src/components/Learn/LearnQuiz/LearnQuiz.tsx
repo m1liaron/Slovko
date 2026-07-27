@@ -2,11 +2,12 @@ import { Audio } from 'expo-av';
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Pressable, Text, View } from 'react-native';
 
+import type { LearnProps } from '@/common/enums/types/learnProps.type';
+
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import ProgressContainer from '../../ProgressContainer/ProgressContainer';
 
 import styles from './LearnQuiz.styles';
-import { LearnProps } from '@/common/enums/types/learnProps.type';
 
 type QuizOption = {
   text: string;

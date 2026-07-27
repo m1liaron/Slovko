@@ -16,10 +16,12 @@ import { SkeletonGroupItem } from '@/common/components/SkeletonGroupItem/Skeleto
 import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { IGroup } from '@/common/enums/types/group.type';
 import type { ISharedGroup } from '@/common/enums/types/sharedGroup';
+import { useLanguage } from '@/contexts/LanguageProvider';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 import AvatarImage from '../../../assets/images/avatar.png';
 import AddButton from '../../common/components/AddButton/AddButton';
@@ -36,8 +38,6 @@ import {
 } from '../../redux/sharedGroupReducer/sharedGroupSlice';
 
 import styles from './SharedGroupsScreen.styles';
-import { HAS_TOKEN } from '@/utils/storage/initToken';
-import { useLanguage } from '@/contexts/LanguageProvider';
 
 const SharedGroupsScreen = () => {
   const {

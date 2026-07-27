@@ -5,9 +5,9 @@ import { AsyncStorageVariables } from '@/common/enums/app/asyncStorageVariables'
 import { enqueueAction } from '@/redux/offlineQueueReducer/offlineQueueSlice';
 import type { AppDispatch, RootState } from '@/redux/store';
 import { getStorageItem } from '@/utils/storage';
+import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 import { persistOfflineQueue } from './persistOfflineQueue';
-import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 // Updated type to match AsyncThunk signature
 type AsyncThunkCreator<Returned, ThunkArg> = AsyncThunk<

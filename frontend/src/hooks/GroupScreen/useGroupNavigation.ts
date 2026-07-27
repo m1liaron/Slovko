@@ -6,9 +6,10 @@ import { AppPath } from '@/common/enums/app/app';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectCardsByGroupId } from '@/redux/cardReducer/cardSelector';
 import {
   getRepeatedCards,
-  rangeCards,
+  setRangeLimit,
   removeStateGroupCards,
 } from '@/redux/cardReducer/cardSlice';
 import {
@@ -19,7 +20,6 @@ import {
   moveStateGroupToAnotherSection,
 } from '@/redux/groupReducer/groupSlice';
 import { moveGroupToAnotherSection } from '@/redux/groupReducer/groupThunk';
-import { HAS_TOKEN } from '@/utils/storage/initToken';
 
 const useGroupNavigation = (
   groupId: string,
@@ -27,7 +27,7 @@ const useGroupNavigation = (
 ) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
-  const { cards } = useAppSelector((state) => state.cards);
+  const cards = useAppSelector((state) => selectCardsByGroupId(state, groupId));
   const { activeSection } = useAppSelector((state) => state.sections);
   const { isConnected } = useAppSelector((state) => state.network);
 
@@ -91,7 +91,7 @@ const useGroupNavigation = (
   const navigateToLearn = useCallback(
     (wordsRangeNumber: number) => {
       if (wordsRangeNumber !== cards.length) {
-        dispatch(rangeCards(wordsRangeNumber));
+        dispatch(setRangeLimit(wordsRangeNumber));
       }
       navigation.navigate(AppPath.Learn, { groupId });
       setShowModesModal(false);

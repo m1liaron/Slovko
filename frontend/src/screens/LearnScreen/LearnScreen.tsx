@@ -3,6 +3,7 @@ import type React from 'react';
 import { View } from 'react-native';
 
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { AppPath } from '@/common/enums/app/app';
 import Loading from '@/components/Loading';
 import {
@@ -23,6 +24,10 @@ type LearnScreenProps = StackScreenProps<
 
 const LearnScreen: React.FC<LearnScreenProps> = ({ route }) => {
   const groupId = (route.params as { groupId?: string | undefined })?.groupId;
+
+  if (!groupId) {
+    return <ThemeText>Sorry, group was not found</ThemeText>;
+  }
 
   const {
     learningCards,

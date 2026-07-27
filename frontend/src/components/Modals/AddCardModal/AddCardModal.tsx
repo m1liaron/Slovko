@@ -1,4 +1,5 @@
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 import Checkbox from 'expo-checkbox';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -7,12 +8,15 @@ import pLimit from 'p-limit';
 import type { Dispatch } from 'react';
 import React, { type ChangeEvent, useEffect, useState } from 'react';
 import { FlatList, Image, Platform, Pressable, Text, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { v4 as uuid } from 'uuid';
 import * as XLSX from 'xlsx';
 
+import { translateText } from '@/api/google-translate';
 import { getUnsplashPhotos } from '@/api/unsplash';
+import type { ICard } from '@/common/enums/types/card.type';
 import { type AddCardRequest } from '@/common/enums/types/card.type';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch } from '@/hooks/redux.hooks';
@@ -31,10 +35,6 @@ import ThemeText from '../../../common/components/ThemeText/ThemeText';
 import { useAppTheme } from '../../../contexts/ThemeProvider';
 import { addCard, addStateCard } from '../../../redux/cardReducer/cardSlice';
 import DefaultModal from '../../DefaultModal/DefaultModal';
-import { TextInput } from 'react-native-gesture-handler';
-
-import { translateText } from '@/api/google-translate';
-import { Picker } from '@react-native-picker/picker';
 
 const BATCH_SIZE = 10;
 const CONCURRENCY = 3;
@@ -302,19 +302,28 @@ const AddCardModal: React.FC<AddCardModalProps> = ({
     await Promise.all(
       batches.map((batch) =>
         limit(async () => {
-          // you could either POST to a new bulk endpoint (see below)
-          // or send each item in the batch sequentially:
+          const optimisticCards = batch.map((card) => ({
+            ...card,
+            id: uuid(),
+            reviewCount: 0,
+            nextReviewAt: null,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            status: 'To Learn',
+            definition: '',
+            example: '',
+            image: { url: '' },
+            learnedAt: null,
+          })) as ICard[];
           await dispatch(
             enqueueOrDispatch(addManyCards, addStateManyCards, {
-              cards: batch,
-              tempId: uuid(),
+              requests: batch,
+              optimisticCards: optimisticCards,
             }),
           );
         }),
       ),
     );
-
-    dispatch(setRangeLimit(cards.length));
   }
 
   const onSaveCard = async () => {

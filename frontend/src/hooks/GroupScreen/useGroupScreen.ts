@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { DataStatus } from '@/common/enums/app/DataStatus';
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 import { getGroup, getGroupStorage } from '@/redux/groupReducer/groupThunk';
 
 import { useAppDispatch, useAppSelector } from '../redux.hooks';
@@ -13,7 +14,9 @@ const useGroupScreen = (groupId: string) => {
   const navigation = useNavigation<StackNavigation>();
 
   const { group, status, groups } = useAppSelector((state) => state.groups);
-  const { cards, isLoading } = useAppSelector((state) => state.cards);
+  const cards = useAppSelector((state) =>
+    selectVisibleCardsByGroup(state, groupId),
+  );
 
   useEffect(() => {
     if (!groupId && status === DataStatus.ERROR) {
@@ -35,8 +38,6 @@ const useGroupScreen = (groupId: string) => {
   return {
     group,
     groups,
-    cards,
-    isLoading,
     totalCards,
     learnedCards,
     progressPercentage,

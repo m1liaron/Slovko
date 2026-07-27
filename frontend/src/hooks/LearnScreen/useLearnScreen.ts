@@ -11,6 +11,7 @@ import type {
 import { enqueueOrDispatch } from '@/helpers/offlineHelpers/enqueueOrDispatch';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import type { StackNavigation } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 import {
   getRepeatedCards,
   updateCardsAfterLearn,
@@ -20,16 +21,16 @@ import { addStateResult, saveResults } from '@/redux/resultReducer/resultSlice';
 import { updateUserStreak } from '@/redux/userReducer/userSlice';
 import { formatTime } from '@/utils/formatTime/formatTime';
 
-export const useLearnScreen = (groupId?: string) => {
+export const useLearnScreen = (groupId: string) => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<StackNavigation>();
 
-  const { filteredCards: learningCards } = useAppSelector(
-    (state) => state.cards,
+  const learningCards = useAppSelector((state) =>
+    selectVisibleCardsByGroup(state),
   );
   const { user } = useAppSelector((state) => state.user);
   const groups = useAppSelector(selectGroup);
-  const { repeatedCards, cards, status, shownModes } = useAppSelector(
+  const { repeatedCards, status, shownModes } = useAppSelector(
     (state) => state.cards,
   );
   const { activeSection } = useAppSelector((state) => state.sections);
@@ -109,12 +110,10 @@ export const useLearnScreen = (groupId?: string) => {
         check: 'checkCards',
       };
 
-      console.log('add data', card);
       const sectionKey = sectionKeyMap[currentSection];
       if (sectionKey) {
         updateCardData(sectionKey, card, isCorrect);
       }
-      console.log('sessionData: ', sessionData);
     },
     [currentSection, updateCardData],
   );
@@ -141,7 +140,7 @@ export const useLearnScreen = (groupId?: string) => {
     const totalLearnedTime = endLearnDate - startLearnDate.getTime();
     setElapsedTime(formatTime(totalLearnedTime));
 
-    const repeatedCardsIds = cards?.map((card) => card.id);
+    const repeatedCardsIds = repeatedCards?.map((card) => card.id);
     dispatch(enqueueOrDispatch(updateCardsAfterLearn, repeatedCardsIds));
     dispatch(enqueueOrDispatch(updateUserStreak, {}));
 
@@ -154,7 +153,6 @@ export const useLearnScreen = (groupId?: string) => {
     }
   }, [
     startLearnDate,
-    cards,
     repeatedCards,
     activeSectionId,
     saveResultsData,

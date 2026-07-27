@@ -3,7 +3,10 @@ import { View } from 'moti';
 
 import { LineLoader } from '@/common/components/LineLoader/LineLoader';
 import ThemeBackground from '@/common/components/ThemeBackground/Themebackground';
+import ThemeText from '@/common/components/ThemeText/ThemeText';
 import type { AppPath } from '@/common/enums/app/AppPath';
+import { DataStatus } from '@/common/enums/app/DataStatus';
+import BackButton from '@/components/BackButton/BackButton';
 import CardList from '@/components/Card/CardList/CardList';
 import { useResponsive } from '@/hooks';
 import {
@@ -12,19 +15,16 @@ import {
   useGroupNavigation,
   useGroupScreen,
 } from '@/hooks/GroupScreen';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
+import { i18n } from '@/localization/i18n';
 import type { RootStackParamList } from '@/navigation/ProtectedRoute/ProtectedRoute';
+import { selectVisibleCardsByGroup } from '@/redux/cardReducer/cardSelector';
 
 import { GroupActions } from './components/GroupActions/GroupActions';
 import { GroupFilters } from './components/GroupFilters/GroupFilters';
 import { GroupHeader } from './components/GroupHeader/GroupHeader';
 import { GroupModals } from './components/GroupModals/GroupsModal';
 import { GroupProgress } from './components/GroupProgress/GroupProgress';
-import ThemeText from '@/common/components/ThemeText/ThemeText';
-import BackButton from '@/components/BackButton/BackButton';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
-import { useEffect } from 'react';
-import { setRangeLimit } from '@/redux/cardReducer/cardSlice';
-import { i18n } from '@/localization/i18n';
 
 type GroupScreenProps = StackScreenProps<
   RootStackParamList,
@@ -33,17 +33,19 @@ type GroupScreenProps = StackScreenProps<
 
 const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
   const dispatch = useAppDispatch();
-  const { rangeLimit } = useAppSelector((state) => state.cards);
+  const { rangeLimit, status } = useAppSelector((state) => state.cards);
   const { groupId } = route.params as { groupId: string };
-  const { cards, filteredCards } = useAppSelector((state) => state.cards);
+  const cards =
+    useAppSelector((state) => selectVisibleCardsByGroup(state, groupId)) ?? [];
+
   const { isDesktop, width } = useResponsive();
 
   const maxContentWidth = isDesktop ? 1200 : width;
+  const isLoading = status === DataStatus.PENDING;
 
   const {
     group: groupData,
     groups,
-    isLoading,
     progressPercentage,
     learnedCards,
   } = useGroupScreen(groupId);
@@ -64,12 +66,6 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
     modalState.setShowModesModal,
   );
 
-  useEffect(() => {
-    if (rangeLimit === 0) {
-      dispatch(setRangeLimit(filteredCards.length));
-    }
-  }, []);
-
   if (!group) {
     return (
       <ThemeBackground>
@@ -89,22 +85,23 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
           onViewModeChange={filterState.setViewMode}
           onToggleFilters={filterState.toggleFilters}
           onOpenSettings={modalState.openEditModal}
+          cards={cards}
         />
 
         {isLoading && <LineLoader />}
 
         <GroupProgress
           learnedCards={learnedCards}
-          shownCardsLength={filteredCards.length}
+          shownCardsLength={cards.length}
           progressPercentage={progressPercentage}
           isDesktop={isDesktop}
         />
       </View>
 
-      <CardList shownCards={filteredCards} groupId={groupId} />
+      <CardList shownCards={cards} groupId={groupId} />
 
       <GroupActions
-        hasCards={filteredCards.length > 1}
+        hasCards={cards.length > 1}
         isLoading={isLoading}
         onLearn={modalState.openModesModal}
         onAddCard={modalState.openAddModal}
@@ -113,7 +110,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
       {filterState.showFilterModal && (
         <GroupFilters
           cardsLength={cards.length}
-          shownCards={filteredCards}
+          shownCards={cards}
           sort={filterState.sort}
           sortOrder={filterState.sortOrder}
           selectedStatus={filterState.selectedStatus}
@@ -131,7 +128,7 @@ const GroupScreen: React.FC<GroupScreenProps> = ({ route }) => {
         newSectionId={navigationHandlers.newSectionId}
         setNewSectionId={navigationHandlers.setNewSectionId}
         group={group}
-        shownCards={filteredCards}
+        shownCards={cards}
         groupTitle={navigationHandlers.groupTitle}
         setGroupTitle={navigationHandlers.setGroupTitle}
         showModesModal={modalState.showModesModal}

@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
 import type Swiper from 'react-native-deck-swiper';
+import Toast from 'react-native-toast-message';
 
 import type { ICard } from '@/common/enums/types/card.type';
+import type { LearnProps } from '@/common/enums/types/learnProps.type';
 import { useResponsive } from '@/hooks';
 import { useCardFlip, useLearnCards, useTypeMode } from '@/hooks/LearnCards';
 
 import { AnswerInput } from './components/AnswerInput.tsx/AnswerInput';
 import { CardSwiper } from './components/CardSwiper/CardSwiper';
 import { TypeModeToggle } from './components/TypeModeToggle/TypeModeToggle';
-import { LearnProps } from '@/common/enums/types/learnProps.type';
-import Toast from 'react-native-toast-message';
 
 const LearnCards: React.FC<LearnProps> = ({
   learningCards: shownCards,

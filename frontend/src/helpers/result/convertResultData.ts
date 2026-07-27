@@ -1,5 +1,6 @@
-import { ModeName } from '@/common/enums/types/result.type';
 import { v4 as uuid } from 'uuid';
+
+import type { ModeName } from '@/common/enums/types/result.type';
 
 type RawWord = any;
 

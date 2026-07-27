@@ -3,6 +3,16 @@ import { Card, Result } from "../../models/models.js";
 import { Section } from "../../models/Section.js";
 import { User } from "../../models/User.js";
 
+interface IResult {
+  id: string;
+  title: string;
+  userId: string;
+  startedLearn: Date;
+  completionTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const fakeUser = {
   name: "Fake User 1",
   email: "fakeuser@gmail.com",
@@ -80,7 +90,7 @@ const cards = [
   ...generateCards(IDS.group2Id, "advanced"),
 ];
 
-const results = [];
+const results: IResult[] = [];
 const resultModes = [];
 const wordResults = [];
 

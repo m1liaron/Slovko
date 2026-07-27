@@ -16,6 +16,7 @@ import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 
 import PressableButton from '@/common/components/PressableButton/PressableButton';
+import Loading from '@/components/Loading';
 import { useAppTheme } from '@/contexts/ThemeProvider';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux.hooks';
 import { i18n } from '@/localization/i18n';
@@ -29,7 +30,6 @@ import { AppPath } from '../../common/enums/app/app';
 import { login } from '../../redux/userReducer/userSlice';
 
 import styles from './LoginScreen.styles';
-import Loading from '@/components/Loading';
 
 const LoginScreen = () => {
   const { width: screenWidth } = useWindowDimensions();
@@ -76,7 +76,7 @@ const LoginScreen = () => {
         navigation.navigate(AppPath.HomeNavigation);
       })
       .catch((error) => {
-        const message = error.message || i18n.t('errors.loginFailed');
+        const message = error.message || i18n.t('loginScreen.loginFailed');
         Toast.show({
           type: 'error',
           text1: 'Невдача',
@@ -202,7 +202,7 @@ const LoginScreen = () => {
 
             {/* Continue Without Account */}
             <Pressable
-              onPress={() => navigation.navigate(AppPath.Main)}
+              onPress={() => navigation.navigate(AppPath.HomeNavigation)}
               style={[
                 styles.guestButton,
                 {

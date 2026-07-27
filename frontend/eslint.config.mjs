@@ -22,6 +22,22 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
       'react-native/no-unused-styles': 'warn',
       'react-native/no-inline-styles': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unsafe-assignment': 'warn',
+      '@typescript-eslint/no-unsafe-member-access': 'warn',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
+      'react/no-unstable-nested-components': 'error', // huge perf killer in RN
+      'react/self-closing-comp': 'warn',
+      'react/jsx-no-useless-fragment': 'warn',
+      'react/no-array-index-key': 'warn',
+      'react-native/no-raw-text': 'error', // text outside <Text> crashes RN
+      'react-native/no-color-literals': 'warn',
+      'no-console': 'warn', // catches leftover debug logs
+      'no-debugger': 'error',
+      'eqeqeq': ['error', 'always'], // no == comparisons
+      'no-var': 'error',
+      'prefer-const': 'error',
     },
   },
 ];

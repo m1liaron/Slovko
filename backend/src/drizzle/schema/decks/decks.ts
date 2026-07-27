@@ -1,6 +1,6 @@
 import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-import { languages } from "../languages";
+import { languages } from "../languages.js";
 
 export const decks = pgTable("decks", {
   id: uuid("id").defaultRandom().primaryKey(),

@@ -1,4 +1,5 @@
 import request from "supertest";
+import { beforeAll, afterAll } from "vitest";
 
 import { sequelize } from "../db/sequelize.js";
 import { app } from "../index.js";
@@ -11,7 +12,7 @@ type Card = {
   imageUri: string;
   learnedAt?: Date;
   nextReviewAt?: Date;
-}
+};
 
 interface ITestData {
   testUser: {
@@ -21,9 +22,22 @@ interface ITestData {
     points: number;
     froze: number;
   };
+  testUser2: {
+    email: string;
+    name: string;
+    password: string;
+    points: number;
+    froze: number;
+    token?: string;
+    id?: string;
+  };
   testCard: Card;
   cards: Card[];
   testSection: {
+    id?: string;
+    title: string;
+  };
+  testSection2: {
     id?: string;
     title: string;
   };
@@ -39,12 +53,22 @@ const testData: ITestData = {
   testUser: {
     email: "lani@gmail.com",
     name: "lani",
-    password: "rty1245",
+    password: "rty1245678",
+    points: 200,
+    froze: 0,
+  },
+  testUser2: {
+    email: "lani2@gmail.com",
+    name: "lani",
+    password: "rty1245678",
     points: 200,
     froze: 0,
   },
   testSection: {
-    title: "New Section"
+    title: "New Section",
+  },
+  testSection2: {
+    title: "New Section",
   },
   testGroup: {
     title: "New Group",
@@ -64,8 +88,6 @@ const changeTestData = (updates: Partial<typeof testData>) => {
 };
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true });
-
   await request(app).post("/users/register").send(testData.testUser);
   const res = await request(app).post("/users/login").send({
     email: testData.testUser.email,

@@ -1,5 +1,6 @@
+import type { AxiosInstance } from 'axios';
+
 import { createAuthorizedInstance } from '@/utils';
-import { AxiosInstance } from 'axios';
 
 const withAuth = async <T>(cb: (api: AxiosInstance) => Promise<T>) => {
   const api = await createAuthorizedInstance();
