@@ -13,3 +13,5 @@ const { router } = authRouter();
 
 router.post("/register", validate(registerSchema), asyncHandler(register));
 router.post("/login", validate(loginSchema), asyncHandler(login));
+
+export { router as authRoute };

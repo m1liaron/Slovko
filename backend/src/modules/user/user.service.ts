@@ -17,11 +17,6 @@ const daysBetween = (from: Date, to: Date): number =>
   Math.round((to.getTime() - from.getTime()) / MILLISECONDS_IN_DAY);
 
 const UserService = {
-  toSafeUser(user: User): Omit<User, "password"> {
-    const { password: _pass, ...safe } = user;
-    return safe;
-  },
-
   async createUser(input: NewUser): Promise<User> {
     if (!input.password) {
       throw HttpError.badRequest("Password is required");
@@ -38,7 +33,7 @@ const UserService = {
   },
 
   async findUserByEmail(email: string): Promise<User | undefined> {
-    return UserRepository.findByEmail(email);
+    return await UserRepository.findByEmail(email);
   },
 
   async findUserById(id: string): Promise<User | undefined> {

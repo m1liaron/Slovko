@@ -9,6 +9,7 @@ import * as relations from "./associations";
 const pool = new Pool({
   connectionString: DATABASE_URL,
 });
+
 const db = drizzle(pool, { schema: { ...schema, ...relations } });
 
 type TransactionMethod = typeof db.transaction;

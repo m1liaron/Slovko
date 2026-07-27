@@ -1,4 +1,5 @@
 import { Application } from "express";
+import { authRoute } from "../modules/auth/index";
 import { userRoute } from "../modules/user/index";
 import { languageRoute } from "../modules/language/index";
 import { groupRoute } from "../modules/group/index";
@@ -11,6 +12,7 @@ import { sectionRoute } from "../modules/section/index";
 import { authMiddleware } from "@/middlewares";
 
 const initializeRoutes = (app: Application) => {
+    app.use("/auth", authRoute);
     app.use("/users", userRoute);
     app.use("/languages", authMiddleware, languageRoute);
     app.use("/cards", authMiddleware, cardRoute);

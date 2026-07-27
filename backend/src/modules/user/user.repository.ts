@@ -5,7 +5,7 @@ import { users, type User, type NewUser } from "./user.model";
 const UserRepository = {
     async create(data: NewUser): Promise<User> {
         const [user] = await db.insert(users).values(data).returning();
-        return user;
+        return user;    
     },
 
     async findById(id: string): Promise<User | undefined> {
@@ -13,7 +13,7 @@ const UserRepository = {
     },
 
     async findByEmail(email: string): Promise<User | undefined> {
-        return db.query.users.findFirst({ where: eq(users.email, email) });
+        return await db.query.users.findFirst({ where: eq(users.email, email) });
     },
 
     async update(id: string, data: Partial<NewUser>): Promise<User | undefined> {
