@@ -4,7 +4,7 @@ import { beforeAll, describe, it, expect } from "vitest";
 import { app } from "../index.js";
 
 import { setup } from "./setup.js";
-import { testData, changeTestData, authRequest } from "./testSetup.js";
+import { testData, changeTestData } from "./testSetup.js";
 
 console.log("DATABASE_URL seen by test:", process.env.DATABASE_URL);
 

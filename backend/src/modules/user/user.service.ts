@@ -2,7 +2,7 @@ import { HttpError } from "@/libs/constants";
 import { encrypt } from "@/libs/modules/encrypt";
 import { StreakRepository } from "@/modules/streak/index";
 
-import { type User, type NewUser } from "./user.model";
+import { type User, type NewUser, SafeUser } from "./user.model";
 import { UserRepository } from "./user.repository";
 
 const MILLISECONDS_IN_DAY = 86400000;
@@ -17,29 +17,30 @@ const daysBetween = (from: Date, to: Date): number =>
   Math.round((to.getTime() - from.getTime()) / MILLISECONDS_IN_DAY);
 
 const UserService = {
-  async createUser(input: NewUser): Promise<User> {
-    if (!input.password) {
-      throw HttpError.badRequest("Password is required");
-    }
-
-    const existing = await UserRepository.findByEmail(input.email);
-    if (existing) {
-      throw HttpError.badRequest("Email already in use");
-    }
-
-    const hashed = await encrypt.hash(input.password);
-
-    return UserRepository.create({ ...input, password: hashed });
+  async createUser(data: NewUser): Promise<SafeUser> {
+    const user = await UserRepository.create(data);
+    return UserRepository.safeUser(user);
   },
 
-  async findUserByEmail(email: string): Promise<User | undefined> {
-    return await UserRepository.findByEmail(email);
+  async getUserById(id: string): Promise<SafeUser | undefined> {
+    const user = await UserRepository.findById(id);
+    return user ? UserRepository.safeUser(user) : undefined;
   },
 
-  async findUserById(id: string): Promise<User | undefined> {
-    return UserRepository.findById(id);
+  async findUserByEmail(email: string): Promise<SafeUser | undefined> {
+    const user = await UserRepository.findByEmail(email);
+    return user ? UserRepository.safeUser(user) : undefined;
   },
 
+  async updateUser(id: string, data: Partial<NewUser>): Promise<SafeUser | undefined> {
+    const user = await UserRepository.update(id, data);
+    return user ? UserRepository.safeUser(user) : undefined;
+  },
+
+  async deleteUser(id: string): Promise<SafeUser | undefined> {
+    const user = await UserRepository.delete(id);
+    return user ? UserRepository.safeUser(user) : undefined;
+  },
   /**
    * Loads a user and, if they have a lastReviewAt, reconciles their streak
    * against the number of days that have passed (freeze consumption,
@@ -89,14 +90,6 @@ const UserService = {
     }
 
     return UserRepository.findById(userId);
-  },
-
-  async updateUser(userId: string, data: Record<string, unknown>) {
-    const user = await UserRepository.update(userId, data);
-    if (!user) {
-      throw HttpError.notFound("User not found");
-    }
-    return user;
   },
 
   /**
@@ -150,7 +143,7 @@ const UserService = {
     const streakDates =
       await StreakRepository.findAllByUserWithSelectedFields(userId);
 
-    return { ...updatedUser, streakDates };
+    return { ...UserRepository.safeUser(updatedUser), streakDates };
   },
 
   async getUserStreakDates(userId: string, month: number, year: number) {
@@ -182,6 +175,10 @@ const UserService = {
       points: user.points - froze,
       frozen: true,
     });
+  },
+
+  async getUserForAuth(email: string): Promise<User | undefined> {
+    return UserRepository.findByEmail(email);
   },
 };
 export { UserService };

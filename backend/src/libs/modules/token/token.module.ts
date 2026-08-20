@@ -3,13 +3,14 @@ import * as jose from 'jose';
 import { HttpError } from '@/libs/constants/index';
 import { type JwtTokenPayload } from '@/libs/types/jwt-token-payload.type.js';
 import { SECRET_JWT_KEY } from './jwt-secret';
+import { EnvVariables } from '@/libs/enums';
 
 class JWToken {
-    public createJWTToken({ email, id }: JwtTokenPayload): Promise<string> {
-        return new jose.SignJWT({ email, id })
+    public createJWTToken({ name, id }: JwtTokenPayload): Promise<string> {
+        return new jose.SignJWT({ name, id })
             .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
             .setIssuedAt()
-            .setExpirationTime(process.env['JWT_LIFETIME'] || '1d')
+            .setExpirationTime(EnvVariables.JWT_LIFETIME || '1d')
             .sign(SECRET_JWT_KEY);
     }
 
@@ -20,8 +21,8 @@ class JWToken {
             });
 
             if (
-                typeof payload['email'] !== 'string' ||
-                typeof payload['id'] !== 'number'
+                typeof payload['name'] !== 'string' ||
+                typeof payload['id'] !== 'string'
             ) {
                 throw HttpError.unauthorized('Invalid token payload');
             }

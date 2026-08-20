@@ -1,8 +1,13 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/drizzle.js";
-import { users, type User, type NewUser } from "./user.model";
+import { users, type User, type NewUser, SafeUser } from "./user.model";
 
 const UserRepository = {
+    safeUser(user: User): SafeUser {
+        const { password: _, ...userData } = user;
+        return userData;
+    },
+
     async create(data: NewUser): Promise<User> {
         const [user] = await db.insert(users).values(data).returning();
         return user;    

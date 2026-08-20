@@ -5,11 +5,12 @@ import { HttpError } from "@/libs/constants/index";
 import { jwtToken } from "@/libs/modules/token/index.js";
 import { encrypt } from "@/libs/modules/encrypt/encrypt.js";
 import { UserService } from "../user/user.service.js";
+import { UserRepository } from "../user/user.repository.js";
 
 const register = async (req: Request, res: Response) => {
     const { email, password, name, points } = req.body;
 
-    const findUser = await UserService.findUserByEmail(email);
+    const findUser = await UserService.getUserForAuth(email);
     if (findUser) {
         throw HttpError.badRequest("User already exist");
     }
@@ -20,14 +21,14 @@ const register = async (req: Request, res: Response) => {
         name,
         points,
     });
-    const token = jwtToken.createJWTToken({ name, id: user.id });
+    const token = await jwtToken.createJWTToken({ name, id: user.id });
     res.status(StatusCodes.CREATED).json({ user: user, token });
 };
 
 const login = async (req: Request, res: Response) => {
     const { email, password: requestPassword } = req.body;
 
-    const user = await UserService.findUserByEmail(email);
+    const user = await UserService.getUserForAuth(email);
     if (!user) {
         return res
             .status(StatusCodes.UNAUTHORIZED)
@@ -41,7 +42,7 @@ const login = async (req: Request, res: Response) => {
             .json({ error: true, message: "Invalid credentials" });
     }
 
-    const token = jwtToken.createJWTToken({ name: user.name, id: user.id });
+    const token = await jwtToken.createJWTToken({ name: user.name, id: user.id });
     res.status(StatusCodes.OK).json({ user: user, token });
 };
 
