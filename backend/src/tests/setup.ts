@@ -1,14 +1,27 @@
-import { pool } from "@/db/drizzle.js";
+import {
+  PostgreSqlContainer,
+  StartedPostgreSqlContainer,
+} from "@testcontainers/postgresql";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { db } from "@/db/drizzle.js";
-import { sql } from "drizzle-orm";
+import { Pool } from "pg";
 
 export async function setup() {
-    await db.execute(sql`DROP SCHEMA public CASCADE;`);
-    await db.execute(sql`CREATE SCHEMA public;`);
-    await migrate(db, { migrationsFolder: "src/db/drizzle/migrations" });
-}
+  const container = await new PostgreSqlContainer("postgres:16-alpine").start();
 
-export async function teardown() {
-    await pool.end();
+  const connectionString = container.getConnectionUri();
+
+  // Make it available to the rest of the test process
+  process.env.DATABASE_URL = connectionString;
+
+  const pool = new Pool({ connectionString });
+  const db = drizzle(pool);
+
+  await migrate(db, { migrationsFolder: "src/db/drizzle/migrations" });
+
+  await pool.end();
+
+  return async () => {
+    await container.stop();
+  };
 }

@@ -1,5 +1,4 @@
-import { EnvVariables } from '@/libs/enums/envVariables.js';
-import { JWToken } from './token.module.js';
+import { JWToken } from "./token.module.js";
 
 const jwtToken = new JWToken();
 

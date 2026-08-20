@@ -1,63 +1,8 @@
-import request from "supertest";
-import { beforeAll, afterAll, describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 
-import { app } from "../index.js";
-
-import { testData, changeTestData, authRequest } from "./testSetup.js";
-import { setup, teardown } from "./setup.js";
-
-beforeAll(async () => {
-  setup();
-});
-
-afterAll(async () => {
-  teardown();
-});
+import { testData, authRequest } from "./testSetup.js";
 
 describe("USER_ROUTES", () => {
-  it("USER_REGISTER should register a new user", async () => {
-    const res = await request(app)
-      .post("/users/register")
-      .send(testData.testUser);
-
-    expect(res.statusCode).toBe(201);
-    expect(res.body.user).toBeDefined();
-    expect(res.body.token).toBeDefined();
-  });
-
-  it("USER_REGISTER should not register an existing user", async () => {
-    const res = await request(app)
-      .post("/users/register")
-      .send(testData.testUser);
-
-    expect(res.statusCode).toBe(400);
-    expect(res.body.message).toContain("already exist");
-  });
-
-  it("USER_LOGIN should login with valid credentials", async () => {
-    const res = await request(app).post("/users/login").send({
-      email: testData.testUser.email,
-      password: testData.testUser.password,
-    });
-
-    expect(res.statusCode).toBe(200);
-    expect(res.body.user).toBeDefined();
-    expect(res.body.token).toBeDefined();
-
-    changeTestData({ token: res.body.token });
-    changeTestData({ userId: res.body.user.id });
-  });
-
-  it("USER_LOGIN should not login with wrong password", async () => {
-    const res = await request(app).post("/users/login").send({
-      email: testData.testUser.email,
-      password: "wrongpassword",
-    });
-
-    expect(res.statusCode).toBe(401);
-    expect(res.body.message).toContain("Invalid credentials");
-  });
-
   it("GET_USER should return user by token", async () => {
     const res = await authRequest("get", "/users/me");
 

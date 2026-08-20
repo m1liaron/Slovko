@@ -1,3 +1,4 @@
+import "./auth.test.js";
 import "./user.test.js";
 import "./section.test.js";
 import "./group.test.js";

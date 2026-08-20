@@ -1,6 +1,6 @@
 import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-import { baseColumns } from "@/db/models/base.model.js";
+import { baseColumns } from "@/db/models/base.model";
 import { languages } from "@/modules/language/schema";
 
 const decks = pgTable("decks", {
